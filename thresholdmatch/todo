@@ -1,0 +1,21 @@
+
+* Construct NNG
+- Blocking
+- Matching
+
+* Find MIS
+- Lexi
+- Heustristic order outwards
+- Heustristic order in second power
+- Simulated annealing
+- Maximum IS
+
+* Construct base blocks
+
+* Assign unassigned
+- Lexi
+- Closest seed
+- closest blocked vertex
+
+
+
