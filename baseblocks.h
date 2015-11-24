@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "thresholdmatch.h"
+#include "config.h"
 
 typedef struct thm_Digraph thm_Digraph; // see "digraph.h"
 

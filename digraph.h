@@ -2,7 +2,7 @@
 #define THM_DIGRAPH_HG
 
 #include <stddef.h>
-#include "thresholdmatch.h"
+#include "config.h"
 
 typedef struct thm_Digraph thm_Digraph;
 struct thm_Digraph {
