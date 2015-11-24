@@ -16,6 +16,11 @@
 - Lexi
 - Closest seed
 - closest blocked vertex
+- Avoid even
+
+* Break large blocks
+- Greedy threshold
+- Greedy fixed-sized
 
 
 
