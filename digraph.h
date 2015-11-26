@@ -1,6 +1,7 @@
 #ifndef THM_DIGRAPH_HG
 #define THM_DIGRAPH_HG
 
+#include <stdbool.h>
 #include <stddef.h>
 #include "config.h"
 
@@ -29,8 +30,9 @@ void thm_free_digraph(thm_Digraph* dg);
 bool thm_change_digraph_head_size(thm_Digraph* dg, thm_Arcref new_max_arcs);
 thm_Digraph thm_empty_digraph(thm_Vid vertices, thm_Arcref max_arcs);
 thm_Digraph thm_balanced_digraph(thm_Vid vertices, thm_Vid arcs_per_vertex, thm_Vid* heads);
+thm_Digraph thm_add_two_digraphs(const thm_Digraph* dg_a, const thm_Digraph* dg_b, bool remove_duplicates);
+thm_Digraph thm_add_digraphs(size_t num_dgs, const thm_Digraph** dgs, bool remove_duplicates);
 
-//thm_Digraph thm_add_digraphs(const thm_Digraph* a, const thm_Digraph* b);
 //fm_digraph fm_transpose(fm_digraph a);
 //fm_digraph fm_undirected(fm_digraph a);
 //fm_digraph fm_exclusion_graph(fm_digraph a);
