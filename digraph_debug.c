@@ -51,7 +51,7 @@ bool thm_digraphs_equal(const thm_Digraph* const dg_a, const thm_Digraph* const 
 				free(single_row);
 				return false;
 			} 
-			single_row[*arc_b]++;
+			single_row[*arc_b] = 2;
 		}
 
 		for (thm_Vid i = 0; i < dg_a->vertices; ++i) {
@@ -67,13 +67,15 @@ bool thm_digraphs_equal(const thm_Digraph* const dg_a, const thm_Digraph* const 
 }
 
 
-thm_Digraph thm_digraph_from_pieces(const thm_Vid vertices, const thm_Arcref max_arcs, thm_Arcref* const tail_ptr, thm_Vid* const head) {
-	thm_Digraph dg = {
-		.vertices = vertices,
-		.max_arcs = max_arcs,
-		.head = head,
-		.tail_ptr = tail_ptr,
-	};
+thm_Digraph thm_digraph_from_pieces(const thm_Vid vertices, const thm_Arcref max_arcs, const thm_Arcref tail_ptr[vertices], const thm_Vid head[max_arcs]) {
+	if (!tail_ptr) return (thm_Digraph) { 0 };
+	if (max_arcs > 0 && !head) return (thm_Digraph) { 0 };
+	thm_Digraph dg = thm_init_digraph(vertices, max_arcs);
+	if (!dg.tail_ptr) return dg;
+
+	for (thm_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
+	for (thm_Arcref a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
+
 	return dg;
 }
 
