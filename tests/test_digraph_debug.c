@@ -110,11 +110,15 @@ void ut_check_debug(void** state) {
 	thm_print_digraph(&ut_dg9);
 	thm_print_digraph(&ut_dg10);
 
+	thm_free_digraph(&ut_dg1);
 	thm_free_digraph(&ut_dg2);
 	thm_free_digraph(&ut_dg3);
+	thm_free_digraph(&ut_dg4);
 	thm_free_digraph(&ut_dg5);
+	thm_free_digraph(&ut_dg6);
 	thm_free_digraph(&ut_dg7);
 	thm_free_digraph(&ut_dg8);
+	thm_free_digraph(&ut_dg9);
 	thm_free_digraph(&ut_dg10);
 
 	thm_free_digraph(&empty_dg1);

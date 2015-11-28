@@ -190,6 +190,7 @@ void ut_thm_union_digraphs(void** state) {
 	assert_identical_digraph(&ut_control13, &ut_make13_a);
 	assert_identical_digraph(&ut_control13, &ut_make13_t);
 
+
 	const thm_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
 	thm_Digraph ut_make31_a = thm_digraph_union(2, sum_31);
 	thm_Digraph ut_make31_t = thm_digraph_union_two(&ut_dg3, &ut_dg1);
@@ -255,6 +256,13 @@ void ut_thm_union_digraphs(void** state) {
 	assert_free_digraph(&ut_make132);
 	assert_free_digraph(&ut_make213);
 	assert_free_digraph(&ut_make321);
+	assert_free_digraph(&ut_control12);
+	assert_free_digraph(&ut_control13);
+	assert_free_digraph(&ut_control31);
+	assert_free_digraph(&ut_control123);
+	assert_free_digraph(&ut_control132);
+	assert_free_digraph(&ut_control213);
+	assert_free_digraph(&ut_control321);
 }
 
 void ut_thm_digraph_transpose(void** state) {

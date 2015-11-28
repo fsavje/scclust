@@ -10,7 +10,7 @@
 #include "../digraph_debug.h"
 
 #define assert_valid_digraph(test_dg, vertices) _assert_valid_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
-#define assert_free_digraph(test_dg) _assert_free_digraph(test_dg)
+#define assert_free_digraph(test_dg) _assert_free_digraph(test_dg, #test_dg, __FILE__, __LINE__)
 #define assert_sound_digraph(test_dg, vertices) _assert_sound_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_equal_digraph(test_dg1, test_dg2) _assert_equal_digraph(test_dg1, test_dg2, #test_dg1, #test_dg2, __FILE__, __LINE__)
 #define assert_identical_digraph(test_dg1, test_dg2) _assert_identical_digraph(test_dg1, test_dg2, #test_dg1, #test_dg2, __FILE__, __LINE__)
@@ -28,9 +28,17 @@ void _assert_valid_digraph(const thm_Digraph* test_dg,
 	}
 }
 
-void _assert_free_digraph(thm_Digraph* test_dg) {
-	for (size_t i = 0; i <= test_dg->vertices; ++i) test_dg->tail_ptr[i] = 1;
-	for (size_t i = 0; i < test_dg->max_arcs; ++i) test_dg->head[i] = 1;
+void _assert_free_digraph(thm_Digraph* test_dg,
+						  const char* const name_dg,
+						  const char* const file,
+						  const int line) {
+	if (!test_dg || !test_dg->tail_ptr) {
+		print_error("%s is already freed\n", name_dg);
+		_fail(file, line);
+	} else {
+		for (size_t i = 0; i <= test_dg->vertices; ++i) test_dg->tail_ptr[i] = 1;
+		for (size_t i = 0; i < test_dg->max_arcs; ++i) test_dg->head[i] = 1;
+	}
 	thm_free_digraph(test_dg);
 }
 
