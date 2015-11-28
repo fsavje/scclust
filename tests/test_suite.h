@@ -1,5 +1,10 @@
-#ifndef UT_THM_MALLOC_OVERRIDE_HG
-#define UT_THM_MALLOC_OVERRIDE_HG
+#ifndef UT_THM_TEST_SUITE_HG
+#define UT_THM_TEST_SUITE_HG
+
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
 
 #include <stdlib.h>
 #define malloc(size) _test_malloc(size, __FILE__, __LINE__)
