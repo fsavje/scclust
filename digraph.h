@@ -45,7 +45,7 @@ thm_Digraph thm_identity_digraph(thm_Vid vertices);
 thm_Digraph thm_balanced_digraph(thm_Vid vertices, thm_Vid arcs_per_vertex, thm_Vid* heads);
 thm_Digraph thm_copy_digraph(const thm_Digraph* dg);
 thm_Digraph thm_digraph_union_two(const thm_Digraph* dg_a, const thm_Digraph* dg_b);
-thm_Digraph thm_digraph_union(size_t num_dgs, const thm_Digraph** dgs);
+thm_Digraph thm_digraph_union(size_t num_dgs, const thm_Digraph* dgs[num_dgs]);
 thm_Digraph thm_digraph_transpose(const thm_Digraph* dg);
 thm_Digraph thm_digraph_undirected(const thm_Digraph* dg);
 thm_Digraph thm_digraph_adjacency_product(const thm_Digraph* dg_a, const thm_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal);

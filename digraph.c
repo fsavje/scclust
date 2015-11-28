@@ -109,7 +109,7 @@ thm_Digraph thm_digraph_union_two(const thm_Digraph* const dg_a, const thm_Digra
 }
 
 
-thm_Digraph thm_digraph_union(const size_t num_dgs, const thm_Digraph** const dgs) {
+thm_Digraph thm_digraph_union(const size_t num_dgs, const thm_Digraph* dgs[num_dgs]) {
 	if (num_dgs == 0) return thm_empty_digraph(0, 0);
 	if (!dgs || !dgs[0]) return (thm_Digraph) { 0 };
 
@@ -222,9 +222,9 @@ thm_Digraph thm_digraph_transpose(const thm_Digraph* const dg) {
 }
 
 
-thm_Digraph thm_digraph_undirected(const thm_Digraph* const dg) {
-	
-}
+//thm_Digraph thm_digraph_undirected(const thm_Digraph* const dg) {
+
+//}
 
 
 thm_Digraph thm_digraph_adjacency_product(const thm_Digraph* const dg_a, const thm_Digraph* const dg_b, const bool force_diagonal, const bool ignore_diagonal) {
