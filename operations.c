@@ -30,75 +30,79 @@ tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* const dg_a, const tbg_Digra
 	return tbg_digraph_union(2, dgs_ab);
 }
 
-
-tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const static num_dgs]) {
-	if (num_dgs == 0) return tbg_empty_digraph(0, 0);
-
-	tbg_Vid vertices = dgs[0]->vertices;
-	tbg_Arcref out_max_arcs = 0;
-	for (size_t i = 0; i < num_dgs; ++i) {
-		if (!dgs[i] || !dgs[i]->tail_ptr || dgs[i]->vertices != vertices) return (tbg_Digraph) { 0 };
-		out_max_arcs += dgs[i]->tail_ptr[vertices];
-	}
-
-	tbg_Vid* row_markers = malloc(sizeof(tbg_Vid[vertices]));
-	if (!row_markers) return (tbg_Digraph) { 0 };
-
-	tbg_Digraph dg_out = tbg_init_digraph(vertices, out_max_arcs);
-	if (!dgs || !dgs[0]) return tbg_null_digraph();
-
-	if (!dg_out.tail_ptr) {
-		// Could not allocate digraph with `row_markers' arcs.
-		// Do correct (but slow) memory calculation and try again.
-
-		out_max_arcs = 0;
-		for (tbg_Vid v = 0; v < vertices; ++v) row_markers[v] = TBG_VID_MAX;
-
-		for (tbg_Vid v = 0; v < vertices; ++v) {
-			for (size_t i = 0; i < num_dgs; ++i) {
-				for (tbg_Vid* arc_toadd = dgs[i]->head + dgs[i]->tail_ptr[v];
-						arc_toadd != dgs[i]->head + dgs[i]->tail_ptr[v + 1];
-						++arc_toadd) {
-					if (row_markers[*arc_toadd] != v) {
-						row_markers[*arc_toadd] = v;
-						++out_max_arcs;
-					}
-				}
-			}
-		}
-
-		dg_out = tbg_init_digraph(vertices, out_max_arcs);
-	}
-
-	// Try again. If fail, give up.
-	if (!dg_out.tail_ptr) {
-		free(row_markers);
-		return dg_out;
-	}
-
-	dg_out.tail_ptr[0] = 0;
-	tbg_Arcref out_arc_write = 0;
+static inline tbg_Arcref itbg_do_union(const tbg_Vid vertices,
+									   const size_t num_dgs,
+									   const tbg_Digraph* const * const dgs,
+									   tbg_Vid* restrict const row_markers,
+									   const bool write,
+									   tbg_Arcref* restrict const out_tail_ptr,
+									   tbg_Vid* restrict const out_head) {
+	tbg_Arcref counter = 0;
+	if (write) out_tail_ptr[0] = 0;
 	for (tbg_Vid v = 0; v < vertices; ++v) row_markers[v] = TBG_VID_MAX;
 
 	for (tbg_Vid v = 0; v < vertices; ++v) {
 		for (size_t i = 0; i < num_dgs; ++i) {
-			for (tbg_Vid* arc_toadd = dgs[i]->head + dgs[i]->tail_ptr[v];
-					arc_toadd != dgs[i]->head + dgs[i]->tail_ptr[v + 1];
-					++arc_toadd) {
-				if (row_markers[*arc_toadd] != v) {
-					row_markers[*arc_toadd] = v;
-					dg_out.head[out_arc_write] = *arc_toadd;
-					++out_arc_write;
+			for (const tbg_Vid* arc_i = dgs[i]->head + dgs[i]->tail_ptr[v];
+					arc_i != dgs[i]->head + dgs[i]->tail_ptr[v + 1];
+					++arc_i) {
+				if (row_markers[*arc_i] != v) {
+					row_markers[*arc_i] = v;
+					if (write) out_head[counter] = *arc_i;
+					++counter;
 				}
 			}
 		}
 
-		dg_out.tail_ptr[v + 1] = out_arc_write;
+		if (write) out_tail_ptr[v + 1] = counter;
 	}
+
+	return counter;
+}
+
+tbg_Digraph tbg_digraph_union(const size_t num_dgs, const tbg_Digraph* const dgs[const static num_dgs]) {
+	if (num_dgs == 0) return tbg_empty_digraph(0, 0);
+	if (!dgs || !dgs[0]) return tbg_null_digraph();
+
+	const tbg_Vid vertices = dgs[0]->vertices;
+
+	tbg_Vid* const row_markers = malloc(sizeof(tbg_Vid[vertices]));
+	if (!row_markers) return tbg_null_digraph();
+
+	tbg_Arcref out_arcs_write = 0;
+
+	// Try greedy memory count first
+	for (size_t i = 0; i < num_dgs; ++i) {
+		if (!dgs[i] || !dgs[i]->tail_ptr || dgs[i]->vertices != vertices) return tbg_null_digraph();
+		out_arcs_write += dgs[i]->tail_ptr[vertices];
+	}
+
+	tbg_Digraph dg_out = tbg_init_digraph(vertices, out_arcs_write);
+	if (!dg_out.tail_ptr) {
+		// Could not allocate digraph with `out_arcs_write' arcs.
+		// Do correct (but slow) memory count by doing
+		// doing union without writing.
+		out_arcs_write = itbg_do_union(vertices,
+									   num_dgs, dgs,
+									   row_markers,
+									   false, NULL, NULL);
+
+		// Try again. If fail, give up.
+		dg_out = tbg_init_digraph(vertices, out_arcs_write);
+		if (!dg_out.tail_ptr) {
+			free(row_markers);
+			return dg_out;
+		}
+	}
+
+	out_arcs_write = itbg_do_union(vertices,
+								   num_dgs, dgs,
+								   row_markers,
+								   true, dg_out.tail_ptr, dg_out.head);
 
 	free(row_markers);
 
-	tbg_change_arc_storage(&dg_out, out_arc_write);
+	tbg_change_arc_storage(&dg_out, out_arcs_write);
 
 	return dg_out;
 }
@@ -144,111 +148,110 @@ tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* const dg) {
 }
 
 
-tbg_Digraph tbg_adjacency_product(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal) {
-	if (force_diagonal && ignore_diagonal) return (tbg_Digraph) { 0 };
-	if (!dg_a || !dg_b || !dg_a->tail_ptr || !dg_b->tail_ptr) return (tbg_Digraph) { 0 };
-	if (dg_a->vertices != dg_b->vertices) return (tbg_Digraph) { 0 };
+static inline tbg_Arcref itbg_do_adjacency_product(const tbg_Vid vertices,
+												   const tbg_Arcref* const dg_a_tail_ptr,
+												   const tbg_Vid* const dg_a_head,
+												   const tbg_Arcref* const dg_b_tail_ptr,
+												   const tbg_Vid* const dg_b_head,
+												   tbg_Vid* restrict const row_markers,
+												   const bool force_diagonal,
+												   const bool ignore_diagonal,
+												   const bool write,
+												   tbg_Arcref* restrict const out_tail_ptr,
+												   tbg_Vid* restrict const out_head) {
+	tbg_Arcref counter = 0;
+	if (write) out_tail_ptr[0] = 0;
+	for (tbg_Vid v = 0; v < vertices; ++v) row_markers[v] = TBG_VID_MAX;
+
+	for (tbg_Vid v = 0; v < vertices; ++v) {
+		if (force_diagonal) {
+			for (const tbg_Vid* arc_b = dg_b_head + dg_b_tail_ptr[v];
+					arc_b != dg_b_head + dg_b_tail_ptr[v + 1];
+					++arc_b) {
+				if (row_markers[*arc_b] != v) {
+					row_markers[*arc_b] = v;
+					if (write) out_head[counter] = *arc_b;
+					++counter;
+				}
+			}
+		}
+		for (const tbg_Vid* arc_a = dg_a_head + dg_a_tail_ptr[v];
+				arc_a != dg_a_head + dg_a_tail_ptr[v + 1];
+				++arc_a) {
+			if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
+			for (const tbg_Vid* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
+					arc_b != dg_b_head + dg_b_tail_ptr[*arc_a + 1];
+					++arc_b) {
+				if (row_markers[*arc_b] != v) {
+					row_markers[*arc_b] = v;
+					if (write) out_head[counter] = *arc_b;
+					++counter;
+				}
+			}
+		}
+
+		if (write) out_tail_ptr[v + 1] = counter;
+	}
+
+	return counter;
+}
+
+tbg_Digraph tbg_adjacency_product(const tbg_Digraph* const dg_a, const tbg_Digraph* const dg_b, const bool force_diagonal, const bool ignore_diagonal) {
+	if (force_diagonal && ignore_diagonal) return tbg_null_digraph();
+	if (!dg_a || !dg_b || !dg_a->tail_ptr || !dg_b->tail_ptr) return tbg_null_digraph();
+	if (dg_a->vertices != dg_b->vertices) return tbg_null_digraph();
 	if (dg_a->vertices == 0) return tbg_empty_digraph(0, 0);
 
-	tbg_Vid* row_markers = malloc(sizeof(tbg_Vid[dg_a->vertices]));
-	if (!row_markers) return (tbg_Digraph) { 0 };
+	const tbg_Vid vertices = dg_a->vertices;
 
-	tbg_Arcref out_max_arcs = 0;
+	tbg_Vid* const row_markers = malloc(sizeof(tbg_Vid[vertices]));
+	if (!row_markers) return tbg_null_digraph();
 
-	// Greedy memory calculation first
-	for (tbg_Vid v = 0; v < dg_a->vertices; ++v) {
+	tbg_Arcref out_arcs_write = 0;
+
+	// Try greedy memory count first
+	for (tbg_Vid v = 0; v < vertices; ++v) {
 		if (force_diagonal) {
-			out_max_arcs += dg_b->tail_ptr[v + 1] - dg_b->tail_ptr[v];
+			out_arcs_write += dg_b->tail_ptr[v + 1] - dg_b->tail_ptr[v];
 		}
-		for (tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		for (const tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
 				arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
 				++arc_a) {
 			if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
-			out_max_arcs += dg_b->tail_ptr[*arc_a + 1] - dg_b->tail_ptr[*arc_a];
+			out_arcs_write += dg_b->tail_ptr[*arc_a + 1] - dg_b->tail_ptr[*arc_a];
 		}
 	}
 
-	tbg_Digraph dg_out = tbg_init_digraph(dg_a->vertices, out_max_arcs);
-
+	tbg_Digraph dg_out = tbg_init_digraph(vertices, out_arcs_write);
 	if (!dg_out.tail_ptr) {
-		// Could not allocate digraph with `row_markers' arcs.
-		// Do correct (but slow) memory calculation and try again.
+		// Could not allocate digraph with `out_arcs_write' arcs.
+		// Do correct (but slow) memory count by doing
+		// doing product without writing.
+		out_arcs_write = itbg_do_adjacency_product(vertices,
+												   dg_a->tail_ptr, dg_a->head,
+												   dg_b->tail_ptr, dg_b->head,
+												   row_markers,
+												   force_diagonal, ignore_diagonal,
+												   false, NULL, NULL);
 
-		out_max_arcs = 0;
-		for (tbg_Vid v = 0; v < dg_a->vertices; ++v) row_markers[v] = TBG_VID_MAX;
-
-		for (tbg_Vid v = 0; v < dg_a->vertices; ++v) {
-			if (force_diagonal) {
-				for (tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
-						arc_b != dg_b->head + dg_b->tail_ptr[v + 1];
-						++arc_b) {
-					if (row_markers[*arc_b] != v) {
-						row_markers[*arc_b] = v;
-						++out_max_arcs;
-					}
-				}
-			}
-			for (tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
-					arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
-					++arc_a) {
-				if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
-				for (tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[*arc_a];
-						arc_b != dg_b->head + dg_b->tail_ptr[*arc_a + 1];
-						++arc_b) {
-					if (row_markers[*arc_b] != v) {
-						row_markers[*arc_b] = v;
-						++out_max_arcs;
-					}
-				}
-			}
+		// Try again. If fail, give up.
+		dg_out = tbg_init_digraph(vertices, out_arcs_write);
+		if (!dg_out.tail_ptr) {
+			free(row_markers);
+			return dg_out;
 		}
-
-		dg_out = tbg_init_digraph(dg_a->vertices, out_max_arcs);
 	}
 
-	// Try again. If fail, give up.
-	if (!dg_out.tail_ptr) {
-		free(row_markers);
-		return dg_out;
-	}
-
-	dg_out.tail_ptr[0] = 0;
-	tbg_Arcref out_arc_write = 0;
-	for (tbg_Vid v = 0; v < dg_a->vertices; ++v) row_markers[v] = TBG_VID_MAX;
-
-	for (tbg_Vid v = 0; v < dg_a->vertices; ++v) {
-		if (force_diagonal) {
-			for (tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
-					arc_b != dg_b->head + dg_b->tail_ptr[v + 1];
-					++arc_b) {
-				if (row_markers[*arc_b] != v) {
-					row_markers[*arc_b] = v;
-					dg_out.head[out_arc_write] = *arc_b;
-					++out_arc_write;
-				}
-			}
-		}
-		for (tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
-				arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
-				++arc_a) {
-			if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
-			for (tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[*arc_a];
-					arc_b != dg_b->head + dg_b->tail_ptr[*arc_a + 1];
-					++arc_b) {
-				if (row_markers[*arc_b] != v) {
-					row_markers[*arc_b] = v;
-					dg_out.head[out_arc_write] = *arc_b;
-					++out_arc_write;
-				}
-			}
-		}
-
-		dg_out.tail_ptr[v + 1] = out_arc_write;
-	}
+	out_arcs_write = itbg_do_adjacency_product(vertices,
+											   dg_a->tail_ptr, dg_a->head,
+											   dg_b->tail_ptr, dg_b->head,
+											   row_markers,
+											   force_diagonal, ignore_diagonal,
+											   true, dg_out.tail_ptr, dg_out.head);
 
 	free(row_markers);
 
-	tbg_change_arc_storage(&dg_out, out_arc_write);
+	tbg_change_arc_storage(&dg_out, out_arcs_write);
 
 	return dg_out;
 }
