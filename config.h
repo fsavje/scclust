@@ -13,10 +13,11 @@
    limitations under the License.
 ==============================================================================*/
 
-#ifndef TBG_DEF_HG
-#define TBG_DEF_HG
+#ifndef TBG_CONFIG_HG
+#define TBG_CONFIG_HG
 
 #include <stdint.h>
+
 
 // Vertex ID type (must be unsigned)
 // Number of vertices < MAX(tbg_Vid)
@@ -29,26 +30,5 @@ typedef uint32_t tbg_Vid;
 // Number of arcs in any digraph <= MAX(tbg_Arcref)
 // Should be MAX(tbg_Arcref) >= MAX(tbg_Vid)
 typedef uint32_t tbg_Arcref;
-
-
-// Main digraph struct
-typedef struct tbg_Digraph tbg_Digraph;
-struct tbg_Digraph {
-	// Number of vertices in graph.
-	tbg_Vid vertices;
-
-	// Maximum number of arcs in graph (i.e., length of `head').
-	tbg_Arcref max_arcs;
-
-	// Array of tbg_Vid: [0, ..., max_arcs - 1].
-	// Contains the head of each arc, indicated by vertex ID.
-	// May be NULL if max_arcs == 0.
-	tbg_Vid* head;
-
-	// Array of tbg_Arcref: [0, ..., vertices].
-	// For arcs for which vertex i is the tail, head[tail_ptr[i]] is the head of the first arc and head[tail_ptr[i+1] - 1] is the last arc.
-	// May never be NULL.
-	tbg_Arcref* tail_ptr;
-};
 
 #endif

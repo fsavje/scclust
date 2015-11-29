@@ -16,8 +16,9 @@
 #ifndef TBG_DEBUG_HG
 #define TBG_DEBUG_HG
 
+#include "config.h"
 #include <stdbool.h>
-#include "def.h"
+#include "digraph.h"
 
 
 bool tbg_is_valid_digraph(const tbg_Digraph* dg);

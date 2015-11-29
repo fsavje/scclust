@@ -14,11 +14,12 @@
 ==============================================================================*/
 
 #include "operations.h"
+#include "config.h"
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "def.h"
+#include "digraph.h"
 #include "core.h"
 
 

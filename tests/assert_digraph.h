@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "../def.h"
+#include "../digraph.h"
 #include "../core.h"
 #include "../debug.h"
 

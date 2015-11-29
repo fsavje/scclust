@@ -13,20 +13,30 @@
    limitations under the License.
 ==============================================================================*/
 
-#ifndef TBG_CORE_HG
-#define TBG_CORE_HG
+#ifndef TBG_STRUCT_HG
+#define TBG_STRUCT_HG
 
 #include "config.h"
-#include <stdbool.h>
-#include "digraph.h"
 
 
-tbg_Digraph tbg_init_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-void tbg_free_digraph(tbg_Digraph* dg);
-bool tbg_change_arc_storage(tbg_Digraph* dg, tbg_Arcref new_max_arcs);
-tbg_Digraph tbg_empty_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-tbg_Digraph tbg_identity_digraph(tbg_Vid vertices);
-tbg_Digraph tbg_balanced_digraph(tbg_Vid vertices, tbg_Vid arcs_per_vertex, tbg_Vid* heads);
-tbg_Digraph tbg_copy_digraph(const tbg_Digraph* dg);
+// Main digraph struct
+typedef struct tbg_Digraph tbg_Digraph;
+struct tbg_Digraph {
+	// Number of vertices in graph.
+	tbg_Vid vertices;
+
+	// Maximum number of arcs in graph (i.e., length of `head').
+	tbg_Arcref max_arcs;
+
+	// Array of tbg_Vid: [0, ..., max_arcs - 1].
+	// Contains the head of each arc, indicated by vertex ID.
+	// May be NULL if max_arcs == 0.
+	tbg_Vid* head;
+
+	// Array of tbg_Arcref: [0, ..., vertices].
+	// For arcs for which vertex i is the tail, head[tail_ptr[i]] is the head of the first arc and head[tail_ptr[i+1] - 1] is the last arc.
+	// May never be NULL.
+	tbg_Arcref* tail_ptr;
+};
 
 #endif

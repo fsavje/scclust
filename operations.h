@@ -16,9 +16,10 @@
 #ifndef TBG_OPERATIONS_HG
 #define TBG_OPERATIONS_HG
 
+#include "config.h"
 #include <stdbool.h>
 #include <stddef.h>
-#include "def.h"
+#include "digraph.h"
 
 
 tbg_Digraph tbg_make_undirected(const tbg_Digraph* dg);
