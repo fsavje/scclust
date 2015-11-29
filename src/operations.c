@@ -13,16 +13,16 @@
    limitations under the License.
 ==============================================================================*/
 
-#include "config.h"
+#include "../config.h"
 #ifndef TBG_HEADER_ONLY_LIB
-	#include "operations.h"
+	#include "../operations.h"
 #endif
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "digraph.h"
-#include "core.h"
+#include "../digraph.h"
+#include "../core.h"
 
 
 tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* const dg_a, const tbg_Digraph* const dg_b) {

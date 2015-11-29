@@ -13,14 +13,14 @@
    limitations under the License.
 ==============================================================================*/
 
-#include "config.h"
+#include "../config.h"
 #ifndef TBG_HEADER_ONLY_LIB
-	#include "core.h"
+	#include "../core.h"
 #endif
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include "digraph.h"
+#include "../digraph.h"
 
 
 tbg_Digraph tbg_init_digraph(const tbg_Vid vertices, const tbg_Arcref max_arcs) {

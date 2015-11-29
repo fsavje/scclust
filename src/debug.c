@@ -13,17 +13,17 @@
    limitations under the License.
 ==============================================================================*/
 
-#include "config.h"
+#include "../config.h"
 #ifndef TBG_HEADER_ONLY_LIB
-	#include "debug.h"
+	#include "../debug.h"
 #endif
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "digraph.h"
-#include "core.h"
+#include "../digraph.h"
+#include "../core.h"
 
 
 bool tbg_is_valid_digraph(const tbg_Digraph* const dg) {
