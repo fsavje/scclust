@@ -1,17 +1,21 @@
 CC=gcc
-FLAGS=-std=c99 -O2 -Wall -Wfloat-equal -include test_suite.h
+FLAGS=-std=c99 -O2 -Wall -Wextra -Wconversion -Wno-missing-field-initializers -Wfloat-equal -include test_suite.h
 INCLUDES=-I/usr/local/include
-LIBS=/usr/local/lib/libcmocka.dylib
-TESTS=test_digraph test_digraph_debug
-MAINOBJECTS=digraph.o digraph_debug.o
+EXLIBS=/usr/local/lib/libcmocka.dylib
+LIBOBJECTS=core.o debug.o operations.o
+STDTESTS=test_core test_debug test_operations
+SPECTESTS=test_special
+ALLTESTS=$(STDTESTS) $(SPECTESTS)
 
-test_digraph_DEP=$(filter-out digraph.o,$(MAINOBJECTS))
-test_digraph_debug_DEP=$(filter-out digraph_debug.o,$(MAINOBJECTS))
+test_special_DEP=$(filter-out operations.o,$(LIBOBJECTS))
 
-all: $(TESTS)
+all: $(ALLTESTS)
 
-$(TESTS): clean $(MAINOBJECTS)
-	$(CC) $(FLAGS) $(INCLUDES) $@.c $($@_DEP) $(LIBS) -o $@.out
+$(STDTESTS): clean $(LIBOBJECTS)
+	$(CC) $(FLAGS) $(INCLUDES) $@.c $(LIBOBJECTS) $(EXLIBS) -o $@.out
+
+$(SPECTESTS): clean $(LIBOBJECTS)
+	$(CC) $(FLAGS) $(INCLUDES) $@.c $($@_DEP) $(EXLIBS) -o $@.out
 
 %.o: ../%.c
 	$(CC) -c $(FLAGS) $(INCLUDES) $< -o $@
