@@ -256,38 +256,37 @@ tbg_Digraph tbg_adjacency_product(const tbg_Digraph* const dg_a, const tbg_Digra
 	return dg_out;
 }
 
-/*
 
-tbg_Digraph tbg_digraph_all_walks(const tbg_Digraph* dg, tbg_Vid length) {
-	return itbg_digraph_power_and_walks(dg, length, false, false);
-}
-tbg_Digraph tbg_digraph_all_paths(const tbg_Digraph* dg, tbg_Vid length) {
-	return itbg_digraph_power_and_walks(dg, length, false, true);
-}
-
-tbg_Digraph tbg_digraph_power(const tbg_Digraph* dg, tbg_Vid exponent) {
-	return itbg_digraph_power_and_walks(dg, length, true, false);
-}
-
-tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid exponent, const bool force_diagonal, const bool ignore_diagonal) {
+static tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg,
+												const tbg_Vid exponent,
+												const bool force_diagonal,
+												const bool ignore_diagonal) {
 	if (!dg || !dg->tail_ptr) return tbg_null_digraph();
 	if (dg->vertices == 0) return tbg_empty_digraph(0, 0);
 	if (exponent == 0) return tbg_empty_digraph(dg->vertices, 0);
 	if (exponent == 1) return tbg_copy_digraph(dg);
-	if (exponent == 2) return tbg_digraph_adjacency_product(dg, dg, power, false);
+	if (exponent == 2) return tbg_adjacency_product(dg, dg, force_diagonal, ignore_diagonal);
+
+	tbg_Digraph dg_expo = tbg_adjacency_product(dg, dg, force_diagonal, ignore_diagonal);
+	if (!dg_expo.tail_ptr) return tbg_null_digraph();
+	
+	tbg_Digraph dg_out = tbg_null_digraph();
+	if (exponent % 2 == 1) {
+		dg_out = tbg_copy_digraph(dg);
+		if (!dg_out.tail_ptr) {
+			tbg_free_digraph(&dg_expo);
+			return tbg_null_digraph();
+		} 
+	}
 
 	tbg_Digraph dg_tmp;
-	tbg_Digraph dg_out = (tbg_Digraph) { 0 };
-	tbg_Digraph dg_expo = tbg_copy_digraph(dg);
-	if (!dg_expo.tail_ptr) return (tbg_Digraph) { 0 };
-
-	for (; exponent > 0; exponent /= 2) {
-		if (exponent % 2 == 1) {
+	for (tbg_Vid e = exponent / 2; e > 0; e /= 2) {
+		if (e % 2 == 1) {
 			if (!dg_out.tail_ptr) {
 				dg_out = tbg_copy_digraph(&dg_expo);
 			} else {
 				dg_tmp = dg_out;
-				dg_out = tbg_digraph_adjacency_product(&dg_tmp, &dg_expo);
+				dg_out = tbg_adjacency_product(&dg_tmp, &dg_expo, force_diagonal, ignore_diagonal);
 				tbg_free_digraph(&dg_tmp);
 			}
 			if (!dg_out.tail_ptr) {
@@ -296,7 +295,7 @@ tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid ex
 			} 
 		}
 		dg_tmp = dg_expo;
-		dg_expo = tbg_digraph_adjacency_product(&dg_tmp, &dg_expo);
+		dg_expo = tbg_adjacency_product(&dg_tmp, &dg_tmp, force_diagonal, ignore_diagonal);
 		tbg_free_digraph(&dg_tmp);
 		if (!dg_expo.tail_ptr) {
 			tbg_free_digraph(&dg_out);
@@ -307,5 +306,18 @@ tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid ex
 	tbg_free_digraph(&dg_expo);
 
 	return dg_out;
-}*/
+}
+
+tbg_Digraph tbg_digraph_all_walks(const tbg_Digraph* const dg, const tbg_Vid length) {
+	return itbg_digraph_power_and_walks(dg, length, false, false);
+}
+
+tbg_Digraph tbg_digraph_all_paths(const tbg_Digraph* const dg, const tbg_Vid length) {
+	return itbg_digraph_power_and_walks(dg, length, false, true);
+}
+
+tbg_Digraph tbg_digraph_power(const tbg_Digraph* const dg, const tbg_Vid exponent) {
+	return itbg_digraph_power_and_walks(dg, exponent, true, false);
+}
+
 
