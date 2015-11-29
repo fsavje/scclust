@@ -29,7 +29,7 @@ tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* dg_a, const tbg_Digraph* dg
 }
 
 
-tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[num_dgs]) {
+tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const static num_dgs]) {
 	if (num_dgs == 0) return tbg_empty_digraph(0, 0);
 	if (!dgs || !dgs[0]) return (tbg_Digraph) { 0 };
 

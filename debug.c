@@ -104,7 +104,7 @@ bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const 
 }
 
 
-tbg_Digraph tbg_digraph_from_pieces(const tbg_Vid vertices, const tbg_Arcref max_arcs, const tbg_Arcref tail_ptr[vertices], const tbg_Vid head[max_arcs]) {
+tbg_Digraph tbg_digraph_from_pieces(const tbg_Vid vertices, const tbg_Arcref max_arcs, const tbg_Arcref tail_ptr[const vertices], const tbg_Vid head[const max_arcs]) {
 	if (!tail_ptr) return (tbg_Digraph) { 0 };
 	if (max_arcs > 0 && !head) return (tbg_Digraph) { 0 };
 	tbg_Digraph dg = tbg_init_digraph(vertices, max_arcs);
@@ -117,7 +117,7 @@ tbg_Digraph tbg_digraph_from_pieces(const tbg_Vid vertices, const tbg_Arcref max
 }
 
 
-tbg_Digraph tbg_digraph_from_string(const char dg_str[]) {
+tbg_Digraph tbg_digraph_from_string(const char dg_str[const]) {
 	tbg_Vid vertices = 0;
 	size_t all_arcs = 0;
 	tbg_Arcref max_arcs = 0;
