@@ -11,7 +11,7 @@ void ut_tbg_is_valid_digraph(void** state) {
 	(void) state;
 
 	tbg_Digraph dg1 = tbg_init_digraph(4, 10);
-	tbg_Digraph dg2 = (tbg_Digraph) { 0 };
+	tbg_Digraph dg2 = tbg_null_digraph();
 	tbg_Digraph dg3 = tbg_init_digraph(4, 0);
 
 	assert_false(tbg_is_valid_digraph(NULL));

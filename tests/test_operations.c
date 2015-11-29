@@ -130,8 +130,8 @@ void ut_tbg_digraph_transpose(void** state) {
 	tbg_Digraph control3 = tbg_digraph_from_string("****/..../..../..../");
 	tbg_Digraph control4 = tbg_empty_digraph(4, 0);
 	tbg_Digraph control5 = tbg_empty_digraph(0, 0);
-	tbg_Digraph control6 = (tbg_Digraph) { 0 };
-	tbg_Digraph control7 = (tbg_Digraph) { 0 };
+	tbg_Digraph control6 = tbg_null_digraph();
+	tbg_Digraph control7 = tbg_null_digraph();
 
 	tbg_Digraph res1 = tbg_digraph_transpose(&ut_dg1);
 	tbg_Digraph res2 = tbg_digraph_transpose(&ut_dg2);
@@ -184,7 +184,7 @@ void ut_tbg_adjacency_product(void** state) {
 	tbg_Digraph dg2_f = tbg_digraph_from_string("*.*../.***./..*../..**./*.*.*/");
 
 	tbg_Digraph prod0 = tbg_adjacency_product(&dg1, &dg1, true, true);
-	tbg_Digraph none = (tbg_Digraph) { 0 };
+	tbg_Digraph none = tbg_null_digraph();
 	assert_identical_digraph(&prod0, &none);
 
 

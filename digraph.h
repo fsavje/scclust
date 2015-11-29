@@ -39,4 +39,9 @@ struct tbg_Digraph {
 	tbg_Arcref* tail_ptr;
 };
 
+
+static inline tbg_Digraph tbg_null_digraph(void) {
+  return (tbg_Digraph) { 0, 0, NULL, NULL };
+}
+
 #endif

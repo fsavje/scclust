@@ -31,7 +31,7 @@ tbg_Digraph tbg_init_digraph(const tbg_Vid vertices, const tbg_Arcref max_arcs) 
 		.tail_ptr = malloc(sizeof(tbg_Arcref[vertices + 1])),
 	};
 
-	if (!dg.tail_ptr) return (tbg_Digraph) { 0 };
+	if (!dg.tail_ptr) return tbg_null_digraph();
 
 	if (max_arcs > 0) {
 		dg.head = malloc(sizeof(tbg_Vid[max_arcs]));
@@ -46,7 +46,7 @@ void tbg_free_digraph(tbg_Digraph* const dg) {
 	if (dg) {
 		free(dg->head);
 		free(dg->tail_ptr);
-		*dg = (tbg_Digraph) { 0 };
+		*dg = tbg_null_digraph();
 	}
 }
 
@@ -110,7 +110,7 @@ tbg_Digraph tbg_balanced_digraph(const tbg_Vid vertices, const tbg_Vid arcs_per_
 
 
 tbg_Digraph tbg_copy_digraph(const tbg_Digraph* const dg) {
-	if (!dg || !dg->tail_ptr) return (tbg_Digraph) { 0 };
+	if (!dg || !dg->tail_ptr) return tbg_null_digraph();
 	if (dg->vertices == 0) return tbg_empty_digraph(0, 0);
 
 	tbg_Digraph dg_out = tbg_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);

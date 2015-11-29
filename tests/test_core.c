@@ -24,7 +24,7 @@ void ut_tbg_init_digraph(void** state) {
 void ut_tbg_free_digraph(void** state) {
 	(void) state;
 
-	tbg_Digraph null_graph = (tbg_Digraph) { 0 };
+	tbg_Digraph null_graph = tbg_null_digraph();
 
 	tbg_Digraph my_graph1 = tbg_empty_digraph(10, 10);
 	tbg_free_digraph(&my_graph1);
@@ -36,7 +36,7 @@ void ut_tbg_free_digraph(void** state) {
 	tbg_free_digraph(&my_graph2);
 	assert_memory_equal(&my_graph2, &null_graph, sizeof(tbg_Digraph));
 
-	tbg_Digraph my_graph3 = (tbg_Digraph) { 0 };
+	tbg_Digraph my_graph3 = tbg_null_digraph();
 	tbg_free_digraph(&my_graph3);
 	assert_memory_equal(&my_graph3, &null_graph, sizeof(tbg_Digraph));
 
@@ -136,7 +136,7 @@ void ut_tbg_copy_digraph(void** state) {
 
 	tbg_Digraph dg1 = tbg_digraph_from_string("****/..*./****/*.../");
 	tbg_Digraph dg2 = tbg_empty_digraph(0, 0);
-	tbg_Digraph dg3 = (tbg_Digraph) { 0 };
+	tbg_Digraph dg3 = tbg_null_digraph();
 
 	tbg_Digraph res1 = tbg_copy_digraph(&dg1);
 	tbg_Digraph res2 = tbg_copy_digraph(&dg2);

@@ -33,7 +33,6 @@ tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* dg_a, const tbg_Digraph* dg
 
 tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const static num_dgs]) {
 	if (num_dgs == 0) return tbg_empty_digraph(0, 0);
-	if (!dgs || !dgs[0]) return (tbg_Digraph) { 0 };
 
 	tbg_Vid vertices = dgs[0]->vertices;
 	tbg_Arcref out_max_arcs = 0;
@@ -46,6 +45,7 @@ tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const stati
 	if (!row_markers) return (tbg_Digraph) { 0 };
 
 	tbg_Digraph dg_out = tbg_init_digraph(vertices, out_max_arcs);
+	if (!dgs || !dgs[0]) return tbg_null_digraph();
 
 	if (!dg_out.tail_ptr) {
 		// Could not allocate digraph with `row_markers' arcs.
@@ -105,11 +105,11 @@ tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const stati
 
 
 tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg) {
-	if (!dg || !dg->tail_ptr) return (tbg_Digraph) { 0 };
+	if (!dg || !dg->tail_ptr) return tbg_null_digraph();
 	if (dg->vertices == 0) return tbg_empty_digraph(0, 0);
 
 	tbg_Vid* row_count = calloc(dg->vertices + 1, sizeof(tbg_Arcref));
-	if (!row_count) return (tbg_Digraph) { 0 };
+	if (!row_count) return tbg_null_digraph();
 
 	tbg_Digraph dg_out = tbg_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
 	if (!dg_out.tail_ptr) {
@@ -267,7 +267,7 @@ tbg_Digraph tbg_digraph_power(const tbg_Digraph* dg, tbg_Vid exponent) {
 }
 
 tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid exponent, const bool force_diagonal, const bool ignore_diagonal) {
-	if (!dg || !dg->tail_ptr) return (tbg_Digraph) { 0 };
+	if (!dg || !dg->tail_ptr) return tbg_null_digraph();
 	if (dg->vertices == 0) return tbg_empty_digraph(0, 0);
 	if (exponent == 0) return tbg_empty_digraph(dg->vertices, 0);
 	if (exponent == 1) return tbg_copy_digraph(dg);
@@ -289,7 +289,7 @@ tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid ex
 			}
 			if (!dg_out.tail_ptr) {
 				tbg_free_digraph(&dg_expo);
-				return (tbg_Digraph) { 0 };
+				return tbg_null_digraph();
 			} 
 		}
 		dg_tmp = dg_expo;
@@ -297,7 +297,7 @@ tbg_Digraph itbg_digraph_power_and_walks(const tbg_Digraph* const dg, tbg_Vid ex
 		tbg_free_digraph(&dg_tmp);
 		if (!dg_expo.tail_ptr) {
 			tbg_free_digraph(&dg_out);
-			return (tbg_Digraph) { 0 };
+			return tbg_null_digraph();
 		}
 	}
 

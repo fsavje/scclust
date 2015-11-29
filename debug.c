@@ -107,8 +107,8 @@ bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const 
 
 
 tbg_Digraph tbg_digraph_from_pieces(const tbg_Vid vertices, const tbg_Arcref max_arcs, const tbg_Arcref tail_ptr[const vertices], const tbg_Vid head[const max_arcs]) {
-	if (!tail_ptr) return (tbg_Digraph) { 0 };
-	if (max_arcs > 0 && !head) return (tbg_Digraph) { 0 };
+	if (!tail_ptr) return tbg_null_digraph();
+	if (max_arcs > 0 && !head) return tbg_null_digraph();
 	tbg_Digraph dg = tbg_init_digraph(vertices, max_arcs);
 	if (!dg.tail_ptr) return dg;
 
@@ -128,10 +128,10 @@ tbg_Digraph tbg_digraph_from_string(const char dg_str[const]) {
 		if (dg_str[c] == '*' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '*') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) {
-			if (all_arcs > TBG_VID_MAX) return (tbg_Digraph) { 0 };
+			if (all_arcs > TBG_VID_MAX) return tbg_null_digraph();
 			vertices = (tbg_Vid) all_arcs;
 		} 
-		if (dg_str[c] == '/' && all_arcs % vertices != 0) return (tbg_Digraph) { 0 };
+		if (dg_str[c] == '/' && all_arcs % vertices != 0) return tbg_null_digraph();
 	}
 
 	tbg_Digraph dg_out = tbg_init_digraph(vertices, max_arcs);
