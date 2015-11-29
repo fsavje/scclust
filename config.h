@@ -36,8 +36,13 @@ typedef uint32_t tbg_Arcref;
 
 
 /*==============================================================================
-Non-serverible part below this line
+Non-user parts below this line
 ==============================================================================*/
+
+// Force library build
+#ifdef TBG_FORCE_LIB_BUILD
+  #undef TBG_HEADER_ONLY_LIB
+#endif
 
 // Add static linkage if making header only library
 #ifdef TBG_HEADER_ONLY_LIB
