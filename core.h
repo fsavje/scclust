@@ -21,12 +21,17 @@
 #include "digraph.h"
 
 
-tbg_Digraph tbg_init_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-void tbg_free_digraph(tbg_Digraph* dg);
-bool tbg_change_arc_storage(tbg_Digraph* dg, tbg_Arcref new_max_arcs);
-tbg_Digraph tbg_empty_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-tbg_Digraph tbg_identity_digraph(tbg_Vid vertices);
-tbg_Digraph tbg_balanced_digraph(tbg_Vid vertices, tbg_Vid arcs_per_vertex, tbg_Vid* heads);
-tbg_Digraph tbg_copy_digraph(const tbg_Digraph* dg);
+TBG_LINKAGE tbg_Digraph tbg_init_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
+TBG_LINKAGE void tbg_free_digraph(tbg_Digraph* dg);
+TBG_LINKAGE bool tbg_change_arc_storage(tbg_Digraph* dg, tbg_Arcref new_max_arcs);
+TBG_LINKAGE tbg_Digraph tbg_empty_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
+TBG_LINKAGE tbg_Digraph tbg_identity_digraph(tbg_Vid vertices);
+TBG_LINKAGE tbg_Digraph tbg_balanced_digraph(tbg_Vid vertices, tbg_Vid arcs_per_vertex, tbg_Vid* heads);
+TBG_LINKAGE tbg_Digraph tbg_copy_digraph(const tbg_Digraph* dg);
+
+
+#ifdef TBG_HEADER_ONLY_LIB
+	#include "core.c"
+#endif
 
 #endif

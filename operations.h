@@ -22,15 +22,19 @@
 #include "digraph.h"
 
 
-tbg_Digraph tbg_make_undirected(const tbg_Digraph* dg);
-tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b);
-tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[num_dgs]);
-tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg);
-tbg_Digraph tbg_adjacency_product(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal);
-tbg_Digraph tbg_digraph_all_walks(const tbg_Digraph* dg, tbg_Vid length);
-tbg_Digraph tbg_digraph_all_paths(const tbg_Digraph* dg, tbg_Vid length);
-tbg_Digraph tbg_digraph_power(const tbg_Digraph* dg, tbg_Vid exponent);
+TBG_LINKAGE tbg_Digraph tbg_make_undirected(const tbg_Digraph* dg);
+TBG_LINKAGE tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b);
+TBG_LINKAGE tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[static num_dgs]);
+TBG_LINKAGE tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg);
+TBG_LINKAGE tbg_Digraph tbg_adjacency_product(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal);
+TBG_LINKAGE tbg_Digraph tbg_digraph_all_walks(const tbg_Digraph* dg, tbg_Vid length);
+TBG_LINKAGE tbg_Digraph tbg_digraph_all_paths(const tbg_Digraph* dg, tbg_Vid length);
+TBG_LINKAGE tbg_Digraph tbg_digraph_power(const tbg_Digraph* dg, tbg_Vid exponent);
 
+
+#ifdef TBG_HEADER_ONLY_LIB
+	#include "operations.c"
+#endif
 
 #endif
 

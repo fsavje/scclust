@@ -13,8 +13,10 @@
    limitations under the License.
 ==============================================================================*/
 
-#include "debug.h"
 #include "config.h"
+#ifndef TBG_HEADER_ONLY_LIB
+	#include "debug.h"
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
