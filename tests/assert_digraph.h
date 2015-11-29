@@ -6,10 +6,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "../digraph.h"
-#include "../core.h"
-#include "../debug.h"
-
 #define assert_valid_digraph(test_dg, vertices) _assert_valid_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_free_digraph(test_dg) _assert_free_digraph(test_dg, #test_dg, __FILE__, __LINE__)
 #define assert_sound_digraph(test_dg, vertices) _assert_sound_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
@@ -17,6 +13,11 @@
 #define assert_identical_digraph(test_dg1, test_dg2) _assert_identical_digraph(test_dg1, test_dg2, #test_dg1, #test_dg2, __FILE__, __LINE__)
 #define assert_empty_digraph(test_dg, vertices) _assert_empty_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_balanced_digraph(test_dg, vertices, arcs_per_vertex) _assert_balanced_digraph(test_dg, vertices, arcs_per_vertex, #test_dg, __FILE__, __LINE__)
+
+#include "../digraph.h"
+#include "../core.h"
+#include "../debug.h"
+
 
 void _assert_valid_digraph(const tbg_Digraph* test_dg,
 						   const tbg_Vid vertices,

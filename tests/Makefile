@@ -1,24 +1,13 @@
 CC=gcc
-FLAGS=-std=c99 -O2 -Wall -Wextra -Wconversion -Wno-missing-field-initializers -Wfloat-equal -include test_suite.h
+FLAGS=-std=c99 -O2 -Wall -Wextra -Wconversion -Wfloat-equal
 INCLUDES=-I/usr/local/include
 EXLIBS=/usr/local/lib/libcmocka.dylib
-LIBOBJECTS=core.o debug.o operations.o
-STDTESTS=test_core test_debug test_operations
-SPECTESTS=test_special
-ALLTESTS=$(STDTESTS) $(SPECTESTS)
+TESTS=test_core test_debug test_operations
 
-test_special_DEP=$(filter-out operations.o,$(LIBOBJECTS))
+all: $(TESTS)
 
-all: $(ALLTESTS)
-
-$(STDTESTS): clean $(LIBOBJECTS)
-	$(CC) $(FLAGS) $(INCLUDES) $@.c $(LIBOBJECTS) $(EXLIBS) -o $@.out
-
-$(SPECTESTS): clean $(LIBOBJECTS)
-	$(CC) $(FLAGS) $(INCLUDES) $@.c $($@_DEP) $(EXLIBS) -o $@.out
-
-%.o: ../%.c
-	$(CC) -c $(FLAGS) $(INCLUDES) $< -o $@
+$(TESTS):
+	$(CC) $(FLAGS) $(INCLUDES) $@.c $(EXLIBS) -o $@.out
 
 clean:
 	$(RM) *.o *.out
