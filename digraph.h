@@ -17,13 +17,14 @@
 #define TBG_STRUCT_HG
 
 #include "config.h"
+#include <stddef.h>
 
 
 // Main digraph struct
 typedef struct tbg_Digraph tbg_Digraph;
 struct tbg_Digraph {
 	// Number of vertices in graph.
-	tbg_Vid vertices;
+	const tbg_Vid vertices;
 
 	// Maximum number of arcs in graph (i.e., length of `head').
 	tbg_Arcref max_arcs;
@@ -36,7 +37,7 @@ struct tbg_Digraph {
 	// Array of tbg_Arcref: [0, ..., vertices].
 	// For arcs for which vertex i is the tail, head[tail_ptr[i]] is the head of the first arc and head[tail_ptr[i+1] - 1] is the last arc.
 	// May never be NULL.
-	tbg_Arcref* tail_ptr;
+	tbg_Arcref* const tail_ptr;
 };
 
 

@@ -25,8 +25,8 @@
 #include "core.h"
 
 
-tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b) {
-	const tbg_Digraph* dgs_ab[2] = {dg_a, dg_b};
+tbg_Digraph tbg_digraph_union_two(const tbg_Digraph* const dg_a, const tbg_Digraph* const dg_b) {
+	const tbg_Digraph* const dgs_ab[2] = {dg_a, dg_b};
 	return tbg_digraph_union(2, dgs_ab);
 }
 
@@ -104,11 +104,11 @@ tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* dgs[const stati
 }
 
 
-tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg) {
+tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return tbg_null_digraph();
 	if (dg->vertices == 0) return tbg_empty_digraph(0, 0);
 
-	tbg_Vid* row_count = calloc(dg->vertices + 1, sizeof(tbg_Arcref));
+	tbg_Vid* const row_count = calloc(dg->vertices + 1, sizeof(tbg_Arcref));
 	if (!row_count) return tbg_null_digraph();
 
 	tbg_Digraph dg_out = tbg_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
@@ -117,7 +117,7 @@ tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg) {
 		return dg_out;
 	}
 
-	for (tbg_Vid* arc = dg->head;
+	for (const tbg_Vid* arc = dg->head;
 			arc != dg->head + dg->tail_ptr[dg->vertices];
 			++arc) {
 		++row_count[*arc + 1];
@@ -130,7 +130,7 @@ tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg) {
 	}
 
 	for (tbg_Vid v = 0; v < dg->vertices; ++v) {
-		for (tbg_Vid* arc = dg->head + dg->tail_ptr[v];
+		for (const tbg_Vid* arc = dg->head + dg->tail_ptr[v];
 				arc != dg->head + dg->tail_ptr[v + 1];
 				++arc) {
 			dg_out.head[row_count[*arc]] = v;

@@ -71,19 +71,19 @@ bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const 
 	if (!dg_a->tail_ptr) return !dg_b->tail_ptr;
 	if (dg_a->vertices != dg_b->vertices) return false;
 
-	int_fast8_t* single_row = malloc(sizeof(int_fast8_t[dg_a->vertices]));
+	int_fast8_t* const single_row = malloc(sizeof(int_fast8_t[dg_a->vertices]));
 
 	for (tbg_Vid v = 0; v < dg_a->vertices; ++v) {
 
 		for (tbg_Vid i = 0; i < dg_a->vertices; ++i) single_row[i] = 0;
 
-		for (tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		for (const tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
 					arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
 					++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
-		for (tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
+		for (const tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
 					arc_b != dg_b->head + dg_b->tail_ptr[v + 1];
 					++arc_b) {
 			if (single_row[*arc_b] == 0) {
@@ -170,13 +170,13 @@ void tbg_print_digraph(const tbg_Digraph* const dg) {
 		return;
 	}
 
-	bool* single_row = calloc(dg->vertices, sizeof(bool));
+	bool* const single_row = calloc(dg->vertices, sizeof(bool));
 
 	for (tbg_Vid v = 0; v < dg->vertices; ++v) {
 
 		for (tbg_Vid i = 0; i < dg->vertices; ++i) single_row[i] = false;
 
-		for (tbg_Vid* a = dg->head + dg->tail_ptr[v];
+		for (const tbg_Vid* a = dg->head + dg->tail_ptr[v];
 					a != dg->head + dg->tail_ptr[v + 1];
 					++a) {
 			single_row[*a] = true;

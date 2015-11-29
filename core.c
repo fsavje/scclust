@@ -61,7 +61,7 @@ bool tbg_change_arc_storage(tbg_Digraph* const dg, const tbg_Arcref new_max_arcs
 		dg->head = NULL;
 		dg->max_arcs = 0;
 	} else {
-		tbg_Vid* tmp_ptr = realloc(dg->head, sizeof(tbg_Vid[new_max_arcs]));
+		tbg_Vid* const tmp_ptr = realloc(dg->head, sizeof(tbg_Vid[new_max_arcs]));
 		if (!tmp_ptr) return false;
 		dg->head = tmp_ptr;
 		dg->max_arcs = new_max_arcs;
