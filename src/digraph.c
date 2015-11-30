@@ -14,13 +14,12 @@
 ==============================================================================*/
 
 
-#include "../core.h"
+#include "../include/digraph.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "../config.h"
-#include "../digraph.h"
+#include "../include/config.h"
 
 
 tbg_Digraph tbg_init_digraph(const tbg_Vid vertices, const tbg_Arcref max_arcs) {

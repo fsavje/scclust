@@ -13,16 +13,15 @@
    limitations under the License.
 ==============================================================================*/
 
-#include "../debug.h"
+#include "../include/digraph_debug.h"
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../config.h"
-#include "../core.h"
-#include "../digraph.h"
+#include "../include/config.h"
+#include "../include/digraph.h"
 
 
 bool tbg_is_valid_digraph(const tbg_Digraph* const dg) {
