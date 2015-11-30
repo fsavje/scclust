@@ -80,20 +80,6 @@ tbg_Digraph tbg_empty_digraph(const tbg_Vid vertices, const tbg_Arcref max_arcs)
 }
 
 
-tbg_Digraph tbg_identity_digraph(const tbg_Vid vertices) {
-	tbg_Digraph dg = tbg_init_digraph(vertices, vertices);
-	if (!dg.tail_ptr) return dg;
-	
-	for (tbg_Vid v = 0; v < vertices; ++v) {
-		dg.tail_ptr[v] = v;
-		dg.head[v] = v;
-	}
-	dg.tail_ptr[vertices] = vertices;
-
-	return dg;
-}
-
-
 tbg_Digraph tbg_balanced_digraph(const tbg_Vid vertices, const tbg_Vid arcs_per_vertex, tbg_Vid* const heads) {
 	tbg_Digraph dg = tbg_init_digraph(vertices, 0);
 	if (!dg.tail_ptr) return dg;
