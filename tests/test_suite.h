@@ -12,6 +12,4 @@
 #define realloc(ptr, size) _test_realloc(ptr, size, __FILE__, __LINE__)
 #define free(ptr) _test_free(ptr, __FILE__, __LINE__)
 
-#define TBG_HEADER_ONLY_LIB
-
 #endif

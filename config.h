@@ -31,24 +31,5 @@ typedef uint32_t tbg_Vid;
 // Should be MAX(tbg_Arcref) >= MAX(tbg_Vid)
 typedef uint32_t tbg_Arcref;
 
-// Uncomment this define for header only library
-//#define TBG_HEADER_ONLY_LIB
-
-
-/*==============================================================================
-Non-user parts below this line
-==============================================================================*/
-
-// Force library build
-#ifdef TBG_FORCE_LIB_BUILD
-  #undef TBG_HEADER_ONLY_LIB
-#endif
-
-// Add static linkage if making header only library
-#ifdef TBG_HEADER_ONLY_LIB
-	#define TBG_LINKAGE static
-#else 
-	#define TBG_LINKAGE 
-#endif
 
 #endif

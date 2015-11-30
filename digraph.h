@@ -16,8 +16,9 @@
 #ifndef TBG_STRUCT_HG
 #define TBG_STRUCT_HG
 
-#include "config.h"
 #include <stddef.h>
+
+#include "config.h"
 
 
 // Main digraph struct

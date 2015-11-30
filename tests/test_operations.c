@@ -2,6 +2,7 @@
 #include "assert_digraph.h"
 
 #include <stddef.h>
+
 #include "../digraph.h"
 #include "../core.h"
 #include "../debug.h"
