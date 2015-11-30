@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
-#include "../digraph.h"
-#include "../core.h"
-#include "../debug.h"
+#include "../include/config.h"
+#include "../include/digraph.h"
+#include "../include/digraph_debug.h"
 
 
 void ut_tbg_is_valid_digraph(void** state) {

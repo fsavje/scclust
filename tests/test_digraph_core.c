@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
-#include "../digraph.h"
-#include "../core.h"
-#include "../debug.h"
+#include "../include/config.h"
+#include "../include/digraph.h"
+#include "../include/digraph_debug.h"
 
 
 void ut_tbg_init_digraph(void** state) {
@@ -92,28 +92,6 @@ void ut_tbg_empty_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void ut_tbg_identity_digraph(void** state) {
-	(void) state;
-
-	tbg_Digraph my_graph1 = tbg_identity_digraph(0);
-	assert_empty_digraph(&my_graph1, 0);
-	assert_int_equal(my_graph1.max_arcs, 0);
-
-	tbg_Digraph my_graph2 = tbg_identity_digraph(4);
-	assert_sound_digraph(&my_graph2, 4);
-	tbg_Digraph control2 = tbg_digraph_from_string("*.../.*../..*./...*/");
-	assert_equal_digraph(&my_graph2, &control2);
-	assert_identical_digraph(&my_graph2, &control2);
-
-	tbg_Digraph my_graph3 = tbg_identity_digraph(100);
-	assert_sound_digraph(&my_graph3, 100);
-
-	assert_free_digraph(&my_graph1);
-	assert_free_digraph(&my_graph2);
-	assert_free_digraph(&my_graph3);
-	assert_free_digraph(&control2);
-}
-
 void ut_tbg_balanced_digraph(void** state) {
 	(void) state;
 
@@ -165,7 +143,6 @@ int main(void) {
 	    cmocka_unit_test(ut_tbg_free_digraph),
 	    cmocka_unit_test(ut_tbg_change_arc_storage),
 	    cmocka_unit_test(ut_tbg_empty_digraph),
-	    cmocka_unit_test(ut_tbg_identity_digraph),
 	    cmocka_unit_test(ut_tbg_balanced_digraph),
 	    cmocka_unit_test(ut_tbg_copy_digraph),
 	};

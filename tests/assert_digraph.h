@@ -14,9 +14,9 @@
 #define assert_empty_digraph(test_dg, vertices) _assert_empty_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_balanced_digraph(test_dg, vertices, arcs_per_vertex) _assert_balanced_digraph(test_dg, vertices, arcs_per_vertex, #test_dg, __FILE__, __LINE__)
 
-#include "../digraph.h"
-#include "../core.h"
-#include "../debug.h"
+#include "../include/config.h"
+#include "../include/digraph.h"
+#include "../include/digraph_debug.h"
 
 
 void _assert_valid_digraph(const tbg_Digraph* test_dg,

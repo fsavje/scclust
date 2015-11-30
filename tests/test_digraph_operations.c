@@ -3,10 +3,9 @@
 
 #include <stddef.h>
 
-#include "../digraph.h"
-#include "../core.h"
-#include "../debug.h"
-#include "../operations.h"
+#include "../include/config.h"
+#include "../include/digraph.h"
+#include "../include/digraph_debug.h"
 
 
 void ut_tbg_union_digraphs(void** state) {
@@ -19,41 +18,29 @@ void ut_tbg_union_digraphs(void** state) {
 
 	const tbg_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
 	tbg_Digraph ut_make12_a = tbg_digraph_union(2, sum_12);
-	tbg_Digraph ut_make12_t = tbg_digraph_union_two(&ut_dg1, &ut_dg2);
 	assert_sound_digraph(&ut_make12_a, 4);
-	assert_sound_digraph(&ut_make12_t, 4);
-	assert_equal_digraph(&ut_make12_a, &ut_make12_t);
 	tbg_Arcref tail_ptr12[5] = {0,2,4,6,8};
 	tbg_Vid head12[8] = {0,3,1,2,2,1,3,0};
 	tbg_Digraph ut_control12 = tbg_digraph_from_pieces(4, 8, tail_ptr12, head12);
 	assert_identical_digraph(&ut_control12, &ut_make12_a);
-	assert_identical_digraph(&ut_control12, &ut_make12_t);
 
 
 	const tbg_Digraph* sum_13[2] = {&ut_dg1, &ut_dg3};
 	tbg_Digraph ut_make13_a = tbg_digraph_union(2, sum_13);
-	tbg_Digraph ut_make13_t = tbg_digraph_union_two(&ut_dg1, &ut_dg3);
 	assert_sound_digraph(&ut_make13_a, 4);
-	assert_sound_digraph(&ut_make13_t, 4);
-	assert_equal_digraph(&ut_make13_a, &ut_make13_t);
 	tbg_Arcref tail_ptr13[5] = {0,1,3,5,7};
 	tbg_Vid head13[7] = {0,1,0,2,0,3,0};
 	tbg_Digraph ut_control13 = tbg_digraph_from_pieces(4, 7, tail_ptr13, head13);
 	assert_identical_digraph(&ut_control13, &ut_make13_a);
-	assert_identical_digraph(&ut_control13, &ut_make13_t);
 
 
 	const tbg_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
 	tbg_Digraph ut_make31_a = tbg_digraph_union(2, sum_31);
-	tbg_Digraph ut_make31_t = tbg_digraph_union_two(&ut_dg3, &ut_dg1);
 	assert_sound_digraph(&ut_make31_a, 4);
-	assert_sound_digraph(&ut_make31_t, 4);
-	assert_equal_digraph(&ut_make31_a, &ut_make31_t);
 	tbg_Arcref tail_ptr31[5] = {0,1,3,5,7};
 	tbg_Vid head31[7] = {0,0,1,0,2,0,3};
 	tbg_Digraph ut_control31 = tbg_digraph_from_pieces(4, 7, tail_ptr31, head31);
 	assert_identical_digraph(&ut_control31, &ut_make31_a);
-	assert_identical_digraph(&ut_control31, &ut_make31_t);
 
 	assert_equal_digraph(&ut_make31_a, &ut_make13_a);
 
@@ -99,11 +86,8 @@ void ut_tbg_union_digraphs(void** state) {
 	assert_free_digraph(&ut_dg2);
 	assert_free_digraph(&ut_dg3);
 	assert_free_digraph(&ut_make12_a);
-	assert_free_digraph(&ut_make12_t);
 	assert_free_digraph(&ut_make13_a);
-	assert_free_digraph(&ut_make13_t);
 	assert_free_digraph(&ut_make31_a);
-	assert_free_digraph(&ut_make31_t);
 	assert_free_digraph(&ut_make123);
 	assert_free_digraph(&ut_make132);
 	assert_free_digraph(&ut_make213);
