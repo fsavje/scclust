@@ -29,7 +29,7 @@
 #include "../include/digraph_debug.h"
 
 
-void ut_scc_init_digraph(void** state) {
+void scc_ut_init_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_init_digraph(0, 0);
@@ -43,7 +43,7 @@ void ut_scc_init_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void ut_scc_free_digraph(void** state) {
+void scc_ut_free_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph null_graph = scc_null_digraph();
@@ -65,7 +65,7 @@ void ut_scc_free_digraph(void** state) {
 	scc_free_digraph(NULL);
 }
 
-void ut_scc_change_arc_storage(void** state) {
+void scc_ut_change_arc_storage(void** state) {
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_empty_digraph(10, 100);
@@ -99,7 +99,7 @@ void ut_scc_change_arc_storage(void** state) {
 	assert_free_digraph(&my_graph5);
 }
 
-void ut_scc_empty_digraph(void** state) {
+void scc_ut_empty_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_empty_digraph(0, 0);
@@ -113,7 +113,7 @@ void ut_scc_empty_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void ut_scc_balanced_digraph(void** state) {
+void scc_ut_balanced_digraph(void** state) {
 	(void) state;
 
 	scc_Vid* heads1 = NULL;
@@ -131,7 +131,7 @@ void ut_scc_balanced_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void ut_scc_copy_digraph(void** state) {
+void scc_ut_copy_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_digraph_from_string("****/..*./****/*.../");
@@ -160,12 +160,12 @@ void ut_scc_copy_digraph(void** state) {
 
 int main(void) {
 	const struct CMUnitTest test_core[] = {
-	    cmocka_unit_test(ut_scc_init_digraph),
-	    cmocka_unit_test(ut_scc_free_digraph),
-	    cmocka_unit_test(ut_scc_change_arc_storage),
-	    cmocka_unit_test(ut_scc_empty_digraph),
-	    cmocka_unit_test(ut_scc_balanced_digraph),
-	    cmocka_unit_test(ut_scc_copy_digraph),
+	    cmocka_unit_test(scc_ut_init_digraph),
+	    cmocka_unit_test(scc_ut_free_digraph),
+	    cmocka_unit_test(scc_ut_change_arc_storage),
+	    cmocka_unit_test(scc_ut_empty_digraph),
+	    cmocka_unit_test(scc_ut_balanced_digraph),
+	    cmocka_unit_test(scc_ut_copy_digraph),
 	};
 	
     return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);

@@ -19,8 +19,8 @@
 ==============================================================================*/
 
 
-#ifndef SCC_CORE_HG
-#define SCC_CORE_HG
+#ifndef SCC_DIGRAPH_HG
+#define SCC_DIGRAPH_HG
 
 #include <stdbool.h>
 #include <stddef.h>

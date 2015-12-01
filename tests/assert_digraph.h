@@ -19,8 +19,8 @@
 ==============================================================================*/
 
 
-#ifndef UT_SCC_ASSERT_DIGRAPH_HG
-#define UT_SCC_ASSERT_DIGRAPH_HG
+#ifndef SCC_UT_ASSERT_DIGRAPH_HG
+#define SCC_UT_ASSERT_DIGRAPH_HG
 
 #include "test_suite.h"
 

@@ -19,8 +19,8 @@
 ==============================================================================*/
 
 
-#ifndef SCC_DEBUG_HG
-#define SCC_DEBUG_HG
+#ifndef SCC_DIGRAPH_DEBUG_HG
+#define SCC_DIGRAPH_DEBUG_HG
 
 #include <stdbool.h>
 

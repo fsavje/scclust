@@ -19,8 +19,8 @@
 ==============================================================================*/
 
 
-#ifndef UT_SCC_TEST_SUITE_HG
-#define UT_SCC_TEST_SUITE_HG
+#ifndef SCC_UT_TEST_SUITE_HG
+#define SCC_UT_TEST_SUITE_HG
 
 #include <stdarg.h>
 #include <stddef.h>

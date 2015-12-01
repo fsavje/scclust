@@ -29,7 +29,7 @@
 #include "../include/digraph_debug.h"
 
 
-void ut_scc_is_valid_digraph(void** state) {
+void scc_ut_is_valid_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_init_digraph(4, 10);
@@ -52,7 +52,7 @@ void ut_scc_is_valid_digraph(void** state) {
 	scc_free_digraph(&dg3);
 }
 
-void ut_scc_is_sound_digraph(void** state) {
+void scc_ut_is_sound_digraph(void** state) {
 	(void) state;
 
 	scc_Arcref tail_ptr[5] = {0,1,2,3,4};
@@ -89,7 +89,7 @@ void ut_scc_is_sound_digraph(void** state) {
 	scc_free_digraph(&dg2);
 }
 
-void ut_scc_is_empty_digraph(void** state) {
+void scc_ut_is_empty_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_digraph_from_string("**../.*../.*.*/..**/");
@@ -102,7 +102,7 @@ void ut_scc_is_empty_digraph(void** state) {
 	scc_free_digraph(&dg2);
 }
 
-void ut_scc_is_balanced_digraph(void** state) {
+void scc_ut_is_balanced_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_digraph_from_string("*.../.*../.*../..*./");
@@ -115,7 +115,7 @@ void ut_scc_is_balanced_digraph(void** state) {
 	scc_free_digraph(&dg2);
 }
 
-void ut_scc_debug_rest(void** state) {
+void scc_ut_debug_rest(void** state) {
 	(void) state;
 
 	scc_Vid headA[7] = {0,1,1,1,3,2,3};
@@ -236,11 +236,11 @@ void ut_scc_debug_rest(void** state) {
 
 int main(void) {
     const struct CMUnitTest test_debug[] = {
-        cmocka_unit_test(ut_scc_is_valid_digraph),
-        cmocka_unit_test(ut_scc_is_sound_digraph),
-        cmocka_unit_test(ut_scc_is_empty_digraph),
-        cmocka_unit_test(ut_scc_is_balanced_digraph),
-        cmocka_unit_test(ut_scc_debug_rest),
+        cmocka_unit_test(scc_ut_is_valid_digraph),
+        cmocka_unit_test(scc_ut_is_sound_digraph),
+        cmocka_unit_test(scc_ut_is_empty_digraph),
+        cmocka_unit_test(scc_ut_is_balanced_digraph),
+        cmocka_unit_test(scc_ut_debug_rest),
     };
 
     return cmocka_run_group_tests_name("debug module", test_debug, NULL, NULL);
