@@ -1,5 +1,5 @@
-#ifndef UT_THM_TEST_SUITE_HG
-#define UT_THM_TEST_SUITE_HG
+#ifndef UT_SCC_TEST_SUITE_HG
+#define UT_SCC_TEST_SUITE_HG
 
 #include <stdarg.h>
 #include <stddef.h>

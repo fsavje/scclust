@@ -13,23 +13,23 @@
    limitations under the License.
 ==============================================================================*/
 
-#ifndef TBG_CONFIG_HG
-#define TBG_CONFIG_HG
+#ifndef SCC_CONFIG_HG
+#define SCC_CONFIG_HG
 
 #include <stdint.h>
 
 
 // Vertex ID type (must be unsigned)
-// Number of vertices < MAX(tbg_Vid)
-typedef uint32_t tbg_Vid;
+// Number of vertices < MAX(scc_Vid)
+typedef uint32_t scc_Vid;
 
-// MAX(tbg_Vid): maximum value of tbg_Vid
-#define TBG_VID_MAX UINT32_MAX
+// MAX(scc_Vid): maximum value of scc_Vid
+#define SCC_VID_MAX UINT32_MAX
 
 // Arc reference type (must be unsigned)
-// Number of arcs in any digraph <= MAX(tbg_Arcref)
-// Should be MAX(tbg_Arcref) >= MAX(tbg_Vid)
-typedef uint32_t tbg_Arcref;
+// Number of arcs in any digraph <= MAX(scc_Arcref)
+// Should be MAX(scc_Arcref) >= MAX(scc_Vid)
+typedef uint32_t scc_Arcref;
 
 
 #endif

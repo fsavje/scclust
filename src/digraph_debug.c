@@ -24,7 +24,7 @@
 #include "../include/digraph.h"
 
 
-bool tbg_is_valid_digraph(const tbg_Digraph* const dg) {
+bool scc_is_valid_digraph(const scc_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return false;
 	if (dg->max_arcs == 0 && dg->head) return false;
 	if (dg->max_arcs > 0 && !dg->head) return false;
@@ -32,8 +32,8 @@ bool tbg_is_valid_digraph(const tbg_Digraph* const dg) {
 }
 
 
-bool tbg_is_sound_digraph(const tbg_Digraph* const dg) {
-	if (!tbg_is_valid_digraph(dg)) return false;
+bool scc_is_sound_digraph(const scc_Digraph* const dg) {
+	if (!scc_is_valid_digraph(dg)) return false;
 	if (dg->tail_ptr[0] != 0) return false;
 	if (dg->tail_ptr[dg->vertices] > dg->max_arcs) return false;
 	for (size_t i = 0; i < dg->vertices; ++i) {
@@ -46,15 +46,15 @@ bool tbg_is_sound_digraph(const tbg_Digraph* const dg) {
 }
 
 
-bool tbg_is_empty_digraph(const tbg_Digraph* const dg) {
-	if (!tbg_is_sound_digraph(dg)) return false;
+bool scc_is_empty_digraph(const scc_Digraph* const dg) {
+	if (!scc_is_sound_digraph(dg)) return false;
 	if (dg->tail_ptr[dg->vertices] != 0) return false;
 	return true;
 }
 
 
-bool tbg_is_balanced_digraph(const tbg_Digraph* const dg, const tbg_Vid arcs_per_vertex) {
-	if (!tbg_is_sound_digraph(dg)) return false;
+bool scc_is_balanced_digraph(const scc_Digraph* const dg, const scc_Vid arcs_per_vertex) {
+	if (!scc_is_sound_digraph(dg)) return false;
 
 	for (size_t i = 0; i <= dg->vertices; ++i) {
 		if (dg->tail_ptr[i] != i * arcs_per_vertex) return false;
@@ -64,24 +64,24 @@ bool tbg_is_balanced_digraph(const tbg_Digraph* const dg, const tbg_Vid arcs_per
 }
 
 
-bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const dg_b){
+bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const dg_b){
 	if (!dg_a) return !dg_b;
 	if (!dg_a->tail_ptr) return !dg_b->tail_ptr;
 	if (dg_a->vertices != dg_b->vertices) return false;
 
 	int_fast8_t* const single_row = malloc(sizeof(int_fast8_t[dg_a->vertices]));
 
-	for (tbg_Vid v = 0; v < dg_a->vertices; ++v) {
+	for (scc_Vid v = 0; v < dg_a->vertices; ++v) {
 
-		for (tbg_Vid i = 0; i < dg_a->vertices; ++i) single_row[i] = 0;
+		for (scc_Vid i = 0; i < dg_a->vertices; ++i) single_row[i] = 0;
 
-		for (const tbg_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
 					arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
 					++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
-		for (const tbg_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
+		for (const scc_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
 					arc_b != dg_b->head + dg_b->tail_ptr[v + 1];
 					++arc_b) {
 			if (single_row[*arc_b] == 0) {
@@ -91,7 +91,7 @@ bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const 
 			single_row[*arc_b] = 2;
 		}
 
-		for (tbg_Vid i = 0; i < dg_a->vertices; ++i) {
+		for (scc_Vid i = 0; i < dg_a->vertices; ++i) {
 			if (single_row[i] == 1) {
 				free(single_row);
 				return false;
@@ -104,39 +104,39 @@ bool tbg_digraphs_equal(const tbg_Digraph* const dg_a, const tbg_Digraph* const 
 }
 
 
-tbg_Digraph tbg_digraph_from_pieces(const tbg_Vid vertices, const tbg_Arcref max_arcs, const tbg_Arcref tail_ptr[const vertices], const tbg_Vid head[const max_arcs]) {
-	if (!tail_ptr) return tbg_null_digraph();
-	if (max_arcs > 0 && !head) return tbg_null_digraph();
-	tbg_Digraph dg = tbg_init_digraph(vertices, max_arcs);
+scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices, const scc_Arcref max_arcs, const scc_Arcref tail_ptr[const vertices], const scc_Vid head[const max_arcs]) {
+	if (!tail_ptr) return scc_null_digraph();
+	if (max_arcs > 0 && !head) return scc_null_digraph();
+	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!dg.tail_ptr) return dg;
 
-	for (tbg_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
-	for (tbg_Arcref a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
+	for (scc_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
+	for (scc_Arcref a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
 
 	return dg;
 }
 
 
-tbg_Digraph tbg_digraph_from_string(const char dg_str[const]) {
-	tbg_Vid vertices = 0;
+scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
+	scc_Vid vertices = 0;
 	size_t all_arcs = 0;
-	tbg_Arcref max_arcs = 0;
+	scc_Arcref max_arcs = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
 		if (dg_str[c] == '*' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '*') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) {
-			if (all_arcs > TBG_VID_MAX) return tbg_null_digraph();
-			vertices = (tbg_Vid) all_arcs;
+			if (all_arcs > SCC_VID_MAX) return scc_null_digraph();
+			vertices = (scc_Vid) all_arcs;
 		} 
-		if (dg_str[c] == '/' && all_arcs % vertices != 0) return tbg_null_digraph();
+		if (dg_str[c] == '/' && all_arcs % vertices != 0) return scc_null_digraph();
 	}
 
-	tbg_Digraph dg_out = tbg_init_digraph(vertices, max_arcs);
+	scc_Digraph dg_out = scc_init_digraph(vertices, max_arcs);
 
-	tbg_Arcref curr_array_pos = 0;
-	tbg_Vid curr_row = 0;
-	tbg_Vid curr_col = 0;
+	scc_Arcref curr_array_pos = 0;
+	scc_Vid curr_row = 0;
+	scc_Vid curr_col = 0;
 	dg_out.tail_ptr[0] = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
@@ -157,7 +157,7 @@ tbg_Digraph tbg_digraph_from_string(const char dg_str[const]) {
 }
 
 
-void tbg_print_digraph(const tbg_Digraph* const dg) {
+void scc_print_digraph(const scc_Digraph* const dg) {
 
 	if (!dg || !dg->tail_ptr) {
 		printf("Unvalid digraph.\n\n");
@@ -170,17 +170,17 @@ void tbg_print_digraph(const tbg_Digraph* const dg) {
 
 	bool* const single_row = calloc(dg->vertices, sizeof(bool));
 
-	for (tbg_Vid v = 0; v < dg->vertices; ++v) {
+	for (scc_Vid v = 0; v < dg->vertices; ++v) {
 
-		for (tbg_Vid i = 0; i < dg->vertices; ++i) single_row[i] = false;
+		for (scc_Vid i = 0; i < dg->vertices; ++i) single_row[i] = false;
 
-		for (const tbg_Vid* a = dg->head + dg->tail_ptr[v];
+		for (const scc_Vid* a = dg->head + dg->tail_ptr[v];
 					a != dg->head + dg->tail_ptr[v + 1];
 					++a) {
 			single_row[*a] = true;
 		}
 
-		for (tbg_Vid i = 0; i < dg->vertices; ++i) {
+		for (scc_Vid i = 0; i < dg->vertices; ++i) {
 			if (single_row[i]) {
 				putchar('*');
 			} else {

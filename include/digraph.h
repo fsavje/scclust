@@ -13,8 +13,8 @@
    limitations under the License.
 ==============================================================================*/
 
-#ifndef TBG_CORE_HG
-#define TBG_CORE_HG
+#ifndef SCC_CORE_HG
+#define SCC_CORE_HG
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -23,38 +23,38 @@
 
 
 // Main digraph struct
-typedef struct tbg_Digraph tbg_Digraph;
-struct tbg_Digraph {
+typedef struct scc_Digraph scc_Digraph;
+struct scc_Digraph {
 	// Number of vertices in graph.
-	const tbg_Vid vertices;
+	const scc_Vid vertices;
 
 	// Maximum number of arcs in graph (i.e., length of `head').
-	tbg_Arcref max_arcs;
+	scc_Arcref max_arcs;
 
-	// Array of tbg_Vid: [0, ..., max_arcs - 1].
+	// Array of scc_Vid: [0, ..., max_arcs - 1].
 	// Contains the head of each arc, indicated by vertex ID.
 	// May be NULL if max_arcs == 0.
-	tbg_Vid* head;
+	scc_Vid* head;
 
-	// Array of tbg_Arcref: [0, ..., vertices].
+	// Array of scc_Arcref: [0, ..., vertices].
 	// For arcs for which vertex i is the tail, head[tail_ptr[i]] is the head of the first arc and head[tail_ptr[i+1] - 1] is the last arc.
 	// May never be NULL.
-	tbg_Arcref* const tail_ptr;
+	scc_Arcref* const tail_ptr;
 };
 
-static inline tbg_Digraph tbg_null_digraph(void) {
-  return (tbg_Digraph) { 0, 0, NULL, NULL };
+static inline scc_Digraph scc_null_digraph(void) {
+  return (scc_Digraph) { 0, 0, NULL, NULL };
 }
 
-tbg_Digraph tbg_init_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-void tbg_free_digraph(tbg_Digraph* dg);
-bool tbg_change_arc_storage(tbg_Digraph* dg, tbg_Arcref new_max_arcs);
-tbg_Digraph tbg_empty_digraph(tbg_Vid vertices, tbg_Arcref max_arcs);
-tbg_Digraph tbg_balanced_digraph(tbg_Vid vertices, tbg_Vid arcs_per_vertex, tbg_Vid* heads);
-tbg_Digraph tbg_copy_digraph(const tbg_Digraph* dg);
-tbg_Digraph tbg_digraph_union(size_t num_dgs, const tbg_Digraph* const dgs[static num_dgs]);
-tbg_Digraph tbg_digraph_transpose(const tbg_Digraph* dg);
-tbg_Digraph tbg_adjacency_product(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal);
+scc_Digraph scc_init_digraph(scc_Vid vertices, scc_Arcref max_arcs);
+void scc_free_digraph(scc_Digraph* dg);
+bool scc_change_arc_storage(scc_Digraph* dg, scc_Arcref new_max_arcs);
+scc_Digraph scc_empty_digraph(scc_Vid vertices, scc_Arcref max_arcs);
+scc_Digraph scc_balanced_digraph(scc_Vid vertices, scc_Vid arcs_per_vertex, scc_Vid* heads);
+scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
+scc_Digraph scc_digraph_union(size_t num_dgs, const scc_Digraph* const dgs[static num_dgs]);
+scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);
+scc_Digraph scc_adjacency_product(const scc_Digraph* dg_a, const scc_Digraph* dg_b, bool force_diagonal, bool ignore_diagonal);
 
 
 #endif

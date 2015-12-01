@@ -13,8 +13,8 @@
    limitations under the License.
 ==============================================================================*/
 
-#ifndef TBG_DEBUG_HG
-#define TBG_DEBUG_HG
+#ifndef SCC_DEBUG_HG
+#define SCC_DEBUG_HG
 
 #include <stdbool.h>
 
@@ -22,14 +22,14 @@
 #include "digraph.h"
 
 
-bool tbg_is_valid_digraph(const tbg_Digraph* dg);
-bool tbg_is_sound_digraph(const tbg_Digraph* dg);
-bool tbg_is_empty_digraph(const tbg_Digraph* dg);
-bool tbg_is_balanced_digraph(const tbg_Digraph* dg, tbg_Vid arcs_per_vertex);
-bool tbg_digraphs_equal(const tbg_Digraph* dg_a, const tbg_Digraph* dg_b);
-tbg_Digraph tbg_digraph_from_pieces(tbg_Vid vertices, tbg_Arcref max_arcs, const tbg_Arcref tail_ptr[vertices], const tbg_Vid head[max_arcs]);
-tbg_Digraph tbg_digraph_from_string(const char dg_str[]);
-void tbg_print_digraph(const tbg_Digraph* dg);
+bool scc_is_valid_digraph(const scc_Digraph* dg);
+bool scc_is_sound_digraph(const scc_Digraph* dg);
+bool scc_is_empty_digraph(const scc_Digraph* dg);
+bool scc_is_balanced_digraph(const scc_Digraph* dg, scc_Vid arcs_per_vertex);
+bool scc_digraphs_equal(const scc_Digraph* dg_a, const scc_Digraph* dg_b);
+scc_Digraph scc_digraph_from_pieces(scc_Vid vertices, scc_Arcref max_arcs, const scc_Arcref tail_ptr[vertices], const scc_Vid head[max_arcs]);
+scc_Digraph scc_digraph_from_string(const char dg_str[]);
+void scc_print_digraph(const scc_Digraph* dg);
 
 
 #endif
