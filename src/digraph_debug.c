@@ -81,15 +81,15 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const 
 
 		for (scc_Vid i = 0; i < dg_a->vertices; ++i) single_row[i] = 0;
 
+		const scc_Vid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
-					arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
-					++arc_a) {
+					arc_a != arc_a_stop; ++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
+		const scc_Vid* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
 		for (const scc_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
-					arc_b != dg_b->head + dg_b->tail_ptr[v + 1];
-					++arc_b) {
+					arc_b != arc_b_stop; ++arc_b) {
 			if (single_row[*arc_b] == 0) {
 				free(single_row);
 				return false;
@@ -180,9 +180,9 @@ void scc_print_digraph(const scc_Digraph* const dg) {
 
 		for (scc_Vid i = 0; i < dg->vertices; ++i) single_row[i] = false;
 
+		const scc_Vid* const a_stop = dg->head + dg->tail_ptr[v + 1];
 		for (const scc_Vid* a = dg->head + dg->tail_ptr[v];
-					a != dg->head + dg->tail_ptr[v + 1];
-					++a) {
+					a != a_stop; ++a) {
 			single_row[*a] = true;
 		}
 

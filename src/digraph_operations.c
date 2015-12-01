@@ -40,9 +40,9 @@ static inline scc_Arcref iscc_do_union(const scc_Vid vertices,
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		for (size_t i = 0; i < num_dgs; ++i) {
+			const scc_Vid* const arc_i_stop = dgs[i]->head + dgs[i]->tail_ptr[v + 1];
 			for (const scc_Vid* arc_i = dgs[i]->head + dgs[i]->tail_ptr[v];
-					arc_i != dgs[i]->head + dgs[i]->tail_ptr[v + 1];
-					++arc_i) {
+					arc_i != arc_i_stop; ++arc_i) {
 				if (row_markers[*arc_i] != v) {
 					row_markers[*arc_i] = v;
 					if (write) out_head[counter] = *arc_i;
@@ -119,10 +119,10 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg) {
 		return dg_out;
 	}
 
-	for (const scc_Vid* arc = dg->head;
-			arc != dg->head + dg->tail_ptr[dg->vertices];
-			++arc) {
-		++row_count[*arc + 1];
+	const scc_Vid* const arc_c_stop = dg->head + dg->tail_ptr[dg->vertices];
+	for (const scc_Vid* arc_c = dg->head;
+			arc_c != arc_c_stop; ++arc_c) {
+		++row_count[*arc_c + 1];
 	}
 
 	dg_out.tail_ptr[0] = 0;
@@ -132,9 +132,9 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg) {
 	}
 
 	for (scc_Vid v = 0; v < dg->vertices; ++v) {
+		const scc_Vid* const arc_stop = dg->head + dg->tail_ptr[v + 1];
 		for (const scc_Vid* arc = dg->head + dg->tail_ptr[v];
-				arc != dg->head + dg->tail_ptr[v + 1];
-				++arc) {
+				arc != arc_stop; ++arc) {
 			dg_out.head[row_count[*arc]] = v;
 			++row_count[*arc];
 		}
@@ -163,23 +163,23 @@ static inline scc_Arcref iscc_do_adjacency_product(const scc_Vid vertices,
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (force_diagonal) {
-			for (const scc_Vid* arc_b = dg_b_head + dg_b_tail_ptr[v];
-					arc_b != dg_b_head + dg_b_tail_ptr[v + 1];
-					++arc_b) {
-				if (row_markers[*arc_b] != v) {
-					row_markers[*arc_b] = v;
-					if (write) out_head[counter] = *arc_b;
+			const scc_Vid* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
+			for (const scc_Vid* v_arc_b = dg_b_head + dg_b_tail_ptr[v];
+					v_arc_b != v_arc_b_stop; ++v_arc_b) {
+				if (row_markers[*v_arc_b] != v) {
+					row_markers[*v_arc_b] = v;
+					if (write) out_head[counter] = *v_arc_b;
 					++counter;
 				}
 			}
 		}
+		const scc_Vid* const arc_a_stop = dg_a_head + dg_a_tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a_head + dg_a_tail_ptr[v];
-				arc_a != dg_a_head + dg_a_tail_ptr[v + 1];
-				++arc_a) {
+				arc_a != arc_a_stop; ++arc_a) {
 			if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
+			const scc_Vid* const arc_b_stop = dg_b_head + dg_b_tail_ptr[*arc_a + 1];
 			for (const scc_Vid* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
-					arc_b != dg_b_head + dg_b_tail_ptr[*arc_a + 1];
-					++arc_b) {
+					arc_b != arc_b_stop; ++arc_b) {
 				if (row_markers[*arc_b] != v) {
 					row_markers[*arc_b] = v;
 					if (write) out_head[counter] = *arc_b;
@@ -213,9 +213,9 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a, const scc_Digra
 		if (force_diagonal) {
 			out_arcs_write += dg_b->tail_ptr[v + 1] - dg_b->tail_ptr[v];
 		}
+		const scc_Vid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
-				arc_a != dg_a->head + dg_a->tail_ptr[v + 1];
-				++arc_a) {
+				arc_a != arc_a_stop; ++arc_a) {
 			if (*arc_a == v && (force_diagonal || ignore_diagonal)) continue;
 			out_arcs_write += dg_b->tail_ptr[*arc_a + 1] - dg_b->tail_ptr[*arc_a];
 		}
