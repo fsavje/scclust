@@ -110,7 +110,7 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return scc_null_digraph();
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
-	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Arcref));
+	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Vid));
 	if (!row_count) return scc_null_digraph();
 
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
