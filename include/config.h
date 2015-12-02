@@ -25,17 +25,24 @@
 #include <stdint.h>
 
 
-// Vertex ID type (must be unsigned)
+// Vertex ID type
 // Number of vertices < MAX(scc_Vid)
 typedef uint32_t scc_Vid;
 
 // MAX(scc_Vid): maximum value of scc_Vid
 #define SCC_VID_MAX UINT32_MAX
 
-// Arc reference type (must be unsigned)
+// Arc reference type
 // Number of arcs in any digraph <= MAX(scc_Arcref)
 // Should be MAX(scc_Arcref) >= MAX(scc_Vid)
 typedef uint32_t scc_Arcref;
+
+// Cluster label
+// Number of clusters <= MAX(scc_Clulab)
+typedef uint32_t scc_Clulab;
+
+
+#define SCC_STABLE_SORTING
 
 
 #endif
