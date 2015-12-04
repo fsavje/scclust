@@ -80,7 +80,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs, const scc_Digraph* const dgs
 		// Do correct (but slow) memory count by doing
 		// doing union without writing.
 		out_arcs_write = iscc_do_union(vertices, num_dgs, dgs,
-                                       row_markers, false, NULL, NULL);
+		                               row_markers, false, NULL, NULL);
 
 		// Try again. If fail, give up.
 		dg_out = scc_init_digraph(vertices, out_arcs_write);
@@ -91,7 +91,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs, const scc_Digraph* const dgs
 	}
 
 	out_arcs_write = iscc_do_union(vertices, num_dgs, dgs,
-                                   row_markers, true, dg_out.tail_ptr, dg_out.head);
+	                               row_markers, true, dg_out.tail_ptr, dg_out.head);
 
 	free(row_markers);
 
@@ -222,11 +222,11 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a, const scc_Digra
 		// Do correct (but slow) memory count by doing
 		// doing product without writing.
 		out_arcs_write = iscc_do_adjacency_product(vertices,
-                                                   dg_a->tail_ptr, dg_a->head,
-                                                   dg_b->tail_ptr, dg_b->head,
-                                                   row_markers,
-                                                   force_diagonal, ignore_diagonal,
-                                                   false, NULL, NULL);
+		                                           dg_a->tail_ptr, dg_a->head,
+		                                           dg_b->tail_ptr, dg_b->head,
+		                                           row_markers,
+		                                           force_diagonal, ignore_diagonal,
+		                                           false, NULL, NULL);
 
 		// Try again. If fail, give up.
 		dg_out = scc_init_digraph(vertices, out_arcs_write);
@@ -237,11 +237,11 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a, const scc_Digra
 	}
 
 	out_arcs_write = iscc_do_adjacency_product(vertices,
-                                               dg_a->tail_ptr, dg_a->head,
-                                               dg_b->tail_ptr, dg_b->head,
-                                               row_markers,
-                                               force_diagonal, ignore_diagonal,
-                                               true, dg_out.tail_ptr, dg_out.head);
+	                                           dg_a->tail_ptr, dg_a->head,
+	                                           dg_b->tail_ptr, dg_b->head,
+	                                           row_markers,
+	                                           force_diagonal, ignore_diagonal,
+	                                           true, dg_out.tail_ptr, dg_out.head);
 
 	free(row_markers);
 
