@@ -89,11 +89,11 @@ void scc_ut_fs_sort_by_inwards(void** state) {
 	(void) state;
 
 	scc_Digraph nng1 = scc_digraph_from_string("**...*/"
-		                                       "***.../"
-		                                       "**.**./"
-		                                       "*.***./"
-		                                       "****../"
-		                                       "***.../");
+	                                           "***.../"
+	                                           "**.**./"
+	                                           "*.***./"
+	                                           "****../"
+	                                           "***.../");
 	scc_Vid ref_sorted_vertices[6] = {5, 4, 3, 2, 1, 0};
 	scc_Vid ref_inwards_count[6] = {6, 5, 4, 3, 2, 1};
 	ptrdiff_t ref_vertex_index[6] = {5, 4, 3, 2, 1, 0};
@@ -119,12 +119,12 @@ void scc_ut_fs_sort_by_inwards(void** state) {
 	assert_memory_equal(sort_i.sorted_vertices, sort_n.sorted_vertices, 6 * sizeof(scc_Vid));
 
 	scc_Digraph nng2 = scc_digraph_from_string(".***.*./"
-		                                       ".*....*/"
-		                                       "**.*.*./"
-		                                       "*..*..*/"
-		                                       ".***.*./"
-		                                       ".....**/"
-		                                       "***..../");
+	                                           ".*....*/"
+	                                           "**.*.*./"
+	                                           "*..*..*/"
+	                                           ".***.*./"
+	                                           ".....**/"
+	                                           "***..../");
 	scc_Vid ref_sorted_vertices2[7] = {4, 0, 2, 6, 3, 5, 1};
 	scc_Vid ref_inwards_count2[7] = {3, 5, 3, 4, 0, 4, 3};
 	ptrdiff_t ref_vertex_index2[7] = {1, 6, 2, 4, 0, 5, 3};
@@ -151,15 +151,15 @@ void scc_ut_fs_sort_by_inwards(void** state) {
 
 
 	scc_Digraph nng3 = scc_digraph_from_string("*..*...**./"
-		                                       ".*.**..***/"
-		                                       "*.**.*.**./"
-		                                       ".****.****/"
-		                                       ".***.*****/"
-		                                       ".***.*****/"
-		                                       "..*..*****/"
-		                                       "..*...****/"
-		                                       "..*...****/"
-		                                       "..*....***/");
+	                                           ".*.**..***/"
+	                                           "*.**.*.**./"
+	                                           ".****.****/"
+	                                           ".***.*****/"
+	                                           ".***.*****/"
+	                                           "..*..*****/"
+	                                           "..*...****/"
+	                                           "..*...****/"
+	                                           "..*....***/");
 	scc_Vid ref_sorted_vertices3[10] = {0, 4, 1, 5, 3, 6, 2, 9, 7, 8};
 	scc_Vid ref_inwards_count3[10] = {2, 4, 8, 6, 2, 4, 6, 10, 10, 8};
 	ptrdiff_t ref_vertex_index3[10] = {0, 2, 6, 4, 1, 3, 5, 8, 9, 7};
@@ -199,12 +199,12 @@ void scc_ut_fs_check_candidate_vertex(void** state) {
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("..**..*/"
-		                                      "..*.*.*/"
-		                                      "*...*.*/"
-		                                      "..*..**/"
-		                                      "......./"
-		                                      "..*..../"
-		                                      "......./");
+	                                          "..*.*.*/"
+	                                          "*...*.*/"
+	                                          "..*..**/"
+	                                          "......./"
+	                                          "..*..../"
+	                                          "......./");
 
 	bool assigned[7] = {true, false, false, false, true, false, false};
 
@@ -224,12 +224,12 @@ void scc_ut_fs_set_seed(void** state) {
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("..**..*/"
-		                                      "..*.*.*/"
-		                                      "*...*.*/"
-		                                      "..*..**/"
-		                                      "......./"
-		                                      "..*..../"
-		                                      "......./");
+	                                          "..*.*.*/"
+	                                          "*...*.*/"
+	                                          "..*..**/"
+	                                          "......./"
+	                                          "..*..../"
+	                                          "......./");
 
 	bool stc_assigned[7] = {false, false, false, false, false, false, false};
 	bool stc_seed[7] = {false, false, false, false, false, false, false};
@@ -317,15 +317,15 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...*...***/"
-		                                      "..***..***/"
-		                                      "**.*.****./"
-		                                      ".**.*.****/"
-		                                      "****.*****/"
-		                                      ".***..****/"
-		                                      "..**.*.***/"
-		                                      "..*..*****/"
-		                                      "..*...****/"
-		                                      "..*....**./");
+	                                          "..***..***/"
+	                                          "**.*.****./"
+	                                          ".**.*.****/"
+	                                          "****.*****/"
+	                                          ".***..****/"
+	                                          "..**.*.***/"
+	                                          "..*..*****/"
+	                                          "..*...****/"
+	                                          "..*....**./");
 	scc_Vid ref_sorted_vertices[10] = {0, 4, 1, 5, 3, 6, 2, 9, 7, 8};
 	scc_Vid ref_inwards_count[10] = {2, 4, 8, 6, 2, 4, 6, 10, 10, 8};
 	ptrdiff_t ref_vertex_index[10] = {0, 2, 6, 4, 1, 3, 5, 8, 9, 7};
@@ -379,15 +379,15 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 
 
 	scc_Digraph nng2 = scc_digraph_from_string(".......**./"
-		                                       "..***..***/"
-		                                       "**.*.*****/"
-		                                       ".**.*.****/"
-		                                       "****.*****/"
-		                                       ".***..****/"
-		                                       "..**.*.***/"
-		                                       "..**.**.**/"
-		                                       "..*...**.*/"
-		                                       "..*....**./");
+	                                           "..***..***/"
+	                                           "**.*.*****/"
+	                                           ".**.*.****/"
+	                                           "****.*****/"
+	                                           ".***..****/"
+	                                           "..**.*.***/"
+	                                           "..**.**.**/"
+	                                           "..*...**.*/"
+	                                           "..*....**./");
 	scc_Vid ref2_sorted_vertices[10] = {0, 4, 1, 5, 3, 6, 2, 9, 7, 8};
 	scc_Vid ref2_inwards_count[10] = {2, 4, 8, 6, 2, 4, 6, 9, 9, 8};
 	ptrdiff_t ref2_vertex_index[10] = {0, 2, 6, 4, 1, 3, 5, 8, 9, 7};
