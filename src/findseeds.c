@@ -29,7 +29,7 @@
 #include "../include/nng_clustering.h"
 
 #define SCC_INIT_BUCKET_CAPACITY 500
- 
+
 
 // ==============================================================================
 // Internal structs
@@ -280,7 +280,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 	}
 
 	if (make_indices) {
-		res.vertex_index = malloc(sizeof(scc_Vid[vertices]));
+		res.vertex_index = malloc(sizeof(scc_Vid*[vertices]));
 		if (!res.vertex_index) {
 			iscc_fs_free_SortResult(&res);
 			return res;
