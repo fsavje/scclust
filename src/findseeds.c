@@ -301,15 +301,15 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 	if (make_indices) {
 		for (scc_Vid v = vertices; v > 0; ) {
 			--v;
+			--(res.bucket_index[res.inwards_count[v]]);
 			*res.bucket_index[res.inwards_count[v]] = v;
 			res.vertex_index[v] = res.bucket_index[res.inwards_count[v]];
-			--(res.bucket_index[res.inwards_count[v]]);
 		}
 	} else {
 		for (scc_Vid v = vertices; v > 0; ) {
 			--v;
-			*res.bucket_index[res.inwards_count[v]] = v;
 			--(res.bucket_index[res.inwards_count[v]]);
+			*res.bucket_index[res.inwards_count[v]] = v;
 		}
 
 		free(res.inwards_count);
