@@ -28,6 +28,8 @@
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"
 
+#define SCC_INIT_BUCKET_CAPACITY 500
+ 
 
 // ==============================================================================
 // Internal structs
@@ -291,7 +293,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 	}
 
 	scc_Vid max_inwards = 0;
-	scc_Vid bucket_ar_capacity = 500;
+	scc_Vid bucket_ar_capacity = SCC_INIT_BUCKET_CAPACITY;
 	scc_Vid* bucket_count = calloc(bucket_ar_capacity + 1, sizeof(scc_Vid));
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (max_inwards < res.inwards_count[v]) {
