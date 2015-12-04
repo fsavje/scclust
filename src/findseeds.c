@@ -29,7 +29,10 @@
 #include "../include/nng_clustering.h"
 
 
+// ==============================================================================
 // Internal structs
+// ==============================================================================
+
 
 typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 struct iscc_fs_SortResult {
@@ -40,17 +43,42 @@ struct iscc_fs_SortResult {
 };
 
 
+// ==============================================================================
 // Internal function prototypes
+// ==============================================================================
 
+
+/*
+ * Function:  iscc_fs_check_input 
+ * --------------------
+ * Checks the input to the seed finding functions.
+ *
+ *  nng: nearest neighbor graph to be used in the clustering
+ *  clustering: struct for output clustering results (this function do not change this)
+ *
+ *  returns: Boolean whether input is OK.
+ */
 static inline bool iscc_fs_check_input(const scc_Digraph* nng, const scc_Clustering* clustering);
+
+
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng, bool make_indices);
+
+
 static void iscc_fs_free_SortResult(iscc_fs_SortResult* sr);
+
+
 static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv, const scc_Digraph* nng, const bool* assigned);
+
+
 static inline void iscc_fs_set_seed(scc_Vid s, const scc_Digraph* nng, scc_Clustering* clustering, bool* assigned);
+
+
 static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease, scc_Vid* restrict inwards_count, scc_Vid** restrict vertex_index, scc_Vid** restrict bucket_index, scc_Vid* current_pos);
 
 
+// ==============================================================================
 // External function implementations
+// ==============================================================================
 
 
 bool iscc_findseeds_lexical(const scc_Digraph* const nng, scc_Clustering* const clustering) {
@@ -221,7 +249,10 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 }
 
 
+// ==============================================================================
 // Internal function implementations 
+// ==============================================================================
+
 
 static inline bool iscc_fs_check_input(const scc_Digraph* const nng, const scc_Clustering* const clustering) {
 	if (!nng || !nng->tail_ptr) return false;
