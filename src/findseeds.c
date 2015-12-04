@@ -142,7 +142,6 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 
 bool iscc_findseeds_inwards_onearc(const scc_Digraph* const nng, scc_Clustering* const clustering, const bool updating) {
 	if (!iscc_fs_check_input(nng, clustering)) return false;
-	if (nng->tail_ptr[nng->vertices] != nng->vertices) return false;
 
 	bool* const assigned = clustering->assigned;
 
@@ -153,7 +152,7 @@ bool iscc_findseeds_inwards_onearc(const scc_Digraph* const nng, scc_Clustering*
 	for (scc_Vid* sorted_v = sort.sorted_vertices;
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
-		if (!assigned[*sorted_v]) {
+		if (!assigned[*sorted_v] && nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]) {
 
 			const scc_Vid v_arc = nng->head[nng->tail_ptr[*sorted_v]];
 			if (!assigned[v_arc]) {
@@ -218,7 +217,7 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 	for (scc_Vid* sorted_v = sort.sorted_vertices;
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
-		if (!excluded[*sorted_v]) {
+		if (!excluded[*sorted_v] && nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]) {
 
 			iscc_fs_set_seed(*sorted_v, nng, clustering, assigned);
 
@@ -390,9 +389,11 @@ static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr) {
 static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Digraph* const nng, const bool* const assigned) {
 	if (assigned[cv]) return false;
 
+	const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
 	const scc_Vid* const cv_arc_stop = nng->head + nng->tail_ptr[cv + 1];
-	for (const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
-	        cv_arc != cv_arc_stop; ++cv_arc) { 
+	if (cv_arc == cv_arc_stop) return false;
+
+	for (; cv_arc != cv_arc_stop; ++cv_arc) { 
 		if (assigned[*cv_arc]) return false;
 	}
 
