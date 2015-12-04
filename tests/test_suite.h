@@ -33,4 +33,8 @@
 #define realloc(ptr, size) _test_realloc(ptr, size, __FILE__, __LINE__)
 #define free(ptr) _test_free(ptr, __FILE__, __LINE__)
 
+#include <assert.h>
+#undef assert
+#define assert(expression) mock_assert((int)(expression), #expression, __FILE__, __LINE__)
+
 #endif
