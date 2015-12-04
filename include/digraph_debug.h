@@ -23,7 +23,6 @@
 #define SCC_DIGRAPH_DEBUG_HG
 
 #include <stdbool.h>
-
 #include "config.h"
 #include "digraph.h"
 

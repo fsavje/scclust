@@ -18,13 +18,14 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ==============================================================================*/
 
+
 #ifndef SCC_FINDSEEDS_HG
 #define SCC_FINDSEEDS_HG
 
 #include <stdbool.h>
-
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"
+
 
 bool iscc_findseeds_lexical(const scc_Digraph* nng, scc_Clustering* clustering);
 bool iscc_findseeds_inwards(const scc_Digraph* nng, scc_Clustering* clustering, bool updating);
@@ -34,8 +35,4 @@ bool iscc_findseeds_exclusion(const scc_Digraph* nng, scc_Clustering* clustering
 //iscc_findseeds_approximation();
 
 
-
 #endif
-
-
-

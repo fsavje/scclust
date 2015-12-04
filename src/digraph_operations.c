@@ -23,7 +23,6 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-
 #include "../include/config.h"
 
 

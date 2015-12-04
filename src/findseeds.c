@@ -18,12 +18,12 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ==============================================================================*/
 
+
 #include "findseeds.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
 #include "../include/config.h"
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"

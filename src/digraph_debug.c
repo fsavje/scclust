@@ -25,7 +25,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "../include/config.h"
 #include "../include/digraph.h"
 
