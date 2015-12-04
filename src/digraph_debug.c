@@ -184,7 +184,7 @@ void scc_print_digraph(const scc_Digraph* const dg) {
 
 		const scc_Vid* const a_stop = dg->head + dg->tail_ptr[v + 1];
 		for (const scc_Vid* a = dg->head + dg->tail_ptr[v];
-					a != a_stop; ++a) {
+		        a != a_stop; ++a) {
 			single_row[*a] = true;
 		}
 

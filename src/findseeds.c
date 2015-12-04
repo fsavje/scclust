@@ -423,6 +423,7 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
                                               scc_Vid* const current_pos) {
 	// Assert that vertex index is correct
 	assert(v_to_decrease == *vertex_index[v_to_decrease]);
+	assert(current_pos < vertex_index[v_to_decrease]);
 
 	// Find vertices to move
 	scc_Vid* const move_from = vertex_index[v_to_decrease];
