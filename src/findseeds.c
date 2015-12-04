@@ -28,8 +28,6 @@
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"
 
-#define SCC_INIT_BUCKET_CAPACITY 500
-
 
 // ==============================================================================
 // Internal structs
@@ -292,6 +290,12 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 		++res.inwards_count[*arc];
 	}
 
+	/*
+	// This is slightly faster but more error-prone
+	// Add if turns out to be bottleneck
+	#ifndef SCC_INIT_BUCKET_CAPACITY
+		#define SCC_INIT_BUCKET_CAPACITY 500
+	#endif
 	scc_Vid max_inwards = 0;
 	scc_Vid bucket_ar_capacity = SCC_INIT_BUCKET_CAPACITY;
 	scc_Vid* bucket_count = calloc(bucket_ar_capacity + 1, sizeof(scc_Vid));
@@ -324,6 +328,25 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 		iscc_fs_free_SortResult(&res);
 		return res;
 	}
+	*/
+
+	scc_Vid max_inwards = 0;
+	for (scc_Vid v = 0; v < vertices; ++v) {
+		if (max_inwards < res.inwards_count[v]) max_inwards = res.inwards_count[v];
+	}
+
+	scc_Vid* bucket_count = calloc(max_inwards + 1, sizeof(scc_Vid));
+	res.bucket_index = malloc(sizeof(scc_Vid*[max_inwards + 1]));
+	if (!bucket_count || !res.bucket_index) {
+		free(bucket_count);
+		iscc_fs_free_SortResult(&res);
+		return res;
+	}
+
+	for (scc_Vid v = 0; v < vertices; ++v) {
+		++bucket_count[res.inwards_count[v]];
+	}
+
 	scc_Vid bucket_cumsum = 0;
 	for (scc_Vid b = 0; b <= max_inwards; ++b) {
 		bucket_cumsum += bucket_count[b];
@@ -334,7 +357,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 	if (make_indices) {
 		for (scc_Vid v = vertices; v > 0; ) {
 			--v;
-			--(res.bucket_index[res.inwards_count[v]]);
+			--res.bucket_index[res.inwards_count[v]];
 			*res.bucket_index[res.inwards_count[v]] = v;
 			res.vertex_index[v] = res.bucket_index[res.inwards_count[v]];
 		}
