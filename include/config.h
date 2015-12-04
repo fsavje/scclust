@@ -42,7 +42,4 @@ typedef uint32_t scc_Arcref;
 typedef uint32_t scc_Clulab;
 
 
-#define SCC_STABLE_SORTING
-
-
 #endif
