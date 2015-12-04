@@ -41,5 +41,8 @@ typedef uint32_t scc_Arcref;
 // Number of clusters <= MAX(scc_Clulab)
 typedef uint32_t scc_Clulab;
 
+// MAX(scc_Clulab): maximum value of scc_Clulab
+#define SCC_CLULAB_MAX UINT32_MAX
+
 
 #endif
