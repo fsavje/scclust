@@ -77,7 +77,7 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 
 	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
 	for (scc_Vid* sorted_v = sort.sorted_vertices;
-		sorted_v != sorted_v_stop; ++sorted_v) {
+	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (iscc_fs_check_candidate_vertex(*sorted_v, nng, assigned)) {
 
@@ -87,7 +87,7 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 
 			const scc_Vid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
 			for (const scc_Vid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
-					v_arc != v_arc_stop; ++v_arc) {
+			        v_arc != v_arc_stop; ++v_arc) {
 
 				assigned[*v_arc] = true;
 				clustering->cluster_label[*v_arc] = clustering->num_clusters;
@@ -95,7 +95,7 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 				if (updating) {
 					const scc_Vid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
 					for (scc_Vid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
-							v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
+					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
 						if (!assigned[*v_arc_arc]) {
 							iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
 						}
@@ -123,7 +123,7 @@ bool iscc_findseeds_inwards_onearc(const scc_Digraph* const nng, scc_Clustering*
 
 	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
 	for (scc_Vid* sorted_v = sort.sorted_vertices;
-		sorted_v != sorted_v_stop; ++sorted_v) {
+	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (!assigned[*sorted_v]) {
 
@@ -188,7 +188,7 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 
 	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
 	for (scc_Vid* sorted_v = sort.sorted_vertices;
-		sorted_v != sorted_v_stop; ++sorted_v) {
+	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (!excluded[*sorted_v]) {
 
@@ -196,14 +196,14 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 
 			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
 			for (const scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
-					ex_arc != ex_arc_stop; ++ex_arc) {
+			        ex_arc != ex_arc_stop; ++ex_arc) {
 
 				excluded[*ex_arc] = true;
 
 				if (updating) {
 					const scc_Vid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
 					for (scc_Vid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
-							ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
+					        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
 						if (!excluded[*ex_arc_arc]) {
 							iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
 						}
@@ -336,7 +336,7 @@ static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Di
 
 	const scc_Vid* const cv_arc_stop = nng->head + nng->tail_ptr[cv + 1];
 	for (const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
-			cv_arc != cv_arc_stop; ++cv_arc) { 
+	        cv_arc != cv_arc_stop; ++cv_arc) { 
 		if (assigned[*cv_arc]) return false;
 	}
 
@@ -351,7 +351,7 @@ static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nn
 
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
 	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
-			s_arc != s_arc_stop; ++s_arc) {
+	        s_arc != s_arc_stop; ++s_arc) {
 		assigned[*s_arc] = true;
 		clustering->cluster_label[*s_arc] = clustering->num_clusters;
 	}
@@ -360,10 +360,10 @@ static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nn
 }
 
 static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
-												scc_Vid* restrict const inwards_count,
-												scc_Vid** restrict const vertex_index,
-												scc_Vid** restrict const bucket_index,
-												scc_Vid* const current_pos) {
+                                              scc_Vid* restrict const inwards_count,
+                                              scc_Vid** restrict const vertex_index,
+                                              scc_Vid** restrict const bucket_index,
+                                              scc_Vid* const current_pos) {
 	// Assert that vertex index is correct
 	assert(v_to_decrease == *vertex_index[v_to_decrease]);
 

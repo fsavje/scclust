@@ -305,10 +305,10 @@ void scc_ut_adjacency_product(void** state) {
 
 int main(void) {
 	const struct CMUnitTest test_operations[] = {
-	    cmocka_unit_test(scc_ut_union_digraphs),
-	    cmocka_unit_test(scc_ut_digraph_transpose),
-	    cmocka_unit_test(scc_ut_adjacency_product),
+		cmocka_unit_test(scc_ut_union_digraphs),
+		cmocka_unit_test(scc_ut_digraph_transpose),
+		cmocka_unit_test(scc_ut_adjacency_product),
 	};
 
-    return cmocka_run_group_tests_name("operations module", test_operations, NULL, NULL);
+	return cmocka_run_group_tests_name("operations module", test_operations, NULL, NULL);
 }

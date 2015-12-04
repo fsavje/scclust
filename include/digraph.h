@@ -48,7 +48,7 @@ struct scc_Digraph {
 };
 
 static inline scc_Digraph scc_null_digraph(void) {
-  return (scc_Digraph) { 0, 0, NULL, NULL };
+	return (scc_Digraph) { 0, 0, NULL, NULL };
 }
 
 scc_Digraph scc_init_digraph(scc_Vid vertices, scc_Arcref max_arcs);

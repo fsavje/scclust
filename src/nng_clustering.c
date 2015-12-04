@@ -35,7 +35,6 @@ void scc_free_Clustering(scc_Clustering* const cl) {
 	}
 }
 
-
 scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm) {
 
 	if (!nng || !nng->tail_ptr) return (scc_Clustering) { 0, 0, NULL, NULL, NULL };

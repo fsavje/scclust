@@ -160,13 +160,13 @@ void scc_ut_copy_digraph(void** state) {
 
 int main(void) {
 	const struct CMUnitTest test_core[] = {
-	    cmocka_unit_test(scc_ut_init_digraph),
-	    cmocka_unit_test(scc_ut_free_digraph),
-	    cmocka_unit_test(scc_ut_change_arc_storage),
-	    cmocka_unit_test(scc_ut_empty_digraph),
-	    cmocka_unit_test(scc_ut_balanced_digraph),
-	    cmocka_unit_test(scc_ut_copy_digraph),
+		cmocka_unit_test(scc_ut_init_digraph),
+		cmocka_unit_test(scc_ut_free_digraph),
+		cmocka_unit_test(scc_ut_change_arc_storage),
+		cmocka_unit_test(scc_ut_empty_digraph),
+		cmocka_unit_test(scc_ut_balanced_digraph),
+		cmocka_unit_test(scc_ut_copy_digraph),
 	};
 	
-    return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);
+	return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);
 }

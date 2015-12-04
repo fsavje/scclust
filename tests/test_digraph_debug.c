@@ -235,13 +235,13 @@ void scc_ut_debug_rest(void** state) {
 
 
 int main(void) {
-    const struct CMUnitTest test_debug[] = {
-        cmocka_unit_test(scc_ut_is_valid_digraph),
-        cmocka_unit_test(scc_ut_is_sound_digraph),
-        cmocka_unit_test(scc_ut_is_empty_digraph),
-        cmocka_unit_test(scc_ut_is_balanced_digraph),
-        cmocka_unit_test(scc_ut_debug_rest),
-    };
+	const struct CMUnitTest test_debug[] = {
+		cmocka_unit_test(scc_ut_is_valid_digraph),
+		cmocka_unit_test(scc_ut_is_sound_digraph),
+		cmocka_unit_test(scc_ut_is_empty_digraph),
+		cmocka_unit_test(scc_ut_is_balanced_digraph),
+		cmocka_unit_test(scc_ut_debug_rest),
+	};
 
-    return cmocka_run_group_tests_name("debug module", test_debug, NULL, NULL);
+	return cmocka_run_group_tests_name("debug module", test_debug, NULL, NULL);
 }

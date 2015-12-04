@@ -82,13 +82,13 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const 
 
 		const scc_Vid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
-					arc_a != arc_a_stop; ++arc_a) {
+		        arc_a != arc_a_stop; ++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
 		const scc_Vid* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
 		for (const scc_Vid* arc_b = dg_b->head + dg_b->tail_ptr[v];
-					arc_b != arc_b_stop; ++arc_b) {
+		        arc_b != arc_b_stop; ++arc_b) {
 			if (single_row[*arc_b] == 0) {
 				free(single_row);
 				return false;
@@ -109,7 +109,10 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const 
 }
 
 
-scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices, const scc_Arcref max_arcs, const scc_Arcref tail_ptr[const vertices], const scc_Vid head[const max_arcs]) {
+scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
+                                    const scc_Arcref max_arcs,
+                                    const scc_Arcref tail_ptr[const vertices],
+                                    const scc_Vid head[const max_arcs]) {
 	if (!tail_ptr) return scc_null_digraph();
 	if (max_arcs > 0 && !head) return scc_null_digraph();
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
