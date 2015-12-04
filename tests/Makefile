@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-std=c99 -O2 -Wall -Wextra -Wconversion -Wfloat-equal
+FLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 EXLIBS=-lcmocka
 OBJECTS=digraph_core.o digraph_debug.o digraph_operations.o
 STDTESTS=test_digraph_core test_digraph_debug test_digraph_operations
