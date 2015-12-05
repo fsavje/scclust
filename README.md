@@ -1,2 +1,2 @@
-# thresholdmatchC
-C library for low level Threshold blocking and matching functionalities 
+# scclust
+A C library for size constrained clustering
