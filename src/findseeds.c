@@ -385,7 +385,10 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 	// Find vertices to move
 	scc_Vid* const move_from = vertex_index[v_to_decrease];
 	scc_Vid* move_to = bucket_index[inwards_count[v_to_decrease]];
-	if (move_to <= current_pos) move_to = current_pos + 1;
+	if (move_to <= current_pos) {
+		move_to = current_pos + 1;
+		bucket_index[inwards_count[v_to_decrease] - 1] = move_to;
+	} 
 
 	// Assert that swap vertices have the same count
 	assert(inwards_count[*move_from] == inwards_count[*move_to]);

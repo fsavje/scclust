@@ -369,7 +369,7 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 	scc_Vid ref_sorted_vertices4[10] = {0, 4, 1, 5, 3, 6, 2, 8, 9, 7};
 	scc_Vid ref_inwards_count4[10] = {2, 4, 8, 6, 2, 4, 6, 10, 7, 8};
 	ptrdiff_t ref_vertex_index4[10] = {0, 2, 6, 4, 1, 3, 5, 9, 7, 8};
-	ptrdiff_t ref_bucket_index4[11] = {0, 0, 0, 2, 2, 4, 4, 6, 8, 9, 9};
+	ptrdiff_t ref_bucket_index4[11] = {0, 0, 0, 2, 2, 4, 4, 7, 8, 9, 9};
 	for (size_t i = 0; i < 10; ++i) check_vertex_index[i] = sort.vertex_index[i] - sort.sorted_vertices;
 	for (size_t i = 0; i < 11; ++i) check_bucket_index[i] = sort.bucket_index[i] - sort.sorted_vertices;
 	assert_memory_equal(sort.sorted_vertices, ref_sorted_vertices4, 10 * sizeof(scc_Vid));
