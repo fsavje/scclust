@@ -58,27 +58,19 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 		case lexical:
 			seed_results = iscc_findseeds_lexical(nng, &clustering);
 			break;
-		
+
 		case inwards_once:
 			seed_results = iscc_findseeds_inwards(nng, &clustering, false);
 			break;
-		
+
 		case inwards_updating:
 			seed_results = iscc_findseeds_inwards(nng, &clustering, true);
 			break;
-		
-		case inwards_once_onearc:
-			seed_results = iscc_findseeds_inwards_onearc(nng, &clustering, false);
-			break;
-		
-		case inwards_updating_onearc:
-			seed_results = iscc_findseeds_inwards_onearc(nng, &clustering, true);
-			break;
-		
+
 		case exclusion_once:
 			seed_results = iscc_findseeds_exclusion(nng, &clustering, false);
 			break;
-		
+
 		case exclusion_updating:
 			seed_results = iscc_findseeds_exclusion(nng, &clustering, true);
 			break;

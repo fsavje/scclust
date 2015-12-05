@@ -30,8 +30,6 @@ enum scc_SeedMethod {
 	lexical,
 	inwards_once,
 	inwards_updating,
-	inwards_once_onearc,
-	inwards_updating_onearc,
 	exclusion_once,
 	exclusion_updating,
 	//simulated_annealing,

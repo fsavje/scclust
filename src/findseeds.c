@@ -140,49 +140,6 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 	return true;
 }
 
-bool iscc_findseeds_inwards_onearc(const scc_Digraph* const nng, scc_Clustering* const clustering, const bool updating) {
-	if (!iscc_fs_check_input(nng, clustering)) return false;
-
-	bool* const assigned = clustering->assigned;
-
-	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
-	if (!sort.sorted_vertices) return false;
-
-	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
-	for (scc_Vid* sorted_v = sort.sorted_vertices;
-	        sorted_v != sorted_v_stop; ++sorted_v) {
-
-		if (!assigned[*sorted_v] && nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]) {
-
-			const scc_Vid v_arc = nng->head[nng->tail_ptr[*sorted_v]];
-			if (!assigned[v_arc]) {
-
-				// Found valid seed
-				clustering->seed[*sorted_v] = true;
-
-				assigned[*sorted_v] = true;
-				assigned[v_arc] = true;
-
-				clustering->cluster_label[*sorted_v] = clustering->num_clusters;
-				clustering->cluster_label[v_arc] = clustering->num_clusters;
-
-				++(clustering->num_clusters);
-
-				if (updating) {
-					const scc_Vid v_arc_arc = nng->head[nng->tail_ptr[v_arc]];
-					if (!assigned[v_arc_arc]) {
-						iscc_fs_decrease_v_in_sort(v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
-					}
-				}
-			}
-		}
-	}
-
-	iscc_fs_free_SortResult(&sort);
-
-	return true;
-}
-
 bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* const clustering, const bool updating) {
 	if (!iscc_fs_check_input(nng, clustering)) return false;
 

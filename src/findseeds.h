@@ -29,7 +29,6 @@
 
 bool iscc_findseeds_lexical(const scc_Digraph* nng, scc_Clustering* clustering);
 bool iscc_findseeds_inwards(const scc_Digraph* nng, scc_Clustering* clustering, bool updating);
-bool iscc_findseeds_inwards_onearc(const scc_Digraph* nng, scc_Clustering* clustering, bool updating);
 bool iscc_findseeds_exclusion(const scc_Digraph* nng, scc_Clustering* clustering, bool updating);
 //iscc_findseeds_simulated_annealing();
 //iscc_findseeds_approximation();
