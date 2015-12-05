@@ -175,21 +175,22 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (!excluded[*sorted_v] && nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]) {
-
 			iscc_fs_set_seed(*sorted_v, nng, clustering, assigned);
+			excluded[*sorted_v] = true;
 
 			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
 			for (const scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
 			        ex_arc != ex_arc_stop; ++ex_arc) {
+				if (!excluded[*ex_arc]) {
+					excluded[*ex_arc] = true;
 
-				excluded[*ex_arc] = true;
-
-				if (updating) {
-					const scc_Vid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
-					for (scc_Vid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
-					        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
-						if (!excluded[*ex_arc_arc]) {
-							iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
+					if (updating) {
+						const scc_Vid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
+						for (scc_Vid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
+						        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
+							if (!excluded[*ex_arc_arc]) {
+								iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
+							}
 						}
 					}
 				}
