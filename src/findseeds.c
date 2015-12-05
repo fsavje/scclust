@@ -108,19 +108,12 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (iscc_fs_check_candidate_vertex(*sorted_v, nng, assigned)) {
+			iscc_fs_set_seed(*sorted_v, nng, clustering, assigned);
 
-			clustering->seed[*sorted_v] = true;
-			assigned[*sorted_v] = true;
-			clustering->cluster_label[*sorted_v] = clustering->num_clusters;
-
-			const scc_Vid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
-			for (const scc_Vid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
-			        v_arc != v_arc_stop; ++v_arc) {
-
-				assigned[*v_arc] = true;
-				clustering->cluster_label[*v_arc] = clustering->num_clusters;
-
-				if (updating) {
+			if (updating) {
+				const scc_Vid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
+				for (const scc_Vid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
+				        v_arc != v_arc_stop; ++v_arc) {
 					const scc_Vid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
 					for (scc_Vid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
@@ -130,8 +123,6 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 					}
 				}
 			}
-
-			++(clustering->num_clusters);
 		}
 	}
 
