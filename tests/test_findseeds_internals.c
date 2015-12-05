@@ -243,7 +243,7 @@ void scc_ut_fs_set_seed(void** state) {
 		.cluster_label = stc_cluster_label,
 	};
 
-	iscc_fs_set_seed(0, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(0, &nng, &clustering);
 	bool ref_assigned0[7] = {true, false, true, true, false, false, true};
 	bool ref_seed0[7] = {true, false, false, false, false, false, false};
 	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
@@ -256,7 +256,7 @@ void scc_ut_fs_set_seed(void** state) {
 	stc_assigned[0] = stc_assigned[2] = stc_assigned[3] = stc_assigned[6] = false;
 	stc_seed[0] = false;
 
-	iscc_fs_set_seed(1, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(1, &nng, &clustering);
 	bool ref_assigned1[7] = {false, true, true, false, true, false, true};
 	bool ref_seed1[7] = {false, true, false, false, false, false, false};
 	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
@@ -266,7 +266,7 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 2);
 
-	iscc_fs_set_seed(2, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(2, &nng, &clustering);
 	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
 	bool ref_seed2[7] = {false, true, true, false, false, false, false};
 	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
@@ -279,7 +279,7 @@ void scc_ut_fs_set_seed(void** state) {
 	stc_assigned[0] = stc_assigned[1] = stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
 	stc_seed[1] = stc_seed[2] = false;
 
-	iscc_fs_set_seed(5, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(5, &nng, &clustering);
 	bool ref_assigned5[7] = {false, false, true, false, false, true, false};
 	bool ref_seed5[7] = {false, false, false, false, false, true, false};
 	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
@@ -289,7 +289,7 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 4);
 
-	iscc_fs_set_seed(3, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(3, &nng, &clustering);
 	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
 	bool ref_seed3[7] = {false, false, false, true, false, true, false};
 	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
@@ -299,7 +299,7 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 5);
 
-	iscc_fs_set_seed(6, &nng, &clustering, clustering.assigned);
+	iscc_fs_set_seed(6, &nng, &clustering);
 	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
 	bool ref_seed6[7] = {false, false, false, true, false, true, true};
 	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};

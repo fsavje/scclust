@@ -70,7 +70,7 @@ static void iscc_fs_free_SortResult(iscc_fs_SortResult* sr);
 static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv, const scc_Digraph* nng, const bool* assigned);
 
 
-static inline void iscc_fs_set_seed(scc_Vid s, const scc_Digraph* nng, scc_Clustering* clustering, bool* assigned);
+static inline void iscc_fs_set_seed(scc_Vid s, const scc_Digraph* nng, scc_Clustering* clustering);
 
 
 static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease, scc_Vid* restrict inwards_count, scc_Vid** restrict vertex_index, scc_Vid** restrict bucket_index, scc_Vid* current_pos);
@@ -84,11 +84,9 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease, scc_Vid* re
 bool iscc_findseeds_lexical(const scc_Digraph* const nng, scc_Clustering* const clustering) {
 	if (!iscc_fs_check_input(nng, clustering)) return false;
 
-	bool* const assigned = clustering->assigned;
-
 	for (scc_Vid cv = 0; cv < nng->vertices; ++cv) {
-		if (iscc_fs_check_candidate_vertex(cv, nng, assigned)) {
-			iscc_fs_set_seed(cv, nng, clustering, assigned);
+		if (iscc_fs_check_candidate_vertex(cv, nng, clustering->assigned)) {
+			iscc_fs_set_seed(cv, nng, clustering);
 		}
 	}
 
@@ -108,7 +106,7 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (iscc_fs_check_candidate_vertex(*sorted_v, nng, assigned)) {
-			iscc_fs_set_seed(*sorted_v, nng, clustering, assigned);
+			iscc_fs_set_seed(*sorted_v, nng, clustering);
 
 			if (updating) {
 				const scc_Vid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
@@ -134,13 +132,11 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* const clustering, const bool updating) {
 	if (!iscc_fs_check_input(nng, clustering)) return false;
 
-	bool* const assigned = clustering->assigned;
+	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
+	if (!nng_transpose.tail_ptr) return false;
 
-	scc_Digraph tmp_digraph = scc_digraph_transpose(nng);
-	if (!tmp_digraph.tail_ptr) return false;
-
-	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &tmp_digraph, true, false);
-	scc_free_digraph(&tmp_digraph);
+	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
+	scc_free_digraph(&nng_transpose);
 	if (!nng_nng_transpose.tail_ptr) return false;
 
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
@@ -166,7 +162,7 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		if (!excluded[*sorted_v] && nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]) {
-			iscc_fs_set_seed(*sorted_v, nng, clustering, assigned);
+			iscc_fs_set_seed(*sorted_v, nng, clustering);
 			excluded[*sorted_v] = true;
 
 			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
@@ -349,16 +345,16 @@ static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Di
 	return true;
 }
 
-static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nng, scc_Clustering* const clustering, bool* const assigned) {
+static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nng, scc_Clustering* const clustering) {
 	
 	clustering->seed[s] = true;
-	assigned[s] = true;
+	clustering->assigned[s] = true;
 	clustering->cluster_label[s] = clustering->num_clusters;
 
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
 	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
 	        s_arc != s_arc_stop; ++s_arc) {
-		assigned[*s_arc] = true;
+		clustering->assigned[*s_arc] = true;
 		clustering->cluster_label[*s_arc] = clustering->num_clusters;
 	}
 
