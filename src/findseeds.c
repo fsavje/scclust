@@ -61,6 +61,9 @@ struct iscc_fs_SortResult {
 static inline bool iscc_fs_check_input(const scc_Digraph* nng, const scc_Clustering* clustering);
 
 
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
+
+
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng, bool make_indices);
 
 
@@ -132,16 +135,7 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* const clustering, const bool updating) {
 	if (!iscc_fs_check_input(nng, clustering)) return false;
 
-	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
-	if (!nng_transpose.tail_ptr) return false;
-
-	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
-	scc_free_digraph(&nng_transpose);
-	if (!nng_nng_transpose.tail_ptr) return false;
-
-	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
-	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
-	scc_free_digraph(&nng_nng_transpose);
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
 	if (!exclusion_graph.tail_ptr) return false;
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&exclusion_graph, updating);
@@ -203,6 +197,24 @@ static inline bool iscc_fs_check_input(const scc_Digraph* const nng, const scc_C
 	if (!clustering || !clustering->assigned || !clustering->seed || !clustering->cluster_label) return false;
 	if (nng->vertices != clustering->vertices || nng->vertices == 0) return false;
 	return true;
+}
+
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng) {
+	if (!nng || !nng->tail_ptr) return scc_null_digraph();
+
+	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
+	if (!nng_transpose.tail_ptr) return scc_null_digraph();
+
+	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
+	scc_free_digraph(&nng_transpose);
+	if (!nng_nng_transpose.tail_ptr) return scc_null_digraph();
+
+	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
+	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
+	scc_free_digraph(&nng_nng_transpose);
+	if (!exclusion_graph.tail_ptr) return scc_null_digraph();
+
+	return exclusion_graph;
 }
 
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, const bool make_indices) {
