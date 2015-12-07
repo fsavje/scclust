@@ -20,7 +20,7 @@
 
 
 #include "test_suite.h"
-#include "test_tools.h"
+#include "assert_digraph.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -28,7 +28,6 @@
 #include "../src/findseeds.c"
 #include "../include/config.h"
 #include "../include/digraph.h"
-#include "../include/digraph_debug.h"
 
 
 void scc_ut_fs_check_input(void** state) {
@@ -73,6 +72,57 @@ void scc_ut_fs_check_input(void** state) {
 	scc_free_Clustering(&clustering);
 	scc_free_digraph(&empty0);
 	scc_free_digraph(&empty10);
+}
+
+
+void scc_ut_exclusion_graph(void** state) {
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string(".*..*............./"
+	                                          "*...*............./"
+	                                          "....*..*........../"
+	                                          "*...*............./"
+	                                          ".*.*............../"
+	                                          "..*.....*........./"
+	                                          "...*.....*......../"
+	                                          "......*.*........./"
+	                                          ".....*.....*....../"
+	                                          "..........*.....*./"
+	                                          ".......*.....*..../"
+	                                          "........*.*......./"
+	                                          "...............**./"
+	                                          "..............*..*/"
+	                                          ".............*...*/"
+	                                          ".........*..*...../"
+	                                          ".............**.../"
+	                                          "..............*.*./");
+
+	scc_Digraph exg = scc_digraph_from_string("*****............./"
+	                                          "*****............./"
+	                                          "******.*..*......./"
+	                                          "*****.*.........../"
+	                                          "*****.*.........../"
+	                                          "..*..*.**..*....../"
+	                                          "...**.**.*.....*../"
+	                                          "..*..****.**....../"
+	                                          ".....*.**..*....../"
+	                                          "......*..****..***/"
+	                                          "..*....*.***.**.*./"
+	                                          ".....*.*****....../"
+	                                          ".........*..*..***/"
+	                                          "..........*..**.**/"
+	                                          "..........*..**.**/"
+	                                          "......*..*..*..*../"
+	                                          ".........**.***.**/"
+	                                          ".........*..***.**/");
+
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng);
+
+	assert_equal_digraph(&exg, &exclusion_graph);
+
+	scc_free_digraph(&nng);
+	scc_free_digraph(&exg);
+	scc_free_digraph(&exclusion_graph);
 }
 
 /*
