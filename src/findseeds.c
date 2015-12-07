@@ -49,7 +49,7 @@ struct iscc_fs_SortResult {
 
 
 /*
- * Function:  iscc_fs_check_input 
+ * Function: iscc_fs_check_input 
  * --------------------
  * Checks the input to the seed finding functions.
  *
@@ -86,6 +86,7 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease, scc_Vid* re
 
 	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos, const scc_Vid* last_pos, const scc_Vid* inwards_count);
 #endif
+
 
 // ==============================================================================
 // External function implementations
@@ -427,11 +428,11 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 		for (; pos != bucket_start; --pos) {
 			assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
 			if (tmp_v >= *(pos - 1)) break;
-			*(pos) = *(pos - 1);
-			vertex_index[*(pos)] = pos;
+			*pos = *(pos - 1);
+			vertex_index[*pos] = pos;
 		}
-		*(pos) = tmp_v;
-		vertex_index[*(pos)] = pos;
+		*pos = tmp_v;
+		vertex_index[*pos] = pos;
 	}
 
 	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
