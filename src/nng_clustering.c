@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "findseeds.h"
+#include "../include/digraph.h"
 
 
 void scc_free_Clustering(scc_Clustering* const cl) {
@@ -59,7 +60,7 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 			seed_results = iscc_findseeds_lexical(nng, &clustering);
 			break;
 
-		case inwards_once:
+		case inwards_order:
 			seed_results = iscc_findseeds_inwards(nng, &clustering, false);
 			break;
 
@@ -67,7 +68,7 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 			seed_results = iscc_findseeds_inwards(nng, &clustering, true);
 			break;
 
-		case exclusion_once:
+		case exclusion_order:
 			seed_results = iscc_findseeds_exclusion(nng, &clustering, false);
 			break;
 

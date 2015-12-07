@@ -28,9 +28,9 @@
 
 enum scc_SeedMethod {
 	lexical,
-	inwards_once,
+	inwards_order,
 	inwards_updating,
-	exclusion_once,
+	exclusion_order,
 	exclusion_updating,
 	//simulated_annealing,
 };
