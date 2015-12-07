@@ -409,6 +409,7 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 		vertex_index[*move_from] = move_from;
 
 		#ifdef SCC_STABLE_CLUSTERING
+			// Sort the two buckets with the moved vertices
 			iscc_fs_debug_vid_sort(bucket_index[inwards_count[v_to_decrease]],
 			                       move_to, inwards_count, vertex_index);
 			iscc_fs_debug_vid_sort(move_to + 1, move_from, inwards_count, vertex_index);
