@@ -316,6 +316,8 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 2);
 
+	stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
+
 	iscc_fs_set_seed(2, &nng, &clustering);
 	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
 	bool ref_seed2[7] = {false, true, true, false, false, false, false};
@@ -339,6 +341,8 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 4);
 
+	stc_assigned[2] = stc_assigned[5] = false;
+
 	iscc_fs_set_seed(3, &nng, &clustering);
 	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
 	bool ref_seed3[7] = {false, false, false, true, false, true, false};
@@ -348,6 +352,8 @@ void scc_ut_fs_set_seed(void** state) {
 	assert_memory_equal(clustering.cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
 	assert_int_equal(clustering.vertices, 7);
 	assert_int_equal(clustering.num_clusters, 5);
+
+	stc_assigned[6] = false;
 
 	iscc_fs_set_seed(6, &nng, &clustering);
 	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
@@ -482,6 +488,7 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 int main(void) {
 	const struct CMUnitTest test_findseeds_internals[] = {
 		cmocka_unit_test(scc_ut_fs_check_input),
+		cmocka_unit_test(scc_ut_exclusion_graph),
 		cmocka_unit_test(scc_ut_fs_sort_by_inwards),
 		cmocka_unit_test(scc_ut_fs_check_candidate_vertex),
 		cmocka_unit_test(scc_ut_fs_set_seed),
