@@ -2,7 +2,7 @@ CC=gcc
 FLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 EXLIBS=-lcmocka
 OBJECTS=digraph_core.o digraph_operations.o digraph_debug.o findseeds.o nng_clustering.o
-STDTESTS=test_digraph_core test_digraph_debug test_digraph_operations
+STDTESTS=test_digraph_core test_digraph_debug test_digraph_operations test_findseeds
 SPECTESTS=test_findseeds_internals
 ALLTESTS=$(STDTESTS) $(SPECTESTS)
 BUILDOBJS=$(addprefix build/,$(OBJECTS))
