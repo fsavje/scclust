@@ -322,6 +322,7 @@ static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Di
 
 static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nng, scc_Clustering* const clustering) {
 	
+	assert(!clustering->assigned[s]);
 	clustering->seed[s] = true;
 	clustering->assigned[s] = true;
 	clustering->cluster_label[s] = clustering->num_clusters;
@@ -329,6 +330,7 @@ static inline void iscc_fs_set_seed(const scc_Vid s, const scc_Digraph* const nn
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
 	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
 	        s_arc != s_arc_stop; ++s_arc) {
+		assert(!clustering->assigned[*s_arc]);
 		clustering->assigned[*s_arc] = true;
 		clustering->cluster_label[*s_arc] = clustering->num_clusters;
 	}
