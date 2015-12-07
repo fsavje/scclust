@@ -32,10 +32,12 @@ typedef uint32_t scc_Vid;
 // MAX(scc_Vid): maximum value of scc_Vid
 #define SCC_VID_MAX UINT32_MAX
 
+
 // Arc reference type
 // Number of arcs in any digraph <= MAX(scc_Arcref)
 // Should be MAX(scc_Arcref) >= MAX(scc_Vid)
 typedef uint32_t scc_Arcref;
+
 
 // Cluster label
 // Number of clusters <= MAX(scc_Clulab)
@@ -43,6 +45,11 @@ typedef uint32_t scc_Clulab;
 
 // MAX(scc_Clulab): maximum value of scc_Clulab
 #define SCC_CLULAB_MAX UINT32_MAX
+
+
+// Uncomment to make clustering stable by sorting on vertex id
+// This increases runtime considerably, generally only recommended for debugging.
+//#define SCC_STABLE_CLUSTERING
 
 
 #endif
