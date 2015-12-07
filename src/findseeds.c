@@ -118,7 +118,8 @@ bool iscc_findseeds_inwards(const scc_Digraph* const nng, scc_Clustering* const 
 					const scc_Vid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
 					for (scc_Vid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
-						if (!assigned[*v_arc_arc]) {
+						// Only decrease if vertex can be seed (i.e., not already assigned and not already considered)
+						if (!assigned[*v_arc_arc] && sorted_v < sort.vertex_index[*v_arc_arc]) {
 							iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
 						}
 					}
@@ -342,7 +343,6 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
                                               scc_Vid* const current_pos) {
 	// Assert that vertex index is correct
 	assert(v_to_decrease == *vertex_index[v_to_decrease]);
-	assert(current_pos < vertex_index[v_to_decrease]);
 
 	// Find vertices to move
 	scc_Vid* const move_from = vertex_index[v_to_decrease];
