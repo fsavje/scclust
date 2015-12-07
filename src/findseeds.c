@@ -204,6 +204,25 @@ bool iscc_findseeds_exclusion(const scc_Digraph* const nng, scc_Clustering* cons
 }
 
 
+/*
+
+Exclusion graph does not give one arc optimality
+
+     *            *
+     |            |
+     v            v
+  *->*->*->*<->*<-*<-*<-*
+     ^            ^
+     |            |
+     *            *
+
+bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, scc_Clustering* const clustering) {
+	if (!iscc_fs_check_input(nng, clustering)) return false;
+	//Among those with 0 inwards arcs, sort on exclusion graph 
+}
+*/
+
+
 // ==============================================================================
 // Internal function implementations 
 // ==============================================================================
