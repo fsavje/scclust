@@ -48,12 +48,14 @@ struct scc_Clustering {
 	scc_Clulab* cluster_label;
 };
 
-void scc_free_Clustering(scc_Clustering* cl);
-scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm, scc_Vid seed_init_capacity);
-
 static inline scc_Clustering scc_null_clustering(void) {
 	return (scc_Clustering) { 0, 0, 0, NULL, NULL, NULL };
 }
+
+void scc_free_Clustering(scc_Clustering* cl);
+scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm, scc_Vid seed_init_capacity);
+bool scc_assign_remaining_lexical(scc_Clustering* clustering, const scc_Digraph* priority_graph);
+bool scc_assign_remaining_keep_even(scc_Clustering* clustering, const scc_Digraph* priority_graph, scc_Vid desired_size);
 
 
 #endif
