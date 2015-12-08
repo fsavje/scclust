@@ -26,6 +26,7 @@
 #include "config.h"
 #include "digraph.h"
 
+
 enum scc_SeedMethod {
 	lexical,
 	inwards_order,
@@ -36,19 +37,23 @@ enum scc_SeedMethod {
 };
 typedef enum scc_SeedMethod scc_SeedMethod;
 
-// Consider changing to array of structs instead
-// Faster when assigning but slower when reading
+
 typedef struct scc_Clustering scc_Clustering;
 struct scc_Clustering {
 	scc_Vid vertices;
+	scc_Vid seed_capacity;
 	scc_Clulab num_clusters;
 	bool* assigned;
-	bool* seed;
+	scc_Vid* seeds;
 	scc_Clulab* cluster_label;
 };
 
 void scc_free_Clustering(scc_Clustering* cl);
-scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm);
+scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm, scc_Vid seed_init_capacity);
+
+static inline scc_Clustering scc_null_clustering(void) {
+	return (scc_Clustering) { 0, 0, 0, NULL, NULL, NULL };
+}
 
 
 #endif

@@ -30,50 +30,186 @@
 #include "../include/digraph.h"
 
 
-void scc_ut_fs_check_input(void** state) {
+#ifdef SCC_STABLE_CLUSTERING
+    #error Please run this test without the SCC_STABLE_CLUSTERING flag
+#endif
+
+
+void scc_ut_fs_check_candidate_vertex(void** state) {
 	(void) state;
 
-	scc_Digraph empty0 = scc_empty_digraph(0, 0);
-	scc_Digraph empty10 = scc_empty_digraph(10, 10);
+	scc_Digraph nng = scc_digraph_from_string("..**..*/"
+	                                          "..*.*.*/"
+	                                          "*...*.*/"
+	                                          "..*..**/"
+	                                          "......./"
+	                                          "..*..../"
+	                                          "......./");
 
-	scc_Clustering clustering = {
-		.vertices = 10,
-		.num_clusters = 0,
-		.assigned = calloc(10, sizeof(bool)),
-		.seed = calloc(10, sizeof(bool)),
-		.cluster_label = malloc(sizeof(scc_Clulab[10])),
-	};
+	bool assigned[7] = {true, false, false, false, true, false, false};
 
-	assert_true(iscc_fs_check_input(&empty10, &clustering));
+	assert_false(iscc_fs_check_candidate_vertex(0, &nng, assigned));
+	assert_false(iscc_fs_check_candidate_vertex(1, &nng, assigned));
+	assert_false(iscc_fs_check_candidate_vertex(2, &nng, assigned));
+	assert_true(iscc_fs_check_candidate_vertex(3, &nng, assigned));
+	assert_false(iscc_fs_check_candidate_vertex(4, &nng, assigned));
+	assert_true(iscc_fs_check_candidate_vertex(5, &nng, assigned));
+	assert_false(iscc_fs_check_candidate_vertex(6, &nng, assigned));
 
-	assert_false(iscc_fs_check_input(NULL, &clustering));
-	assert_false(iscc_fs_check_input(&empty10, NULL));
-
-	scc_Digraph nng_tmp = scc_digraph_from_pieces(10, 10, NULL, NULL);
-	assert_false(iscc_fs_check_input(&nng_tmp, &clustering));
-
-	scc_Clustering cl_tmp = clustering;
-	cl_tmp.assigned = NULL;
-	assert_false(iscc_fs_check_input(&empty10, &cl_tmp));
-	cl_tmp = clustering;
-	cl_tmp.seed = NULL;
-	assert_false(iscc_fs_check_input(&empty10, &cl_tmp));
-	cl_tmp = clustering;
-	cl_tmp.cluster_label = NULL;
-	assert_false(iscc_fs_check_input(&empty10, &cl_tmp));
-
-	clustering.vertices = 5;
-	assert_false(iscc_fs_check_input(&empty10, &clustering));
-	clustering.vertices = 10;
-	assert_true(iscc_fs_check_input(&empty10, &clustering));
-
-	assert_false(iscc_fs_check_input(&empty0, &clustering));
-
-	scc_free_Clustering(&clustering);
-	scc_free_digraph(&empty0);
-	scc_free_digraph(&empty10);
+	scc_free_digraph(&nng);
 }
 
+void scc_ut_fs_add_seed(void** state) {
+	(void) state;
+
+	scc_Clustering cl = {
+		.vertices = 10,
+		.seed_capacity = 1,
+		.num_clusters = 0,
+		.assigned = NULL,
+		.seeds = malloc(sizeof(scc_Vid[1])),
+		.cluster_label = NULL,
+	};
+
+	scc_Vid ref_seeds[6] = {4, 1, 6, 3, 5, 7};
+
+	assert_true(iscc_fs_add_seed(4, &cl));
+	assert_true(iscc_fs_add_seed(1, &cl));
+	assert_true(iscc_fs_add_seed(6, &cl));
+	assert_true(iscc_fs_add_seed(3, &cl));
+	assert_true(iscc_fs_add_seed(5, &cl));
+	assert_true(iscc_fs_add_seed(7, &cl));
+
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.seed_capacity, 8);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_null(cl.assigned);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
+
+	iscc_fs_shrink_seeds_array(&cl);
+
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.seed_capacity, 6);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_null(cl.assigned);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
+	
+	iscc_fs_shrink_seeds_array(&cl);
+
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.seed_capacity, 6);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_null(cl.assigned);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
+
+	scc_free_Clustering(&cl);
+}
+
+void scc_ut_fs_assign_neighbors(void** state) {
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("..**..*/"
+	                                          "..*.*.*/"
+	                                          "*...*.*/"
+	                                          "..*..**/"
+	                                          "......./"
+	                                          "..*..../"
+	                                          "......./");
+
+	bool stc_assigned[7] = {false, false, false, false, false, false, false};
+	scc_Clulab stc_cluster_label[7] = {SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX};
+
+	iscc_fs_assign_neighbors(0, 0, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned0[7] = {true, false, true, true, false, false, true};
+	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
+	assert_memory_equal(stc_assigned, ref_assigned0, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clulab));
+
+	stc_assigned[0] = stc_assigned[2] = stc_assigned[3] = stc_assigned[6] = false;
+
+	iscc_fs_assign_neighbors(1, 1, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned1[7] = {false, true, true, false, true, false, true};
+	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
+	assert_memory_equal(stc_assigned, ref_assigned1, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clulab));
+
+	stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
+
+	iscc_fs_assign_neighbors(2, 2, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
+	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
+	assert_memory_equal(stc_assigned, ref_assigned2, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clulab));
+
+	stc_assigned[0] = stc_assigned[1] = stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
+
+	iscc_fs_assign_neighbors(5, 3, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned5[7] = {false, false, true, false, false, true, false};
+	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
+	assert_memory_equal(stc_assigned, ref_assigned5, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clulab));
+
+	stc_assigned[2] = stc_assigned[5] = false;
+
+	iscc_fs_assign_neighbors(3, 4, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
+	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
+	assert_memory_equal(stc_assigned, ref_assigned3, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
+
+	stc_assigned[6] = false;
+
+	iscc_fs_assign_neighbors(6, 5, &nng, stc_assigned, stc_cluster_label);
+	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
+	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
+	assert_memory_equal(stc_assigned, ref_assigned6, 7 * sizeof(bool));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clulab));
+
+	scc_free_digraph(&nng);
+}
+
+void scc_ut_fs_assign_cl_labels(void** state) {
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("..**..*/"
+	                                          "..*.*.*/"
+	                                          "*...*.*/"
+	                                          "..*..**/"
+	                                          "......./"
+	                                          "..*..../"
+	                                          "......./");
+
+	scc_Clulab stc_cluster_label[7] = {SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX};
+
+	iscc_fs_assign_cl_labels(0, 0, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clulab));
+
+	iscc_fs_assign_cl_labels(1, 1, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clulab));
+
+	iscc_fs_assign_cl_labels(2, 2, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clulab));
+
+	iscc_fs_assign_cl_labels(5, 3, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clulab));
+
+	iscc_fs_assign_cl_labels(3, 4, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
+
+	iscc_fs_assign_cl_labels(6, 5, &nng, stc_cluster_label);
+	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clulab));
+
+	scc_free_digraph(&nng);
+}
 
 void scc_ut_exclusion_graph(void** state) {
 	(void) state;
@@ -245,130 +381,6 @@ void scc_ut_fs_sort_by_inwards(void** state) {
 	scc_free_digraph(&nng3);
 }
 
-void scc_ut_fs_check_candidate_vertex(void** state) {
-	(void) state;
-
-	scc_Digraph nng = scc_digraph_from_string("..**..*/"
-	                                          "..*.*.*/"
-	                                          "*...*.*/"
-	                                          "..*..**/"
-	                                          "......./"
-	                                          "..*..../"
-	                                          "......./");
-
-	bool assigned[7] = {true, false, false, false, true, false, false};
-
-	assert_false(iscc_fs_check_candidate_vertex(0, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(1, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(2, &nng, assigned));
-	assert_true(iscc_fs_check_candidate_vertex(3, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(4, &nng, assigned));
-	assert_true(iscc_fs_check_candidate_vertex(5, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(6, &nng, assigned));
-
-	scc_free_digraph(&nng);
-}
-
-
-void scc_ut_fs_set_seed(void** state) {
-	(void) state;
-
-	scc_Digraph nng = scc_digraph_from_string("..**..*/"
-	                                          "..*.*.*/"
-	                                          "*...*.*/"
-	                                          "..*..**/"
-	                                          "......./"
-	                                          "..*..../"
-	                                          "......./");
-
-	bool stc_assigned[7] = {false, false, false, false, false, false, false};
-	bool stc_seed[7] = {false, false, false, false, false, false, false};
-	scc_Clulab stc_cluster_label[7] = {SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX};
-
-	scc_Clustering clustering = {
-		.vertices = 7,
-		.num_clusters = 0,
-		.assigned = stc_assigned,
-		.seed = stc_seed,
-		.cluster_label = stc_cluster_label,
-	};
-
-	iscc_fs_set_seed(0, &nng, &clustering);
-	bool ref_assigned0[7] = {true, false, true, true, false, false, true};
-	bool ref_seed0[7] = {true, false, false, false, false, false, false};
-	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
-	assert_memory_equal(clustering.assigned, ref_assigned0, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed0, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 1);
-
-	stc_assigned[0] = stc_assigned[2] = stc_assigned[3] = stc_assigned[6] = false;
-	stc_seed[0] = false;
-
-	iscc_fs_set_seed(1, &nng, &clustering);
-	bool ref_assigned1[7] = {false, true, true, false, true, false, true};
-	bool ref_seed1[7] = {false, true, false, false, false, false, false};
-	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
-	assert_memory_equal(clustering.assigned, ref_assigned1, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed1, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 2);
-
-	stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
-
-	iscc_fs_set_seed(2, &nng, &clustering);
-	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
-	bool ref_seed2[7] = {false, true, true, false, false, false, false};
-	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
-	assert_memory_equal(clustering.assigned, ref_assigned2, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed2, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 3);
-
-	stc_assigned[0] = stc_assigned[1] = stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
-	stc_seed[1] = stc_seed[2] = false;
-
-	iscc_fs_set_seed(5, &nng, &clustering);
-	bool ref_assigned5[7] = {false, false, true, false, false, true, false};
-	bool ref_seed5[7] = {false, false, false, false, false, true, false};
-	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
-	assert_memory_equal(clustering.assigned, ref_assigned5, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed5, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 4);
-
-	stc_assigned[2] = stc_assigned[5] = false;
-
-	iscc_fs_set_seed(3, &nng, &clustering);
-	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
-	bool ref_seed3[7] = {false, false, false, true, false, true, false};
-	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
-	assert_memory_equal(clustering.assigned, ref_assigned3, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed3, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 5);
-
-	stc_assigned[6] = false;
-
-	iscc_fs_set_seed(6, &nng, &clustering);
-	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
-	bool ref_seed6[7] = {false, false, false, true, false, true, true};
-	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
-	assert_memory_equal(clustering.assigned, ref_assigned6, 7 * sizeof(bool));
-	assert_memory_equal(clustering.seed, ref_seed6, 7 * sizeof(bool));
-	assert_memory_equal(clustering.cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clulab));
-	assert_int_equal(clustering.vertices, 7);
-	assert_int_equal(clustering.num_clusters, 6);
-
-	scc_free_digraph(&nng);
-}
-
-
 void scc_ut_fs_decrease_v_in_sort(void** state) {
 	(void) state;
 
@@ -487,11 +499,12 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 
 int main(void) {
 	const struct CMUnitTest test_findseeds_internals[] = {
-		cmocka_unit_test(scc_ut_fs_check_input),
+		cmocka_unit_test(scc_ut_fs_check_candidate_vertex),
+		cmocka_unit_test(scc_ut_fs_add_seed),
+		cmocka_unit_test(scc_ut_fs_assign_neighbors),
+		cmocka_unit_test(scc_ut_fs_assign_cl_labels),
 		cmocka_unit_test(scc_ut_exclusion_graph),
 		cmocka_unit_test(scc_ut_fs_sort_by_inwards),
-		cmocka_unit_test(scc_ut_fs_check_candidate_vertex),
-		cmocka_unit_test(scc_ut_fs_set_seed),
 		cmocka_unit_test(scc_ut_fs_decrease_v_in_sort),
 	};
 
