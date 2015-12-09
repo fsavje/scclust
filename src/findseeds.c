@@ -28,6 +28,9 @@
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"
 
+#ifdef SCC_STABLE_CLUSTERING
+ 	#include "findseeds_debug.h"
+#endif
 
 // ==============================================================================
 // Internal structs
@@ -76,15 +79,6 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
                                               scc_Vid** restrict vertex_index,
                                               scc_Vid** restrict bucket_index,
                                               scc_Vid* current_pos);
-
-#ifdef SCC_STABLE_CLUSTERING
-
-
-	static inline void iscc_fs_debug_vid_sort(scc_Vid* bucket_start, scc_Vid* pos, const scc_Vid* inwards_count, scc_Vid** vertex_index);
-
-	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos, const scc_Vid* last_pos, const scc_Vid* inwards_count);
-
-#endif
 
 
 // ==============================================================================
@@ -519,7 +513,7 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 		vertex_index[*move_from] = move_from;
 
 		#ifdef SCC_STABLE_CLUSTERING
-			iscc_fs_debug_vid_sort(move_to + 1, move_from, inwards_count, vertex_index);
+			iscc_fs_debug_bucket_sort(move_to + 1, move_from, inwards_count, vertex_index);
 		#endif
 	}
 
@@ -527,37 +521,7 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 		if (bucket_index[inwards_count[v_to_decrease]] <= current_pos) {
 			bucket_index[inwards_count[v_to_decrease]] = current_pos + 1;
 		}
-		iscc_fs_debug_vid_sort(bucket_index[inwards_count[v_to_decrease]],
-		                       move_to, inwards_count, vertex_index);
+		iscc_fs_debug_bucket_sort(bucket_index[inwards_count[v_to_decrease]],
+		                          move_to, inwards_count, vertex_index);
 	#endif
 }
-
-#ifdef SCC_STABLE_CLUSTERING
-
-	static inline void iscc_fs_debug_vid_sort(scc_Vid* const bucket_start,
-	                                          scc_Vid* pos,
-	                                          const scc_Vid* const inwards_count,
-	                                          scc_Vid** const vertex_index) {
-		scc_Vid tmp_v = *pos;
-		for (; pos != bucket_start; --pos) {
-			assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
-			if (tmp_v >= *(pos - 1)) break;
-			*pos = *(pos - 1);
-			vertex_index[*pos] = pos;
-		}
-		*pos = tmp_v;
-		vertex_index[*pos] = pos;
-	}
-
-	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
-	                                            const scc_Vid* const last_pos,
-	                                            const scc_Vid* const inwards_count) {
-		for (; current_pos != last_pos; ++current_pos) {
-			assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);
-			if (inwards_count[*(current_pos)] == inwards_count[*(current_pos + 1)]) {
-				assert(*(current_pos) < *(current_pos + 1));
-			}
-		}
-	}
-
-#endif
