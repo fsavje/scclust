@@ -121,6 +121,8 @@ scc_Clustering iscc_findseeds_lexical(const scc_Digraph* const nng, const scc_Vi
 scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vid seed_init_capacity, const bool updating) {
 	if (!nng || !nng->tail_ptr) return scc_null_clustering();
 
+	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
+
 	scc_Clustering cl = {
 		.vertices = nng->vertices,
 		.seed_capacity = seed_init_capacity,
@@ -130,11 +132,9 @@ scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vi
 		.cluster_label = NULL,
 	};
 
-	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
-
 	if (!cl.assigned || !cl.seeds || !sort.sorted_vertices) {
-		scc_free_Clustering(&cl);
 		iscc_fs_free_SortResult(&sort);
+		scc_free_Clustering(&cl);
 		return cl;
 	}
 
@@ -150,8 +150,8 @@ scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vi
 			assert(!cl.assigned[*sorted_v]);
 			cl.assigned[*sorted_v] = true;
 			if (!iscc_fs_add_seed(*sorted_v, &cl)) {
-				scc_free_Clustering(&cl);
 				iscc_fs_free_SortResult(&sort);
+				scc_free_Clustering(&cl);
 				return cl;
 			}
 
@@ -160,8 +160,11 @@ scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vi
 			        v_arc != v_arc_stop; ++v_arc) {
 				assert(!cl.assigned[*v_arc]);
 				cl.assigned[*v_arc] = true;
+			}
 
-				if (updating) {
+			if (updating) {
+				for (const scc_Vid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
+				        v_arc != v_arc_stop; ++v_arc) {
 					const scc_Vid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
 					for (scc_Vid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
