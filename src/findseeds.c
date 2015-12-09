@@ -209,11 +209,11 @@ scc_Clustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_
 	}
 
 	// Remove edges to vertices that cannot be seeds
-	for (scc_Vid v = 0; v < vertices; ++v) {
+	for (scc_Vid v = 0; v < nng->vertices; ++v) {
 		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
 			excluded[v] = true;
 			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[v + 1];
-			for (const scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[v];
+			for (scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[v];
 			        ex_arc != ex_arc_stop; ++ex_arc) {
 				*ex_arc = SCC_VID_MAX;
 			}

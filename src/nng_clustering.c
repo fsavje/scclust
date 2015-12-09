@@ -102,7 +102,7 @@ bool scc_assign_remaining_lexical(scc_Clustering* const clustering, const scc_Di
 
 bool scc_assign_remaining_keep_even(scc_Clustering* const clustering, const scc_Digraph* const priority_graph, const scc_Vid desired_size) {
 
-	cluster_size = calloc(clustering->num_clusters, sizeof(scc_Vid));
+	scc_Vid* cluster_size = calloc(clustering->num_clusters, sizeof(scc_Vid));
 	if (!cluster_size) return false;
 
 	const scc_Vid vertices = clustering->vertices;

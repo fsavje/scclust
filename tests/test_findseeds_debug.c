@@ -22,6 +22,7 @@
 
 #include "test_suite.h"
 
+#include "../src/findseeds_debug.h"
 #include "../src/findseeds.c"
 #include "../include/config.h"
 #include "../include/digraph.h"
@@ -36,7 +37,7 @@ void scc_ut_fs_debug_vid_sort(void** state) {
 	scc_Vid inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
 	scc_Vid* vertex_index1[7];
 	for (scc_Vid* b = buckets1; b != buckets1 + 7; ++b) vertex_index1[*b] = b;
-	iscc_fs_debug_vid_sort(buckets1 + 2, buckets1 + 5, inwards_count1, vertex_index1);
+	iscc_fs_debug_bucket_sort(buckets1 + 2, buckets1 + 5, inwards_count1, vertex_index1);
 
 	scc_Vid ref_buckets1[7] = {1, 4, 2, 3, 5, 6, 0};
 	scc_Vid ref_inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
@@ -51,7 +52,7 @@ void scc_ut_fs_debug_vid_sort(void** state) {
 	scc_Vid inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
 	scc_Vid* vertex_index2[7];
 	for (scc_Vid* b = buckets2; b != buckets2 + 7; ++b) vertex_index2[*b] = b;
-	iscc_fs_debug_vid_sort(buckets2 + 2, buckets2 + 5, inwards_count2, vertex_index2);
+	iscc_fs_debug_bucket_sort(buckets2 + 2, buckets2 + 5, inwards_count2, vertex_index2);
 
 	scc_Vid ref_buckets2[7] = {1, 4, 2, 3, 5, 6, 0};
 	scc_Vid ref_inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
@@ -66,7 +67,7 @@ void scc_ut_fs_debug_vid_sort(void** state) {
 	scc_Vid inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
 	scc_Vid* vertex_index3[7];
 	for (scc_Vid* b = buckets3; b != buckets3 + 7; ++b) vertex_index3[*b] = b;
-	iscc_fs_debug_vid_sort(buckets3 + 6, buckets3 + 6, inwards_count3, vertex_index3);
+	iscc_fs_debug_bucket_sort(buckets3 + 6, buckets3 + 6, inwards_count3, vertex_index3);
 
 	scc_Vid ref_buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
 	scc_Vid ref_inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
