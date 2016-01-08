@@ -29,12 +29,12 @@
 
 
 enum scc_SeedMethod {
-	lexical,
-	inwards_order,
-	inwards_updating,
-	exclusion_order,
-	exclusion_updating,
-	//simulated_annealing,
+	SCC_LEXICAL,
+	SCC_INWARDS_ORDER,
+	SCC_INWARDS_UPDATING,
+	SCC_EXCLUSION_ORDER,
+	SCC_EXCLUSION_UPDATING,
+	//SCC_SIMULATED_ANNEALING,
 };
 typedef enum scc_SeedMethod scc_SeedMethod;
 

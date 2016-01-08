@@ -51,23 +51,23 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 
 	switch(sm) {
 
-		case lexical:
+		case SCC_LEXICAL:
 			clustering = iscc_findseeds_lexical(nng, seed_init_capacity);
 			break;
 
-		case inwards_order:
+		case SCC_INWARDS_ORDER:
 			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, false);
 			break;
 
-		case inwards_updating:
+		case SCC_INWARDS_UPDATING:
 			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, true);
 			break;
 
-		case exclusion_order:
+		case SCC_EXCLUSION_ORDER:
 			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
 			break;
 
-		case exclusion_updating:
+		case SCC_EXCLUSION_UPDATING:
 			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
 			break;
 

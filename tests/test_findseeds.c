@@ -69,7 +69,7 @@ void scc_ut_findseeds_lexical(void** state) {
 	assert_int_equal(cl_from_low.cluster_label[7], fp_cluster_label[7]);
 
 
-	scc_Clustering cl_from_high = scc_base_clustering(&nng, lexical, 6);
+	scc_Clustering cl_from_high = scc_base_clustering(&nng, SCC_LEXICAL, 6);
 	assert_int_equal(cl_from_high.vertices, 10);
 	assert_int_equal(cl_from_low.seed_capacity, 3);
 	assert_int_equal(cl_from_high.num_clusters, 3);
@@ -115,7 +115,7 @@ void scc_ut_findseeds_inwards(void** state) {
 	assert_memory_equal(cl_from_low.cluster_label, fp_cluster_label, 8 * sizeof(bool));
 
 
-	scc_Clustering cl_from_high = scc_base_clustering(&nng, inwards_order, 6);
+	scc_Clustering cl_from_high = scc_base_clustering(&nng, SCC_INWARDS_ORDER, 6);
 	assert_int_equal(cl_from_high.vertices, 10);
 	assert_int_equal(cl_from_low.seed_capacity, 4);
 	assert_int_equal(cl_from_high.num_clusters, 4);
@@ -156,7 +156,7 @@ void scc_ut_findseeds_inwards_updating(void** state) {
 	assert_memory_equal(cl_from_low.cluster_label, fp_cluster_label, 8 * sizeof(bool));
 
 
-	scc_Clustering cl_from_high = scc_base_clustering(&nng, inwards_updating, 6);
+	scc_Clustering cl_from_high = scc_base_clustering(&nng, SCC_INWARDS_UPDATING, 6);
 	assert_int_equal(cl_from_high.vertices, 10);
 	assert_int_equal(cl_from_low.seed_capacity, 4);
 	assert_int_equal(cl_from_high.num_clusters, 4);
@@ -196,7 +196,7 @@ void scc_ut_findseeds_exclusion(void** state) {
 	assert_memory_equal(cl_from_low.seeds, fp_seeds, 4 * sizeof(scc_Vid));
 	assert_memory_equal(cl_from_low.cluster_label, fp_cluster_label, 8 * sizeof(bool));
  
-	scc_Clustering cl_from_high = scc_base_clustering(&nng, exclusion_order, 6);
+	scc_Clustering cl_from_high = scc_base_clustering(&nng, SCC_EXCLUSION_ORDER, 6);
 	assert_int_equal(cl_from_high.vertices, 10);
 	assert_int_equal(cl_from_low.seed_capacity, 4);
 	assert_int_equal(cl_from_high.num_clusters, 4);
@@ -237,7 +237,7 @@ void scc_ut_findseeds_exclusion_updating(void** state) {
 	assert_memory_equal(cl_from_low.cluster_label, fp_cluster_label, 8 * sizeof(bool));
 
 
-	scc_Clustering cl_from_high = scc_base_clustering(&nng, exclusion_updating, 6);
+	scc_Clustering cl_from_high = scc_base_clustering(&nng, SCC_EXCLUSION_UPDATING, 6);
 	assert_int_equal(cl_from_high.vertices, 10);
 	assert_int_equal(cl_from_low.seed_capacity, 4);
 	assert_int_equal(cl_from_high.num_clusters, 4);
@@ -273,27 +273,27 @@ void scc_ut_findseeds_checkseeds18(void** state) {
 	                                          ".............**.../"
 	                                          "..............*.*./");
 
-	scc_Clustering cl_seed_lexical = scc_base_clustering(&nng, lexical, 7);
+	scc_Clustering cl_seed_lexical = scc_base_clustering(&nng, SCC_LEXICAL, 7);
 	scc_Vid ref_seeds_lexical[5] = {0, 5, 6, 10, 12};
 	assert_memory_equal(cl_seed_lexical.seeds, ref_seeds_lexical, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_lexical.num_clusters, 5);
 
-	scc_Clustering cl_seed_inwards = scc_base_clustering(&nng, inwards_order, 7);
+	scc_Clustering cl_seed_inwards = scc_base_clustering(&nng, SCC_INWARDS_ORDER, 7);
 	scc_Vid ref_seeds_inwards[5] = {2, 6, 11, 12, 13};
 	assert_memory_equal(cl_seed_inwards.seeds, ref_seeds_inwards, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_inwards.num_clusters, 5);
 
-	scc_Clustering cl_seed_inupdat = scc_base_clustering(&nng, inwards_updating, 7);
+	scc_Clustering cl_seed_inupdat = scc_base_clustering(&nng, SCC_INWARDS_UPDATING, 7);
 	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
 	assert_memory_equal(cl_seed_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_inupdat.num_clusters, 5);
 
-	scc_Clustering cl_seed_exclusi = scc_base_clustering(&nng, exclusion_order, 7);
+	scc_Clustering cl_seed_exclusi = scc_base_clustering(&nng, SCC_EXCLUSION_ORDER, 7);
 	scc_Vid ref_seeds_exclusi[4] = {8, 15, 0, 13};
 	assert_memory_equal(cl_seed_exclusi.seeds, ref_seeds_exclusi, 4 * sizeof(bool));
 	assert_int_equal(cl_seed_exclusi.num_clusters, 4);
 
-	scc_Clustering cl_seed_exupdat = scc_base_clustering(&nng, exclusion_updating, 7);
+	scc_Clustering cl_seed_exupdat = scc_base_clustering(&nng, SCC_EXCLUSION_UPDATING, 7);
 	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 4};
 	assert_memory_equal(cl_seed_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_exupdat.num_clusters, 5);
