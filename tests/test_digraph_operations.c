@@ -41,7 +41,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
 	scc_Digraph ut_make12_a = scc_digraph_union(2, sum_12);
 	assert_sound_digraph(&ut_make12_a, 4);
-	scc_Arcref tail_ptr12[5] = {0,2,4,6,8};
+	scc_Arci tail_ptr12[5] = {0,2,4,6,8};
 	scc_Vid head12[8] = {0,3,1,2,2,1,3,0};
 	scc_Digraph ut_control12 = scc_digraph_from_pieces(4, 8, tail_ptr12, head12);
 	assert_identical_digraph(&ut_control12, &ut_make12_a);
@@ -50,7 +50,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_13[2] = {&ut_dg1, &ut_dg3};
 	scc_Digraph ut_make13_a = scc_digraph_union(2, sum_13);
 	assert_sound_digraph(&ut_make13_a, 4);
-	scc_Arcref tail_ptr13[5] = {0,1,3,5,7};
+	scc_Arci tail_ptr13[5] = {0,1,3,5,7};
 	scc_Vid head13[7] = {0,1,0,2,0,3,0};
 	scc_Digraph ut_control13 = scc_digraph_from_pieces(4, 7, tail_ptr13, head13);
 	assert_identical_digraph(&ut_control13, &ut_make13_a);
@@ -59,7 +59,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
 	scc_Digraph ut_make31_a = scc_digraph_union(2, sum_31);
 	assert_sound_digraph(&ut_make31_a, 4);
-	scc_Arcref tail_ptr31[5] = {0,1,3,5,7};
+	scc_Arci tail_ptr31[5] = {0,1,3,5,7};
 	scc_Vid head31[7] = {0,0,1,0,2,0,3};
 	scc_Digraph ut_control31 = scc_digraph_from_pieces(4, 7, tail_ptr31, head31);
 	assert_identical_digraph(&ut_control31, &ut_make31_a);
@@ -70,7 +70,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_123[3] = {&ut_dg1, &ut_dg2, &ut_dg3};
 	scc_Digraph ut_make123 = scc_digraph_union(3, sum_123);
 	assert_sound_digraph(&ut_make123, 4);
-	scc_Arcref tail_ptr123[5] = {0,2,5,8,10};
+	scc_Arci tail_ptr123[5] = {0,2,5,8,10};
 	scc_Vid head123[10] = {0,3,1,2,0,2,1,0,3,0};
 	scc_Digraph ut_control123 = scc_digraph_from_pieces(4, 10, tail_ptr123, head123);
 	assert_identical_digraph(&ut_control123, &ut_make123);
@@ -78,7 +78,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_132[3] = {&ut_dg1, &ut_dg3, &ut_dg2};
 	scc_Digraph ut_make132 = scc_digraph_union(3, sum_132);
 	assert_sound_digraph(&ut_make132, 4);
-	scc_Arcref tail_ptr132[5] = {0,2,5,8,10};
+	scc_Arci tail_ptr132[5] = {0,2,5,8,10};
 	scc_Vid head132[10] = {0,3,1,0,2,2,0,1,3,0};
 	scc_Digraph ut_control132 = scc_digraph_from_pieces(4, 10, tail_ptr132, head132);
 	assert_identical_digraph(&ut_control132, &ut_make132);
@@ -86,7 +86,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_213[3] = {&ut_dg2, &ut_dg1, &ut_dg3};
 	scc_Digraph ut_make213 = scc_digraph_union(3, sum_213);
 	assert_sound_digraph(&ut_make213, 4);
-	scc_Arcref tail_ptr213[5] = {0,2,5,8,10};
+	scc_Arci tail_ptr213[5] = {0,2,5,8,10};
 	scc_Vid head213[10] = {3,0,2,1,0,1,2,0,0,3};
 	scc_Digraph ut_control213 = scc_digraph_from_pieces(4, 10, tail_ptr213, head213);
 	assert_identical_digraph(&ut_control213, &ut_make213);
@@ -94,7 +94,7 @@ void scc_ut_union_digraphs(void** state) {
 	const scc_Digraph* sum_321[3] = {&ut_dg3, &ut_dg2, &ut_dg1};
 	scc_Digraph ut_make321 = scc_digraph_union(3, sum_321);
 	assert_sound_digraph(&ut_make321, 4);
-	scc_Arcref tail_ptr321[5] = {0,2,5,8,10};
+	scc_Arci tail_ptr321[5] = {0,2,5,8,10};
 	scc_Vid head321[10] = {0,3,0,2,1,0,1,2,0,3};
 	scc_Digraph ut_control321 = scc_digraph_from_pieces(4, 10, tail_ptr321, head321);
 	assert_identical_digraph(&ut_control321, &ut_make321);

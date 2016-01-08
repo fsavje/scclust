@@ -33,7 +33,7 @@ bool scc_is_sound_digraph(const scc_Digraph* dg);
 bool scc_is_empty_digraph(const scc_Digraph* dg);
 bool scc_is_balanced_digraph(const scc_Digraph* dg, scc_Vid arcs_per_vertex);
 bool scc_digraphs_equal(const scc_Digraph* dg_a, const scc_Digraph* dg_b);
-scc_Digraph scc_digraph_from_pieces(scc_Vid vertices, scc_Arcref max_arcs, const scc_Arcref tail_ptr[vertices], const scc_Vid head[max_arcs]);
+scc_Digraph scc_digraph_from_pieces(scc_Vid vertices, scc_Arci max_arcs, const scc_Arci tail_ptr[vertices], const scc_Vid head[max_arcs]);
 scc_Digraph scc_digraph_from_string(const char dg_str[]);
 void scc_print_digraph(const scc_Digraph* dg);
 

@@ -27,14 +27,14 @@
 #include "../include/config.h"
 
 
-static inline scc_Arcref iscc_do_union(const scc_Vid vertices,
-                                       const size_t num_dgs,
-                                       const scc_Digraph* const * const dgs,
-                                       scc_Vid* restrict const row_markers,
-                                       const bool write,
-                                       scc_Arcref* restrict const out_tail_ptr,
-                                       scc_Vid* restrict const out_head) {
-	scc_Arcref counter = 0;
+static inline scc_Arci iscc_do_union(const scc_Vid vertices,
+                                     const size_t num_dgs,
+                                     const scc_Digraph* const * const dgs,
+                                     scc_Vid* restrict const row_markers,
+                                     const bool write,
+                                     scc_Arci* restrict const out_tail_ptr,
+                                     scc_Vid* restrict const out_head) {
+	scc_Arci counter = 0;
 	if (write) out_tail_ptr[0] = 0;
 	for (scc_Vid v = 0; v < vertices; ++v) row_markers[v] = SCC_VID_MAX;
 
@@ -67,7 +67,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs, const scc_Digraph* const dgs
 	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
 	if (!row_markers) return scc_null_digraph();
 
-	scc_Arcref out_arcs_write = 0;
+	scc_Arci out_arcs_write = 0;
 
 	// Try greedy memory count first
 	for (size_t i = 0; i < num_dgs; ++i) {
@@ -142,18 +142,18 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg) {
 }
 
 
-static inline scc_Arcref iscc_do_adjacency_product(const scc_Vid vertices,
-                                                   const scc_Arcref* const dg_a_tail_ptr,
-                                                   const scc_Vid* const dg_a_head,
-                                                   const scc_Arcref* const dg_b_tail_ptr,
-                                                   const scc_Vid* const dg_b_head,
-                                                   scc_Vid* restrict const row_markers,
-                                                   const bool force_diagonal,
-                                                   const bool ignore_diagonal,
-                                                   const bool write,
-                                                   scc_Arcref* restrict const out_tail_ptr,
-                                                   scc_Vid* restrict const out_head) {
-	scc_Arcref counter = 0;
+static inline scc_Arci iscc_do_adjacency_product(const scc_Vid vertices,
+                                                 const scc_Arci* const dg_a_tail_ptr,
+                                                 const scc_Vid* const dg_a_head,
+                                                 const scc_Arci* const dg_b_tail_ptr,
+                                                 const scc_Vid* const dg_b_head,
+                                                 scc_Vid* restrict const row_markers,
+                                                 const bool force_diagonal,
+                                                 const bool ignore_diagonal,
+                                                 const bool write,
+                                                 scc_Arci* restrict const out_tail_ptr,
+                                                 scc_Vid* restrict const out_head) {
+	scc_Arci counter = 0;
 	if (write) out_tail_ptr[0] = 0;
 	for (scc_Vid v = 0; v < vertices; ++v) row_markers[v] = SCC_VID_MAX;
 
@@ -202,7 +202,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a, const scc_Digra
 	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
 	if (!row_markers) return scc_null_digraph();
 
-	scc_Arcref out_arcs_write = 0;
+	scc_Arci out_arcs_write = 0;
 
 	// Try greedy memory count first
 	for (scc_Vid v = 0; v < vertices; ++v) {

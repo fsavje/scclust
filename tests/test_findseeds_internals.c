@@ -121,53 +121,53 @@ void scc_ut_fs_assign_neighbors(void** state) {
 	                                          "......./");
 
 	bool stc_assigned[7] = {false, false, false, false, false, false, false};
-	scc_Clulab stc_cluster_label[7] = {SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX};
+	scc_Clabel stc_cluster_label[7] = {SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
 	iscc_fs_assign_neighbors(0, 0, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned0[7] = {true, false, true, true, false, false, true};
-	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
+	scc_Clabel ref_cluster_label0[7] = {0, SCC_CLABEL_MAX, 0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 0};
 	assert_memory_equal(stc_assigned, ref_assigned0, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clabel));
 
 	stc_assigned[0] = stc_assigned[2] = stc_assigned[3] = stc_assigned[6] = false;
 
 	iscc_fs_assign_neighbors(1, 1, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned1[7] = {false, true, true, false, true, false, true};
-	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
+	scc_Clabel ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLABEL_MAX, 1};
 	assert_memory_equal(stc_assigned, ref_assigned1, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clabel));
 
 	stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
 
 	iscc_fs_assign_neighbors(2, 2, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
-	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
+	scc_Clabel ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLABEL_MAX, 2};
 	assert_memory_equal(stc_assigned, ref_assigned2, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clabel));
 
 	stc_assigned[0] = stc_assigned[1] = stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
 
 	iscc_fs_assign_neighbors(5, 3, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned5[7] = {false, false, true, false, false, true, false};
-	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
+	scc_Clabel ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
 	assert_memory_equal(stc_assigned, ref_assigned5, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clabel));
 
 	stc_assigned[2] = stc_assigned[5] = false;
 
 	iscc_fs_assign_neighbors(3, 4, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
-	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
+	scc_Clabel ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
 	assert_memory_equal(stc_assigned, ref_assigned3, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clabel));
 
 	stc_assigned[6] = false;
 
 	iscc_fs_assign_neighbors(6, 5, &nng, stc_assigned, stc_cluster_label);
 	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
-	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
+	scc_Clabel ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
 	assert_memory_equal(stc_assigned, ref_assigned6, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clulab));
+	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clabel));
 
 	scc_free_digraph(&nng);
 }
@@ -183,31 +183,31 @@ void scc_ut_fs_assign_cl_labels(void** state) {
 	                                          "..*..../"
 	                                          "......./");
 
-	scc_Clulab stc_cluster_label[7] = {SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX, SCC_CLULAB_MAX};
+	scc_Clabel stc_cluster_label[7] = {SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
 	iscc_fs_assign_cl_labels(0, 0, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label0[7] = {0, SCC_CLULAB_MAX, 0, 0, SCC_CLULAB_MAX, SCC_CLULAB_MAX, 0};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label0[7] = {0, SCC_CLABEL_MAX, 0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 0};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clabel));
 
 	iscc_fs_assign_cl_labels(1, 1, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLULAB_MAX, 1};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLABEL_MAX, 1};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clabel));
 
 	iscc_fs_assign_cl_labels(2, 2, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLULAB_MAX, 2};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLABEL_MAX, 2};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clabel));
 
 	iscc_fs_assign_cl_labels(5, 3, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clabel));
 
 	iscc_fs_assign_cl_labels(3, 4, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clabel));
 
 	iscc_fs_assign_cl_labels(6, 5, &nng, stc_cluster_label);
-	scc_Clulab ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clulab));
+	scc_Clabel ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
+	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clabel));
 
 	scc_free_digraph(&nng);
 }

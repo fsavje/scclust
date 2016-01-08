@@ -43,10 +43,10 @@ typedef struct scc_Clustering scc_Clustering;
 struct scc_Clustering {
 	scc_Vid vertices;
 	scc_Vid seed_capacity;
-	scc_Clulab num_clusters;
+	scc_Clabel num_clusters;
 	bool* assigned;
 	scc_Vid* seeds;
-	scc_Clulab* cluster_label;
+	scc_Clabel* cluster_label;
 };
 
 static inline scc_Clustering scc_null_clustering(void) {

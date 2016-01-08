@@ -80,12 +80,13 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 
 bool scc_assign_remaining_lexical(scc_Clustering* const clustering, const scc_Digraph* const priority_graph) {
 
+	const scc_Vid vertices = clustering->vertices;
 	bool* const assigned = clustering->assigned;
-	scc_Clulab* const cluster_label = clustering->cluster_label;
+	scc_Clabel* const cluster_label = clustering->cluster_label;
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (!assigned[v]) {
-			cluster_label[v] = SCC_CLULAB_MAX;
+			cluster_label[v] = SCC_CLABEL_MAX;
 
 			const scc_Vid* const v_arc_stop = priority_graph->head + priority_graph->tail_ptr[v + 1];
 			for (const scc_Vid* v_arc = priority_graph->head + priority_graph->tail_ptr[v];
@@ -108,18 +109,18 @@ bool scc_assign_remaining_keep_even(scc_Clustering* const clustering, const scc_
 
 	const scc_Vid vertices = clustering->vertices;
 	bool* const assigned = clustering->assigned;
-	scc_Clulab* const cluster_label = clustering->cluster_label;
+	scc_Clabel* const cluster_label = clustering->cluster_label;
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (!assigned[v]) {
-			scc_Clulab best_cluster = SCC_CLULAB_MAX;
+			scc_Clabel best_cluster = SCC_CLABEL_MAX;
 			scc_Vid best_size = 0;
 
 			const scc_Vid* const v_arc_stop = priority_graph->head + priority_graph->tail_ptr[v + 1];
 			for (const scc_Vid* v_arc = priority_graph->head + priority_graph->tail_ptr[v];
 			        v_arc != v_arc_stop; ++v_arc) {
 				if (assigned[*v_arc]) {
-					if ((best_cluster == SCC_CLULAB_MAX) || (best_size < cluster_size[cluster_label[*v_arc]])) {
+					if ((best_cluster == SCC_CLABEL_MAX) || (best_size < cluster_size[cluster_label[*v_arc]])) {
 						best_cluster = cluster_label[*v_arc];
 						best_size = cluster_size[best_cluster];
 					}
@@ -127,7 +128,7 @@ bool scc_assign_remaining_keep_even(scc_Clustering* const clustering, const scc_
 			}
 
 			cluster_label[v] = best_cluster;
-			if (best_cluster != SCC_CLULAB_MAX) {
+			if (best_cluster != SCC_CLABEL_MAX) {
 				++cluster_size[best_cluster];
 				if (cluster_size[best_cluster] % desired_size == 0) cluster_size[best_cluster] = 0;
 			}

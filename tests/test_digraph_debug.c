@@ -56,7 +56,7 @@ void scc_ut_is_valid_digraph(void** state) {
 void scc_ut_is_sound_digraph(void** state) {
 	(void) state;
 
-	scc_Arcref tail_ptr[5] = {0,1,2,3,4};
+	scc_Arci tail_ptr[5] = {0,1,2,3,4};
 	scc_Vid head[4] = {0,1,2,3};
 	scc_Digraph dg1 = scc_digraph_from_pieces(4, 4, tail_ptr, head);
 	assert_true(scc_is_sound_digraph(&dg1));
@@ -120,24 +120,24 @@ void scc_ut_debug_rest(void** state) {
 	(void) state;
 
 	scc_Vid headA[7] = {0,1,1,1,3,2,3};
-	scc_Arcref tail_ptrA[5] = {0,2,3,5,7};
+	scc_Arci tail_ptrA[5] = {0,2,3,5,7};
 
 	scc_Digraph ut_dg1 = scc_digraph_from_pieces(4, 7, tail_ptrA, headA);
 	scc_Digraph ut_dg2 = scc_digraph_from_string("**../.*../.*.*/..**/");
 	scc_Digraph ut_dg3 = scc_digraph_from_string("**../.*../.*.*/..**");
 
-	scc_Arcref tail_ptrB[5] = {0,0,0,0,0};
+	scc_Arci tail_ptrB[5] = {0,0,0,0,0};
 	scc_Digraph ut_dg4 = scc_digraph_from_pieces(4, 0, tail_ptrB, NULL);
 	scc_Digraph ut_dg5 = scc_digraph_from_string("..../..../..../....");
 	scc_Digraph empty_dg1 = scc_empty_digraph(4, 0);
 
 	scc_Vid headC[4] = {0,1,2,3};
-	scc_Arcref tail_ptrC[5] = {0,1,2,3,4};
+	scc_Arci tail_ptrC[5] = {0,1,2,3,4};
 	scc_Digraph ut_dg6 = scc_digraph_from_pieces(4, 4, tail_ptrC, headC);
 	scc_Digraph ut_dg7 = scc_digraph_from_string("*.../.*../..*./...*");
 	scc_Digraph ut_dg8 = scc_digraph_from_string("a*.../e fdgtthhh.*..t/2..*.5/7..   .*");
 
-	scc_Arcref tail_ptrD[1] = {0};
+	scc_Arci tail_ptrD[1] = {0};
 	scc_Digraph ut_dg9 = scc_digraph_from_pieces(0, 0, tail_ptrD, NULL);
 	scc_Digraph ut_dg10 = scc_digraph_from_string(" ");
 	scc_Digraph empty_dg2 = scc_empty_digraph(0, 0);
@@ -164,16 +164,16 @@ void scc_ut_debug_rest(void** state) {
 	assert_int_equal(ut_dg9.max_arcs, 0);
 	assert_int_equal(ut_dg10.max_arcs, 0);
 
-	assert_memory_equal(ut_dg1.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg2.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg3.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg4.tail_ptr, &tail_ptrB, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg5.tail_ptr, &tail_ptrB, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg6.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg7.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg8.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg9.tail_ptr, &tail_ptrD, 1 * sizeof(scc_Arcref));
-	assert_memory_equal(ut_dg10.tail_ptr, &tail_ptrD, 1 * sizeof(scc_Arcref));
+	assert_memory_equal(ut_dg1.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg2.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg3.tail_ptr, &tail_ptrA, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg4.tail_ptr, &tail_ptrB, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg5.tail_ptr, &tail_ptrB, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg6.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg7.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg8.tail_ptr, &tail_ptrC, 5 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg9.tail_ptr, &tail_ptrD, 1 * sizeof(scc_Arci));
+	assert_memory_equal(ut_dg10.tail_ptr, &tail_ptrD, 1 * sizeof(scc_Arci));
 
 	assert_memory_equal(ut_dg1.head, &headA, ut_dg1.max_arcs * sizeof(scc_Vid));
 	assert_memory_equal(ut_dg2.head, &headA, ut_dg2.max_arcs * sizeof(scc_Vid));

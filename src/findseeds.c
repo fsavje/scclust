@@ -57,15 +57,15 @@ static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv, const scc_Digraph*
 static inline bool iscc_fs_add_seed(scc_Vid s, scc_Clustering* cl);
 
 static inline void iscc_fs_assign_neighbors(scc_Vid s,
-                                            scc_Clulab new_label,
+                                            scc_Clabel new_label,
                                             const scc_Digraph* restrict nng,
                                             bool* restrict assigned,
-                                            scc_Clulab* restrict cluster_label);
+                                            scc_Clabel* restrict cluster_label);
 
 static inline void iscc_fs_assign_cl_labels(scc_Vid s,
-                                            scc_Clulab new_label,
+                                            scc_Clabel new_label,
                                             const scc_Digraph* nng,
-                                            scc_Clulab* cluster_label);
+                                            scc_Clabel* cluster_label);
 
 static void iscc_fs_shrink_seeds_array(scc_Clustering* cl);
 
@@ -96,7 +96,7 @@ scc_Clustering iscc_findseeds_lexical(const scc_Digraph* const nng, const scc_Vi
 		.num_clusters = 0,
 		.assigned = calloc(nng->vertices, sizeof(bool)),
 		.seeds = malloc(sizeof(scc_Vid[seed_init_capacity])),
-		.cluster_label = malloc(sizeof(scc_Clulab[nng->vertices])),
+		.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices])),
 	};
 
 	if (!cl.assigned || !cl.seeds || !cl.cluster_label) {
@@ -183,7 +183,7 @@ scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vi
 
 	iscc_fs_shrink_seeds_array(&cl);
 
-	cl.cluster_label = malloc(sizeof(scc_Clulab[nng->vertices]));
+	cl.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices]));
 	if (!cl.cluster_label) {
 		scc_free_Clustering(&cl);
 		return cl;
@@ -287,7 +287,7 @@ scc_Clustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_
 	iscc_fs_shrink_seeds_array(&cl);
 
 	cl.assigned = calloc(nng->vertices, sizeof(bool));
-	cl.cluster_label = malloc(sizeof(scc_Clulab[nng->vertices]));
+	cl.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices]));
 	if (!cl.assigned || !cl.cluster_label) {
 		scc_free_Clustering(&cl);
 		return cl;
@@ -352,10 +352,10 @@ static inline bool iscc_fs_add_seed(const scc_Vid s, scc_Clustering* const cl) {
 }
 
 static inline void iscc_fs_assign_neighbors(const scc_Vid s,
-                                            const scc_Clulab new_label,
+                                            const scc_Clabel new_label,
                                             const scc_Digraph* restrict const nng,
                                             bool* restrict const assigned,
-                                            scc_Clulab* restrict const cluster_label) {
+                                            scc_Clabel* restrict const cluster_label) {
 	assert(!assigned[s]);
 	assigned[s] = true;
 	cluster_label[s] = new_label;
@@ -370,9 +370,9 @@ static inline void iscc_fs_assign_neighbors(const scc_Vid s,
 }
 
 static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
-                                            const scc_Clulab new_label,
+                                            const scc_Clabel new_label,
                                             const scc_Digraph* const nng,
-                                            scc_Clulab* const cluster_label) {
+                                            scc_Clabel* const cluster_label) {
 	cluster_label[s] = new_label;
 
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];

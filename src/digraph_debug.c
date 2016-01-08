@@ -111,8 +111,8 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const 
 
 
 scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
-                                    const scc_Arcref max_arcs,
-                                    const scc_Arcref tail_ptr[const vertices],
+                                    const scc_Arci max_arcs,
+                                    const scc_Arci tail_ptr[const vertices],
                                     const scc_Vid head[const max_arcs]) {
 	if (!tail_ptr) return scc_null_digraph();
 	if (max_arcs > 0 && !head) return scc_null_digraph();
@@ -120,7 +120,7 @@ scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
 	if (!dg.tail_ptr) return dg;
 
 	for (scc_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
-	for (scc_Arcref a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
+	for (scc_Arci a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
 
 	return dg;
 }
@@ -129,7 +129,7 @@ scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
 scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 	scc_Vid vertices = 0;
 	size_t all_arcs = 0;
-	scc_Arcref max_arcs = 0;
+	scc_Arci max_arcs = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
 		if (dg_str[c] == '*' || dg_str[c] == '.') ++all_arcs;
@@ -143,7 +143,7 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, max_arcs);
 
-	scc_Arcref curr_array_pos = 0;
+	scc_Arci curr_array_pos = 0;
 	scc_Vid curr_row = 0;
 	scc_Vid curr_col = 0;
 	dg_out.tail_ptr[0] = 0;

@@ -27,12 +27,12 @@
 #include "../include/config.h"
 
 
-scc_Digraph scc_init_digraph(const scc_Vid vertices, const scc_Arcref max_arcs) {
+scc_Digraph scc_init_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 	scc_Digraph dg = {
 		.vertices = vertices,
 		.max_arcs = max_arcs,
 		.head = NULL,
-		.tail_ptr = malloc(sizeof(scc_Arcref[vertices + 1])),
+		.tail_ptr = malloc(sizeof(scc_Arci[vertices + 1])),
 	};
 
 	if (!dg.tail_ptr) return scc_null_digraph();
@@ -55,7 +55,7 @@ void scc_free_digraph(scc_Digraph* const dg) {
 }
 
 
-bool scc_change_arc_storage(scc_Digraph* const dg, const scc_Arcref new_max_arcs) {
+bool scc_change_arc_storage(scc_Digraph* const dg, const scc_Arci new_max_arcs) {
 	if (!dg || !dg->tail_ptr) return false;
 	if (dg->max_arcs == new_max_arcs) return true;
 	if (dg->tail_ptr[dg->vertices] > new_max_arcs) return false;
@@ -75,7 +75,7 @@ bool scc_change_arc_storage(scc_Digraph* const dg, const scc_Arcref new_max_arcs
 }
 
 
-scc_Digraph scc_empty_digraph(const scc_Vid vertices, const scc_Arcref max_arcs) {
+scc_Digraph scc_empty_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!dg.tail_ptr) return dg;
 	
@@ -107,7 +107,7 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* const dg) {
 	if (!dg_out.tail_ptr) return dg_out;
 
 	for (scc_Vid v = 0; v <= dg->vertices; ++v) dg_out.tail_ptr[v] = dg->tail_ptr[v];
-	for (scc_Arcref a = 0; a < dg->tail_ptr[dg->vertices]; ++a) dg_out.head[a] = dg->head[a];
+	for (scc_Arci a = 0; a < dg->tail_ptr[dg->vertices]; ++a) dg_out.head[a] = dg->head[a];
 
 	return dg_out;
 }
