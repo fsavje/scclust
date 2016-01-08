@@ -30,7 +30,7 @@
 #include "../include/digraph.h"
 
 
-bool scc_is_valid_digraph(const scc_Digraph* const dg) {
+bool scc_is_initialized_digraph(const scc_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return false;
 	if (dg->max_arcs == 0 && dg->head) return false;
 	if (dg->max_arcs > 0 && !dg->head) return false;
@@ -38,8 +38,8 @@ bool scc_is_valid_digraph(const scc_Digraph* const dg) {
 }
 
 
-bool scc_is_sound_digraph(const scc_Digraph* const dg) {
-	if (!scc_is_valid_digraph(dg)) return false;
+bool scc_is_valid_digraph(const scc_Digraph* const dg) {
+	if (!scc_is_initialized_digraph(dg)) return false;
 	if (dg->tail_ptr[0] != 0) return false;
 	if (dg->tail_ptr[dg->vertices] > dg->max_arcs) return false;
 	for (size_t i = 0; i < dg->vertices; ++i) {
@@ -53,14 +53,14 @@ bool scc_is_sound_digraph(const scc_Digraph* const dg) {
 
 
 bool scc_is_empty_digraph(const scc_Digraph* const dg) {
-	if (!scc_is_sound_digraph(dg)) return false;
+	if (!scc_is_valid_digraph(dg)) return false;
 	if (dg->tail_ptr[dg->vertices] != 0) return false;
 	return true;
 }
 
 
 bool scc_is_balanced_digraph(const scc_Digraph* const dg, const scc_Vid arcs_per_vertex) {
-	if (!scc_is_sound_digraph(dg)) return false;
+	if (!scc_is_valid_digraph(dg)) return false;
 
 	for (size_t i = 0; i <= dg->vertices; ++i) {
 		if (dg->tail_ptr[i] != i * arcs_per_vertex) return false;

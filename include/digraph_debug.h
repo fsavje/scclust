@@ -28,10 +28,10 @@
 #include "digraph.h"
 
 
+bool scc_is_initialized_digraph(const scc_Digraph* dg);
+
+
 bool scc_is_valid_digraph(const scc_Digraph* dg);
-
-
-bool scc_is_sound_digraph(const scc_Digraph* dg);
 
 
 bool scc_is_empty_digraph(const scc_Digraph* dg);

@@ -28,9 +28,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define assert_valid_digraph(test_dg, vertices) _assert_valid_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
+#define assert_initialized_digraph(test_dg, vertices) _assert_initialized_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_free_digraph(test_dg) _assert_free_digraph(test_dg, #test_dg, __FILE__, __LINE__)
-#define assert_sound_digraph(test_dg, vertices) _assert_sound_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
+#define assert_valid_digraph(test_dg, vertices) _assert_valid_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_equal_digraph(test_dg1, test_dg2) _assert_equal_digraph(test_dg1, test_dg2, #test_dg1, #test_dg2, __FILE__, __LINE__)
 #define assert_identical_digraph(test_dg1, test_dg2) _assert_identical_digraph(test_dg1, test_dg2, #test_dg1, #test_dg2, __FILE__, __LINE__)
 #define assert_empty_digraph(test_dg, vertices) _assert_empty_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
@@ -41,12 +41,12 @@
 #include "../include/digraph_debug.h"
 
 
-void _assert_valid_digraph(const scc_Digraph* test_dg,
-                           const scc_Vid vertices,
-                           const char* const name_dg,
-                           const char* const file,
-                           const int line) {
-	if (!scc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
+void _assert_initialized_digraph(const scc_Digraph* test_dg,
+                                 const scc_Vid vertices,
+                                 const char* const name_dg,
+                                 const char* const file,
+                                 const int line) {
+	if (!scc_is_initialized_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not valid\n", name_dg);
 		_fail(file, line);
 	}
@@ -66,12 +66,12 @@ void _assert_free_digraph(scc_Digraph* test_dg,
 	scc_free_digraph(test_dg);
 }
 
-void _assert_sound_digraph(const scc_Digraph* test_dg,
+void _assert_valid_digraph(const scc_Digraph* test_dg,
                            const scc_Vid vertices,
                            const char* const name_dg,
                            const char* const file,
                            const int line) {
-	if (!scc_is_sound_digraph(test_dg) || test_dg->vertices != vertices) {
+	if (!scc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not sound\n", name_dg);
 		_fail(file, line);
 	}

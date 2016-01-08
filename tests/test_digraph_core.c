@@ -34,12 +34,12 @@ void scc_ut_init_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_init_digraph(0, 0);
-	assert_valid_digraph(&my_graph1, 0);
+	assert_initialized_digraph(&my_graph1, 0);
 	assert_int_equal(my_graph1.max_arcs, 0);
 	assert_free_digraph(&my_graph1);
 
 	scc_Digraph my_graph2 = scc_init_digraph(10, 100);
-	assert_valid_digraph(&my_graph2, 10);
+	assert_initialized_digraph(&my_graph2, 10);
 	assert_int_equal(my_graph2.max_arcs, 100);
 	assert_free_digraph(&my_graph2);
 }
@@ -77,7 +77,7 @@ void scc_ut_change_arc_storage(void** state) {
 
 	scc_Digraph my_graph2 = scc_digraph_from_string("*.../.*../..*./...*/");
 	assert_false(scc_change_arc_storage(&my_graph2, 2));
-	assert_sound_digraph(&my_graph2, 4);
+	assert_valid_digraph(&my_graph2, 4);
 	assert_int_equal(my_graph2.max_arcs, 4);
 	assert_free_digraph(&my_graph2);
 
@@ -126,8 +126,8 @@ void scc_ut_copy_digraph(void** state) {
 	scc_Digraph res3 = scc_copy_digraph(&dg3);
 	scc_Digraph res4 = scc_copy_digraph(NULL);
 
-	assert_sound_digraph(&res1, 4);
-	assert_sound_digraph(&res2, 0);
+	assert_valid_digraph(&res1, 4);
+	assert_valid_digraph(&res2, 0);
 
 	assert_equal_digraph(&res1, &dg1);
 	assert_equal_digraph(&res2, &dg2);

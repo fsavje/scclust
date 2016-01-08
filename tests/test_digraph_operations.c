@@ -40,7 +40,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
 	scc_Digraph ut_make12_a = scc_digraph_union(2, sum_12);
-	assert_sound_digraph(&ut_make12_a, 4);
+	assert_valid_digraph(&ut_make12_a, 4);
 	scc_Arci tail_ptr12[5] = {0,2,4,6,8};
 	scc_Vid head12[8] = {0,3,1,2,2,1,3,0};
 	scc_Digraph ut_control12 = scc_digraph_from_pieces(4, 8, tail_ptr12, head12);
@@ -49,7 +49,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_13[2] = {&ut_dg1, &ut_dg3};
 	scc_Digraph ut_make13_a = scc_digraph_union(2, sum_13);
-	assert_sound_digraph(&ut_make13_a, 4);
+	assert_valid_digraph(&ut_make13_a, 4);
 	scc_Arci tail_ptr13[5] = {0,1,3,5,7};
 	scc_Vid head13[7] = {0,1,0,2,0,3,0};
 	scc_Digraph ut_control13 = scc_digraph_from_pieces(4, 7, tail_ptr13, head13);
@@ -58,7 +58,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
 	scc_Digraph ut_make31_a = scc_digraph_union(2, sum_31);
-	assert_sound_digraph(&ut_make31_a, 4);
+	assert_valid_digraph(&ut_make31_a, 4);
 	scc_Arci tail_ptr31[5] = {0,1,3,5,7};
 	scc_Vid head31[7] = {0,0,1,0,2,0,3};
 	scc_Digraph ut_control31 = scc_digraph_from_pieces(4, 7, tail_ptr31, head31);
@@ -69,7 +69,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_123[3] = {&ut_dg1, &ut_dg2, &ut_dg3};
 	scc_Digraph ut_make123 = scc_digraph_union(3, sum_123);
-	assert_sound_digraph(&ut_make123, 4);
+	assert_valid_digraph(&ut_make123, 4);
 	scc_Arci tail_ptr123[5] = {0,2,5,8,10};
 	scc_Vid head123[10] = {0,3,1,2,0,2,1,0,3,0};
 	scc_Digraph ut_control123 = scc_digraph_from_pieces(4, 10, tail_ptr123, head123);
@@ -77,7 +77,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_132[3] = {&ut_dg1, &ut_dg3, &ut_dg2};
 	scc_Digraph ut_make132 = scc_digraph_union(3, sum_132);
-	assert_sound_digraph(&ut_make132, 4);
+	assert_valid_digraph(&ut_make132, 4);
 	scc_Arci tail_ptr132[5] = {0,2,5,8,10};
 	scc_Vid head132[10] = {0,3,1,0,2,2,0,1,3,0};
 	scc_Digraph ut_control132 = scc_digraph_from_pieces(4, 10, tail_ptr132, head132);
@@ -85,7 +85,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_213[3] = {&ut_dg2, &ut_dg1, &ut_dg3};
 	scc_Digraph ut_make213 = scc_digraph_union(3, sum_213);
-	assert_sound_digraph(&ut_make213, 4);
+	assert_valid_digraph(&ut_make213, 4);
 	scc_Arci tail_ptr213[5] = {0,2,5,8,10};
 	scc_Vid head213[10] = {3,0,2,1,0,1,2,0,0,3};
 	scc_Digraph ut_control213 = scc_digraph_from_pieces(4, 10, tail_ptr213, head213);
@@ -93,7 +93,7 @@ void scc_ut_union_digraphs(void** state) {
 
 	const scc_Digraph* sum_321[3] = {&ut_dg3, &ut_dg2, &ut_dg1};
 	scc_Digraph ut_make321 = scc_digraph_union(3, sum_321);
-	assert_sound_digraph(&ut_make321, 4);
+	assert_valid_digraph(&ut_make321, 4);
 	scc_Arci tail_ptr321[5] = {0,2,5,8,10};
 	scc_Vid head321[10] = {0,3,0,2,1,0,1,2,0,3};
 	scc_Digraph ut_control321 = scc_digraph_from_pieces(4, 10, tail_ptr321, head321);
@@ -148,11 +148,11 @@ void scc_ut_digraph_transpose(void** state) {
 	scc_Digraph res6 = scc_digraph_transpose(NULL);
 	scc_Digraph res7 = scc_digraph_transpose(&control7);
 
-	assert_sound_digraph(&res1, 4);
-	assert_sound_digraph(&res2, 4);
-	assert_sound_digraph(&res3, 4);
-	assert_sound_digraph(&res4, 4);
-	assert_sound_digraph(&res5, 0);
+	assert_valid_digraph(&res1, 4);
+	assert_valid_digraph(&res2, 4);
+	assert_valid_digraph(&res3, 4);
+	assert_valid_digraph(&res4, 4);
+	assert_valid_digraph(&res5, 0);
 
 	assert_equal_digraph(&res1, &control1);
 	assert_equal_digraph(&res2, &control2);
@@ -196,19 +196,19 @@ void scc_ut_adjacency_product(void** state) {
 
 
 	scc_Digraph prod1 = scc_adjacency_product(&dg1, &dg1, false, false);
-	assert_sound_digraph(&prod1, 5);
+	assert_valid_digraph(&prod1, 5);
 	scc_Digraph control1 = scc_digraph_from_string("**.*./..*../...*./.*.../..*../");
 	assert_equal_digraph(&prod1, &control1);
 
 	scc_Digraph prod2 = scc_adjacency_product(&dg1, &dg1, false, true);
-	assert_sound_digraph(&prod2, 5);
+	assert_valid_digraph(&prod2, 5);
 	scc_Digraph control2 = scc_digraph_from_string("...*./..*../...*./.*.../..*../");
 	scc_Digraph control2alt = scc_adjacency_product(&dg1_i, &dg1, false, false);
 	assert_equal_digraph(&prod2, &control2);
 	assert_equal_digraph(&prod2, &control2alt);
 
 	scc_Digraph prod3 = scc_adjacency_product(&dg1, &dg1, true, false);
-	assert_sound_digraph(&prod3, 5);
+	assert_valid_digraph(&prod3, 5);
 	scc_Digraph control3 = scc_digraph_from_string("**.*./..**./.*.*./.**../..**./");
 	scc_Digraph control3alt = scc_adjacency_product(&dg1_f, &dg1, false, false);
 	assert_equal_digraph(&prod3, &control3);
@@ -216,19 +216,19 @@ void scc_ut_adjacency_product(void** state) {
 
 
 	scc_Digraph prod4 = scc_adjacency_product(&dg1, &prod2, false, false);
-	assert_sound_digraph(&prod4, 5);
+	assert_valid_digraph(&prod4, 5);
 	scc_Digraph control4 = scc_digraph_from_string("..**./.*.../..*../...*./.*.../");
 	assert_equal_digraph(&prod4, &control4);
 
 	scc_Digraph prod5 = scc_adjacency_product(&dg1, &prod2, false, true);
-	assert_sound_digraph(&prod5, 5);
+	assert_valid_digraph(&prod5, 5);
 	scc_Digraph control5 = scc_digraph_from_string("..*../.*.../..*../...*./.*.../");
 	scc_Digraph control5alt = scc_adjacency_product(&dg1_i, &prod2, false, false);
 	assert_equal_digraph(&prod5, &control5);
 	assert_equal_digraph(&prod5, &control5alt);
 
 	scc_Digraph prod6 = scc_adjacency_product(&dg1, &prod2, true, false);
-	assert_sound_digraph(&prod6, 5);
+	assert_valid_digraph(&prod6, 5);
 	scc_Digraph control6 = scc_digraph_from_string("..**./.**../..**./.*.*./.**../");
 	scc_Digraph control6alt = scc_adjacency_product(&dg1_f, &prod2, false, false);
 	assert_equal_digraph(&prod6, &control6);
@@ -236,33 +236,33 @@ void scc_ut_adjacency_product(void** state) {
 
 
 	scc_Digraph prod7 = scc_adjacency_product(&dg1, &dg2, false, false);
-	assert_sound_digraph(&prod7, 5);
+	assert_valid_digraph(&prod7, 5);
 	scc_Digraph control7 = scc_digraph_from_string("..**./..*../..**./...../..*../");
 	assert_equal_digraph(&prod7, &control7);
 
 	scc_Digraph prod8 = scc_adjacency_product(&dg1, &dg2, false, true);
-	assert_sound_digraph(&prod8, 5);
+	assert_valid_digraph(&prod8, 5);
 	scc_Digraph control8 = scc_adjacency_product(&dg1_i, &dg2, false, false);
 	assert_equal_digraph(&prod8, &control8);
 
 	scc_Digraph prod9 = scc_adjacency_product(&dg1, &dg2, true, false);
-	assert_sound_digraph(&prod9, 5);
+	assert_valid_digraph(&prod9, 5);
 	scc_Digraph control9 = scc_adjacency_product(&dg1_f, &dg2, false, false);
 	assert_equal_digraph(&prod9, &control9);
 
 
 	scc_Digraph prod10 = scc_adjacency_product(&dg2, &dg1, false, false);
-	assert_sound_digraph(&prod10, 5);
+	assert_valid_digraph(&prod10, 5);
 	scc_Digraph control10 = scc_digraph_from_string(".*.../.**../...../.*.../**.../");
 	assert_equal_digraph(&prod10, &control10);
 
 	scc_Digraph prod11 = scc_adjacency_product(&dg2, &dg1, false, true);
-	assert_sound_digraph(&prod11, 5);
+	assert_valid_digraph(&prod11, 5);
 	scc_Digraph control11 = scc_adjacency_product(&dg2_i, &dg1, false, false);
 	assert_equal_digraph(&prod11, &control11);
 
 	scc_Digraph prod12 = scc_adjacency_product(&dg2, &dg1, true, false);
-	assert_sound_digraph(&prod12, 5);
+	assert_valid_digraph(&prod12, 5);
 	scc_Digraph control12 = scc_adjacency_product(&dg2_f, &dg1, false, false);
 	assert_equal_digraph(&prod12, &control12);
 

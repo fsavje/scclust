@@ -30,61 +30,61 @@
 #include "../include/digraph_debug.h"
 
 
-void scc_ut_is_valid_digraph(void** state) {
+void scc_ut_is_initialized_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_init_digraph(4, 10);
 	scc_Digraph dg2 = SCC_NULL_DIGRAPH;
 	scc_Digraph dg3 = scc_init_digraph(4, 0);
 
-	assert_false(scc_is_valid_digraph(NULL));
-	assert_true(scc_is_valid_digraph(&dg1));
-	assert_false(scc_is_valid_digraph(&dg2));
-	assert_true(scc_is_valid_digraph(&dg3));
+	assert_false(scc_is_initialized_digraph(NULL));
+	assert_true(scc_is_initialized_digraph(&dg1));
+	assert_false(scc_is_initialized_digraph(&dg2));
+	assert_true(scc_is_initialized_digraph(&dg3));
 
 	dg3.head = dg1.head;
 	dg1.head = NULL;
 
-	assert_false(scc_is_valid_digraph(&dg1));
-	assert_false(scc_is_valid_digraph(&dg3));
+	assert_false(scc_is_initialized_digraph(&dg1));
+	assert_false(scc_is_initialized_digraph(&dg3));
 
 	scc_free_digraph(&dg1);
 	scc_free_digraph(&dg2);
 	scc_free_digraph(&dg3);
 }
 
-void scc_ut_is_sound_digraph(void** state) {
+void scc_ut_is_valid_digraph(void** state) {
 	(void) state;
 
 	scc_Arci tail_ptr[5] = {0,1,2,3,4};
 	scc_Vid head[4] = {0,1,2,3};
 	scc_Digraph dg1 = scc_digraph_from_pieces(4, 4, tail_ptr, head);
-	assert_true(scc_is_sound_digraph(&dg1));
+	assert_true(scc_is_valid_digraph(&dg1));
 
 	dg1.tail_ptr[0] = 10;
-	assert_false(scc_is_sound_digraph(&dg1));
+	assert_false(scc_is_valid_digraph(&dg1));
 	dg1.tail_ptr[0] = 0;
-	assert_true(scc_is_sound_digraph(&dg1));
+	assert_true(scc_is_valid_digraph(&dg1));
 
 	dg1.tail_ptr[4] = 10;
-	assert_false(scc_is_sound_digraph(&dg1));
+	assert_false(scc_is_valid_digraph(&dg1));
 	dg1.tail_ptr[4] = 4;
-	assert_true(scc_is_sound_digraph(&dg1));
+	assert_true(scc_is_valid_digraph(&dg1));
 
 	dg1.tail_ptr[3] = 4;
 	dg1.tail_ptr[4] = 3;
-	assert_false(scc_is_sound_digraph(&dg1));
+	assert_false(scc_is_valid_digraph(&dg1));
 	dg1.tail_ptr[3] = 3;
 	dg1.tail_ptr[4] = 4;
-	assert_true(scc_is_sound_digraph(&dg1));
+	assert_true(scc_is_valid_digraph(&dg1));
 
 	dg1.head[0] = 10;
-	assert_false(scc_is_sound_digraph(&dg1));
+	assert_false(scc_is_valid_digraph(&dg1));
 	dg1.head[0] = 0;
-	assert_true(scc_is_sound_digraph(&dg1));
+	assert_true(scc_is_valid_digraph(&dg1));
 
 	scc_Digraph dg2 = scc_empty_digraph(4, 10);
-	assert_true(scc_is_sound_digraph(&dg2));
+	assert_true(scc_is_valid_digraph(&dg2));
 
 	scc_free_digraph(&dg1);
 	scc_free_digraph(&dg2);
@@ -161,16 +161,16 @@ void scc_ut_debug_rest(void** state) {
 	scc_Digraph ut_dg10 = scc_digraph_from_string(" ");
 	scc_Digraph empty_dg2 = scc_empty_digraph(0, 0);
 
-	assert_sound_digraph(&ut_dg1, 4);
-	assert_sound_digraph(&ut_dg2, 4);
-	assert_sound_digraph(&ut_dg3, 4);
-	assert_sound_digraph(&ut_dg4, 4);
-	assert_sound_digraph(&ut_dg5, 4);
-	assert_sound_digraph(&ut_dg6, 4);
-	assert_sound_digraph(&ut_dg7, 4);
-	assert_sound_digraph(&ut_dg8, 4);
-	assert_sound_digraph(&ut_dg9, 0);
-	assert_sound_digraph(&ut_dg10, 0);
+	assert_valid_digraph(&ut_dg1, 4);
+	assert_valid_digraph(&ut_dg2, 4);
+	assert_valid_digraph(&ut_dg3, 4);
+	assert_valid_digraph(&ut_dg4, 4);
+	assert_valid_digraph(&ut_dg5, 4);
+	assert_valid_digraph(&ut_dg6, 4);
+	assert_valid_digraph(&ut_dg7, 4);
+	assert_valid_digraph(&ut_dg8, 4);
+	assert_valid_digraph(&ut_dg9, 0);
+	assert_valid_digraph(&ut_dg10, 0);
 
 	assert_int_equal(ut_dg1.max_arcs, 7);
 	assert_int_equal(ut_dg2.max_arcs, 7);
@@ -256,8 +256,8 @@ void scc_ut_debug_rest(void** state) {
 
 int main(void) {
 	const struct CMUnitTest test_debug[] = {
+		cmocka_unit_test(scc_ut_is_initialized_digraph),
 		cmocka_unit_test(scc_ut_is_valid_digraph),
-		cmocka_unit_test(scc_ut_is_sound_digraph),
 		cmocka_unit_test(scc_ut_is_empty_digraph),
 		cmocka_unit_test(scc_ut_is_balanced_digraph),
 		cmocka_unit_test(scc_ut_balanced_digraph),
