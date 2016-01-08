@@ -85,20 +85,6 @@ scc_Digraph scc_empty_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 }
 
 
-scc_Digraph scc_balanced_digraph(const scc_Vid vertices, const scc_Vid arcs_per_vertex, scc_Vid* const heads) {
-	scc_Digraph dg = scc_init_digraph(vertices, 0);
-	if (!dg.tail_ptr) return dg;
-
-	dg.max_arcs = vertices * arcs_per_vertex;
-	dg.head = heads;
-	for (scc_Vid v = 0; v <= vertices; ++v) {
-		dg.tail_ptr[v] = v * arcs_per_vertex;
-	}
-	
-	return dg;
-}
-
-
 scc_Digraph scc_copy_digraph(const scc_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return scc_null_digraph();
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);

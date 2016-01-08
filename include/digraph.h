@@ -56,7 +56,6 @@ scc_Digraph scc_init_digraph(scc_Vid vertices, scc_Arci max_arcs);
 void scc_free_digraph(scc_Digraph* dg);
 bool scc_change_arc_storage(scc_Digraph* dg, scc_Arci new_max_arcs);
 scc_Digraph scc_empty_digraph(scc_Vid vertices, scc_Arci max_arcs);
-scc_Digraph scc_balanced_digraph(scc_Vid vertices, scc_Vid arcs_per_vertex, scc_Vid* heads);
 scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
 scc_Digraph scc_digraph_union(size_t num_dgs, const scc_Digraph* const dgs[static num_dgs]);
 scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);

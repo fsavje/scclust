@@ -110,6 +110,21 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a, const scc_Digraph* const 
 }
 
 
+scc_Digraph scc_balanced_digraph(const scc_Vid vertices, const scc_Arci arcs_per_vertex, scc_Vid* const heads) {
+	scc_Digraph dg = scc_init_digraph(vertices, vertices * arcs_per_vertex);
+	if (!dg.tail_ptr) return dg;
+
+	for (scc_Arci a = 0; a < dg.max_arcs; ++a) {
+		dg.head[a] = heads[a];
+	}
+	for (scc_Vid v = 0; v <= vertices; ++v) {
+		dg.tail_ptr[v] = v * arcs_per_vertex;
+	}
+	
+	return dg;
+}
+
+
 scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
                                     const scc_Arci max_arcs,
                                     const scc_Arci tail_ptr[const vertices],
