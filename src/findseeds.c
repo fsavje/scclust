@@ -394,19 +394,19 @@ static void iscc_fs_shrink_seeds_array(scc_Clustering* const cl) {
 
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng) {
-	if (!nng || !nng->tail_ptr) return scc_null_digraph();
+	if (!nng || !nng->tail_ptr) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
-	if (!nng_transpose.tail_ptr) return scc_null_digraph();
+	if (!nng_transpose.tail_ptr) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
 	scc_free_digraph(&nng_transpose);
-	if (!nng_nng_transpose.tail_ptr) return scc_null_digraph();
+	if (!nng_nng_transpose.tail_ptr) return SCC_NULL_DIGRAPH;
 
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
 	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
 	scc_free_digraph(&nng_nng_transpose);
-	if (!exclusion_graph.tail_ptr) return scc_null_digraph();
+	if (!exclusion_graph.tail_ptr) return SCC_NULL_DIGRAPH;
 
 	return exclusion_graph;
 }

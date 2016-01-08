@@ -129,8 +129,8 @@ scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
                                     const scc_Arci max_arcs,
                                     const scc_Arci tail_ptr[const vertices],
                                     const scc_Vid head[const max_arcs]) {
-	if (!tail_ptr) return scc_null_digraph();
-	if (max_arcs > 0 && !head) return scc_null_digraph();
+	if (!tail_ptr) return SCC_NULL_DIGRAPH;
+	if (max_arcs > 0 && !head) return SCC_NULL_DIGRAPH;
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!dg.tail_ptr) return dg;
 
@@ -150,10 +150,10 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 		if (dg_str[c] == '*' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '*') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) {
-			if (all_arcs > SCC_VID_MAX) return scc_null_digraph();
+			if (all_arcs > SCC_VID_MAX) return SCC_NULL_DIGRAPH;
 			vertices = (scc_Vid) all_arcs;
 		} 
-		if (dg_str[c] == '/' && all_arcs % vertices != 0) return scc_null_digraph();
+		if (dg_str[c] == '/' && all_arcs % vertices != 0) return SCC_NULL_DIGRAPH;
 	}
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, max_arcs);

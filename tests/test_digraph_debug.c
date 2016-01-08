@@ -34,7 +34,7 @@ void scc_ut_is_valid_digraph(void** state) {
 	(void) state;
 
 	scc_Digraph dg1 = scc_init_digraph(4, 10);
-	scc_Digraph dg2 = scc_null_digraph();
+	scc_Digraph dg2 = SCC_NULL_DIGRAPH;
 	scc_Digraph dg3 = scc_init_digraph(4, 0);
 
 	assert_false(scc_is_valid_digraph(NULL));
@@ -260,6 +260,7 @@ int main(void) {
 		cmocka_unit_test(scc_ut_is_sound_digraph),
 		cmocka_unit_test(scc_ut_is_empty_digraph),
 		cmocka_unit_test(scc_ut_is_balanced_digraph),
+		cmocka_unit_test(scc_ut_balanced_digraph),
 		cmocka_unit_test(scc_ut_debug_rest),
 	};
 

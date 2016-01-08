@@ -35,7 +35,7 @@ scc_Digraph scc_init_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 		.tail_ptr = malloc(sizeof(scc_Arci[vertices + 1])),
 	};
 
-	if (!dg.tail_ptr) return scc_null_digraph();
+	if (!dg.tail_ptr) return SCC_NULL_DIGRAPH;
 
 	if (max_arcs > 0) {
 		dg.head = malloc(sizeof(scc_Vid[max_arcs]));
@@ -50,7 +50,7 @@ void scc_free_digraph(scc_Digraph* const dg) {
 	if (dg) {
 		free(dg->head);
 		free(dg->tail_ptr);
-		*dg = scc_null_digraph();
+		*dg = SCC_NULL_DIGRAPH;
 	}
 }
 
@@ -86,7 +86,7 @@ scc_Digraph scc_empty_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 
 
 scc_Digraph scc_copy_digraph(const scc_Digraph* const dg) {
-	if (!dg || !dg->tail_ptr) return scc_null_digraph();
+	if (!dg || !dg->tail_ptr) return SCC_NULL_DIGRAPH;
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);

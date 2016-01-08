@@ -47,7 +47,7 @@ void scc_ut_init_digraph(void** state) {
 void scc_ut_free_digraph(void** state) {
 	(void) state;
 
-	scc_Digraph null_graph = scc_null_digraph();
+	scc_Digraph null_graph = SCC_NULL_DIGRAPH;
 
 	scc_Digraph my_graph1 = scc_empty_digraph(10, 10);
 	scc_free_digraph(&my_graph1);
@@ -59,7 +59,7 @@ void scc_ut_free_digraph(void** state) {
 	scc_free_digraph(&my_graph2);
 	assert_memory_equal(&my_graph2, &null_graph, sizeof(scc_Digraph));
 
-	scc_Digraph my_graph3 = scc_null_digraph();
+	scc_Digraph my_graph3 = SCC_NULL_DIGRAPH;
 	scc_free_digraph(&my_graph3);
 	assert_memory_equal(&my_graph3, &null_graph, sizeof(scc_Digraph));
 
@@ -119,7 +119,7 @@ void scc_ut_copy_digraph(void** state) {
 
 	scc_Digraph dg1 = scc_digraph_from_string("****/..*./****/*.../");
 	scc_Digraph dg2 = scc_empty_digraph(0, 0);
-	scc_Digraph dg3 = scc_null_digraph();
+	scc_Digraph dg3 = SCC_NULL_DIGRAPH;
 
 	scc_Digraph res1 = scc_copy_digraph(&dg1);
 	scc_Digraph res2 = scc_copy_digraph(&dg2);
@@ -147,7 +147,6 @@ int main(void) {
 		cmocka_unit_test(scc_ut_free_digraph),
 		cmocka_unit_test(scc_ut_change_arc_storage),
 		cmocka_unit_test(scc_ut_empty_digraph),
-		cmocka_unit_test(scc_ut_balanced_digraph),
 		cmocka_unit_test(scc_ut_copy_digraph),
 	};
 	

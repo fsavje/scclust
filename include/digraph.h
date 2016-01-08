@@ -48,11 +48,9 @@ struct scc_Digraph {
 	scc_Arci* const tail_ptr;
 };
 
-static inline scc_Digraph scc_null_digraph(void) {
-	return (scc_Digraph) { 0, 0, NULL, NULL };
-}
 
 scc_Digraph scc_init_digraph(scc_Vid vertices, scc_Arci max_arcs);
+static const scc_Digraph SCC_NULL_DIGRAPH = { 0, 0, NULL, NULL };
 void scc_free_digraph(scc_Digraph* dg);
 bool scc_change_arc_storage(scc_Digraph* dg, scc_Arci new_max_arcs);
 scc_Digraph scc_empty_digraph(scc_Vid vertices, scc_Arci max_arcs);
