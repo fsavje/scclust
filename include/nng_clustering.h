@@ -39,8 +39,8 @@ enum scc_SeedMethod {
 typedef enum scc_SeedMethod scc_SeedMethod;
 
 
-typedef struct scc_Clustering scc_Clustering;
-struct scc_Clustering {
+typedef struct scc_SeedClustering scc_SeedClustering;
+struct scc_SeedClustering {
 	scc_Vid vertices;
 	scc_Vid seed_capacity;
 	scc_Clabel num_clusters;
@@ -49,9 +49,7 @@ struct scc_Clustering {
 	scc_Clabel* cluster_label;
 };
 
-static inline scc_Clustering scc_null_clustering(void) {
-	return (scc_Clustering) { 0, 0, 0, NULL, NULL, NULL };
-}
+static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, 0, NULL, NULL, NULL };
 
 void scc_free_Clustering(scc_Clustering* cl);
 scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm, scc_Vid seed_init_capacity);

@@ -63,7 +63,7 @@ void scc_ut_fs_check_candidate_vertex(void** state) {
 void scc_ut_fs_add_seed(void** state) {
 	(void) state;
 
-	scc_Clustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = 10,
 		.seed_capacity = 1,
 		.num_clusters = 0,

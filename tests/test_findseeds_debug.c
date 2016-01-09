@@ -83,8 +83,6 @@ void scc_ut_fs_debug_vid_sort(void** state) {
 void scc_ut_findseeds_checkseeds18_debug(void** state) {
 	(void) state;
 
-
-	scc_Clustering cl_seed_inupdat = scc_base_clustering(&nng, SCC_INWARDS_UPDATING, 7);
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
 	                                          "#...#............./"
 	                                          "....#..#........../"
@@ -103,11 +101,13 @@ void scc_ut_findseeds_checkseeds18_debug(void** state) {
 	                                          ".........#..#...../"
 	                                          ".............##.../"
 	                                          "..............#.#./");
+
+	scc_SeedClustering cl_seed_inupdat = scc_base_clustering(&nng, SCC_INWARDS_UPDATING, 7);
 	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
 	assert_memory_equal(cl_seed_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_inupdat.num_clusters, 5);
 
-	scc_Clustering cl_seed_exupdat = scc_base_clustering(&nng, SCC_EXCLUSION_UPDATING, 7);
+	scc_SeedClustering cl_seed_exupdat = scc_base_clustering(&nng, SCC_EXCLUSION_UPDATING, 7);
 	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
 	assert_memory_equal(cl_seed_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_exupdat.num_clusters, 5);

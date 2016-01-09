@@ -33,21 +33,23 @@
 // External function implementations
 // ==============================================================================
 
-void scc_free_Clustering(scc_Clustering* const cl) {
+
+void scc_free_Clustering(scc_SeedClustering* const cl) {
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
 		free(cl->cluster_label);
-		*cl = scc_null_clustering();
+		*cl = SCC_NULL_SEED_CLUSTERING;
 	}
 }
 
-scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm, scc_Vid seed_init_capacity) {
 
-	if (!nng || !nng->tail_ptr) return scc_null_clustering();
+scc_SeedClustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm, scc_Vid seed_init_capacity) {
+
+	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 	if (seed_init_capacity < 100) seed_init_capacity = 100;
 
-	scc_Clustering clustering = scc_null_clustering();
+	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 
 	switch(sm) {
 
@@ -78,7 +80,8 @@ scc_Clustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedM
 	return clustering;
 }
 
-bool scc_assign_remaining_lexical(scc_Clustering* const clustering, const scc_Digraph* const priority_graph) {
+
+bool scc_assign_remaining_lexical(scc_SeedClustering* const clustering, const scc_Digraph* const priority_graph) {
 
 	const scc_Vid vertices = clustering->vertices;
 	bool* const assigned = clustering->assigned;
@@ -102,7 +105,8 @@ bool scc_assign_remaining_lexical(scc_Clustering* const clustering, const scc_Di
 	return true;
 }
 
-bool scc_assign_remaining_keep_even(scc_Clustering* const clustering, const scc_Digraph* const priority_graph, const scc_Vid desired_size) {
+
+bool scc_assign_remaining_keep_even(scc_SeedClustering* const clustering, const scc_Digraph* const priority_graph, const scc_Vid desired_size) {
 
 	scc_Vid* cluster_size = calloc(clustering->num_clusters, sizeof(scc_Vid));
 	if (!cluster_size) return false;

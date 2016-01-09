@@ -54,7 +54,8 @@ struct iscc_fs_SortResult {
 
 static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv, const scc_Digraph* nng, const bool* assigned);
 
-static inline bool iscc_fs_add_seed(scc_Vid s, scc_Clustering* cl);
+static inline bool iscc_fs_add_seed(scc_Vid s,
+                                    scc_SeedClustering* cl);
 
 static inline void iscc_fs_assign_neighbors(scc_Vid s,
                                             scc_Clabel new_label,
@@ -67,7 +68,7 @@ static inline void iscc_fs_assign_cl_labels(scc_Vid s,
                                             const scc_Digraph* nng,
                                             scc_Clabel* cluster_label);
 
-static void iscc_fs_shrink_seeds_array(scc_Clustering* cl);
+static void iscc_fs_shrink_seeds_array(scc_SeedClustering* cl);
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
 
@@ -87,10 +88,10 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 // ==============================================================================
 
 
-scc_Clustering iscc_findseeds_lexical(const scc_Digraph* const nng, const scc_Vid seed_init_capacity) {
-	if (!nng || !nng->tail_ptr) return scc_null_clustering();
+scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng, const scc_Vid seed_init_capacity) {
+	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
-	scc_Clustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = nng->vertices,
 		.seed_capacity = seed_init_capacity,
 		.num_clusters = 0,
@@ -119,12 +120,13 @@ scc_Clustering iscc_findseeds_lexical(const scc_Digraph* const nng, const scc_Vi
 	return cl;
 }
 
-scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vid seed_init_capacity, const bool updating) {
-	if (!nng || !nng->tail_ptr) return scc_null_clustering();
+
+scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vid seed_init_capacity, const bool updating) {
+	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
 
-	scc_Clustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = nng->vertices,
 		.seed_capacity = seed_init_capacity,
 		.num_clusters = 0,
@@ -196,8 +198,9 @@ scc_Clustering iscc_findseeds_inwards(const scc_Digraph* const nng, const scc_Vi
 	return cl;
 }
 
-scc_Clustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_Vid seed_init_capacity, const bool updating) {
-	if (!nng || !nng->tail_ptr) return scc_null_clustering();
+
+scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_Vid seed_init_capacity, const bool updating) {
+	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
 	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
 
@@ -206,7 +209,7 @@ scc_Clustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_
 	if (!exclusion_graph.tail_ptr || !excluded) {
 		scc_free_digraph(&exclusion_graph);
 		free(excluded);
-		return scc_null_clustering();
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	// Remove edges to vertices that cannot be seeds
@@ -223,7 +226,7 @@ scc_Clustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const scc_
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&exclusion_graph, updating);
 
-	scc_Clustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = nng->vertices,
 		.seed_capacity = seed_init_capacity,
 		.num_clusters = 0,
@@ -337,7 +340,8 @@ static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Di
 	return true;
 }
 
-static inline bool iscc_fs_add_seed(const scc_Vid s, scc_Clustering* const cl) {
+
+static inline bool iscc_fs_add_seed(const scc_Vid s, scc_SeedClustering* const cl) {
 	assert(cl->num_clusters <= cl->seed_capacity);
 	if (cl->num_clusters == cl->seed_capacity) {
 		cl->seed_capacity *= 2;
@@ -382,7 +386,8 @@ static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
 	}
 }
 
-static void iscc_fs_shrink_seeds_array(scc_Clustering* const cl) {
+
+static void iscc_fs_shrink_seeds_array(scc_SeedClustering* const cl) {
 	if (cl && cl->seeds && (cl->seed_capacity > cl->num_clusters)) {
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->num_clusters]));
 		if (tmp_ptr) {
