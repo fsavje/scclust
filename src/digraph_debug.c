@@ -127,6 +127,11 @@ scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
 	for (scc_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
 	for (scc_Arci a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
 
+	if (!scc_is_valid_digraph(&dg)) {
+		scc_free_digraph(&dg);
+		return SCC_NULL_DIGRAPH;
+	}
+
 	return dg;
 }
 
@@ -166,6 +171,11 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 		}
 	}
 	dg_out.tail_ptr[vertices] = curr_array_pos;
+
+	if (!scc_is_valid_digraph(&dg_out)) {
+		scc_free_digraph(&dg_out);
+		return SCC_NULL_DIGRAPH;
+	}
 
 	return dg_out;
 }
