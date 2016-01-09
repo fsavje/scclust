@@ -31,9 +31,9 @@
 #define scc_ut_print_Vid_array(to_print, length) _scc_ut_print_Vid_array(to_print, length, #to_print, __LINE__)
 
 void _scc_ut_print_Vid_array(const scc_Vid* const to_print,
-                                    const size_t length,
-                                    const char* const name,
-                                    const int line) {
+                             const size_t length,
+                             const char* const name,
+                             const int line) {
 	printf("%i:%s: ", line, name);
 
 	if (length == 0) {

@@ -3,7 +3,7 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -18,6 +18,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
+
+
+/** @file
+ *
+ * Size constrained clustering using nearest neighbor graphs.
+ */
 
 
 #ifndef SCC_NNG_CLUSTERING_HG
@@ -51,10 +57,20 @@ struct scc_SeedClustering {
 
 static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, 0, NULL, NULL, NULL };
 
-void scc_free_Clustering(scc_Clustering* cl);
-scc_Clustering scc_base_clustering(const scc_Digraph* nng, scc_SeedMethod sm, scc_Vid seed_init_capacity);
-bool scc_assign_remaining_lexical(scc_Clustering* clustering, const scc_Digraph* priority_graph);
-bool scc_assign_remaining_keep_even(scc_Clustering* clustering, const scc_Digraph* priority_graph, scc_Vid desired_size);
+void scc_free_Clustering(scc_SeedClustering* cl);
+
+scc_SeedClustering scc_base_clustering(const scc_Digraph* nng,
+                                       scc_SeedMethod sm,
+                                       scc_Vid seed_init_capacity);
+
+
+bool scc_assign_remaining_lexical(scc_SeedClustering* clustering,
+                                  const scc_Digraph* priority_graph);
+
+
+bool scc_assign_remaining_keep_even(scc_SeedClustering* clustering,
+                                    const scc_Digraph* priority_graph,
+                                    scc_Vid desired_size);
 
 
 #endif

@@ -27,6 +27,9 @@
 #include "../include/config.h"
 
 
+// ==============================================================================
+// Static function implementations
+// ==============================================================================
 static inline void iscc_fs_debug_bucket_sort(scc_Vid* const bucket_start,
                                              scc_Vid* pos,
                                              const scc_Vid* const inwards_count,

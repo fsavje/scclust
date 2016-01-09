@@ -30,8 +30,9 @@
 #include "../include/nng_clustering.h"
 
 #ifdef SCC_STABLE_CLUSTERING
- 	#include "findseeds_debug.h"
+	#include "findseeds_debug.h"
 #endif
+
 
 // ==============================================================================
 // Internal structs
@@ -51,8 +52,9 @@ struct iscc_fs_SortResult {
 // Internal function prototypes
 // ==============================================================================
 
-
-static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv, const scc_Digraph* nng, const bool* assigned);
+static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv,
+                                                  const scc_Digraph* nng,
+                                                  const bool* assigned);
 
 static inline bool iscc_fs_add_seed(scc_Vid s,
                                     scc_SeedClustering* cl);
@@ -72,7 +74,8 @@ static void iscc_fs_shrink_seeds_array(scc_SeedClustering* cl);
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
 
-static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng, bool make_indices);
+static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng,
+                                                  bool make_indices);
 
 static void iscc_fs_free_SortResult(iscc_fs_SortResult* sr);
 
@@ -326,6 +329,7 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 // Internal function implementations 
 // ==============================================================================
 
+
 static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Digraph* const nng, const bool* const assigned) {
 	if (assigned[cv]) return false;
 
@@ -355,6 +359,7 @@ static inline bool iscc_fs_add_seed(const scc_Vid s, scc_SeedClustering* const c
 	return true;
 }
 
+
 static inline void iscc_fs_assign_neighbors(const scc_Vid s,
                                             const scc_Clabel new_label,
                                             const scc_Digraph* restrict const nng,
@@ -372,6 +377,7 @@ static inline void iscc_fs_assign_neighbors(const scc_Vid s,
 		cluster_label[*s_arc] = new_label;
 	}
 }
+
 
 static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
                                             const scc_Clabel new_label,
@@ -415,6 +421,7 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng) {
 
 	return exclusion_graph;
 }
+
 
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, const bool make_indices) {
 
@@ -494,6 +501,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 	return res;
 }
 
+
 static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr) {
 	if (sr) {
 		free(sr->inwards_count);
@@ -503,6 +511,7 @@ static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr) {
 		*sr = (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 	}
 }
+
 
 static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
                                               scc_Vid* restrict const inwards_count,

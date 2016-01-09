@@ -27,6 +27,11 @@
 #include "../include/config.h"
 
 
+// ==============================================================================
+// External function implementations
+// ==============================================================================
+
+
 static inline scc_Arci iscc_do_union(const scc_Vid vertices,
                                      const size_t num_dgs,
                                      const scc_Digraph* const * const dgs,
@@ -58,7 +63,8 @@ static inline scc_Arci iscc_do_union(const scc_Vid vertices,
 }
 
 
-scc_Digraph scc_digraph_union(const size_t num_dgs, const scc_Digraph* const dgs[const static num_dgs]) {
+scc_Digraph scc_digraph_union(const size_t num_dgs,
+                              const scc_Digraph* const dgs[const static num_dgs]) {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
 	if (!dgs || !dgs[0]) return SCC_NULL_DIGRAPH;
 
@@ -79,7 +85,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs, const scc_Digraph* const dgs
 	if (!dg_out.tail_ptr) {
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
-		// doing union without writing.
+		// union without writing.
 		out_arcs_write = iscc_do_union(vertices, num_dgs, dgs,
 		                               row_markers, false, NULL, NULL);
 
@@ -191,7 +197,11 @@ static inline scc_Arci iscc_do_adjacency_product(const scc_Vid vertices,
 }
 
 
-scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a, const scc_Digraph* const dg_b, const bool force_diagonal, const bool ignore_diagonal) {
+scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
+                                  const scc_Digraph* const dg_b,
+                                  const bool force_diagonal,
+                                  const bool ignore_diagonal) {
+
 	if (force_diagonal && ignore_diagonal) return SCC_NULL_DIGRAPH;
 	if (!dg_a || !dg_b || !dg_a->tail_ptr || !dg_b->tail_ptr) return SCC_NULL_DIGRAPH;
 	if (dg_a->vertices != dg_b->vertices) return SCC_NULL_DIGRAPH;

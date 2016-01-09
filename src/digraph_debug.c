@@ -30,6 +30,11 @@
 #include "../include/digraph.h"
 
 
+// ==============================================================================
+// External function implementations
+// ==============================================================================
+
+
 bool scc_is_initialized_digraph(const scc_Digraph* const dg) {
 	if (!dg || !dg->tail_ptr) return false;
 	if (dg->max_arcs == 0 && dg->head) return false;

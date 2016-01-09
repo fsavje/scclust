@@ -6,6 +6,12 @@ BUILDOBJS=$(addprefix build/,$(OBJECTS))
 
 all: library
 
+doc:
+	doxygen DoxyAPI
+
+doc-source:
+	doxygen DoxySource
+
 library: $(BUILDOBJS)
 	$(AR) rcs lib/libscclust.a $(BUILDOBJS)
 
@@ -13,4 +19,5 @@ build/%.o: src/%.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean:
-	$(RM) build/*.o lib/*.a 
+	$(RM) build/*.o lib/*.a
+	$(RM) -R doc/html doc/latex

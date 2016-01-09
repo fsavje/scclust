@@ -27,6 +27,11 @@
 #include "../include/config.h"
 
 
+// ==============================================================================
+// External function implementations
+// ============================================================================== 
+
+
 scc_Digraph scc_init_digraph(const scc_Vid vertices, const scc_Arci max_arcs) {
 	scc_Digraph dg = {
 		.vertices = vertices,

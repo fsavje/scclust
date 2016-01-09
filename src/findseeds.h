@@ -27,9 +27,19 @@
 #include "../include/digraph.h"
 #include "../include/nng_clustering.h"
 
+
+// ==============================================================================
+// External function prototypes
+// ==============================================================================
+
 scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* nng, scc_Vid seed_init_capacity);
+
 scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* nng, scc_Vid seed_init_capacity, bool updating);
+
 scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* nng, scc_Vid seed_init_capacity, bool updating);
+
+
+
 //iscc_findseeds_simulated_annealing();
 //iscc_findseeds_approximation();
 

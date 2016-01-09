@@ -262,15 +262,6 @@ void scc_ut_exclusion_graph(void** state) {
 	scc_free_digraph(&exclusion_graph);
 }
 
-/*
-typedef struct iscc_fs_SortResult iscc_fs_SortResult;
-struct iscc_fs_SortResult {
-	scc_Vid* inwards_count;
-	scc_Vid* sorted_vertices;
-	scc_Vid** vertex_index;
-	scc_Vid** bucket_index;
-};
-*/
 
 void scc_ut_fs_sort_by_inwards(void** state) {
 	(void) state;
