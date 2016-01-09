@@ -45,9 +45,6 @@ bool scc_digraphs_equal(const scc_Digraph* dg_a,
                         const scc_Digraph* dg_b);
 
 
-scc_Digraph scc_balanced_digraph(scc_Vid vertices,
-                                 scc_Arci arcs_per_vertex,
-                                 scc_Vid* heads);
 
 
 scc_Digraph scc_digraph_from_pieces(scc_Vid vertices,

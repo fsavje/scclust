@@ -116,25 +116,6 @@ void scc_ut_is_balanced_digraph(void** state) {
 	scc_free_digraph(&dg2);
 }
 
-void scc_ut_balanced_digraph(void** state) {
-	(void) state;
-
-	scc_Vid* heads1 = NULL;
-	scc_Digraph my_graph1 = scc_balanced_digraph(0, 0, heads1);
-	assert_balanced_digraph(&my_graph1, 0, 0);
-	assert_int_equal(my_graph1.max_arcs, 0);
-	assert_free_digraph(&my_graph1);
-
-	scc_Vid* heads2 = malloc(sizeof(scc_Vid[10 * 4]));
-	for (size_t i = 0; i < 40; ++i) heads2[i] = i % 10;
-	scc_Digraph my_graph2 = scc_balanced_digraph(10, 4, heads2);
-	assert_balanced_digraph(&my_graph2, 10, 4);
-	assert_int_equal(my_graph2.max_arcs, 40);
-	for (size_t i = 0; i < 40; ++i) assert_int_equal(my_graph2.head[i], i % 10);
-	assert_free_digraph(&my_graph2);
-	free(heads2);
-}
-
 void scc_ut_debug_rest(void** state) {
 	(void) state;
 
