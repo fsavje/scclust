@@ -40,16 +40,16 @@
 void scc_ut_findseeds_lexical(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string(".*......../"
-	                                          "...*....../"
-	                                          "*........./"
-	                                          ".*......../"
-	                                          ".....*..../"
-	                                          "...*....../"
-	                                          "....*...../"
-	                                          "......*.../"
-	                                          "......*.../"
-	                                          "......*.../");
+	scc_Digraph nng = scc_digraph_from_string(".#......../"
+	                                          "...#....../"
+	                                          "#........./"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          "...#....../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
 
 	bool fp_assigned[10] = {true, true, false, false, true, true, true, true, false, false};
 	scc_Vid fp_seeds[3] = {0, 4, 7};
@@ -91,16 +91,16 @@ void scc_ut_findseeds_lexical(void** state) {
 void scc_ut_findseeds_inwards(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string("...*....../"
-	                                          "...*....../"
-	                                          "*........./"
-	                                          ".*......../"
-	                                          ".....*..../"
-	                                          ".*......../"
-	                                          "....*...../"
-	                                          "......*.../"
-	                                          "......*.../"
-	                                          "......*.../");
+	scc_Digraph nng = scc_digraph_from_string("...#....../"
+	                                          "...#....../"
+	                                          "#........./"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          ".#......../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {2, 7, 4, 1};
@@ -132,16 +132,16 @@ void scc_ut_findseeds_inwards(void** state) {
 void scc_ut_findseeds_inwards_updating(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string("...*....../"
-	                                          "...*....../"
-	                                          "*........./"
-	                                          ".*......../"
-	                                          ".....*..../"
-	                                          ".*......../"
-	                                          "....*...../"
-	                                          "......*.../"
-	                                          "......*.../"
-	                                          "......*.../");
+	scc_Digraph nng = scc_digraph_from_string("...#....../"
+	                                          "...#....../"
+	                                          "#........./"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          ".#......../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {2, 7, 4, 3};
@@ -173,16 +173,16 @@ void scc_ut_findseeds_inwards_updating(void** state) {
 void scc_ut_findseeds_exclusion(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string("...*....../"
-	                                          "...*....../"
-	                                          ".*......../"
-	                                          ".*......../"
-	                                          ".....*..../"
-	                                          ".*......../"
-	                                          "....*...../"
-	                                          "......*.../"
-	                                          "......*.../"
-	                                          "......*.../");
+	scc_Digraph nng = scc_digraph_from_string("...#....../"
+	                                          "...#....../"
+	                                          ".#......../"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          ".#......../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {0, 4, 2, 7};
@@ -213,16 +213,16 @@ void scc_ut_findseeds_exclusion(void** state) {
 void scc_ut_findseeds_exclusion_updating(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string("...*....../"
-	                                          "...*....../"
-	                                          ".*......../"
-	                                          ".*......../"
-	                                          ".....*..../"
-	                                          ".*......../"
-	                                          "....*...../"
-	                                          "......*.../"
-	                                          "......*.../"
-	                                          "......*.../");
+	scc_Digraph nng = scc_digraph_from_string("...#....../"
+	                                          "...#....../"
+	                                          ".#......../"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          ".#......../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {0, 2, 4, 7};
@@ -254,26 +254,26 @@ void scc_ut_findseeds_exclusion_updating(void** state) {
 void scc_ut_findseeds_checkseeds18(void** state) {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string(".*..*............./"
-	                                          "*...*............./"
-	                                          "....*..*........../"
-	                                          "*...*............./"
-	                                          ".*.*............../"
-	                                          "..*.....*........./"
-	                                          "...*.....*......../"
-	                                          "......*.*........./"
-	                                          ".....*.....*....../"
-	                                          "..........*.....*./"
-	                                          ".......*.....*..../"
-	                                          "........*.*......./"
-	                                          "...............**./"
-	                                          "..............*..*/"
-	                                          ".............*...*/"
-	                                          ".........*..*...../"
-	                                          ".............**.../"
-	                                          "..............*.*./");
 
 	scc_Clustering cl_seed_lexical = scc_base_clustering(&nng, SCC_LEXICAL, 7);
+	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
+	                                          "#...#............./"
+	                                          "....#..#........../"
+	                                          "#...#............./"
+	                                          ".#.#............../"
+	                                          "..#.....#........./"
+	                                          "...#.....#......../"
+	                                          "......#.#........./"
+	                                          ".....#.....#....../"
+	                                          "..........#.....#./"
+	                                          ".......#.....#..../"
+	                                          "........#.#......./"
+	                                          "...............##./"
+	                                          "..............#..#/"
+	                                          ".............#...#/"
+	                                          ".........#..#...../"
+	                                          ".............##.../"
+	                                          "..............#.#./");
 	scc_Vid ref_seeds_lexical[5] = {0, 5, 6, 10, 12};
 	assert_memory_equal(cl_seed_lexical.seeds, ref_seeds_lexical, 5 * sizeof(bool));
 	assert_int_equal(cl_seed_lexical.num_clusters, 5);

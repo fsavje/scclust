@@ -33,9 +33,9 @@
 void scc_ut_union_digraphs(void** state) {
 	(void) state;
 
-	scc_Digraph ut_dg1 = scc_digraph_from_string("*.../.*../..*./...*/");
-	scc_Digraph ut_dg2 = scc_digraph_from_string("...*/..*./.*../*.../");
-	scc_Digraph ut_dg3 = scc_digraph_from_string("*.../*.../*.../*.../");
+	scc_Digraph ut_dg1 = scc_digraph_from_string("#.../.#../..#./...#/");
+	scc_Digraph ut_dg2 = scc_digraph_from_string("...#/..#./.#../#.../");
+	scc_Digraph ut_dg3 = scc_digraph_from_string("#.../#.../#.../#.../");
 
 
 	const scc_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
@@ -126,15 +126,15 @@ void scc_ut_union_digraphs(void** state) {
 void scc_ut_digraph_transpose(void** state) {
 	(void) state;
 
-	scc_Digraph ut_dg1 = scc_digraph_from_string("*.../.*../..*./...*/");
-	scc_Digraph ut_dg2 = scc_digraph_from_string("****/..*./****/*.../");
-	scc_Digraph ut_dg3 = scc_digraph_from_string("*.../*.../*.../*.../");
+	scc_Digraph ut_dg1 = scc_digraph_from_string("#.../.#../..#./...#/");
+	scc_Digraph ut_dg2 = scc_digraph_from_string("####/..#./####/#.../");
+	scc_Digraph ut_dg3 = scc_digraph_from_string("#.../#.../#.../#.../");
 	scc_Digraph ut_dg4 = scc_digraph_from_string("..../..../..../..../");
 	scc_Digraph ut_dg5 = scc_empty_digraph(0, 0);
 
-	scc_Digraph control1 = scc_digraph_from_string("*.../.*../..*./...*/");
-	scc_Digraph control2 = scc_digraph_from_string("*.**/*.*./***./*.*./");
-	scc_Digraph control3 = scc_digraph_from_string("****/..../..../..../");
+	scc_Digraph control1 = scc_digraph_from_string("#.../.#../..#./...#/");
+	scc_Digraph control2 = scc_digraph_from_string("#.##/#.#./###./#.#./");
+	scc_Digraph control3 = scc_digraph_from_string("####/..../..../..../");
 	scc_Digraph control4 = scc_empty_digraph(4, 0);
 	scc_Digraph control5 = scc_empty_digraph(0, 0);
 	scc_Digraph control6 = SCC_NULL_DIGRAPH;
@@ -183,12 +183,12 @@ void scc_ut_digraph_transpose(void** state) {
 void scc_ut_adjacency_product(void** state) {
 	(void) state;
 
-	scc_Digraph dg1 = scc_digraph_from_string("**.../...*./.*.../..*../...*./");
-	scc_Digraph dg1_i = scc_digraph_from_string(".*.../...*./.*.../..*../...*./");
-	scc_Digraph dg1_f = scc_digraph_from_string("**.../.*.*./.**../..**./...**/");
-	scc_Digraph dg2 = scc_digraph_from_string("..*../..**./...../..*../*.*../");
-	scc_Digraph dg2_i = scc_digraph_from_string("..*../..**./...../..*../*.*../");
-	scc_Digraph dg2_f = scc_digraph_from_string("*.*../.***./..*../..**./*.*.*/");
+	scc_Digraph dg1 = scc_digraph_from_string("##.../...#./.#.../..#../...#./");
+	scc_Digraph dg1_i = scc_digraph_from_string(".#.../...#./.#.../..#../...#./");
+	scc_Digraph dg1_f = scc_digraph_from_string("##.../.#.#./.##../..##./...##/");
+	scc_Digraph dg2 = scc_digraph_from_string("..#../..##./...../..#../#.#../");
+	scc_Digraph dg2_i = scc_digraph_from_string("..#../..##./...../..#../#.#../");
+	scc_Digraph dg2_f = scc_digraph_from_string("#.#../.###./..#../..##./#.#.#/");
 
 	scc_Digraph prod0 = scc_adjacency_product(&dg1, &dg1, true, true);
 	scc_Digraph none = SCC_NULL_DIGRAPH;
@@ -197,19 +197,19 @@ void scc_ut_adjacency_product(void** state) {
 
 	scc_Digraph prod1 = scc_adjacency_product(&dg1, &dg1, false, false);
 	assert_valid_digraph(&prod1, 5);
-	scc_Digraph control1 = scc_digraph_from_string("**.*./..*../...*./.*.../..*../");
+	scc_Digraph control1 = scc_digraph_from_string("##.#./..#../...#./.#.../..#../");
 	assert_equal_digraph(&prod1, &control1);
 
 	scc_Digraph prod2 = scc_adjacency_product(&dg1, &dg1, false, true);
 	assert_valid_digraph(&prod2, 5);
-	scc_Digraph control2 = scc_digraph_from_string("...*./..*../...*./.*.../..*../");
+	scc_Digraph control2 = scc_digraph_from_string("...#./..#../...#./.#.../..#../");
 	scc_Digraph control2alt = scc_adjacency_product(&dg1_i, &dg1, false, false);
 	assert_equal_digraph(&prod2, &control2);
 	assert_equal_digraph(&prod2, &control2alt);
 
 	scc_Digraph prod3 = scc_adjacency_product(&dg1, &dg1, true, false);
 	assert_valid_digraph(&prod3, 5);
-	scc_Digraph control3 = scc_digraph_from_string("**.*./..**./.*.*./.**../..**./");
+	scc_Digraph control3 = scc_digraph_from_string("##.#./..##./.#.#./.##../..##./");
 	scc_Digraph control3alt = scc_adjacency_product(&dg1_f, &dg1, false, false);
 	assert_equal_digraph(&prod3, &control3);
 	assert_equal_digraph(&prod3, &control3alt);
@@ -217,19 +217,19 @@ void scc_ut_adjacency_product(void** state) {
 
 	scc_Digraph prod4 = scc_adjacency_product(&dg1, &prod2, false, false);
 	assert_valid_digraph(&prod4, 5);
-	scc_Digraph control4 = scc_digraph_from_string("..**./.*.../..*../...*./.*.../");
+	scc_Digraph control4 = scc_digraph_from_string("..##./.#.../..#../...#./.#.../");
 	assert_equal_digraph(&prod4, &control4);
 
 	scc_Digraph prod5 = scc_adjacency_product(&dg1, &prod2, false, true);
 	assert_valid_digraph(&prod5, 5);
-	scc_Digraph control5 = scc_digraph_from_string("..*../.*.../..*../...*./.*.../");
+	scc_Digraph control5 = scc_digraph_from_string("..#../.#.../..#../...#./.#.../");
 	scc_Digraph control5alt = scc_adjacency_product(&dg1_i, &prod2, false, false);
 	assert_equal_digraph(&prod5, &control5);
 	assert_equal_digraph(&prod5, &control5alt);
 
 	scc_Digraph prod6 = scc_adjacency_product(&dg1, &prod2, true, false);
 	assert_valid_digraph(&prod6, 5);
-	scc_Digraph control6 = scc_digraph_from_string("..**./.**../..**./.*.*./.**../");
+	scc_Digraph control6 = scc_digraph_from_string("..##./.##../..##./.#.#./.##../");
 	scc_Digraph control6alt = scc_adjacency_product(&dg1_f, &prod2, false, false);
 	assert_equal_digraph(&prod6, &control6);
 	assert_equal_digraph(&prod6, &control6alt);
@@ -237,7 +237,7 @@ void scc_ut_adjacency_product(void** state) {
 
 	scc_Digraph prod7 = scc_adjacency_product(&dg1, &dg2, false, false);
 	assert_valid_digraph(&prod7, 5);
-	scc_Digraph control7 = scc_digraph_from_string("..**./..*../..**./...../..*../");
+	scc_Digraph control7 = scc_digraph_from_string("..##./..#../..##./...../..#../");
 	assert_equal_digraph(&prod7, &control7);
 
 	scc_Digraph prod8 = scc_adjacency_product(&dg1, &dg2, false, true);
@@ -253,7 +253,7 @@ void scc_ut_adjacency_product(void** state) {
 
 	scc_Digraph prod10 = scc_adjacency_product(&dg2, &dg1, false, false);
 	assert_valid_digraph(&prod10, 5);
-	scc_Digraph control10 = scc_digraph_from_string(".*.../.**../...../.*.../**.../");
+	scc_Digraph control10 = scc_digraph_from_string(".#.../.##../...../.#.../##.../");
 	assert_equal_digraph(&prod10, &control10);
 
 	scc_Digraph prod11 = scc_adjacency_product(&dg2, &dg1, false, true);

@@ -93,7 +93,7 @@ void scc_ut_is_valid_digraph(void** state) {
 void scc_ut_is_empty_digraph(void** state) {
 	(void) state;
 
-	scc_Digraph dg1 = scc_digraph_from_string("**../.*../.*.*/..**/");
+	scc_Digraph dg1 = scc_digraph_from_string("##../.#../.#.#/..##/");
 	scc_Digraph dg2 = scc_empty_digraph(4, 10);
 
 	assert_false(scc_is_empty_digraph(&dg1));
@@ -106,7 +106,7 @@ void scc_ut_is_empty_digraph(void** state) {
 void scc_ut_is_balanced_digraph(void** state) {
 	(void) state;
 
-	scc_Digraph dg1 = scc_digraph_from_string("*.../.*../.*../..*./");
+	scc_Digraph dg1 = scc_digraph_from_string("#.../.#../.#../..#./");
 	scc_Digraph dg2 = scc_empty_digraph(4, 10);
 
 	assert_true(scc_is_balanced_digraph(&dg1, 1));
@@ -123,8 +123,8 @@ void scc_ut_debug_rest(void** state) {
 	scc_Arci tail_ptrA[5] = {0,2,3,5,7};
 
 	scc_Digraph ut_dg1 = scc_digraph_from_pieces(4, 7, tail_ptrA, headA);
-	scc_Digraph ut_dg2 = scc_digraph_from_string("**../.*../.*.*/..**/");
-	scc_Digraph ut_dg3 = scc_digraph_from_string("**../.*../.*.*/..**");
+	scc_Digraph ut_dg2 = scc_digraph_from_string("##../.#../.#.#/..##/");
+	scc_Digraph ut_dg3 = scc_digraph_from_string("##../.#../.#.#/..##");
 
 	scc_Arci tail_ptrB[5] = {0,0,0,0,0};
 	scc_Digraph ut_dg4 = scc_digraph_from_pieces(4, 0, tail_ptrB, NULL);
@@ -134,8 +134,8 @@ void scc_ut_debug_rest(void** state) {
 	scc_Vid headC[4] = {0,1,2,3};
 	scc_Arci tail_ptrC[5] = {0,1,2,3,4};
 	scc_Digraph ut_dg6 = scc_digraph_from_pieces(4, 4, tail_ptrC, headC);
-	scc_Digraph ut_dg7 = scc_digraph_from_string("*.../.*../..*./...*");
-	scc_Digraph ut_dg8 = scc_digraph_from_string("a*.../e fdgtthhh.*..t/2..*.5/7..   .*");
+	scc_Digraph ut_dg7 = scc_digraph_from_string("#.../.#../..#./...#");
+	scc_Digraph ut_dg8 = scc_digraph_from_string("a#.../e fdgtthhh.#..t/2..#.5/7..   .#");
 
 	scc_Arci tail_ptrD[1] = {0};
 	scc_Digraph ut_dg9 = scc_digraph_from_pieces(0, 0, tail_ptrD, NULL);
@@ -241,7 +241,6 @@ int main(void) {
 		cmocka_unit_test(scc_ut_is_valid_digraph),
 		cmocka_unit_test(scc_ut_is_empty_digraph),
 		cmocka_unit_test(scc_ut_is_balanced_digraph),
-		cmocka_unit_test(scc_ut_balanced_digraph),
 		cmocka_unit_test(scc_ut_debug_rest),
 	};
 

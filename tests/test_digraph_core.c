@@ -75,7 +75,7 @@ void scc_ut_change_arc_storage(void** state) {
 	assert_int_equal(my_graph1.max_arcs, 100);
 	assert_free_digraph(&my_graph1);
 
-	scc_Digraph my_graph2 = scc_digraph_from_string("*.../.*../..*./...*/");
+	scc_Digraph my_graph2 = scc_digraph_from_string("#.../.#../..#./...#/");
 	assert_false(scc_change_arc_storage(&my_graph2, 2));
 	assert_valid_digraph(&my_graph2, 4);
 	assert_int_equal(my_graph2.max_arcs, 4);
@@ -117,7 +117,7 @@ void scc_ut_empty_digraph(void** state) {
 void scc_ut_copy_digraph(void** state) {
 	(void) state;
 
-	scc_Digraph dg1 = scc_digraph_from_string("****/..*./****/*.../");
+	scc_Digraph dg1 = scc_digraph_from_string("####/..#./####/#.../");
 	scc_Digraph dg2 = scc_empty_digraph(0, 0);
 	scc_Digraph dg3 = SCC_NULL_DIGRAPH;
 

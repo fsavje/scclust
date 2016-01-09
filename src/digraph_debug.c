@@ -132,8 +132,8 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 	scc_Arci max_arcs = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
-		if (dg_str[c] == '*' || dg_str[c] == '.') ++all_arcs;
-		if (dg_str[c] == '*') ++max_arcs;
+		if (dg_str[c] == '#' || dg_str[c] == '.') ++all_arcs;
+		if (dg_str[c] == '#') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) {
 			if (all_arcs > SCC_VID_MAX) return SCC_NULL_DIGRAPH;
 			vertices = (scc_Vid) all_arcs;
@@ -149,11 +149,11 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const]) {
 	dg_out.tail_ptr[0] = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
-		if (dg_str[c] == '*') {
+		if (dg_str[c] == '#') {
 			dg_out.head[curr_array_pos] = curr_col;
 			++curr_array_pos;
 		}
-		if (dg_str[c] == '*' || dg_str[c] == '.') ++curr_col;
+		if (dg_str[c] == '#' || dg_str[c] == '.') ++curr_col;
 		if (dg_str[c] == '/') {
 			++curr_row;
 			curr_col = 0;
@@ -191,7 +191,7 @@ void scc_print_digraph(const scc_Digraph* const dg) {
 
 		for (scc_Vid i = 0; i < dg->vertices; ++i) {
 			if (single_row[i]) {
-				putchar('*');
+				putchar('#');
 			} else {
 				putchar('.');
 			}
