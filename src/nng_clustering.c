@@ -22,26 +22,12 @@
 
 #include "../include/nng_clustering.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "../include/config.h"
 #include "../include/digraph.h"
 #include "findseeds.h"
-
-// ==============================================================================
-// Internal function prototypes
-// ==============================================================================
-
-static inline void iscc_fs_assign_neighbors(scc_Vid s,
-                                            scc_Clabel new_label,
-                                            const scc_Digraph* restrict nng,
-                                            bool* restrict assigned,
-                                            scc_Clabel* restrict cluster_label);
-
-static inline void iscc_fs_assign_cl_labels(scc_Vid s,
-                                            scc_Clabel new_label,
-                                            const scc_Digraph* nng,
-                                            scc_Clabel* cluster_label);
 
 
 // ==============================================================================
@@ -97,7 +83,37 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 		return SCC_NULL_SEED_CLUSTERING;
 	}
 
-	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
+	scc_SeedClustering clustering = {
+		.vertices = nng->vertices,
+		.num_clusters = seed_array.num_seeds,
+		.assigned = calloc(nng->vertices, sizeof(bool)),
+		.seeds = seed_array.seeds,
+		.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices])),
+	};
+
+	seed_array.seeds = NULL;
+	iscc_free_SeedArray(&seed_array);
+
+	if (!clustering.assigned || !clustering.cluster_label) {
+		scc_free_SeedClustering(&clustering);
+		return SCC_NULL_SEED_CLUSTERING;
+	}
+
+	for (scc_Vid c = 0; c < clustering.num_clusters; ++c) {
+		const scc_Vid seed = clustering.seeds[c];
+
+		assert(!clustering.assigned[seed]);
+		clustering.assigned[seed] = true;
+		clustering.cluster_label[seed] = c;
+
+		const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[seed + 1];
+		for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[seed];
+		        s_arc != s_arc_stop; ++s_arc) {
+			assert(!clustering.assigned[*s_arc]);
+			clustering.assigned[*s_arc] = true;
+			clustering.cluster_label[*s_arc] = c;
+		}
+	}
 
 	return clustering;
 }
@@ -167,42 +183,4 @@ bool scc_assign_remaining_keep_even(scc_SeedClustering* const clustering,
 	free(cluster_size);
 
 	return true;
-}
-
-// ==============================================================================
-// Internal function implementations 
-// ==============================================================================
-
-static inline void iscc_fs_assign_neighbors(const scc_Vid s,
-                                            const scc_Clabel new_label,
-                                            const scc_Digraph* restrict const nng,
-                                            bool* restrict const assigned,
-                                            scc_Clabel* restrict const cluster_label)
-{
-	assert(!assigned[s]);
-	assigned[s] = true;
-	cluster_label[s] = new_label;
-
-	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
-	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
-	        s_arc != s_arc_stop; ++s_arc) {
-		assert(!assigned[*s_arc]);
-		assigned[*s_arc] = true;
-		cluster_label[*s_arc] = new_label;
-	}
-}
-
-
-static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
-                                            const scc_Clabel new_label,
-                                            const scc_Digraph* const nng,
-                                            scc_Clabel* const cluster_label)
-{
-	cluster_label[s] = new_label;
-
-	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
-	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
-	        s_arc != s_arc_stop; ++s_arc) {
-		cluster_label[*s_arc] = new_label;
-	}
 }
