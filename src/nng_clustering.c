@@ -32,7 +32,6 @@
 // Internal function prototypes
 // ==============================================================================
 
-
 static inline void iscc_fs_assign_neighbors(scc_Vid s,
                                             scc_Clabel new_label,
                                             const scc_Digraph* restrict nng,
@@ -49,8 +48,8 @@ static inline void iscc_fs_assign_cl_labels(scc_Vid s,
 // External function implementations
 // ==============================================================================
 
-
-void scc_free_SeedClustering(scc_SeedClustering* const cl) {
+void scc_free_SeedClustering(scc_SeedClustering* const cl)
+{
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
@@ -60,8 +59,10 @@ void scc_free_SeedClustering(scc_SeedClustering* const cl) {
 }
 
 
-scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm, scc_Vid seed_init_capacity) {
-
+scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
+                                           const scc_SeedMethod sm,
+                                           scc_Vid seed_init_capacity)
+{
 	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
 	iscc_SeedArray seed_array = ISCC_NULL_SEED_ARRAY;
@@ -102,8 +103,9 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng, const s
 }
 
 
-bool scc_assign_remaining_lexical(scc_SeedClustering* const clustering, const scc_Digraph* const priority_graph) {
-
+bool scc_assign_remaining_lexical(scc_SeedClustering* const clustering,
+                                  const scc_Digraph* const priority_graph)
+{
 	const scc_Vid vertices = clustering->vertices;
 	bool* const assigned = clustering->assigned;
 	scc_Clabel* const cluster_label = clustering->cluster_label;
@@ -127,8 +129,10 @@ bool scc_assign_remaining_lexical(scc_SeedClustering* const clustering, const sc
 }
 
 
-bool scc_assign_remaining_keep_even(scc_SeedClustering* const clustering, const scc_Digraph* const priority_graph, const scc_Vid desired_size) {
-
+bool scc_assign_remaining_keep_even(scc_SeedClustering* const clustering,
+                                    const scc_Digraph* const priority_graph,
+                                    const scc_Vid desired_size)
+{
 	scc_Vid* cluster_size = calloc(clustering->num_clusters, sizeof(scc_Vid));
 	if (!cluster_size) return false;
 
@@ -173,7 +177,8 @@ static inline void iscc_fs_assign_neighbors(const scc_Vid s,
                                             const scc_Clabel new_label,
                                             const scc_Digraph* restrict const nng,
                                             bool* restrict const assigned,
-                                            scc_Clabel* restrict const cluster_label) {
+                                            scc_Clabel* restrict const cluster_label)
+{
 	assert(!assigned[s]);
 	assigned[s] = true;
 	cluster_label[s] = new_label;
@@ -191,7 +196,8 @@ static inline void iscc_fs_assign_neighbors(const scc_Vid s,
 static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
                                             const scc_Clabel new_label,
                                             const scc_Digraph* const nng,
-                                            scc_Clabel* const cluster_label) {
+                                            scc_Clabel* const cluster_label)
+{
 	cluster_label[s] = new_label;
 
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
@@ -200,4 +206,3 @@ static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
 		cluster_label[*s_arc] = new_label;
 	}
 }
-

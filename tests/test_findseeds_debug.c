@@ -32,7 +32,8 @@
 #include "../include/nng_clustering.h"
 
 
-void scc_ut_fs_debug_vid_sort(void** state) {
+void scc_ut_fs_debug_vid_sort(void** state)
+{
 	(void) state;
 
 	scc_Vid buckets1[7] = {1, 4, 3, 5, 6, 2, 0};
@@ -80,7 +81,9 @@ void scc_ut_fs_debug_vid_sort(void** state) {
 	assert_memory_equal(vertex_index3, ref_vertex_index3, 7 * sizeof(scc_Vid*));
 }
 
-void scc_ut_findseeds_checkseeds18_debug(void** state) {
+
+void scc_ut_findseeds_checkseeds18_debug(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
@@ -117,7 +120,9 @@ void scc_ut_findseeds_checkseeds18_debug(void** state) {
 	scc_free_Clustering(&cl_seed_exupdat);
 }
 
-int main(void) {
+
+int main(void)
+{
 	const struct CMUnitTest test_findseeds_debug[] = {
 		cmocka_unit_test(scc_ut_fs_debug_vid_sort),
 		cmocka_unit_test(scc_ut_findseeds_checkseeds18_debug),
@@ -125,4 +130,3 @@ int main(void) {
 
 	return cmocka_run_group_tests_name("debug find seeds module", test_findseeds_debug, NULL, NULL);
 }
-

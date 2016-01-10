@@ -30,10 +30,12 @@
 // ==============================================================================
 // Static function implementations
 // ==============================================================================
+
 static inline void iscc_fs_debug_bucket_sort(scc_Vid* const bucket_start,
                                              scc_Vid* pos,
                                              const scc_Vid* const inwards_count,
-                                             scc_Vid** const vertex_index) {
+                                             scc_Vid** const vertex_index)
+{
 	scc_Vid tmp_v = *pos;
 	for (; pos != bucket_start; --pos) {
 		assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
@@ -47,7 +49,8 @@ static inline void iscc_fs_debug_bucket_sort(scc_Vid* const bucket_start,
 
 static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
                                             const scc_Vid* const last_pos,
-                                            const scc_Vid* const inwards_count) {
+                                            const scc_Vid* const inwards_count)
+{
 	for (; current_pos != last_pos; ++current_pos) {
 		assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);
 		if (inwards_count[*(current_pos)] == inwards_count[*(current_pos + 1)]) {
@@ -57,4 +60,3 @@ static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
 }
 
 #endif
-

@@ -36,7 +36,8 @@
 #endif
 
 
-void scc_ut_fs_check_candidate_vertex(void** state) {
+void scc_ut_fs_check_candidate_vertex(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("..##..#/"
@@ -60,7 +61,9 @@ void scc_ut_fs_check_candidate_vertex(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_fs_add_seed(void** state) {
+
+void scc_ut_fs_add_seed(void** state)
+{
 	(void) state;
 
 	scc_SeedClustering cl = {
@@ -109,7 +112,9 @@ void scc_ut_fs_add_seed(void** state) {
 	scc_free_Clustering(&cl);
 }
 
-void scc_ut_fs_assign_neighbors(void** state) {
+
+void scc_ut_fs_assign_neighbors(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("..##..#/"
@@ -172,7 +177,9 @@ void scc_ut_fs_assign_neighbors(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_fs_assign_cl_labels(void** state) {
+
+void scc_ut_fs_assign_cl_labels(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("..##..#/"
@@ -212,7 +219,9 @@ void scc_ut_fs_assign_cl_labels(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_exclusion_graph(void** state) {
+
+void scc_ut_exclusion_graph(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
@@ -263,7 +272,8 @@ void scc_ut_exclusion_graph(void** state) {
 }
 
 
-void scc_ut_fs_sort_by_inwards(void** state) {
+void scc_ut_fs_sort_by_inwards(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng1 = scc_digraph_from_string("##...#/"
@@ -373,7 +383,9 @@ void scc_ut_fs_sort_by_inwards(void** state) {
 	scc_free_digraph(&nng3);
 }
 
-void scc_ut_fs_decrease_v_in_sort(void** state) {
+
+void scc_ut_fs_decrease_v_in_sort(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...#...###/"
@@ -489,7 +501,9 @@ void scc_ut_fs_decrease_v_in_sort(void** state) {
 	scc_free_digraph(&nng2);
 }
 
-int main(void) {
+
+int main(void)
+{
 	const struct CMUnitTest test_findseeds_internals[] = {
 		cmocka_unit_test(scc_ut_fs_check_candidate_vertex),
 		cmocka_unit_test(scc_ut_fs_add_seed),
@@ -502,4 +516,3 @@ int main(void) {
 
 	return cmocka_run_group_tests_name("internal find seeds module", test_findseeds_internals, NULL, NULL);
 }
-

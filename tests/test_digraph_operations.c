@@ -30,7 +30,8 @@
 #include "../include/digraph_debug.h"
 
 
-void scc_ut_union_digraphs(void** state) {
+void scc_ut_union_digraphs(void** state)
+{
 	(void) state;
 
 	scc_Digraph ut_dg1 = scc_digraph_from_string("#.../.#../..#./...#/");
@@ -123,7 +124,9 @@ void scc_ut_union_digraphs(void** state) {
 	assert_free_digraph(&ut_control321);
 }
 
-void scc_ut_digraph_transpose(void** state) {
+
+void scc_ut_digraph_transpose(void** state)
+{
 	(void) state;
 
 	scc_Digraph ut_dg1 = scc_digraph_from_string("#.../.#../..#./...#/");
@@ -180,7 +183,8 @@ void scc_ut_digraph_transpose(void** state) {
 }
 
 
-void scc_ut_adjacency_product(void** state) {
+void scc_ut_adjacency_product(void** state)
+{
 	(void) state;
 
 	scc_Digraph dg1 = scc_digraph_from_string("##.../...#./.#.../..#../...#./");
@@ -304,7 +308,8 @@ void scc_ut_adjacency_product(void** state) {
 }
 
 
-int main(void) {
+int main(void)
+{
 	const struct CMUnitTest test_operations[] = {
 		cmocka_unit_test(scc_ut_union_digraphs),
 		cmocka_unit_test(scc_ut_digraph_transpose),

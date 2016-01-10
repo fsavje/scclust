@@ -45,17 +45,20 @@ void _assert_initialized_digraph(const scc_Digraph* test_dg,
                                  const scc_Vid vertices,
                                  const char* const name_dg,
                                  const char* const file,
-                                 const int line) {
+                                 const int line)
+{
 	if (!scc_is_initialized_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not valid\n", name_dg);
 		_fail(file, line);
 	}
 }
 
+
 void _assert_free_digraph(scc_Digraph* test_dg,
                           const char* const name_dg,
                           const char* const file,
-                          const int line) {
+                          const int line)
+{
 	if (!test_dg || !test_dg->tail_ptr) {
 		print_error("%s is already freed\n", name_dg);
 		_fail(file, line);
@@ -66,58 +69,68 @@ void _assert_free_digraph(scc_Digraph* test_dg,
 	scc_free_digraph(test_dg);
 }
 
+
 void _assert_valid_digraph(const scc_Digraph* test_dg,
                            const scc_Vid vertices,
                            const char* const name_dg,
                            const char* const file,
-                           const int line) {
+                           const int line)
+{
 	if (!scc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not sound\n", name_dg);
 		_fail(file, line);
 	}
 }
 
+
 void _assert_empty_digraph(const scc_Digraph* test_dg,
                            const scc_Vid vertices,
                            const char* const name_dg,
                            const char* const file,
-                           const int line) {
+                           const int line)
+{
 	if (!scc_is_empty_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not empty\n", name_dg);
 		_fail(file, line);
 	}
 }
 
+
 void _assert_balanced_digraph(const scc_Digraph* test_dg,
                               const scc_Vid vertices,
                               const scc_Vid arcs_per_vertex,
                               const char* const name_dg,
                               const char* const file,
-                              const int line) {
+                              const int line)
+{
 	if (!scc_is_balanced_digraph(test_dg, arcs_per_vertex) || test_dg->vertices != vertices) {
 		print_error("%s is not balanced\n", name_dg);
 		_fail(file, line);
 	}
 }
 
+
 void _assert_equal_digraph(const scc_Digraph* test_dg1,
                            const scc_Digraph* test_dg2,
                            const char* const name_dg1,
                            const char* const name_dg2,
                            const char* const file,
-                           const int line) {
+                           const int line)
+{
 	if (!scc_digraphs_equal(test_dg1, test_dg2)) {
 		print_error("%s and %s are not equal\n", name_dg1, name_dg2);
 		_fail(file, line);
 	}
 }
 
+
 void _assert_identical_digraph(const scc_Digraph* test_dg1,
                                const scc_Digraph* test_dg2,
                                const char* const name_dg1,
                                const char* const name_dg2,
                                const char* const file,
-                               const int line) {
+                               const int line)
+{
 	bool is_identical = true;
 	if (is_identical && test_dg1->max_arcs != test_dg2->max_arcs) is_identical = false;
 	if (is_identical && test_dg1->vertices != test_dg2->vertices) is_identical = false;
@@ -153,5 +166,6 @@ void _assert_identical_digraph(const scc_Digraph* test_dg1,
 		_fail(file, line);
 	}
 }
+
 
 #endif

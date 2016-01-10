@@ -37,7 +37,8 @@
 #endif
 
 
-void scc_ut_findseeds_lexical(void** state) {
+void scc_ut_findseeds_lexical(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string(".#......../"
@@ -88,7 +89,9 @@ void scc_ut_findseeds_lexical(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_findseeds_inwards(void** state) {
+
+void scc_ut_findseeds_inwards(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...#....../"
@@ -129,7 +132,9 @@ void scc_ut_findseeds_inwards(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_findseeds_inwards_updating(void** state) {
+
+void scc_ut_findseeds_inwards_updating(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...#....../"
@@ -170,7 +175,9 @@ void scc_ut_findseeds_inwards_updating(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_findseeds_exclusion(void** state) {
+
+void scc_ut_findseeds_exclusion(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...#....../"
@@ -210,7 +217,9 @@ void scc_ut_findseeds_exclusion(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_findseeds_exclusion_updating(void** state) {
+
+void scc_ut_findseeds_exclusion_updating(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string("...#....../"
@@ -251,7 +260,9 @@ void scc_ut_findseeds_exclusion_updating(void** state) {
 	scc_free_digraph(&nng);
 }
 
-void scc_ut_findseeds_checkseeds18(void** state) {
+
+void scc_ut_findseeds_checkseeds18(void** state)
+{
 	(void) state;
 
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
@@ -306,7 +317,9 @@ void scc_ut_findseeds_checkseeds18(void** state) {
 	scc_free_Clustering(&cl_seed_exupdat);
 }
 
-int main(void) {
+
+int main(void)
+{
 	const struct CMUnitTest test_findseeds[] = {
 		cmocka_unit_test(scc_ut_findseeds_lexical),
 		cmocka_unit_test(scc_ut_findseeds_inwards),
@@ -318,4 +331,3 @@ int main(void) {
 
 	return cmocka_run_group_tests_name("find seeds module", test_findseeds, NULL, NULL);
 }
-

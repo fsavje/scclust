@@ -33,7 +33,8 @@
 void _scc_ut_print_Vid_array(const scc_Vid* const to_print,
                              const size_t length,
                              const char* const name,
-                             const int line) {
+                             const int line)
+{
 	printf("%i:%s: ", line, name);
 
 	if (length == 0) {
@@ -44,5 +45,6 @@ void _scc_ut_print_Vid_array(const scc_Vid* const to_print,
 		printf("]\n");
 	}
 }
+
 
 #endif

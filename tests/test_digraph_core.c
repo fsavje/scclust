@@ -30,7 +30,8 @@
 #include "../include/digraph_debug.h"
 
 
-void scc_ut_init_digraph(void** state) {
+void scc_ut_init_digraph(void** state)
+{
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_init_digraph(0, 0);
@@ -44,7 +45,9 @@ void scc_ut_init_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void scc_ut_free_digraph(void** state) {
+
+void scc_ut_free_digraph(void** state)
+{
 	(void) state;
 
 	scc_Digraph null_graph = SCC_NULL_DIGRAPH;
@@ -66,7 +69,9 @@ void scc_ut_free_digraph(void** state) {
 	scc_free_digraph(NULL);
 }
 
-void scc_ut_change_arc_storage(void** state) {
+
+void scc_ut_change_arc_storage(void** state)
+{
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_empty_digraph(10, 100);
@@ -100,7 +105,9 @@ void scc_ut_change_arc_storage(void** state) {
 	assert_free_digraph(&my_graph5);
 }
 
-void scc_ut_empty_digraph(void** state) {
+
+void scc_ut_empty_digraph(void** state)
+{
 	(void) state;
 
 	scc_Digraph my_graph1 = scc_empty_digraph(0, 0);
@@ -114,7 +121,9 @@ void scc_ut_empty_digraph(void** state) {
 	assert_free_digraph(&my_graph2);
 }
 
-void scc_ut_copy_digraph(void** state) {
+
+void scc_ut_copy_digraph(void** state)
+{
 	(void) state;
 
 	scc_Digraph dg1 = scc_digraph_from_string("####/..#./####/#.../");
@@ -141,7 +150,8 @@ void scc_ut_copy_digraph(void** state) {
 }
 
 
-int main(void) {
+int main(void)
+{
 	const struct CMUnitTest test_core[] = {
 		cmocka_unit_test(scc_ut_init_digraph),
 		cmocka_unit_test(scc_ut_free_digraph),

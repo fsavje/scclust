@@ -38,7 +38,6 @@
 // Internal structs
 // ==============================================================================
 
-
 typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 struct iscc_fs_SortResult {
 	scc_Vid* inwards_count;
@@ -85,10 +84,9 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 // External function implementations
 // ==============================================================================
 
-
 iscc_SeedArray iscc_findseeds_lexical(const scc_Digraph* nng,
-                                      scc_Vid seed_init_capacity) {
-	
+                                      scc_Vid seed_init_capacity)
+{
 	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
@@ -123,8 +121,8 @@ iscc_SeedArray iscc_findseeds_lexical(const scc_Digraph* nng,
 
 iscc_SeedArray iscc_findseeds_inwards(const scc_Digraph* const nng,
                                       const scc_Vid seed_init_capacity,
-                                      const bool updating) {
-
+                                      const bool updating)
+{
 	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
@@ -186,8 +184,8 @@ iscc_SeedArray iscc_findseeds_inwards(const scc_Digraph* const nng,
 
 iscc_SeedArray iscc_findseeds_exclusion(const scc_Digraph* const nng,
                                         const scc_Vid seed_init_capacity,
-                                        const bool updating) {
-
+                                        const bool updating)
+{
 	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
 
 	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
@@ -275,7 +273,8 @@ iscc_SeedArray iscc_findseeds_exclusion(const scc_Digraph* const nng,
 }
 
 
-void iscc_free_SeedArray(iscc_SeedArray* const sa) {
+void iscc_free_SeedArray(iscc_SeedArray* const sa)
+{
 	if (sa) {
 		free(sa->seeds);
 		*sa = ISCC_NULL_SEED_ARRAY;
@@ -307,7 +306,8 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 
 static inline bool iscc_fs_check_neighbors_marks(const scc_Vid cv,
                                                  const scc_Digraph* const nng,
-                                                 const bool* const marks) {
+                                                 const bool* const marks)
+{
 	if (marks[cv]) return false;
 
 	const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
@@ -324,7 +324,8 @@ static inline bool iscc_fs_check_neighbors_marks(const scc_Vid cv,
 
 static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
                                                const scc_Digraph* const nng,
-                                               bool* const marks) {
+                                               bool* const marks)
+{
 	assert(!marks[s]);
 	marks[s] = true;
 
@@ -338,7 +339,8 @@ static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
 
 
 static inline bool iscc_fs_add_seed(const scc_Vid s,
-                                    iscc_SeedArray* const sa) {
+                                    iscc_SeedArray* const sa)
+{
 	assert(sa->num_seeds <= sa->seed_capacity);
 	if (sa->num_seeds == sa->seed_capacity) {
 		sa->seed_capacity = sa->seed_capacity + (sa->seed_capacity >> 3) + 512;
@@ -352,7 +354,8 @@ static inline bool iscc_fs_add_seed(const scc_Vid s,
 }
 
 
-static void iscc_fs_shrink_SeedArray(iscc_SeedArray* const sa) {
+static void iscc_fs_shrink_SeedArray(iscc_SeedArray* const sa)
+{
 	if (sa && sa->seeds && (sa->seed_capacity > sa->num_seeds)) {
 		scc_Vid* const tmp_ptr = realloc(sa->seeds, sizeof(scc_Vid[sa->num_seeds]));
 		if (tmp_ptr) {
@@ -363,8 +366,8 @@ static void iscc_fs_shrink_SeedArray(iscc_SeedArray* const sa) {
 }
 
 
-static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity) {
-	
+static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity)
+{
 	if (seed_init_capacity < 128) seed_init_capacity = 128;
 
 	iscc_SeedArray sa = {
@@ -379,7 +382,8 @@ static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity) {
 }
 
 
-static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng) {
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
+{
 	if (!nng || !nng->tail_ptr) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
@@ -398,8 +402,9 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng) {
 }
 
 
-static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, const bool make_indices) {
-
+static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
+                                                  const bool make_indices)
+{
 	const scc_Vid vertices = nng->vertices;
 
 	iscc_fs_SortResult res = {
@@ -477,7 +482,8 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng, 
 }
 
 
-static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr) {
+static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr)
+{
 	if (sr) {
 		free(sr->inwards_count);
 		free(sr->sorted_vertices);
@@ -492,7 +498,8 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
                                               scc_Vid* restrict const inwards_count,
                                               scc_Vid** restrict const vertex_index,
                                               scc_Vid** restrict const bucket_index,
-                                              scc_Vid* const current_pos) {
+                                              scc_Vid* const current_pos)
+{
 	// Assert that vertex index is correct
 	assert(v_to_decrease == *vertex_index[v_to_decrease]);
 
