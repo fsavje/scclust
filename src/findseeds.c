@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include "../include/config.h"
 #include "../include/digraph.h"
-#include "../include/nng_clustering.h"
 
 
 // ==============================================================================
@@ -91,6 +90,15 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 // ==============================================================================
 // External function implementations
 // ==============================================================================
+
+void iscc_free_SeedArray(iscc_SeedArray* const sa)
+{
+	if (sa) {
+		free(sa->seeds);
+		*sa = ISCC_NULL_SEED_ARRAY;
+	}
+}
+
 
 iscc_SeedArray iscc_findseeds_lexical(const scc_Digraph* const nng,
                                       scc_Vid seed_init_capacity)
@@ -278,15 +286,6 @@ iscc_SeedArray iscc_findseeds_exclusion(const scc_Digraph* const nng,
 	iscc_fs_shrink_SeedArray(&seed_array);
 
 	return seed_array;
-}
-
-
-void iscc_free_SeedArray(iscc_SeedArray* const sa)
-{
-	if (sa) {
-		free(sa->seeds);
-		*sa = ISCC_NULL_SEED_ARRAY;
-	}
 }
 
 
