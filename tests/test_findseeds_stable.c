@@ -24,12 +24,10 @@
 
 #include "test_suite.h"
 
-#include "../src/findseeds_debug.h"
 #include "../src/findseeds.c"
 #include "../include/config.h"
 #include "../include/digraph.h"
 #include "../include/digraph_debug.h"
-#include "../include/nng_clustering.h"
 
 
 void scc_ut_fs_debug_vid_sort(void** state)
@@ -105,19 +103,20 @@ void scc_ut_findseeds_checkseeds18_debug(void** state)
 	                                          ".............##.../"
 	                                          "..............#.#./");
 
-	scc_SeedClustering cl_seed_inupdat = scc_base_clustering(&nng, SCC_INWARDS_UPDATING, 7);
-	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
-	assert_memory_equal(cl_seed_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(bool));
-	assert_int_equal(cl_seed_inupdat.num_clusters, 5);
 
-	scc_SeedClustering cl_seed_exupdat = scc_base_clustering(&nng, SCC_EXCLUSION_UPDATING, 7);
+	iscc_SeedArray seeds_inupdat = iscc_findseeds_inwards(&nng, 128, true);
+	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
+	assert_memory_equal(seeds_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(bool));
+	assert_int_equal(seeds_inupdat.num_seeds, 5);
+
+	iscc_SeedArray seeds_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
 	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
-	assert_memory_equal(cl_seed_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(bool));
-	assert_int_equal(cl_seed_exupdat.num_clusters, 5);
+	assert_memory_equal(seeds_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(bool));
+	assert_int_equal(seeds_exupdat.num_seeds, 5);
 
 	scc_free_digraph(&nng);
-	scc_free_Clustering(&cl_seed_inupdat);
-	scc_free_Clustering(&cl_seed_exupdat);
+	iscc_free_SeedArray(&seeds_inupdat);
+	iscc_free_SeedArray(&seeds_exupdat);
 }
 
 

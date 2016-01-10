@@ -58,11 +58,11 @@ static inline bool iscc_fs_add_seed(scc_Vid s,
 
 static inline bool iscc_fs_check_neighbors_marks(scc_Vid cv,
                                                  const scc_Digraph* nng,
-                                                 const bool* assigned);
+                                                 const bool* marks);
 
 static inline void iscc_fs_mark_seed_neighbors(scc_Vid s,
                                                const scc_Digraph* nng,
-                                               bool* assigned);
+                                               bool* marks);
 
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng,
                                                   bool make_indices);
@@ -351,7 +351,7 @@ static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity)
 
 static void iscc_fs_shrink_SeedArray(iscc_SeedArray* const sa)
 {
-	if (sa && sa->seeds && (sa->seed_capacity > sa->num_seeds)) {
+	if (sa && sa->seeds && (sa->seed_capacity > sa->num_seeds) && (sa->num_seeds > 0)) {
 		scc_Vid* const tmp_ptr = realloc(sa->seeds, sizeof(scc_Vid[sa->num_seeds]));
 		if (tmp_ptr) {
 			sa->seeds = tmp_ptr;
@@ -366,7 +366,7 @@ static inline bool iscc_fs_add_seed(const scc_Vid s,
 {
 	assert(sa->num_seeds <= sa->seed_capacity);
 	if (sa->num_seeds == sa->seed_capacity) {
-		sa->seed_capacity = sa->seed_capacity + (sa->seed_capacity >> 3) + 512;
+		sa->seed_capacity = sa->seed_capacity + (sa->seed_capacity >> 3) + 1024;
 		scc_Vid* const tmp_ptr = realloc(sa->seeds, sizeof(scc_Vid[sa->seed_capacity]));
 		if (!tmp_ptr) return false;
 		sa->seeds = tmp_ptr;

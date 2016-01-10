@@ -29,195 +29,12 @@
 #include "../src/findseeds.c"
 #include "../include/config.h"
 #include "../include/digraph.h"
+#include "../include/digraph_debug.h"
 
 
 #ifdef SCC_STABLE_CLUSTERING
     #error Please run this test without the SCC_STABLE_CLUSTERING flag
 #endif
-
-
-void scc_ut_fs_check_candidate_vertex(void** state)
-{
-	(void) state;
-
-	scc_Digraph nng = scc_digraph_from_string("..##..#/"
-	                                          "..#.#.#/"
-	                                          "#...#.#/"
-	                                          "..#..##/"
-	                                          "......./"
-	                                          "..#..../"
-	                                          "......./");
-
-	bool assigned[7] = {true, false, false, false, true, false, false};
-
-	assert_false(iscc_fs_check_candidate_vertex(0, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(1, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(2, &nng, assigned));
-	assert_true(iscc_fs_check_candidate_vertex(3, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(4, &nng, assigned));
-	assert_true(iscc_fs_check_candidate_vertex(5, &nng, assigned));
-	assert_false(iscc_fs_check_candidate_vertex(6, &nng, assigned));
-
-	scc_free_digraph(&nng);
-}
-
-
-void scc_ut_fs_add_seed(void** state)
-{
-	(void) state;
-
-	scc_SeedClustering cl = {
-		.vertices = 10,
-		.seed_capacity = 1,
-		.num_clusters = 0,
-		.assigned = NULL,
-		.seeds = malloc(sizeof(scc_Vid[1])),
-		.cluster_label = NULL,
-	};
-
-	scc_Vid ref_seeds[6] = {4, 1, 6, 3, 5, 7};
-
-	assert_true(iscc_fs_add_seed(4, &cl));
-	assert_true(iscc_fs_add_seed(1, &cl));
-	assert_true(iscc_fs_add_seed(6, &cl));
-	assert_true(iscc_fs_add_seed(3, &cl));
-	assert_true(iscc_fs_add_seed(5, &cl));
-	assert_true(iscc_fs_add_seed(7, &cl));
-
-	assert_int_equal(cl.vertices, 10);
-	assert_int_equal(cl.seed_capacity, 8);
-	assert_int_equal(cl.num_clusters, 6);
-	assert_null(cl.assigned);
-	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
-	assert_null(cl.cluster_label);
-
-	iscc_fs_shrink_seeds_array(&cl);
-
-	assert_int_equal(cl.vertices, 10);
-	assert_int_equal(cl.seed_capacity, 6);
-	assert_int_equal(cl.num_clusters, 6);
-	assert_null(cl.assigned);
-	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
-	assert_null(cl.cluster_label);
-	
-	iscc_fs_shrink_seeds_array(&cl);
-
-	assert_int_equal(cl.vertices, 10);
-	assert_int_equal(cl.seed_capacity, 6);
-	assert_int_equal(cl.num_clusters, 6);
-	assert_null(cl.assigned);
-	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
-	assert_null(cl.cluster_label);
-
-	scc_free_Clustering(&cl);
-}
-
-
-void scc_ut_fs_assign_neighbors(void** state)
-{
-	(void) state;
-
-	scc_Digraph nng = scc_digraph_from_string("..##..#/"
-	                                          "..#.#.#/"
-	                                          "#...#.#/"
-	                                          "..#..##/"
-	                                          "......./"
-	                                          "..#..../"
-	                                          "......./");
-
-	bool stc_assigned[7] = {false, false, false, false, false, false, false};
-	scc_Clabel stc_cluster_label[7] = {SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
-
-	iscc_fs_assign_neighbors(0, 0, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned0[7] = {true, false, true, true, false, false, true};
-	scc_Clabel ref_cluster_label0[7] = {0, SCC_CLABEL_MAX, 0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 0};
-	assert_memory_equal(stc_assigned, ref_assigned0, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clabel));
-
-	stc_assigned[0] = stc_assigned[2] = stc_assigned[3] = stc_assigned[6] = false;
-
-	iscc_fs_assign_neighbors(1, 1, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned1[7] = {false, true, true, false, true, false, true};
-	scc_Clabel ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLABEL_MAX, 1};
-	assert_memory_equal(stc_assigned, ref_assigned1, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clabel));
-
-	stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
-
-	iscc_fs_assign_neighbors(2, 2, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned2[7] = {true, true, true, false, true, false, true};
-	scc_Clabel ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLABEL_MAX, 2};
-	assert_memory_equal(stc_assigned, ref_assigned2, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clabel));
-
-	stc_assigned[0] = stc_assigned[1] = stc_assigned[2] = stc_assigned[4] = stc_assigned[6] = false;
-
-	iscc_fs_assign_neighbors(5, 3, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned5[7] = {false, false, true, false, false, true, false};
-	scc_Clabel ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
-	assert_memory_equal(stc_assigned, ref_assigned5, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clabel));
-
-	stc_assigned[2] = stc_assigned[5] = false;
-
-	iscc_fs_assign_neighbors(3, 4, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned3[7] = {false, false, true, true, false, true, true};
-	scc_Clabel ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
-	assert_memory_equal(stc_assigned, ref_assigned3, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clabel));
-
-	stc_assigned[6] = false;
-
-	iscc_fs_assign_neighbors(6, 5, &nng, stc_assigned, stc_cluster_label);
-	bool ref_assigned6[7] = {false, false, true, true, false, true, true};
-	scc_Clabel ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
-	assert_memory_equal(stc_assigned, ref_assigned6, 7 * sizeof(bool));
-	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clabel));
-
-	scc_free_digraph(&nng);
-}
-
-
-void scc_ut_fs_assign_cl_labels(void** state)
-{
-	(void) state;
-
-	scc_Digraph nng = scc_digraph_from_string("..##..#/"
-	                                          "..#.#.#/"
-	                                          "#...#.#/"
-	                                          "..#..##/"
-	                                          "......./"
-	                                          "..#..../"
-	                                          "......./");
-
-	scc_Clabel stc_cluster_label[7] = {SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
-
-	iscc_fs_assign_cl_labels(0, 0, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label0[7] = {0, SCC_CLABEL_MAX, 0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 0};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label0, 7 * sizeof(scc_Clabel));
-
-	iscc_fs_assign_cl_labels(1, 1, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label1[7] = {0, 1, 1, 0, 1, SCC_CLABEL_MAX, 1};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label1, 7 * sizeof(scc_Clabel));
-
-	iscc_fs_assign_cl_labels(2, 2, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label2[7] = {2, 1, 2, 0, 2, SCC_CLABEL_MAX, 2};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label2, 7 * sizeof(scc_Clabel));
-
-	iscc_fs_assign_cl_labels(5, 3, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label5[7] = {2, 1, 3, 0, 2, 3, 2};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label5, 7 * sizeof(scc_Clabel));
-
-	iscc_fs_assign_cl_labels(3, 4, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label3[7] = {2, 1, 4, 4, 2, 4, 4};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label3, 7 * sizeof(scc_Clabel));
-
-	iscc_fs_assign_cl_labels(6, 5, &nng, stc_cluster_label);
-	scc_Clabel ref_cluster_label6[7] = {2, 1, 4, 4, 2, 4, 5};
-	assert_memory_equal(stc_cluster_label, ref_cluster_label6, 7 * sizeof(scc_Clabel));
-
-	scc_free_digraph(&nng);
-}
 
 
 void scc_ut_exclusion_graph(void** state)
@@ -269,6 +86,193 @@ void scc_ut_exclusion_graph(void** state)
 	scc_free_digraph(&nng);
 	scc_free_digraph(&exg);
 	scc_free_digraph(&exclusion_graph);
+}
+
+
+void scc_ut_fs_make_seed_array(void** state)
+{
+	(void) state;
+
+	iscc_SeedArray sa1 = iscc_fs_make_seed_array(500);
+
+	assert_int_equal(sa1.seed_capacity, 500);
+	assert_int_equal(sa1.num_seeds, 0);
+	assert_non_null(sa1.seeds);
+	sa1.seeds[499] = 123;
+
+	iscc_SeedArray sa2 = iscc_fs_make_seed_array(10);
+
+	assert_int_equal(sa2.seed_capacity, 128);
+	assert_int_equal(sa2.num_seeds, 0);
+	assert_non_null(sa2.seeds);
+	sa2.seeds[127] = 123;
+
+	iscc_free_SeedArray(&sa1);
+	iscc_free_SeedArray(&sa2);
+}
+
+
+void scc_ut_fs_shrink_SeedArray(void** state)
+{
+	(void) state;
+
+	iscc_SeedArray sa = iscc_fs_make_seed_array(500);
+	assert_int_equal(sa.seed_capacity, 500);
+
+	iscc_fs_shrink_SeedArray(&sa);
+	assert_int_equal(sa.seed_capacity, 500);
+
+	sa.num_seeds = 10;
+	iscc_fs_shrink_SeedArray(&sa);
+	assert_int_equal(sa.seed_capacity, 10);
+
+	iscc_free_SeedArray(&sa);
+}
+
+
+void scc_ut_fs_add_seed(void** state)
+{
+	(void) state;
+
+	iscc_SeedArray sa = {
+		.seed_capacity = 1,
+		.num_seeds = 0,
+		.seeds = malloc(sizeof(scc_Vid[1])),
+	};
+
+	scc_Vid ref_seeds[6] = {4, 1, 6, 3, 5, 7};
+
+	assert_true(iscc_fs_add_seed(4, &sa));
+	assert_true(iscc_fs_add_seed(1, &sa));
+	assert_true(iscc_fs_add_seed(6, &sa));
+	assert_true(iscc_fs_add_seed(3, &sa));
+	assert_true(iscc_fs_add_seed(5, &sa));
+	assert_true(iscc_fs_add_seed(7, &sa));
+
+	assert_int_equal(sa.seed_capacity, 1025);
+	assert_int_equal(sa.num_seeds, 6);
+	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+
+	iscc_fs_shrink_SeedArray(&sa);
+
+	assert_int_equal(sa.seed_capacity, 6);
+	assert_int_equal(sa.num_seeds, 6);
+	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	
+	iscc_fs_shrink_SeedArray(&sa);
+
+	assert_int_equal(sa.seed_capacity, 6);
+	assert_int_equal(sa.num_seeds, 6);
+	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+
+	iscc_SeedArray sa2 = iscc_fs_make_seed_array(1);
+
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_true(iscc_fs_add_seed(10000 - s, &sa2));
+	}
+
+	assert_int_equal(sa2.seed_capacity, 10780);
+	assert_int_equal(sa2.num_seeds, 10000);
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_int_equal(sa2.seeds[s], 10000 - s);
+	}
+
+	iscc_fs_shrink_SeedArray(&sa2);
+
+	assert_int_equal(sa2.seed_capacity, 10000);
+	assert_int_equal(sa2.num_seeds, 10000);
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_int_equal(sa2.seeds[s], 10000 - s);
+	}
+	
+	iscc_fs_shrink_SeedArray(&sa2);
+
+	assert_int_equal(sa2.seed_capacity, 10000);
+	assert_int_equal(sa2.num_seeds, 10000);
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_int_equal(sa2.seeds[s], 10000 - s);
+	}
+
+	iscc_free_SeedArray(&sa);
+	iscc_free_SeedArray(&sa2);
+}
+
+
+void scc_ut_fs_check_neighbors_marks(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("..##..#/"
+	                                          "..#.#.#/"
+	                                          "#...#.#/"
+	                                          "..#..##/"
+	                                          "......./"
+	                                          "..#..../"
+	                                          "......./");
+
+	bool marks[7] = {true, false, false, false, true, false, false};
+
+	assert_false(iscc_fs_check_neighbors_marks(0, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(1, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(2, &nng, marks));
+	assert_true(iscc_fs_check_neighbors_marks(3, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(4, &nng, marks));
+	assert_true(iscc_fs_check_neighbors_marks(5, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(6, &nng, marks));
+
+	scc_free_digraph(&nng);
+}
+
+
+void scc_ut_fs_mark_seed_neighbors(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("..##..#/"
+	                                          "..#.#.#/"
+	                                          "#...#.#/"
+	                                          "..#..##/"
+	                                          "......./"
+	                                          "..#..../"
+	                                          "......./");
+
+	bool stc_marks[7] = {false, false, false, false, false, false, false};
+
+	iscc_fs_mark_seed_neighbors(0, &nng, stc_marks);
+	bool ref_marks0[7] = {true, false, true, true, false, false, true};
+	assert_memory_equal(stc_marks, ref_marks0, 7 * sizeof(bool));
+
+	stc_marks[0] = stc_marks[2] = stc_marks[3] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(1, &nng, stc_marks);
+	bool ref_marks1[7] = {false, true, true, false, true, false, true};
+	assert_memory_equal(stc_marks, ref_marks1, 7 * sizeof(bool));
+
+	stc_marks[2] = stc_marks[4] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(2, &nng, stc_marks);
+	bool ref_marks2[7] = {true, true, true, false, true, false, true};
+	assert_memory_equal(stc_marks, ref_marks2, 7 * sizeof(bool));
+
+	stc_marks[0] = stc_marks[1] = stc_marks[2] = stc_marks[4] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(5, &nng, stc_marks);
+	bool ref_marks5[7] = {false, false, true, false, false, true, false};
+	assert_memory_equal(stc_marks, ref_marks5, 7 * sizeof(bool));
+
+	stc_marks[2] = stc_marks[5] = false;
+
+	iscc_fs_mark_seed_neighbors(3, &nng, stc_marks);
+	bool ref_marks3[7] = {false, false, true, true, false, true, true};
+	assert_memory_equal(stc_marks, ref_marks3, 7 * sizeof(bool));
+
+	stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(6, &nng, stc_marks);
+	bool ref_marks6[7] = {false, false, true, true, false, true, true};
+	assert_memory_equal(stc_marks, ref_marks6, 7 * sizeof(bool));
+
+	scc_free_digraph(&nng);
 }
 
 
@@ -381,6 +385,30 @@ void scc_ut_fs_sort_by_inwards(void** state)
 	scc_free_digraph(&nng1);
 	scc_free_digraph(&nng2);
 	scc_free_digraph(&nng3);
+}
+
+
+void scc_ut_fs_free_SortResult(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("##...#/"
+	                                           "###.../"
+	                                           "##.##./"
+	                                           "#.###./"
+	                                           "####../"
+	                                           "###.../");
+
+	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&nng, false);
+
+	iscc_fs_free_SortResult(&sort);
+
+	assert_null(sort.inwards_count);
+	assert_null(sort.sorted_vertices);
+	assert_null(sort.vertex_index);
+	assert_null(sort.bucket_index);
+
+	scc_free_digraph(&nng);
 }
 
 
@@ -505,12 +533,14 @@ void scc_ut_fs_decrease_v_in_sort(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_findseeds_internals[] = {
-		cmocka_unit_test(scc_ut_fs_check_candidate_vertex),
-		cmocka_unit_test(scc_ut_fs_add_seed),
-		cmocka_unit_test(scc_ut_fs_assign_neighbors),
-		cmocka_unit_test(scc_ut_fs_assign_cl_labels),
 		cmocka_unit_test(scc_ut_exclusion_graph),
+		cmocka_unit_test(scc_ut_fs_make_seed_array),
+		cmocka_unit_test(scc_ut_fs_shrink_SeedArray),
+		cmocka_unit_test(scc_ut_fs_add_seed),
+		cmocka_unit_test(scc_ut_fs_check_neighbors_marks),
+		cmocka_unit_test(scc_ut_fs_mark_seed_neighbors),
 		cmocka_unit_test(scc_ut_fs_sort_by_inwards),
+		cmocka_unit_test(scc_ut_fs_free_SortResult),
 		cmocka_unit_test(scc_ut_fs_decrease_v_in_sort),
 	};
 
