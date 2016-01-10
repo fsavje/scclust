@@ -28,15 +28,27 @@
 #include "../include/nng_clustering.h"
 
 
-// ==============================================================================
-// External function prototypes
-// ==============================================================================
+typedef struct iscc_SeedArray iscc_SeedArray;
+struct iscc_SeedArray {
+	scc_Vid seed_capacity;
+	scc_Vid num_seeds;
+	scc_Vid* seeds;
+};
 
-scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* nng, scc_Vid seed_init_capacity);
+static const iscc_SeedArray ISCC_NULL_SEED_ARRAY = { 0, 0, NULL };
 
-scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* nng, scc_Vid seed_init_capacity, bool updating);
+void iscc_free_SeedArray(iscc_SeedArray* sa);
 
-scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* nng, scc_Vid seed_init_capacity, bool updating);
+iscc_SeedArray iscc_findseeds_lexical(const scc_Digraph* nng,
+                                      scc_Vid seed_init_capacity);
+
+iscc_SeedArray iscc_findseeds_inwards(const scc_Digraph* nng,
+                                      scc_Vid seed_init_capacity,
+                                      bool updating);
+
+iscc_SeedArray iscc_findseeds_exclusion(const scc_Digraph* nng,
+                                        scc_Vid seed_init_capacity,
+                                        bool updating);
 
 
 

@@ -34,7 +34,7 @@
 // ==============================================================================
 
 
-void scc_free_Clustering(scc_SeedClustering* const cl) {
+void scc_free_SeedClustering(scc_SeedClustering* const cl) {
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
@@ -44,10 +44,9 @@ void scc_free_Clustering(scc_SeedClustering* const cl) {
 }
 
 
-scc_SeedClustering scc_base_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm, scc_Vid seed_init_capacity) {
+scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng, const scc_SeedMethod sm, scc_Vid seed_init_capacity) {
 
 	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
-	if (seed_init_capacity < 100) seed_init_capacity = 100;
 
 	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 

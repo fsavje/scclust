@@ -57,7 +57,7 @@ static inline bool iscc_fs_check_candidate_vertex(scc_Vid cv,
                                                   const bool* assigned);
 
 static inline bool iscc_fs_add_seed(scc_Vid s,
-                                    scc_SeedClustering* cl);
+                                    iscc_SeedArray* sa);
 
 static inline void iscc_fs_assign_neighbors(scc_Vid s,
                                             scc_Clabel new_label,
@@ -70,7 +70,9 @@ static inline void iscc_fs_assign_cl_labels(scc_Vid s,
                                             const scc_Digraph* nng,
                                             scc_Clabel* cluster_label);
 
-static void iscc_fs_shrink_seeds_array(scc_SeedClustering* cl);
+static void iscc_fs_shrink_seed_array(iscc_SeedArray* sa);
+
+static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity);
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
 
@@ -307,6 +309,14 @@ scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng, const 
 }
 
 
+void iscc_free_SeedArray(iscc_SeedArray* const sa) {
+	if (sa) {
+		free(sa->seeds);
+		*cl = ISCC_NULL_SEED_ARRAY;
+	}
+}
+
+
 /*
 
 Exclusion graph does not give one arc optimality
@@ -329,8 +339,9 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 // Internal function implementations 
 // ==============================================================================
 
-
-static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Digraph* const nng, const bool* const assigned) {
+static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv,
+                                                  const scc_Digraph* const nng,
+                                                  const bool* const assigned) {
 	if (assigned[cv]) return false;
 
 	const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
@@ -345,17 +356,17 @@ static inline bool iscc_fs_check_candidate_vertex(const scc_Vid cv, const scc_Di
 }
 
 
-static inline bool iscc_fs_add_seed(const scc_Vid s, scc_SeedClustering* const cl) {
-	assert(cl->num_clusters <= cl->seed_capacity);
-	if (cl->num_clusters == cl->seed_capacity) {
-		cl->seed_capacity *= 2;
-		if (cl->seed_capacity > cl->vertices) cl->seed_capacity = cl->vertices;
-		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->seed_capacity]));
+static inline bool iscc_fs_add_seed(const scc_Vid s,
+                                    iscc_SeedArray* const sa) {
+	assert(sa->num_seeds <= sa->seed_capacity);
+	if (sa->num_seeds == sa->seed_capacity) {
+		sa->seed_capacity = sa->seed_capacity + (sa->seed_capacity >> 3) + 512;
+		scc_Vid* const tmp_ptr = realloc(sa->seeds, sizeof(scc_Vid[sa->seed_capacity]));
 		if (!tmp_ptr) return false;
-		cl->seeds = tmp_ptr;
+		sa->seeds = tmp_ptr;
 	}
-	cl->seeds[cl->num_clusters] = s;
-	++(cl->num_clusters);
+	sa->seeds[sa->num_seeds] = s;
+	++(sa->num_seeds);
 	return true;
 }
 
@@ -393,14 +404,30 @@ static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
 }
 
 
-static void iscc_fs_shrink_seeds_array(scc_SeedClustering* const cl) {
-	if (cl && cl->seeds && (cl->seed_capacity > cl->num_clusters)) {
-		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->num_clusters]));
+static void iscc_fs_shrink_seed_array(iscc_SeedArray* const sa) {
+	if (sa && sa->seeds && (sa->seed_capacity > sa->num_seeds)) {
+		scc_Vid* const tmp_ptr = realloc(sa->seeds, sizeof(scc_Vid[sa->num_seeds]));
 		if (tmp_ptr) {
-			cl->seeds = tmp_ptr;
-			cl->seed_capacity = cl->num_clusters;
+			sa->seeds = tmp_ptr;
+			sa->seed_capacity = sa->num_seeds;
 		}
 	}
+}
+
+
+static iscc_SeedArray iscc_fs_make_seed_array(scc_Vid seed_init_capacity) {
+	
+	if (seed_init_capacity < 128) seed_init_capacity = 128;
+
+	iscc_SeedArray sa = {
+		.seed_capacity = seed_init_capacity,
+		.num_seeds = 0,
+		.seeds = malloc(sizeof(scc_Vid[seed_init_capacity])),
+	};
+
+	if (!sa.seeds) return ISCC_NULL_SEED_ARRAY;
+
+	return sa;
 }
 
 
