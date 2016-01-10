@@ -48,33 +48,39 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng, const s
 
 	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
-	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
+	iscc_SeedArray seed_array = ISCC_NULL_SEED_ARRAY;
 
 	switch(sm) {
 
 		case SCC_LEXICAL:
-			clustering = iscc_findseeds_lexical(nng, seed_init_capacity);
+			seed_array = iscc_findseeds_lexical(nng, seed_init_capacity);
 			break;
 
 		case SCC_INWARDS_ORDER:
-			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, false);
+			seed_array = iscc_findseeds_inwards(nng, seed_init_capacity, false);
 			break;
 
 		case SCC_INWARDS_UPDATING:
-			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, true);
+			seed_array = iscc_findseeds_inwards(nng, seed_init_capacity, true);
 			break;
 
 		case SCC_EXCLUSION_ORDER:
-			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
+			seed_array = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
 			break;
 
 		case SCC_EXCLUSION_UPDATING:
-			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
+			seed_array = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
 			break;
 
 		default:
 			break;
 	}
+
+	if (!seed_array.seeds) {
+		return SCC_NULL_SEED_CLUSTERING;
+	}
+
+	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 
 	return clustering;
 }

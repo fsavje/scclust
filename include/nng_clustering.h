@@ -54,7 +54,7 @@ struct scc_SeedClustering {
 	scc_Clabel* cluster_label;
 };
 
-static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, 0, NULL, NULL, NULL };
+static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, NULL, NULL, NULL };
 
 void scc_free_SeedClustering(scc_SeedClustering* cl);
 
