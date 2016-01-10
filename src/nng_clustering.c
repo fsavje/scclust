@@ -28,6 +28,22 @@
 #include "../include/digraph.h"
 #include "findseeds.h"
 
+// ==============================================================================
+// Internal function prototypes
+// ==============================================================================
+
+
+static inline void iscc_fs_assign_neighbors(scc_Vid s,
+                                            scc_Clabel new_label,
+                                            const scc_Digraph* restrict nng,
+                                            bool* restrict assigned,
+                                            scc_Clabel* restrict cluster_label);
+
+static inline void iscc_fs_assign_cl_labels(scc_Vid s,
+                                            scc_Clabel new_label,
+                                            const scc_Digraph* nng,
+                                            scc_Clabel* cluster_label);
+
 
 // ==============================================================================
 // External function implementations
@@ -148,3 +164,40 @@ bool scc_assign_remaining_keep_even(scc_SeedClustering* const clustering, const 
 
 	return true;
 }
+
+// ==============================================================================
+// Internal function implementations 
+// ==============================================================================
+
+static inline void iscc_fs_assign_neighbors(const scc_Vid s,
+                                            const scc_Clabel new_label,
+                                            const scc_Digraph* restrict const nng,
+                                            bool* restrict const assigned,
+                                            scc_Clabel* restrict const cluster_label) {
+	assert(!assigned[s]);
+	assigned[s] = true;
+	cluster_label[s] = new_label;
+
+	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
+	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
+	        s_arc != s_arc_stop; ++s_arc) {
+		assert(!assigned[*s_arc]);
+		assigned[*s_arc] = true;
+		cluster_label[*s_arc] = new_label;
+	}
+}
+
+
+static inline void iscc_fs_assign_cl_labels(const scc_Vid s,
+                                            const scc_Clabel new_label,
+                                            const scc_Digraph* const nng,
+                                            scc_Clabel* const cluster_label) {
+	cluster_label[s] = new_label;
+
+	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
+	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
+	        s_arc != s_arc_stop; ++s_arc) {
+		cluster_label[*s_arc] = new_label;
+	}
+}
+
