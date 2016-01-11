@@ -104,15 +104,15 @@ bool scc_digraphs_equal(const scc_Digraph* dg_a,
  *
  *  \param vertices number of vertices in the digraph.
  *  \param max_arcs length of the memory space for arcs.
- *  \param[in] tail_ptr array of arc indices (see scc_Digraph::tail_ptr).
- *  \param[in] head array of arc heads (see scc_Digraph::head).
+ *  \param[in] tail_ptr array of arc indices of length `vertices + 1` (see scc_Digraph::tail_ptr).
+ *  \param[in] head array of arc heads of length `max_arcs` (see scc_Digraph::head).
  *
  *  \return the constructed scc_Digraph.
  */
 scc_Digraph scc_digraph_from_pieces(scc_Vid vertices,
                                     scc_Arci max_arcs,
-                                    const scc_Arci tail_ptr[vertices],
-                                    const scc_Vid head[max_arcs]);
+                                    const scc_Arci tail_ptr[],
+                                    const scc_Vid head[]);
 
 /** Constructs digraph from human readable strings.
  *

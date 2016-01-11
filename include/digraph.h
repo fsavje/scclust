@@ -193,7 +193,7 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
  *  \note All digraphs in \p dgs must contain equally many vertices.
  */
 scc_Digraph scc_digraph_union(size_t num_dgs,
-                              const scc_Digraph* const dgs[static num_dgs]);
+                              const scc_Digraph* const dgs[]);
 
 /** Derives the digraph transpose a digraph.
  *

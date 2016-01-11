@@ -33,23 +33,23 @@
 
 static inline scc_Arci iscc_do_union(scc_Vid vertices,
                                      size_t num_dgs,
-                                     const scc_Digraph* const * dgs,
-                                     scc_Vid* restrict row_markers,
+                                     const scc_Digraph* const dgs[static num_dgs],
+                                     scc_Vid row_markers[restrict static vertices],
                                      bool write,
-                                     scc_Arci* restrict out_tail_ptr,
-                                     scc_Vid* restrict out_head);
+                                     scc_Arci out_tail_ptr[restrict],
+                                     scc_Vid out_head[restrict]);
 
 static inline scc_Arci iscc_do_adjacency_product(scc_Vid vertices,
-                                                 const scc_Arci* dg_a_tail_ptr,
+                                                 const scc_Arci dg_a_tail_ptr[static vertices + 1],
                                                  const scc_Vid* dg_a_head,
-                                                 const scc_Arci* dg_b_tail_ptr,
+                                                 const scc_Arci dg_b_tail_ptr[static vertices + 1],
                                                  const scc_Vid* dg_b_head,
-                                                 scc_Vid* restrict row_markers,
+                                                 scc_Vid row_markers[restrict static vertices],
                                                  bool force_diagonal,
                                                  bool ignore_diagonal,
                                                  bool write,
-                                                 scc_Arci* restrict out_tail_ptr,
-                                                 scc_Vid* restrict out_head);
+                                                 scc_Arci out_tail_ptr[restrict],
+                                                 scc_Vid out_head[restrict]);
 
 
 // ==============================================================================
@@ -214,11 +214,11 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 
 static inline scc_Arci iscc_do_union(const scc_Vid vertices,
                                      const size_t num_dgs,
-                                     const scc_Digraph* const * const dgs,
-                                     scc_Vid* restrict const row_markers,
+                                     const scc_Digraph* const dgs[const static num_dgs],
+                                     scc_Vid row_markers[restrict const static vertices],
                                      const bool write,
-                                     scc_Arci* restrict const out_tail_ptr,
-                                     scc_Vid* restrict const out_head)
+                                     scc_Arci out_tail_ptr[restrict const],
+                                     scc_Vid out_head[restrict const])
 {
 	scc_Arci counter = 0;
 	if (write) out_tail_ptr[0] = 0;
@@ -245,16 +245,16 @@ static inline scc_Arci iscc_do_union(const scc_Vid vertices,
 
 
 static inline scc_Arci iscc_do_adjacency_product(const scc_Vid vertices,
-                                                 const scc_Arci* const dg_a_tail_ptr,
+                                                 const scc_Arci dg_a_tail_ptr[const static vertices + 1],
                                                  const scc_Vid* const dg_a_head,
-                                                 const scc_Arci* const dg_b_tail_ptr,
+                                                 const scc_Arci dg_b_tail_ptr[const static vertices + 1],
                                                  const scc_Vid* const dg_b_head,
-                                                 scc_Vid* restrict const row_markers,
+                                                 scc_Vid row_markers[restrict const static vertices],
                                                  const bool force_diagonal,
                                                  const bool ignore_diagonal,
                                                  const bool write,
-                                                 scc_Arci* restrict const out_tail_ptr,
-                                                 scc_Vid* restrict const out_head)
+                                                 scc_Arci out_tail_ptr[restrict const],
+                                                 scc_Vid out_head[restrict const])
 {
 	scc_Arci counter = 0;
 	if (write) out_tail_ptr[0] = 0;

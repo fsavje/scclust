@@ -57,11 +57,11 @@ static inline bool iscc_fs_add_seed(scc_Vid s,
 
 static inline bool iscc_fs_check_neighbors_marks(scc_Vid cv,
                                                  const scc_Digraph* nng,
-                                                 const bool* marks);
+                                                 const bool marks[static nng->vertices]);
 
 static inline void iscc_fs_mark_seed_neighbors(scc_Vid s,
                                                const scc_Digraph* nng,
-                                               bool* marks);
+                                               bool marks[static nng->vertices]);
 
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng,
                                                   bool make_indices);
@@ -69,23 +69,24 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* nng,
 static void iscc_fs_free_SortResult(iscc_fs_SortResult* sr);
 
 static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
-                                              scc_Vid* restrict inwards_count,
-                                              scc_Vid** restrict vertex_index,
-                                              scc_Vid** restrict bucket_index,
+                                              scc_Vid inwards_count[restrict],
+                                              scc_Vid* vertex_index[restrict],
+                                              scc_Vid* bucket_index[restrict],
                                               scc_Vid* current_pos);
 
 #ifdef SCC_STABLE_CLUSTERING
 
-	static inline void iscc_fs_debug_bucket_sort(scc_Vid* bucket_start,
+	static inline void iscc_fs_debug_bucket_sort(const scc_Vid* bucket_start,
 	                                             scc_Vid* pos,
-	                                             const scc_Vid* inwards_count,
-	                                             scc_Vid** vertex_index);
+	                                             const scc_Vid inwards_count[],
+	                                             scc_Vid* vertex_index[]);
 
 	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
 	                                            const scc_Vid* last_pos,
-	                                            const scc_Vid* inwards_count);
+	                                            const scc_Vid inwards_count[]);
 
 #endif
+
 
 // ==============================================================================
 // External function implementations
@@ -378,7 +379,7 @@ static inline bool iscc_fs_add_seed(const scc_Vid s,
 
 static inline bool iscc_fs_check_neighbors_marks(const scc_Vid cv,
                                                  const scc_Digraph* const nng,
-                                                 const bool* const marks)
+                                                 const bool marks[const static nng->vertices])
 {
 	if (marks[cv]) return false;
 
@@ -396,7 +397,7 @@ static inline bool iscc_fs_check_neighbors_marks(const scc_Vid cv,
 
 static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
                                                const scc_Digraph* const nng,
-                                               bool* const marks)
+                                               bool marks[const static nng->vertices])
 {
 	assert(!marks[s]);
 	marks[s] = true;
@@ -503,9 +504,9 @@ static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr)
 
 
 static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
-                                              scc_Vid* restrict const inwards_count,
-                                              scc_Vid** restrict const vertex_index,
-                                              scc_Vid** restrict const bucket_index,
+                                              scc_Vid inwards_count[restrict const],
+                                              scc_Vid* vertex_index[restrict const],
+                                              scc_Vid* bucket_index[restrict const],
                                               scc_Vid* const current_pos)
 {
 	// Assert that vertex index is correct
@@ -556,10 +557,10 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 #ifdef SCC_STABLE_CLUSTERING
 
 
-	static inline void iscc_fs_debug_bucket_sort(scc_Vid* const bucket_start,
+	static inline void iscc_fs_debug_bucket_sort(const scc_Vid* const bucket_start,
 	                                             scc_Vid* pos,
-	                                             const scc_Vid* const inwards_count,
-	                                             scc_Vid** const vertex_index)
+	                                             const scc_Vid inwards_count[const],
+	                                             scc_Vid* vertex_index[const])
 	{
 		scc_Vid tmp_v = *pos;
 		for (; pos != bucket_start; --pos) {
@@ -575,7 +576,7 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 
 	static inline void iscc_fs_debug_check_sort(const scc_Vid* current_pos,
 	                                            const scc_Vid* const last_pos,
-	                                            const scc_Vid* const inwards_count)
+	                                            const scc_Vid inwards_count[const])
 	{
 		for (; current_pos != last_pos; ++current_pos) {
 			assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);

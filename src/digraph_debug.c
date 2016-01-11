@@ -123,8 +123,8 @@ bool scc_digraphs_equal(const scc_Digraph* const dg_a,
 
 scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
                                     const scc_Arci max_arcs,
-                                    const scc_Arci tail_ptr[const vertices],
-                                    const scc_Vid head[const max_arcs])
+                                    const scc_Arci tail_ptr[const static vertices],
+                                    const scc_Vid head[const static max_arcs])
 {
 	if (!tail_ptr) return SCC_NULL_DIGRAPH;
 	if (max_arcs > 0 && !head) return SCC_NULL_DIGRAPH;
