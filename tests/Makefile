@@ -9,17 +9,22 @@ BUILDOBJS=$(addprefix build/,$(OBJECTS))
 test_findseeds_internals_DEP=$(filter-out build/findseeds.o,$(BUILDOBJS))
 test_findseeds_stable_DEP=$(filter-out build/findseeds.o,$(BUILDOBJS))
 
+.PHONY: builddirs $(ALLTESTS) clean
 
-all: $(STDTESTS)
-
-$(STDTESTS): clean $(BUILDOBJS)
-	$(CC) $(FLAGS) $@.c $(BUILDOBJS) $(EXLIBS) -o build/$@.out
-
-$(SPECTESTS): clean $(BUILDOBJS)
-	$(CC) $(FLAGS) $@.c $($@_DEP) $(EXLIBS) -o build/$@.out
-
-build/%.o: ../src/%.c
-	$(CC) $(FLAGS) -include test_suite.h -c $< -o $@
+all: $(ALLTESTS)
 
 clean:
-	$(RM) build/*.o build/*.out
+	$(RM) -R build/
+
+builddirs:
+	mkdir -p build
+
+
+$(STDTESTS): clean builddirs $(BUILDOBJS)
+	$(CC) $(FLAGS) $@.c $(BUILDOBJS) $(EXLIBS) -o build/$@.out
+
+$(SPECTESTS): clean builddirs $(BUILDOBJS)
+	$(CC) $(FLAGS) $@.c $($@_DEP) $(EXLIBS) -o build/$@.out
+
+build/%.o: ../src/%.c builddirs
+	$(CC) $(FLAGS) -include test_suite.h -c $< -o $@

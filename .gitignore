@@ -31,5 +31,10 @@
 # Debug files
 *.dSYM/
 
+# Build folders
+build/
+doc/
+lib/
+
 # Local miscellaneous
 localmisc/

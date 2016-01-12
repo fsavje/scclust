@@ -8,13 +8,19 @@ OBJECTS = ANN.o brute.o kd_tree.o kd_util.o kd_split.o \
 
 BUILDOBJS=$(addprefix build/,$(OBJECTS))
 
+.PHONY: builddirs library clean
+
 all: library
 
-library: $(BUILDOBJS)
+clean:
+	$(RM) -R build/ lib/
+
+builddirs:
+	mkdir -p build lib
+
+
+library: builddirs $(BUILDOBJS)
 	$(AR) rcs lib/libANN.a $(BUILDOBJS)
 
-build/%.o: src/%.cpp
+build/%.o: src/%.cpp builddirs
 	$(CXX) $(FLAGS) -c $< -o $@
-
-clean:
-	$(RM) build/*.o lib/*.a lib/*.h

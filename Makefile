@@ -2,20 +2,26 @@ FLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 OBJECTS=digraph_core.o digraph_operations.o digraph_debug.o findseeds.o nng_clustering.o
 BUILDOBJS=$(addprefix build/,$(OBJECTS))
 
+.PHONY: builddirs library clean
+
 all: library
 
-doc:
-	doxygen DoxyAPI
+clean:
+	$(RM) -R build/ doc/ lib/
 
-doc-source:
-	doxygen DoxySource
+builddirs:
+	mkdir -p build doc lib
 
-library: $(BUILDOBJS)
+
+library: $(BUILDOBJS) builddirs
 	$(AR) rcs lib/libscclust.a $(BUILDOBJS)
 
-build/%.o: src/%.c
+build/%.o: src/%.c builddirs
 	$(CC) $(FLAGS) -c $< -o $@
 
-clean:
-	$(RM) build/*.o lib/*.a
-	$(RM) -R doc/html doc/latex
+
+doc: builddirs
+	doxygen DoxyAPI
+
+doc-source: builddirs
+	doxygen DoxySource
