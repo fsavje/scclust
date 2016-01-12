@@ -10,14 +10,11 @@ BUILDOBJS=$(addprefix build/,$(OBJECTS))
 
 all: library
 
-library: $(BUILDOBJS) lib/ANN.h
+library: $(BUILDOBJS)
 	$(AR) rcs lib/libANN.a $(BUILDOBJS)
 
 build/%.o: src/%.cpp
 	$(CXX) $(FLAGS) -c $< -o $@
-
-lib/ANN.h:
-	mv include/ANN/ANN.h lib/ANN.h
 
 clean:
 	$(RM) build/*.o lib/*.a lib/*.h
