@@ -65,6 +65,7 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
                                                scc_SeedMethod sm,
                                                scc_Vid seed_init_capacity);
+                                               scc_Clabel external_cluster_label[]);
 
 scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl);
 
