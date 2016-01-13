@@ -31,9 +31,9 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "clustering.h"
 #include "config.h"
 #include "digraph.h"
+#include "clustering.h"
 
 
 enum scc_SeedMethod {
@@ -69,12 +69,10 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
 scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl);
 
 scc_Clustering scc_assign_remaining_lexical(scc_TempSeedClustering* cl,
-                                            const scc_Digraph* priority_graph,
-                                            bool make_final_clustering);
+                                            const scc_Digraph* priority_graph);
 
 scc_Clustering scc_assign_remaining_desired_size(scc_TempSeedClustering* cl,
                                                  const scc_Digraph* priority_graph,
-                                                 bool make_final_clustering,
                                                  scc_Vid desired_size);
 
 
