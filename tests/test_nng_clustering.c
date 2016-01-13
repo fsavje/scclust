@@ -28,12 +28,84 @@
 #include "../include/config.h"
 #include "../include/digraph.h"
 #include "../include/digraph_debug.h"
+#include "../include/clustering.h"
 #include "../include/nng_clustering.h"
 
 
 #ifdef SCC_STABLE_CLUSTERING
     #error Please run this test without the SCC_STABLE_CLUSTERING flag
 #endif
+
+
+void scc_ut_nng_free_TempSeedClustering(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string(".#......../"
+	                                          "...#....../"
+	                                          "#........./"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          "...#....../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
+	
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6);
+	assert_int_equal(seed_clustering.vertices, 10);
+	assert_int_equal(seed_clustering.num_clusters, 3);
+	assert_int_equal(seed_clustering.seed_capacity, 3);
+	assert_non_null(seed_clustering.assigned);
+	assert_non_null(seed_clustering.seeds);
+	assert_non_null(seed_clustering.cluster_label);
+
+	scc_free_TempSeedClustering(&seed_clustering);
+
+	assert_int_equal(seed_clustering.vertices, 0);
+	assert_int_equal(seed_clustering.num_clusters, 0);
+	assert_int_equal(seed_clustering.seed_capacity, 0);
+	assert_null(seed_clustering.assigned);
+	assert_null(seed_clustering.seeds);
+	assert_null(seed_clustering.cluster_label);
+
+	scc_free_digraph(&nng);
+}
+
+
+void scc_ut_nng_copy_TempSeedClustering(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string(".#......../"
+	                                          "...#....../"
+	                                          "#........./"
+	                                          ".#......../"
+	                                          ".....#..../"
+	                                          "...#....../"
+	                                          "....#...../"
+	                                          "......#.../"
+	                                          "......#.../"
+	                                          "......#.../");
+	
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6);
+
+	scc_TempSeedClustering copy = scc_copy_TempSeedClustering(&seed_clustering);
+
+	assert_int_equal(seed_clustering.vertices, copy.vertices);
+	assert_int_equal(seed_clustering.num_clusters, copy.num_clusters);
+	assert_int_equal(seed_clustering.seed_capacity, copy.seed_capacity);
+	assert_non_null(copy.assigned);
+	assert_non_null(copy.seeds);
+	assert_non_null(copy.cluster_label);
+	assert_memory_equal(seed_clustering.assigned, copy.assigned, seed_clustering.vertices * sizeof(bool));
+	assert_memory_equal(seed_clustering.seeds, copy.seeds, seed_clustering.seed_capacity * sizeof(scc_Vid));
+	assert_memory_equal(seed_clustering.cluster_label, copy.cluster_label, seed_clustering.vertices * sizeof(scc_Clabel));
+
+	scc_free_digraph(&nng);
+	scc_free_TempSeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&copy);
+}
 
 
 void scc_ut_clustering_lexical(void** state)
@@ -206,14 +278,329 @@ void scc_ut_clustering_exclusion_updating(void** state)
 }
 
 
+void scc_ut_ignore_remaining(void** state)
+{
+	(void) state;
+
+	bool assigned[20] = { true,  false, true,  false, true, 
+	                      false, true,  false, true,  false,
+	                      true,  false, true,  false, true,
+	                      false, true,  false, true,  false  };
+	scc_Vid seeds[5] = { 0, 18, 2, 6, 4 };
+	scc_Clabel cluster_label[20] = { 0, 0, 2, 1, 4,
+	                                 2, 3, 3, 0, 4,
+	                                 1, 5, 4, 6, 3,
+	                                 7, 2, 8, 1, 9  };
+	scc_TempSeedClustering cl_template = {
+		.vertices = 20,
+		.num_clusters = 5,
+		.seed_capacity = 5,
+		.assigned = assigned,
+		.seeds = seeds,
+		.cluster_label = cluster_label,
+	};
+
+	const scc_Clabel M = SCC_CLABEL_MAX;
+	scc_Clabel ref_cluster_label[20] = { 0, M, 2, M, 4,
+	                                     M, 3, M, 0, M,
+	                                     1, M, 4, M, 3,
+	                                     M, 2, M, 1, M  };
+
+	scc_TempSeedClustering cl = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out = scc_ignore_remaining(&cl);
+	assert_int_equal(cl.vertices, 0);
+	assert_int_equal(cl.num_clusters, 0);
+	assert_int_equal(cl.seed_capacity, 0);
+	assert_null(cl.assigned);
+	assert_null(cl.seeds);
+	assert_null(cl.cluster_label);
+	assert_int_equal(out.vertices, 20);
+	assert_int_equal(out.num_clusters, 5);
+	assert_non_null(out.cluster_label);
+	assert_memory_equal(out.cluster_label, ref_cluster_label, 20 * sizeof(scc_Clabel));
+
+	scc_free_TempSeedClustering(&cl);
+	scc_free_Clustering(&out);
+}
+
+
+void scc_ut_assign_remaining_lexical(void** state)
+{
+	(void) state;
+
+	bool assigned[20] = { true,  false, true,  false, true, 
+	                      false, true,  false, true,  false,
+	                      true,  false, true,  false, true,
+	                      false, true,  false, true,  false  };
+	scc_Vid seeds[5] = { 0, 18, 2, 6, 4 };
+	scc_Clabel cluster_label[20] = { 0, 0, 2, 1, 4,
+	                                 2, 3, 3, 0, 4,
+	                                 1, 5, 4, 6, 3,
+	                                 7, 2, 8, 1, 9  };
+	scc_TempSeedClustering cl_template = {
+		.vertices = 20,
+		.num_clusters = 5,
+		.seed_capacity = 5,
+		.assigned = assigned,
+		.seeds = seeds,
+		.cluster_label = cluster_label,
+	};
+
+	scc_Arci tail_ptr1[21] = {  0,  1,  2,  3,  4, 
+	                            5,  6,  7,  8,  9, 
+	                           10, 11, 12, 13, 14, 
+	                           15, 16, 17, 18, 19, 20 };
+	scc_Vid head1[20] = { 4,
+	                      0,
+	                      2,
+	                     18,
+	                      7,
+	                      1,
+	                     10,
+	                      1,
+	                      1,
+	                     12,
+	                      2,
+	                     14,
+	                      7,
+	                     10,
+	                      3,
+	                      6,
+	                     15,
+	                      2,
+	                     12,
+	                      0 };
+	scc_Digraph prio1 = scc_digraph_from_pieces(20, 20, tail_ptr1, head1);
+	assert_true(scc_digraph_is_initialized(&prio1));
+
+
+	scc_Arci tail_ptr2[21] = {  0,  2,  3,  4,  5, 
+	                            7, 10, 12, 14, 14, 
+	                           14, 16, 17, 19, 19, 
+	                           20, 23, 23, 26, 28, 34 };
+	scc_Vid head2[34] = {  0, 19,
+	                      18,
+	                       1,
+	                      17,
+	                       2, 19,
+	                       0,  6, 18,
+	                       3, 18,
+	                       5,  0,
+	                      
+	                      
+	                       5, 17,
+	                       0,
+	                       6, 16,
+	                      
+	                       7,
+	                      13, 15, 17,
+	                      
+	                       6,  0, 15,
+	                       9, 15,
+	                       0,  2, 4, 6, 8, 10 };
+	scc_Digraph prio2 = scc_digraph_from_pieces(20, 34, tail_ptr2, head2);
+	assert_true(scc_digraph_is_initialized(&prio2));
+
+	const scc_Clabel M = SCC_CLABEL_MAX;
+	scc_Clabel ref_cluster_label1[20] = { 0, 0, 2, 1, 4,
+	                                      M, 3, M, 0, 4,
+	                                      1, 3, 4, 1, 3,
+	                                      3, 2, 2, 1, 0  };
+	scc_Clabel ref_cluster_label2[20] = { 0, 1, 2, M, 4,
+	                                      0, 3, 0, 0, M,
+	                                      1, 0, 4, M, 3,
+	                                      M, 2, 3, 1, 0  };
+
+	scc_TempSeedClustering cl1 = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out1 = scc_assign_remaining_lexical(&cl1, &prio1);
+	assert_int_equal(cl1.vertices, 0);
+	assert_int_equal(cl1.num_clusters, 0);
+	assert_int_equal(cl1.seed_capacity, 0);
+	assert_null(cl1.assigned);
+	assert_null(cl1.seeds);
+	assert_null(cl1.cluster_label);
+	assert_int_equal(out1.vertices, 20);
+	assert_int_equal(out1.num_clusters, 5);
+	assert_non_null(out1.cluster_label);
+	assert_memory_equal(out1.cluster_label, ref_cluster_label1, 20 * sizeof(scc_Clabel));
+
+	scc_TempSeedClustering cl2 = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out2 = scc_assign_remaining_lexical(&cl2, &prio2);
+	assert_int_equal(cl2.vertices, 0);
+	assert_int_equal(cl2.num_clusters, 0);
+	assert_int_equal(cl2.seed_capacity, 0);
+	assert_null(cl2.assigned);
+	assert_null(cl2.seeds);
+	assert_null(cl2.cluster_label);
+	assert_int_equal(out2.vertices, 20);
+	assert_int_equal(out2.num_clusters, 5);
+	assert_non_null(out2.cluster_label);
+	assert_memory_equal(out2.cluster_label, ref_cluster_label2, 20 * sizeof(scc_Clabel));
+
+	scc_free_digraph(&prio1);
+	scc_free_TempSeedClustering(&cl1);
+	scc_free_Clustering(&out1);
+	scc_free_digraph(&prio2);
+	scc_free_TempSeedClustering(&cl2);
+	scc_free_Clustering(&out2);
+}
+
+
+void scc_ut_assign_remaining_desired_size(void** state)
+{
+	(void) state;
+
+
+	bool assigned[20] = { true,  false, true,  false, true, 
+	                      false, true,  false, true,  false,
+	                      true,  false, true,  false, true,
+	                      false, true,  false, true,  false  };
+	scc_Vid seeds[5] = { 0, 18, 2, 6, 4 };
+	scc_Clabel cluster_label[20] = { 0, 0, 2, 1, 4,
+	                                 2, 3, 3, 0, 4,
+	                                 1, 5, 4, 6, 3,
+	                                 7, 2, 8, 1, 9  };
+	scc_TempSeedClustering cl_template = {
+		.vertices = 20,
+		.num_clusters = 5,
+		.seed_capacity = 5,
+		.assigned = assigned,
+		.seeds = seeds,
+		.cluster_label = cluster_label,
+	};
+
+	scc_Arci tail_ptr1[21] = {  0,  1,  2,  3,  4, 
+	                            5,  6,  7,  8,  9, 
+	                           10, 11, 12, 13, 14, 
+	                           15, 16, 17, 18, 19, 20 };
+	scc_Vid head1[20] = { 4,
+	                      0,
+	                      2,
+	                     18,
+	                      7,
+	                      1,
+	                     10,
+	                      1,
+	                      1,
+	                     12,
+	                      2,
+	                     14,
+	                      7,
+	                     10,
+	                      3,
+	                      6,
+	                     15,
+	                      2,
+	                     12,
+	                      0 };
+	scc_Digraph prio1 = scc_digraph_from_pieces(20, 20, tail_ptr1, head1);
+	assert_true(scc_digraph_is_initialized(&prio1));
+
+
+	scc_Arci tail_ptr2[21] = {  0,  2,  3,  4,  5, 
+	                            7, 10, 12, 14, 14, 
+	                           14, 16, 17, 19, 19, 
+	                           20, 23, 23, 26, 28, 34 };
+	scc_Vid head2[34] = {  0, 19,
+	                      18,
+	                       1,
+	                      17,
+	                       2, 19,
+	                       0,  6, 18,
+	                       3, 18,
+	                       5,  0,
+	                      
+	                      
+	                       5, 17,
+	                       0,
+	                       6, 16,
+	                      
+	                       7,
+	                      13, 15, 17,
+	                      
+	                       6,  0, 15,
+	                       9, 15,
+	                       0,  2, 4, 6, 8, 10 };
+	scc_Digraph prio2 = scc_digraph_from_pieces(20, 34, tail_ptr2, head2);
+	assert_true(scc_digraph_is_initialized(&prio2));
+
+	const scc_Clabel M = SCC_CLABEL_MAX;
+	scc_Clabel ref_cluster_label1[20] = { 0, 0, 2, 1, 4,
+	                                      M, 3, M, 0, 4,
+	                                      1, 3, 4, 1, 3,
+	                                      3, 2, 2, 1, 0  };
+	scc_Clabel ref_cluster_label2[20] = { 0, 1, 2, M, 4,
+	                                      1, 3, 0, 0, M,
+	                                      1, 0, 4, M, 3,
+	                                      M, 2, 3, 1, 3  };
+	scc_Clabel ref_cluster_label3[20] = { 0, 1, 2, M, 4,
+	                                      1, 3, 0, 0, M,
+	                                      1, 0, 4, M, 3,
+	                                      M, 2, 0, 1, 1  };
+
+	scc_TempSeedClustering cl1 = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out1 = scc_assign_remaining_desired_size(&cl1, &prio1, 2);
+	assert_int_equal(cl1.vertices, 0);
+	assert_int_equal(cl1.num_clusters, 0);
+	assert_int_equal(cl1.seed_capacity, 0);
+	assert_null(cl1.assigned);
+	assert_null(cl1.seeds);
+	assert_null(cl1.cluster_label);
+	assert_int_equal(out1.vertices, 20);
+	assert_int_equal(out1.num_clusters, 5);
+	assert_non_null(out1.cluster_label);
+	assert_memory_equal(out1.cluster_label, ref_cluster_label1, 20 * sizeof(scc_Clabel));
+
+	scc_TempSeedClustering cl2 = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out2 = scc_assign_remaining_desired_size(&cl2, &prio2, 2);
+	assert_int_equal(cl2.vertices, 0);
+	assert_int_equal(cl2.num_clusters, 0);
+	assert_int_equal(cl2.seed_capacity, 0);
+	assert_null(cl2.assigned);
+	assert_null(cl2.seeds);
+	assert_null(cl2.cluster_label);
+	assert_int_equal(out2.vertices, 20);
+	assert_int_equal(out2.num_clusters, 5);
+	assert_non_null(out2.cluster_label);
+	assert_memory_equal(out2.cluster_label, ref_cluster_label2, 20 * sizeof(scc_Clabel));
+
+	scc_TempSeedClustering cl3 = scc_copy_TempSeedClustering(&cl_template);
+	scc_Clustering out3 = scc_assign_remaining_desired_size(&cl3, &prio2, 3);
+	assert_int_equal(cl3.vertices, 0);
+	assert_int_equal(cl3.num_clusters, 0);
+	assert_int_equal(cl3.seed_capacity, 0);
+	assert_null(cl3.assigned);
+	assert_null(cl3.seeds);
+	assert_null(cl3.cluster_label);
+	assert_int_equal(out3.vertices, 20);
+	assert_int_equal(out3.num_clusters, 5);
+	assert_non_null(out3.cluster_label);
+	assert_memory_equal(out3.cluster_label, ref_cluster_label3, 20 * sizeof(scc_Clabel));
+
+	scc_free_digraph(&prio1);
+	scc_free_TempSeedClustering(&cl1);
+	scc_free_Clustering(&out1);
+	scc_free_digraph(&prio2);
+	scc_free_TempSeedClustering(&cl2);
+	scc_free_Clustering(&out2);
+	scc_free_TempSeedClustering(&cl3);
+	scc_free_Clustering(&out3);
+}
+
+
 int main(void)
 {
 	const struct CMUnitTest test_clustering[] = {
+		cmocka_unit_test(scc_ut_nng_free_TempSeedClustering),
+		cmocka_unit_test(scc_ut_nng_copy_TempSeedClustering),
 		cmocka_unit_test(scc_ut_clustering_lexical),
 		cmocka_unit_test(scc_ut_clustering_inwards),
 		cmocka_unit_test(scc_ut_clustering_inwards_updating),
 		cmocka_unit_test(scc_ut_clustering_exclusion),
 		cmocka_unit_test(scc_ut_clustering_exclusion_updating),
+		cmocka_unit_test(scc_ut_ignore_remaining),
+		cmocka_unit_test(scc_ut_assign_remaining_lexical),
+		cmocka_unit_test(scc_ut_assign_remaining_desired_size),
 	};
 
 	return cmocka_run_group_tests_name("nng clustering module", test_clustering, NULL, NULL);
