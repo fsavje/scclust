@@ -64,9 +64,6 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 
 	const scc_Vid vertices = dgs[0]->vertices;
 
-	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
-	if (!row_markers) return SCC_NULL_DIGRAPH;
-
 	scc_Arci out_arcs_write = 0;
 
 	// Try greedy memory count first
@@ -74,6 +71,9 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 		if (!scc_digraph_is_initialized(dgs[i]) || dgs[i]->vertices != vertices) return SCC_NULL_DIGRAPH;
 		out_arcs_write += dgs[i]->tail_ptr[vertices];
 	}
+
+	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
+	if (!row_markers) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, out_arcs_write);
 	if (!scc_digraph_is_initialized(&dg_out)) {
@@ -108,12 +108,11 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
 	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Vid));
-	if (!row_count) return SCC_NULL_DIGRAPH;
-
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if (!scc_digraph_is_initialized(&dg_out)) {
+	if (!row_count || !scc_digraph_is_initialized(&dg_out)) {
 		free(row_count);
-		return dg_out;
+		scc_free_digraph(&dg_out);
+		return SCC_NULL_DIGRAPH;
 	}
 
 	const scc_Vid* const arc_c_stop = dg->head + dg->tail_ptr[dg->vertices];

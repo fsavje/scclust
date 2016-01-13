@@ -98,7 +98,7 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
                                               scc_Vid seed_init_capacity)
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	assert(scc_digraph_is_initialized(nng));
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
@@ -134,7 +134,7 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
                                               const scc_Vid seed_init_capacity,
                                               const bool updating)
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	assert(scc_digraph_is_initialized(nng));
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
 
@@ -197,7 +197,7 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
                                                 const scc_Vid seed_init_capacity,
                                                 const bool updating)
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	assert(scc_digraph_is_initialized(nng));
 
 	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
 
@@ -309,7 +309,7 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_DIGRAPH;
+	assert(scc_digraph_is_initialized(nng));
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
 	if (!scc_digraph_is_initialized(&nng_transpose)) return SCC_NULL_DIGRAPH;
@@ -362,7 +362,9 @@ static void iscc_fs_shrink_seed_array(scc_TempSeedClustering* const cl)
 static inline bool iscc_fs_add_seed(const scc_Vid s,
                                     scc_TempSeedClustering* const cl)
 {
+	assert(cl->seeds);
 	assert(cl->num_clusters <= cl->seed_capacity);
+	
 	if (cl->num_clusters == cl->seed_capacity) {
 		cl->seed_capacity = cl->seed_capacity + (cl->seed_capacity >> 3) + 1024;
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->seed_capacity]));
@@ -379,6 +381,8 @@ static inline bool iscc_fs_check_neighbors_marks(const scc_Vid cv,
                                                  const scc_Digraph* const nng,
                                                  const bool marks[const static nng->vertices])
 {
+	assert(scc_digraph_is_initialized(nng));
+
 	if (marks[cv]) return false;
 
 	const scc_Vid* cv_arc = nng->head + nng->tail_ptr[cv];
@@ -397,6 +401,8 @@ static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
                                                const scc_Digraph* const nng,
                                                bool marks[const static nng->vertices])
 {
+	assert(scc_digraph_is_initialized(nng));
+
 	assert(!marks[s]);
 	marks[s] = true;
 
@@ -412,6 +418,8 @@ static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
 static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
                                                   const bool make_indices)
 {
+	assert(scc_digraph_is_initialized(nng));
+
 	const scc_Vid vertices = nng->vertices;
 
 	iscc_fs_SortResult res = {
@@ -538,14 +546,17 @@ static inline void iscc_fs_decrease_v_in_sort(const scc_Vid v_to_decrease,
 		vertex_index[*move_from] = move_from;
 
 		#ifdef SCC_STABLE_CLUSTERING
+			// Sort old bucket by vertex ID
 			iscc_fs_debug_bucket_sort(move_to + 1, move_from, inwards_count, vertex_index);
 		#endif
 	}
 
 	#ifdef SCC_STABLE_CLUSTERING
+		// If new bucket start on or before current_pos in the sorted vertices, move it to next in line
 		if (bucket_index[inwards_count[v_to_decrease]] <= current_pos) {
 			bucket_index[inwards_count[v_to_decrease]] = current_pos + 1;
 		}
+		// Sort new bucket by vertex ID
 		iscc_fs_debug_bucket_sort(bucket_index[inwards_count[v_to_decrease]],
 		                          move_to, inwards_count, vertex_index);
 	#endif
