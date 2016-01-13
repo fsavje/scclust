@@ -19,21 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-#ifndef SCC_CLUSTERING_HG
-#define SCC_CLUSTERING_HG
+#include "../include/nng_clustering.h"
 
-#include <stddef.h>
-#include "config.h"
+#include <stdlib.h>
 
-typedef struct scc_Clustering scc_Clustering;
-struct scc_Clustering {
-	scc_Vid vertices;
-	scc_Clabel num_clusters;
-	scc_Clabel* cluster_label;
-};
 
-static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, NULL };
+// ==============================================================================
+// External function implementations
+// ==============================================================================
 
-void scc_free_Clustering(scc_Clustering* cl);
-
-#endif
+void scc_free_Clustering(scc_Clustering* const cl)
+{
+	if (cl) {
+		free(cl->cluster_label);
+		*cl = SCC_NULL_CLUSTERING;
+	}
+}

@@ -1,5 +1,5 @@
 FLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-OBJECTS=digraph_core.o digraph_operations.o digraph_debug.o findseeds.o nng_clustering.o
+OBJECTS=digraph_core.o digraph_operations.o digraph_debug.o clustering.o findseeds.o nng_clustering.o
 BUILDOBJS=$(addprefix build/,$(OBJECTS))
 
 .PHONY: builddirs library clean
