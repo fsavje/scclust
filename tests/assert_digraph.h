@@ -47,7 +47,7 @@ void _assert_initialized_digraph(const scc_Digraph* test_dg,
                                  const char* const file,
                                  const int line)
 {
-	if (!scc_is_initialized_digraph(test_dg) || test_dg->vertices != vertices) {
+	if (!scc_digraph_is_initialized(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not valid\n", name_dg);
 		_fail(file, line);
 	}
@@ -59,7 +59,7 @@ void _assert_free_digraph(scc_Digraph* test_dg,
                           const char* const file,
                           const int line)
 {
-	if (!test_dg || !test_dg->tail_ptr) {
+	if (!scc_digraph_is_initialized(test_dg)) {
 		print_error("%s is already freed\n", name_dg);
 		_fail(file, line);
 	} else {

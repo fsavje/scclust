@@ -50,7 +50,7 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
                                                const scc_SeedMethod sm,
                                                scc_Vid seed_init_capacity)
 {
-	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
 
 	scc_TempSeedClustering clustering = SCC_NULL_TEMP_SEED_CLUSTERING;
 

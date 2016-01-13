@@ -98,7 +98,7 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
                                               scc_Vid seed_init_capacity)
 {
-	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
@@ -134,7 +134,7 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
                                               const scc_Vid seed_init_capacity,
                                               const bool updating)
 {
-	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(nng, updating);
 
@@ -197,13 +197,13 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
                                                 const scc_Vid seed_init_capacity,
                                                 const bool updating)
 {
-	if (!nng || !nng->tail_ptr) return ISCC_NULL_SEED_ARRAY;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
 
 	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
 
 	bool* const excluded = calloc(nng->vertices, sizeof(bool));
 
-	if (!exclusion_graph.tail_ptr || !excluded) {
+	if (!scc_digraph_is_initialized(&exclusion_graph) || !excluded) {
 		scc_free_digraph(&exclusion_graph);
 		free(excluded);
 		return SCC_NULL_TEMP_SEED_CLUSTERING;
@@ -309,19 +309,19 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 
 static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 {
-	if (!nng || !nng->tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
-	if (!nng_transpose.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(&nng_transpose)) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
 	scc_free_digraph(&nng_transpose);
-	if (!nng_nng_transpose.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(&nng_nng_transpose)) return SCC_NULL_DIGRAPH;
 
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
 	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
 	scc_free_digraph(&nng_nng_transpose);
-	if (!exclusion_graph.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(&exclusion_graph)) return SCC_NULL_DIGRAPH;
 
 	return exclusion_graph;
 }

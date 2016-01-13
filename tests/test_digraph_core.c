@@ -46,6 +46,31 @@ void scc_ut_init_digraph(void** state)
 }
 
 
+void scc_ut_digraph_is_initialized(void** state)
+{
+	(void) state;
+
+	scc_Digraph dg1 = scc_init_digraph(4, 10);
+	scc_Digraph dg2 = SCC_NULL_DIGRAPH;
+	scc_Digraph dg3 = scc_init_digraph(4, 0);
+
+	assert_false(scc_digraph_is_initialized(NULL));
+	assert_true(scc_digraph_is_initialized(&dg1));
+	assert_false(scc_digraph_is_initialized(&dg2));
+	assert_true(scc_digraph_is_initialized(&dg3));
+
+	dg3.head = dg1.head;
+	dg1.head = NULL;
+
+	assert_false(scc_digraph_is_initialized(&dg1));
+	assert_false(scc_digraph_is_initialized(&dg3));
+
+	scc_free_digraph(&dg1);
+	scc_free_digraph(&dg2);
+	scc_free_digraph(&dg3);
+}
+
+
 void scc_ut_free_digraph(void** state)
 {
 	(void) state;
@@ -154,6 +179,7 @@ int main(void)
 {
 	const struct CMUnitTest test_core[] = {
 		cmocka_unit_test(scc_ut_init_digraph),
+		cmocka_unit_test(scc_ut_digraph_is_initialized),
 		cmocka_unit_test(scc_ut_free_digraph),
 		cmocka_unit_test(scc_ut_change_arc_storage),
 		cmocka_unit_test(scc_ut_empty_digraph),

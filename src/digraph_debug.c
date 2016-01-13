@@ -34,18 +34,9 @@
 // External function implementations
 // ==============================================================================
 
-bool scc_is_initialized_digraph(const scc_Digraph* const dg)
-{
-	if (!dg || !dg->tail_ptr) return false;
-	if (dg->max_arcs == 0 && dg->head) return false;
-	if (dg->max_arcs > 0 && !dg->head) return false;
-	return true;
-}
-
-
 bool scc_is_valid_digraph(const scc_Digraph* const dg)
 {
-	if (!scc_is_initialized_digraph(dg)) return false;
+	if (!scc_digraph_is_initialized(dg)) return false;
 	if (dg->tail_ptr[0] != 0) return false;
 	if (dg->tail_ptr[dg->vertices] > dg->max_arcs) return false;
 	for (size_t i = 0; i < dg->vertices; ++i) {
@@ -129,7 +120,7 @@ scc_Digraph scc_digraph_from_pieces(const scc_Vid vertices,
 	if (!tail_ptr) return SCC_NULL_DIGRAPH;
 	if (max_arcs > 0 && !head) return SCC_NULL_DIGRAPH;
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
-	if (!dg.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;
 
 	for (scc_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
 	for (scc_Arci a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
@@ -160,7 +151,7 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const])
 	}
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, max_arcs);
-	if (!dg_out.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(&dg_out)) return SCC_NULL_DIGRAPH;
 
 	scc_Arci curr_array_pos = 0;
 	scc_Vid curr_row = 0;
@@ -192,7 +183,7 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const])
 
 void scc_print_digraph(const scc_Digraph* const dg)
 {
-	if (!dg || !dg->tail_ptr) {
+	if (!scc_digraph_is_initialized(dg)) {
 		printf("Unvalid digraph.\n\n");
 		return;
 	} 

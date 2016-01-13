@@ -60,7 +60,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
                               const scc_Digraph* const dgs[const static num_dgs])
 {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
-	if (!dgs || !dgs[0]) return SCC_NULL_DIGRAPH;
+	if (!dgs || !scc_digraph_is_initialized(*dgs)) return SCC_NULL_DIGRAPH;
 
 	const scc_Vid vertices = dgs[0]->vertices;
 
@@ -71,12 +71,12 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 
 	// Try greedy memory count first
 	for (size_t i = 0; i < num_dgs; ++i) {
-		if (!dgs[i] || !dgs[i]->tail_ptr || dgs[i]->vertices != vertices) return SCC_NULL_DIGRAPH;
+		if (!scc_digraph_is_initialized(dgs[i]) || dgs[i]->vertices != vertices) return SCC_NULL_DIGRAPH;
 		out_arcs_write += dgs[i]->tail_ptr[vertices];
 	}
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, out_arcs_write);
-	if (!dg_out.tail_ptr) {
+	if (!scc_digraph_is_initialized(&dg_out)) {
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
 		// union without writing.
@@ -85,7 +85,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 
 		// Try again. If fail, give up.
 		dg_out = scc_init_digraph(vertices, out_arcs_write);
-		if (!dg_out.tail_ptr) {
+		if (!scc_digraph_is_initialized(&dg_out)) {
 			free(row_markers);
 			return dg_out;
 		}
@@ -104,14 +104,14 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 
 scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 {
-	if (!dg || !dg->tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(dg)) return SCC_NULL_DIGRAPH;
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
 	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Vid));
 	if (!row_count) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if (!dg_out.tail_ptr) {
+	if (!scc_digraph_is_initialized(&dg_out)) {
 		free(row_count);
 		return dg_out;
 	}
@@ -149,7 +149,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
                                   const bool ignore_diagonal)
 {
 	if (force_diagonal && ignore_diagonal) return SCC_NULL_DIGRAPH;
-	if (!dg_a || !dg_b || !dg_a->tail_ptr || !dg_b->tail_ptr) return SCC_NULL_DIGRAPH;
+	if (!scc_digraph_is_initialized(dg_a) || !scc_digraph_is_initialized(dg_b)) return SCC_NULL_DIGRAPH;
 	if (dg_a->vertices != dg_b->vertices) return SCC_NULL_DIGRAPH;
 	if (dg_a->vertices == 0) return scc_empty_digraph(0, 0);
 
@@ -174,7 +174,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 	}
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, out_arcs_write);
-	if (!dg_out.tail_ptr) {
+	if (!scc_digraph_is_initialized(&dg_out)) {
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
 		// doing product without writing.
@@ -187,7 +187,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 
 		// Try again. If fail, give up.
 		dg_out = scc_init_digraph(vertices, out_arcs_write);
-		if (!dg_out.tail_ptr) {
+		if (!scc_digraph_is_initialized(&dg_out)) {
 			free(row_markers);
 			return dg_out;
 		}

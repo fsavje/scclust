@@ -30,31 +30,6 @@
 #include "../include/digraph_debug.h"
 
 
-void scc_ut_is_initialized_digraph(void** state)
-{
-	(void) state;
-
-	scc_Digraph dg1 = scc_init_digraph(4, 10);
-	scc_Digraph dg2 = SCC_NULL_DIGRAPH;
-	scc_Digraph dg3 = scc_init_digraph(4, 0);
-
-	assert_false(scc_is_initialized_digraph(NULL));
-	assert_true(scc_is_initialized_digraph(&dg1));
-	assert_false(scc_is_initialized_digraph(&dg2));
-	assert_true(scc_is_initialized_digraph(&dg3));
-
-	dg3.head = dg1.head;
-	dg1.head = NULL;
-
-	assert_false(scc_is_initialized_digraph(&dg1));
-	assert_false(scc_is_initialized_digraph(&dg3));
-
-	scc_free_digraph(&dg1);
-	scc_free_digraph(&dg2);
-	scc_free_digraph(&dg3);
-}
-
-
 void scc_ut_is_valid_digraph(void** state)
 {
 	(void) state;
@@ -247,7 +222,6 @@ void scc_ut_debug_rest(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_debug[] = {
-		cmocka_unit_test(scc_ut_is_initialized_digraph),
 		cmocka_unit_test(scc_ut_is_valid_digraph),
 		cmocka_unit_test(scc_ut_is_empty_digraph),
 		cmocka_unit_test(scc_ut_is_balanced_digraph),

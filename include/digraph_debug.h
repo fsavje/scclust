@@ -36,19 +36,6 @@
 #include "config.h"
 #include "digraph.h"
 
-
-/** Checks whether provided digraph is initialized.
- *
- *  This function returns \c true if \p dg is initialized. That is, scc_Digraph::tail_ptr
- *  and scc_Digraph::head are allocated. If scc_Digraph::max_arcs is zero, it checks so
- *  scc_Digraph::head is \c NULL.
- *
- *  \param[in] dg digraph to check.
- *
- *  \return \c true if \p dg is correctly initialized, otherwise \c false.
- */
-bool scc_is_initialized_digraph(const scc_Digraph* dg);
-
 /** Checks whether provided digraph is valid.
  *
  *  This function returns \c true if \p dg is a valid scc_Digraph instance. That is,
