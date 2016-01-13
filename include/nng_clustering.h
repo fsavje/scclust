@@ -60,7 +60,7 @@ static const scc_TempSeedClustering SCC_NULL_TEMP_SEED_CLUSTERING = { 0, 0, 0, N
 
 void scc_free_TempSeedClustering(scc_TempSeedClustering* cl);
 
-scc_TempSeedClustering scc_copy_TempSeedClustering(scc_TempSeedClustering* cl);
+scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering* cl);
 
 scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
                                                scc_SeedMethod sm,
