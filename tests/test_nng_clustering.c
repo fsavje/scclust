@@ -55,9 +55,10 @@ void scc_ut_clustering_lexical(void** state)
 	scc_Vid fp_seeds[3] = {0, 4, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 1, 1, 2, 2, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6);
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 3);
+	assert_int_equal(seed_clustering.seed_capacity, 3);
 	assert_memory_equal(seed_clustering.assigned, fp_assigned, 10 * sizeof(bool));
 	assert_memory_equal(seed_clustering.seeds, fp_seeds, 3 * sizeof(scc_Vid));
 	assert_int_equal(seed_clustering.cluster_label[0], fp_cluster_label[0]);
@@ -67,7 +68,7 @@ void scc_ut_clustering_lexical(void** state)
 	assert_int_equal(seed_clustering.cluster_label[6], fp_cluster_label[6]);
 	assert_int_equal(seed_clustering.cluster_label[7], fp_cluster_label[7]);
 
-	scc_free_SeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&seed_clustering);
 
 	scc_free_digraph(&nng);
 }
@@ -92,14 +93,15 @@ void scc_ut_clustering_inwards(void** state)
 	scc_Vid fp_seeds[4] = {2, 7, 4, 1};
 	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 6);
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 6);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
+	assert_int_equal(seed_clustering.seed_capacity, 4);
 	assert_memory_equal(seed_clustering.assigned, fp_assigned, 10 * sizeof(bool));
 	assert_memory_equal(seed_clustering.seeds, fp_seeds, 4 * sizeof(scc_Vid));
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
-	scc_free_SeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&seed_clustering);
 
 	scc_free_digraph(&nng);
 }
@@ -124,14 +126,15 @@ void scc_ut_clustering_inwards_updating(void** state)
 	scc_Vid fp_seeds[4] = {2, 7, 4, 3};
 	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 6);
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 6);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
+	assert_int_equal(seed_clustering.seed_capacity, 4);
 	assert_memory_equal(seed_clustering.assigned, fp_assigned, 10 * sizeof(bool));
 	assert_memory_equal(seed_clustering.seeds, fp_seeds, 4 * sizeof(scc_Vid));
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
-	scc_free_SeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&seed_clustering);
 
 	scc_free_digraph(&nng);
 }
@@ -156,14 +159,15 @@ void scc_ut_clustering_exclusion(void** state)
 	scc_Vid fp_seeds[4] = {0, 4, 2, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 2, 2, 0, 1, 1, 3, 3, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 6);
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 6);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
+	assert_int_equal(seed_clustering.seed_capacity, 4);
 	assert_memory_equal(seed_clustering.assigned, fp_assigned, 10 * sizeof(bool));
 	assert_memory_equal(seed_clustering.seeds, fp_seeds, 4 * sizeof(scc_Vid));
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
-	scc_free_SeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&seed_clustering);
 
 	scc_free_digraph(&nng);
 }
@@ -188,14 +192,15 @@ void scc_ut_clustering_exclusion_updating(void** state)
 	scc_Vid fp_seeds[4] = {0, 2, 4, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 1, 1, 0, 2, 2, 3, 3, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 6);
+	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 6);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
+	assert_int_equal(seed_clustering.seed_capacity, 4);
 	assert_memory_equal(seed_clustering.assigned, fp_assigned, 10 * sizeof(bool));
 	assert_memory_equal(seed_clustering.seeds, fp_seeds, 4 * sizeof(scc_Vid));
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
-	scc_free_SeedClustering(&seed_clustering);
+	scc_free_TempSeedClustering(&seed_clustering);
 
 	scc_free_digraph(&nng);
 }

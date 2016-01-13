@@ -89,44 +89,65 @@ void scc_ut_exclusion_graph(void** state)
 }
 
 
-void scc_ut_fs_make_seed_array(void** state)
+void scc_ut_fs_make_clustering(void** state)
 {
 	(void) state;
 
-	iscc_SeedArray sa1 = iscc_fs_make_seed_array(500);
+	scc_TempSeedClustering cl1 = iscc_fs_make_clustering(100, 500);
 
-	assert_int_equal(sa1.seed_capacity, 500);
-	assert_int_equal(sa1.num_seeds, 0);
-	assert_non_null(sa1.seeds);
-	sa1.seeds[499] = 123;
+	assert_int_equal(cl1.vertices, 100);
+	assert_int_equal(cl1.num_clusters, 0);
+	assert_int_equal(cl1.seed_capacity, 500);
+	assert_null(cl1.assigned);
+	assert_non_null(cl1.seeds);
+	assert_null(cl1.cluster_label);
+	cl1.seeds[499] = 123;
 
-	iscc_SeedArray sa2 = iscc_fs_make_seed_array(10);
+	scc_TempSeedClustering cl2 = iscc_fs_make_clustering(10, 10);
 
-	assert_int_equal(sa2.seed_capacity, 128);
-	assert_int_equal(sa2.num_seeds, 0);
-	assert_non_null(sa2.seeds);
-	sa2.seeds[127] = 123;
+	assert_int_equal(cl2.vertices, 10);
+	assert_int_equal(cl2.num_clusters, 0);
+	assert_int_equal(cl2.seed_capacity, 128);
+	assert_null(cl2.assigned);
+	assert_non_null(cl2.seeds);
+	assert_null(cl2.cluster_label);
+	cl2.seeds[127] = 123;
 
-	iscc_free_SeedArray(&sa1);
-	iscc_free_SeedArray(&sa2);
+	scc_free_TempSeedClustering(&cl1);
+	scc_free_TempSeedClustering(&cl2);
 }
 
 
-void scc_ut_fs_shrink_SeedArray(void** state)
+void scc_ut_fs_shrink_seed_array(void** state)
 {
 	(void) state;
 
-	iscc_SeedArray sa = iscc_fs_make_seed_array(500);
-	assert_int_equal(sa.seed_capacity, 500);
+	scc_TempSeedClustering cl = iscc_fs_make_clustering(100, 500);
+	assert_int_equal(cl.vertices, 100);
+	assert_int_equal(cl.num_clusters, 0);
+	assert_int_equal(cl.seed_capacity, 500);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_null(cl.cluster_label);
 
-	iscc_fs_shrink_SeedArray(&sa);
-	assert_int_equal(sa.seed_capacity, 500);
+	iscc_fs_shrink_seed_array(&cl);
+	assert_int_equal(cl.vertices, 100);
+	assert_int_equal(cl.num_clusters, 0);
+	assert_int_equal(cl.seed_capacity, 500);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_null(cl.cluster_label);
 
-	sa.num_seeds = 10;
-	iscc_fs_shrink_SeedArray(&sa);
-	assert_int_equal(sa.seed_capacity, 10);
+	cl.num_clusters = 10;
+	iscc_fs_shrink_seed_array(&cl);
+	assert_int_equal(cl.vertices, 100);
+	assert_int_equal(cl.num_clusters, 10);
+	assert_int_equal(cl.seed_capacity, 10);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_null(cl.cluster_label);
 
-	iscc_free_SeedArray(&sa);
+	scc_free_TempSeedClustering(&cl);
 }
 
 
@@ -134,67 +155,95 @@ void scc_ut_fs_add_seed(void** state)
 {
 	(void) state;
 
-	iscc_SeedArray sa = {
+	scc_TempSeedClustering cl = {
+		.vertices = 10,
+		.num_clusters = 0,
 		.seed_capacity = 1,
-		.num_seeds = 0,
+		.assigned = NULL,
 		.seeds = malloc(sizeof(scc_Vid[1])),
+		.cluster_label = NULL,
 	};
 
 	scc_Vid ref_seeds[6] = {4, 1, 6, 3, 5, 7};
 
-	assert_true(iscc_fs_add_seed(4, &sa));
-	assert_true(iscc_fs_add_seed(1, &sa));
-	assert_true(iscc_fs_add_seed(6, &sa));
-	assert_true(iscc_fs_add_seed(3, &sa));
-	assert_true(iscc_fs_add_seed(5, &sa));
-	assert_true(iscc_fs_add_seed(7, &sa));
+	assert_true(iscc_fs_add_seed(4, &cl));
+	assert_true(iscc_fs_add_seed(1, &cl));
+	assert_true(iscc_fs_add_seed(6, &cl));
+	assert_true(iscc_fs_add_seed(3, &cl));
+	assert_true(iscc_fs_add_seed(5, &cl));
+	assert_true(iscc_fs_add_seed(7, &cl));
 
-	assert_int_equal(sa.seed_capacity, 1025);
-	assert_int_equal(sa.num_seeds, 6);
-	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_int_equal(cl.seed_capacity, 1025);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
 
-	iscc_fs_shrink_SeedArray(&sa);
+	iscc_fs_shrink_seed_array(&cl);
 
-	assert_int_equal(sa.seed_capacity, 6);
-	assert_int_equal(sa.num_seeds, 6);
-	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_int_equal(cl.seed_capacity, 6);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
+
+	iscc_fs_shrink_seed_array(&cl);
+
+	assert_int_equal(cl.vertices, 10);
+	assert_int_equal(cl.num_clusters, 6);
+	assert_int_equal(cl.seed_capacity, 6);
+	assert_null(cl.assigned);
+	assert_non_null(cl.seeds);
+	assert_memory_equal(cl.seeds, ref_seeds, 6 * sizeof(scc_Vid));
+	assert_null(cl.cluster_label);
+
+
+	scc_TempSeedClustering cl2 = iscc_fs_make_clustering(99999, 1);
+
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_true(iscc_fs_add_seed(10000 - s, &cl2));
+	}
+
+	assert_int_equal(cl2.vertices, 99999);
+	assert_int_equal(cl2.num_clusters, 10000);
+	assert_int_equal(cl2.seed_capacity, 10780);
+	assert_null(cl2.assigned);
+	assert_non_null(cl2.seeds);
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_int_equal(cl2.seeds[s], 10000 - s);
+	}
+	assert_null(cl2.cluster_label);
+
+	iscc_fs_shrink_seed_array(&cl2);
+
+	assert_int_equal(cl2.vertices, 99999);
+	assert_int_equal(cl2.num_clusters, 10000);
+	assert_int_equal(cl2.seed_capacity, 10000);
+	assert_null(cl2.assigned);
+	assert_non_null(cl2.seeds);
+	for (scc_Vid s = 0; s < 10000; ++s) {
+		assert_int_equal(cl2.seeds[s], 10000 - s);
+	}
+	assert_null(cl2.cluster_label);
 	
-	iscc_fs_shrink_SeedArray(&sa);
+	iscc_fs_shrink_seed_array(&cl2);
 
-	assert_int_equal(sa.seed_capacity, 6);
-	assert_int_equal(sa.num_seeds, 6);
-	assert_memory_equal(sa.seeds, ref_seeds, 6 * sizeof(scc_Vid));
-
-	iscc_SeedArray sa2 = iscc_fs_make_seed_array(1);
-
+	assert_int_equal(cl2.vertices, 99999);
+	assert_int_equal(cl2.num_clusters, 10000);
+	assert_int_equal(cl2.seed_capacity, 10000);
+	assert_null(cl2.assigned);
+	assert_non_null(cl2.seeds);
 	for (scc_Vid s = 0; s < 10000; ++s) {
-		assert_true(iscc_fs_add_seed(10000 - s, &sa2));
+		assert_int_equal(cl2.seeds[s], 10000 - s);
 	}
+	assert_null(cl2.cluster_label);
 
-	assert_int_equal(sa2.seed_capacity, 10780);
-	assert_int_equal(sa2.num_seeds, 10000);
-	for (scc_Vid s = 0; s < 10000; ++s) {
-		assert_int_equal(sa2.seeds[s], 10000 - s);
-	}
-
-	iscc_fs_shrink_SeedArray(&sa2);
-
-	assert_int_equal(sa2.seed_capacity, 10000);
-	assert_int_equal(sa2.num_seeds, 10000);
-	for (scc_Vid s = 0; s < 10000; ++s) {
-		assert_int_equal(sa2.seeds[s], 10000 - s);
-	}
-	
-	iscc_fs_shrink_SeedArray(&sa2);
-
-	assert_int_equal(sa2.seed_capacity, 10000);
-	assert_int_equal(sa2.num_seeds, 10000);
-	for (scc_Vid s = 0; s < 10000; ++s) {
-		assert_int_equal(sa2.seeds[s], 10000 - s);
-	}
-
-	iscc_free_SeedArray(&sa);
-	iscc_free_SeedArray(&sa2);
+	scc_free_TempSeedClustering(&cl);
+	scc_free_TempSeedClustering(&cl2);
 }
 
 
@@ -534,8 +583,8 @@ int main(void)
 {
 	const struct CMUnitTest test_findseeds_internals[] = {
 		cmocka_unit_test(scc_ut_exclusion_graph),
-		cmocka_unit_test(scc_ut_fs_make_seed_array),
-		cmocka_unit_test(scc_ut_fs_shrink_SeedArray),
+		cmocka_unit_test(scc_ut_fs_make_clustering),
+		cmocka_unit_test(scc_ut_fs_shrink_seed_array),
 		cmocka_unit_test(scc_ut_fs_add_seed),
 		cmocka_unit_test(scc_ut_fs_check_neighbors_marks),
 		cmocka_unit_test(scc_ut_fs_mark_seed_neighbors),

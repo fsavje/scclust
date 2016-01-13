@@ -103,20 +103,29 @@ void scc_ut_findseeds_checkseeds18_debug(void** state)
 	                                          ".............##.../"
 	                                          "..............#.#./");
 
-
-	iscc_SeedArray seeds_inupdat = iscc_findseeds_inwards(&nng, 128, true);
 	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
-	assert_memory_equal(seeds_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(bool));
-	assert_int_equal(seeds_inupdat.num_seeds, 5);
+	scc_TempSeedClustering cl_inupdat = iscc_findseeds_inwards(&nng, 128, true);
+	assert_int_equal(cl_inupdat.vertices, 18);
+	assert_int_equal(cl_inupdat.num_clusters, 5);
+	assert_int_equal(cl_inupdat.seed_capacity, 5);
+	assert_null(cl_inupdat.assigned);
+	assert_non_null(cl_inupdat.seeds);
+	assert_memory_equal(cl_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(scc_Vid));
+	assert_null(cl_inupdat.cluster_label);
 
-	iscc_SeedArray seeds_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
 	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
-	assert_memory_equal(seeds_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(bool));
-	assert_int_equal(seeds_exupdat.num_seeds, 5);
+	scc_TempSeedClustering cl_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
+	assert_int_equal(cl_exupdat.vertices, 18);
+	assert_int_equal(cl_exupdat.num_clusters, 5);
+	assert_int_equal(cl_exupdat.seed_capacity, 5);
+	assert_null(cl_exupdat.assigned);
+	assert_non_null(cl_exupdat.seeds);
+	assert_memory_equal(cl_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(scc_Vid));
+	assert_null(cl_exupdat.cluster_label);
 
 	scc_free_digraph(&nng);
-	iscc_free_SeedArray(&seeds_inupdat);
-	iscc_free_SeedArray(&seeds_exupdat);
+	scc_free_TempSeedClustering(&cl_inupdat);
+	scc_free_TempSeedClustering(&cl_exupdat);
 }
 
 

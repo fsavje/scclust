@@ -25,6 +25,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "../include/clustering.h"
 #include "../include/config.h"
 #include "../include/digraph.h"
 #include "findseeds.h"
@@ -34,69 +35,62 @@
 // External function implementations
 // ==============================================================================
 
-void scc_free_SeedClustering(scc_SeedClustering* const cl)
+void scc_free_TempSeedClustering(scc_TempSeedClustering* const cl)
 {
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
 		free(cl->cluster_label);
-		*cl = SCC_NULL_SEED_CLUSTERING;
+		*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 }
 
 
-scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
-                                           const scc_SeedMethod sm,
-                                           scc_Vid seed_init_capacity)
+scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
+                                               const scc_SeedMethod sm,
+                                               scc_Vid seed_init_capacity)
 {
 	if (!nng || !nng->tail_ptr) return SCC_NULL_SEED_CLUSTERING;
 
-	iscc_SeedArray seed_array = ISCC_NULL_SEED_ARRAY;
+	scc_TempSeedClustering clustering = SCC_NULL_TEMP_SEED_CLUSTERING;
 
 	switch(sm) {
 
 		case SCC_LEXICAL:
-			seed_array = iscc_findseeds_lexical(nng, seed_init_capacity);
+			clustering = iscc_findseeds_lexical(nng, seed_init_capacity);
 			break;
 
 		case SCC_INWARDS_ORDER:
-			seed_array = iscc_findseeds_inwards(nng, seed_init_capacity, false);
+			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, false);
 			break;
 
 		case SCC_INWARDS_UPDATING:
-			seed_array = iscc_findseeds_inwards(nng, seed_init_capacity, true);
+			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, true);
 			break;
 
 		case SCC_EXCLUSION_ORDER:
-			seed_array = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
+			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
 			break;
 
 		case SCC_EXCLUSION_UPDATING:
-			seed_array = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
+			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
 			break;
 
 		default:
 			break;
 	}
 
-	if (!seed_array.seeds) {
-		return SCC_NULL_SEED_CLUSTERING;
+	if (!clustering.seeds) {
+		scc_free_TempSeedClustering(&clustering);
+		return SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 
-	scc_SeedClustering clustering = {
-		.vertices = nng->vertices,
-		.num_clusters = seed_array.num_seeds,
-		.assigned = calloc(nng->vertices, sizeof(bool)),
-		.seeds = seed_array.seeds,
-		.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices])),
-	};
-
-	seed_array.seeds = NULL;
-	iscc_free_SeedArray(&seed_array);
+	clustering.assigned = calloc(nng->vertices, sizeof(bool));
+	clustering.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices]));
 
 	if (!clustering.assigned || !clustering.cluster_label) {
-		scc_free_SeedClustering(&clustering);
-		return SCC_NULL_SEED_CLUSTERING;
+		scc_free_TempSeedClustering(&clustering);
+		return SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 
 	for (scc_Vid c = 0; c < clustering.num_clusters; ++c) {

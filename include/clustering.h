@@ -3,7 +3,7 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,30 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
+#ifndef SCC_CLUSTERING_HG
+#define SCC_CLUSTERING_HG
 
-#ifndef SCC_FINDSEEDS_HG
-#define SCC_FINDSEEDS_HG
+#include <stddef.h>
+#include "config.h"
 
-#include <stdbool.h>
-#include "../include/digraph.h"
-#include "../include/nng_clustering.h"
+typedef struct scc_Clustering scc_Clustering;
+struct scc_Clustering {
+	scc_Vid vertices;
+	scc_Clabel num_clusters;
+	scc_Clabel* cluster_label;
+};
 
-
-scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* nng,
-                                              scc_Vid seed_init_capacity);
-
-scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* nng,
-                                              scc_Vid seed_init_capacity,
-                                              bool updating);
-
-scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* nng,
-                                                scc_Vid seed_init_capacity,
-                                                bool updating);
-
-
-
-//iscc_findseeds_simulated_annealing();
-//iscc_findseeds_approximation();
-
+static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, NULL };
 
 #endif
