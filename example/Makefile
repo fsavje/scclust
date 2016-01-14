@@ -3,7 +3,7 @@ CXXFLAGS=-std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werr
 
 .PHONY: builddirs example clean
 
-all: example test_nng
+all: example nng_test
 
 clean:
 	$(RM) -R build/
@@ -12,21 +12,21 @@ builddirs:
 	mkdir -p build
 
 
-example: builddirs build/nng.o ../lib/scclust.a libANN/lib/libANN.a
 
+example: builddirs build/nng.o ../lib/libscclust.a libANN/lib/libANN.a
 
 build/nng.o: nng.cpp builddirs
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-../lib/scclust.a:
+../lib/libscclust.a:
 	cd .. && $(MAKE) library
 
 libANN/lib/libANN.a:
 	cd libANN && $(MAKE) library
 
 
-test_nng: clean builddirs build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a
-	$(CC) $(CFLAGS) test_nng.c build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a -lcmocka -lstdc++ -o build/$@.out
+nng_test: clean builddirs build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a
+	$(CC) $(CFLAGS) nng_test.c build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a -lcmocka -lstdc++ -o build/$@.out
 
 build/t_digraph_core.o: ../src/digraph_core.c builddirs
 	$(CC) $(CFLAGS) -include ../tests/test_suite.h -c $< -o $@

@@ -82,9 +82,12 @@ void scc_ut_get_nng(void** state)
 
 	scc_Vid search_indices[6] = { 5, 4, 3, 2, 1, 0 };
 
-	scc_Digraph nng1 = get_nng(&data_points, queries,
-	                           6, search_indices,
-	                           1, false, 0.0);
+	scc_Digraph nng1a = get_nng(&data_points, queries,
+	                            6, search_indices,
+	                            1, false, 0.0, true);
+	scc_Digraph nng1b = get_nng(&data_points, queries,
+	                            6, search_indices,
+	                            1, false, 0.0, false);
 	scc_Digraph ref1 = scc_digraph_from_string("....#...../"
 	                                           "........../"
 	                                           ".#......../"
@@ -95,11 +98,15 @@ void scc_ut_get_nng(void** state)
 	                                           "........../"
 	                                           ".#......../"
 	                                           "........../");
-	assert_equal_digraph(&nng1, &ref1);
+	assert_equal_digraph(&nng1a, &ref1);
+	assert_equal_digraph(&nng1b, &ref1);
 
-	scc_Digraph nng2 = get_nng(&data_points, queries,
-	                           6, search_indices,
-	                           2, false, 0.0);
+	scc_Digraph nng2a = get_nng(&data_points, queries,
+	                            6, search_indices,
+	                            2, false, 0.0, true);
+	scc_Digraph nng2b = get_nng(&data_points, queries,
+	                            6, search_indices,
+	                            2, false, 0.0, false);
 	scc_Digraph ref2 = scc_digraph_from_string("...##...../"
 	                                           "........../"
 	                                           ".#...#..../"
@@ -110,11 +117,12 @@ void scc_ut_get_nng(void** state)
 	                                           "........../"
 	                                           ".##......./"
 	                                           "........../");
-	assert_equal_digraph(&nng2, &ref2);
+	assert_equal_digraph(&nng2a, &ref2);
+	assert_equal_digraph(&nng2b, &ref2);
 
 	scc_Digraph nng3 = get_nng(&data_points, queries,
 	                           6, search_indices,
-	                           2, true, 25.0);
+	                           2, true, 25.0, true);
 	scc_Digraph ref3 = scc_digraph_from_string("....#...../"
 	                                           "........../"
 	                                           "........../"
@@ -127,12 +135,31 @@ void scc_ut_get_nng(void** state)
 	                                           "........../");
 	assert_equal_digraph(&nng3, &ref3);
 
-	scc_free_digraph(&nng1);
-	scc_free_digraph(&nng2);
+	scc_Digraph nng4 = get_nng(&data_points, queries,
+	                           6, search_indices,
+	                           2, true, 25.0, false);
+	scc_Digraph ref4 = scc_digraph_from_string("........../"
+	                                           "........../"
+	                                           "........../"
+	                                           "........../"
+	                                           "........../"
+	                                           "........../"
+	                                           "...##...../"
+	                                           "........../"
+	                                           "........../"
+	                                           "........../");
+	assert_equal_digraph(&nng4, &ref4);
+
+	scc_free_digraph(&nng1a);
+	scc_free_digraph(&nng1b);
+	scc_free_digraph(&nng2a);
+	scc_free_digraph(&nng2b);
 	scc_free_digraph(&nng3);
+	scc_free_digraph(&nng4);
 	scc_free_digraph(&ref1);
 	scc_free_digraph(&ref2);
 	scc_free_digraph(&ref3);
+	scc_free_digraph(&ref4);
 }
 
 
@@ -155,7 +182,8 @@ void scc_ut_get_all_nng(void** state)
 	9: 1 (0.00000)		8 (19.56761)
 	*/
 	
-	scc_Digraph nng1 = get_all_nng(&data_points, 1, false, 0.0);
+	scc_Digraph nng1a = get_all_nng(&data_points, 1, false, 0.0, true);
+	scc_Digraph nng1b = get_all_nng(&data_points, 1, false, 0.0, false);
 	scc_Digraph ref1 = scc_digraph_from_string("....# ...../"
 	                                           "..... ....#/"
 	                                           "..... ...#./"
@@ -166,9 +194,11 @@ void scc_ut_get_all_nng(void** state)
 	                                           "..... #..../"
 	                                           ".#... ...../"
 	                                           ".#... ...../");
-	assert_equal_digraph(&nng1, &ref1);
+	assert_equal_digraph(&nng1a, &ref1);
+	assert_equal_digraph(&nng1b, &ref1);
 
-	scc_Digraph nng2 = get_all_nng(&data_points, 2, false, 0.0);
+	scc_Digraph nng2a = get_all_nng(&data_points, 2, false, 0.0, true);
+	scc_Digraph nng2b = get_all_nng(&data_points, 2, false, 0.0, false);
 	scc_Digraph ref2 = scc_digraph_from_string("....# .#.../"
 	                                           "..... ...##/"
 	                                           ".#... ...#./"
@@ -179,9 +209,10 @@ void scc_ut_get_all_nng(void** state)
 	                                           "...#. #..../"
 	                                           ".#... ....#/"
 	                                           ".#... ...#./");
-	assert_equal_digraph(&nng2, &ref2);
+	assert_equal_digraph(&nng2a, &ref2);
+	assert_equal_digraph(&nng2b, &ref2);
 
-	scc_Digraph nng3 = get_all_nng(&data_points, 2, true, 20.0);
+	scc_Digraph nng3 = get_all_nng(&data_points, 2, true, 20.0, true);
 	scc_Digraph ref3 = scc_digraph_from_string("....# ...../"
 	                                           "..... ...##/"
 	                                           "..... ...../"
@@ -194,13 +225,29 @@ void scc_ut_get_all_nng(void** state)
 	                                           ".#... ...#./");
 	assert_equal_digraph(&nng3, &ref3);
 
-	scc_free_digraph(&nng1);
-	scc_free_digraph(&nng2);
+	scc_Digraph nng4 = get_all_nng(&data_points, 2, true, 20.0, false);
+	scc_Digraph ref4 = scc_digraph_from_string("..... ...../"
+	                                           "..... ...##/"
+	                                           "..... ...../"
+	                                           "..... ...../"
+	                                           "#.... .#.../"
+	                                           "..... ...../"
+	                                           "...## ...../"
+	                                           "..... ...../"
+	                                           ".#... ....#/"
+	                                           ".#... ...#./");
+	assert_equal_digraph(&nng4, &ref4);
+
+	scc_free_digraph(&nng1a);
+	scc_free_digraph(&nng1b);
+	scc_free_digraph(&nng2a);
+	scc_free_digraph(&nng2b);
 	scc_free_digraph(&nng3);
+	scc_free_digraph(&nng4);
 	scc_free_digraph(&ref1);
 	scc_free_digraph(&ref2);
 	scc_free_digraph(&ref3);
-
+	scc_free_digraph(&ref4);
 }
 
 
