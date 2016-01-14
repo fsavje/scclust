@@ -22,7 +22,9 @@
 
 #include "../include/digraph.h"
 
+#include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include "../include/config.h"
 
@@ -31,9 +33,11 @@
 // External function implementations
 // ============================================================================== 
 
-scc_Digraph scc_init_digraph(const scc_Vid vertices,
-                             const scc_Arci max_arcs)
+scc_Digraph scc_init_digraph(const size_t vertices,
+                             const size_t max_arcs)
 {
+	if ((vertices >= SCC_VID_MAX) || (max_arcs > SCC_ARCI_MAX)) return SCC_NULL_DIGRAPH;
+
 	scc_Digraph dg = {
 		.vertices = vertices,
 		.max_arcs = max_arcs,
@@ -45,8 +49,13 @@ scc_Digraph scc_init_digraph(const scc_Vid vertices,
 
 	if (max_arcs > 0) {
 		dg.head = malloc(sizeof(scc_Vid[max_arcs]));
-		if (!dg.head) scc_free_digraph(&dg);
+		if (!dg.head) {
+			scc_free_digraph(&dg);
+			return SCC_NULL_DIGRAPH;
+		}
 	}
+
+	assert(scc_digraph_is_initialized(&dg));
 
 	return dg;
 }
@@ -55,6 +64,7 @@ scc_Digraph scc_init_digraph(const scc_Vid vertices,
 bool scc_digraph_is_initialized(const scc_Digraph* const dg)
 {
 	if (!dg || !dg->tail_ptr) return false;
+	if ((dg->vertices >= SCC_VID_MAX) || (dg->max_arcs > SCC_ARCI_MAX)) return false;
 	if (dg->max_arcs == 0 && dg->head) return false;
 	if (dg->max_arcs > 0 && !dg->head) return false;
 	return true;
@@ -72,9 +82,10 @@ void scc_free_digraph(scc_Digraph* const dg)
 
 
 bool scc_change_arc_storage(scc_Digraph* const dg,
-                            const scc_Arci new_max_arcs)
+                            const size_t new_max_arcs)
 {
 	if (!scc_digraph_is_initialized(dg)) return false;
+	if (new_max_arcs > SCC_ARCI_MAX) return false;
 	if (dg->max_arcs == new_max_arcs) return true;
 	if (dg->tail_ptr[dg->vertices] > new_max_arcs) return false;
 
@@ -93,8 +104,8 @@ bool scc_change_arc_storage(scc_Digraph* const dg,
 }
 
 
-scc_Digraph scc_empty_digraph(const scc_Vid vertices,
-                              const scc_Arci max_arcs)
+scc_Digraph scc_empty_digraph(const size_t vertices,
+                              const size_t max_arcs)
 {
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;

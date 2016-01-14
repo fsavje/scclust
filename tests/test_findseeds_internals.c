@@ -24,6 +24,7 @@
 #include "assert_digraph.h"
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
 
 #include "../src/findseeds.c"

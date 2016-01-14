@@ -126,7 +126,7 @@ void scc_ut_clustering_lexical(void** state)
 
 	bool fp_assigned[10] = {true, true, false, false, true, true, true, true, false, false};
 	scc_Vid fp_seeds[3] = {0, 4, 7};
-	scc_Clabel fp_cluster_label[10] = {0, 0, SCC_CLABEL_MAX, SCC_CLABEL_MAX, 1, 1, 2, 2, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
+	scc_Clabel fp_cluster_label[10] = {0, 0, SCC_CLABEL_NA, SCC_CLABEL_NA, 1, 1, 2, 2, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
 	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
@@ -180,7 +180,7 @@ void scc_ut_clustering_inwards(void** state)
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {2, 7, 4, 1};
-	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
+	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
 	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
@@ -224,7 +224,7 @@ void scc_ut_clustering_inwards_updating(void** state)
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {2, 7, 4, 3};
-	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
+	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
 	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
@@ -268,7 +268,7 @@ void scc_ut_clustering_exclusion(void** state)
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {0, 4, 2, 7};
-	scc_Clabel fp_cluster_label[10] = {0, 2, 2, 0, 1, 1, 3, 3, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
+	scc_Clabel fp_cluster_label[10] = {0, 2, 2, 0, 1, 1, 3, 3, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
 	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
@@ -312,7 +312,7 @@ void scc_ut_clustering_exclusion_updating(void** state)
 
 	bool fp_assigned[10] = {true, true, true, true, true, true, true, true, false, false};
 	scc_Vid fp_seeds[4] = {0, 2, 4, 7};
-	scc_Clabel fp_cluster_label[10] = {0, 1, 1, 0, 2, 2, 3, 3, SCC_CLABEL_MAX, SCC_CLABEL_MAX};
+	scc_Clabel fp_cluster_label[10] = {0, 1, 1, 0, 2, 2, 3, 3, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
 	scc_TempSeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
@@ -361,7 +361,7 @@ void scc_ut_ignore_remaining(void** state)
 		.cluster_label = cluster_label,
 	};
 
-	const scc_Clabel M = SCC_CLABEL_MAX;
+	const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel ref_cluster_label[20] = { 0, M, 2, M, 4,
 	                                     M, 3, M, 0, M,
 	                                     1, M, 4, M, 3,
@@ -462,7 +462,7 @@ void scc_ut_assign_remaining_lexical(void** state)
 	scc_Digraph prio2 = scc_digraph_from_pieces(20, 34, tail_ptr2, head2);
 	assert_true(scc_digraph_is_initialized(&prio2));
 
-	const scc_Clabel M = SCC_CLABEL_MAX;
+	const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel ref_cluster_label1[20] = { 0, 0, 2, 1, 4,
 	                                      M, 3, M, 0, 4,
 	                                      1, 3, 4, 1, 3,
@@ -585,7 +585,7 @@ void scc_ut_assign_remaining_desired_size(void** state)
 	scc_Digraph prio2 = scc_digraph_from_pieces(20, 34, tail_ptr2, head2);
 	assert_true(scc_digraph_is_initialized(&prio2));
 
-	const scc_Clabel M = SCC_CLABEL_MAX;
+	const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel ref_cluster_label1[20] = { 0, 0, 2, 1, 4,
 	                                      M, 3, M, 0, 4,
 	                                      1, 3, 4, 1, 3,
@@ -651,7 +651,7 @@ void scc_ut_assign_remaining_desired_size(void** state)
 
 int main(void)
 {
-	const struct CMUnitTest test_clustering[] = {
+	const struct CMUnitTest test_nng_clustering[] = {
 		cmocka_unit_test(scc_ut_nng_free_TempSeedClustering),
 		cmocka_unit_test(scc_ut_nng_copy_TempSeedClustering),
 		cmocka_unit_test(scc_ut_clustering_lexical),
@@ -664,5 +664,5 @@ int main(void)
 		cmocka_unit_test(scc_ut_assign_remaining_desired_size),
 	};
 
-	return cmocka_run_group_tests_name("nng clustering module", test_clustering, NULL, NULL);
+	return cmocka_run_group_tests_name("nng clustering module", test_nng_clustering, NULL, NULL);
 }

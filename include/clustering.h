@@ -27,8 +27,8 @@
 
 typedef struct scc_Clustering scc_Clustering;
 struct scc_Clustering {
-	scc_Vid vertices;
-	scc_Clabel num_clusters;
+	size_t vertices;
+	size_t num_clusters;
 	scc_Clabel* cluster_label;
 };
 

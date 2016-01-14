@@ -24,6 +24,9 @@
 
 #include "test_suite.h"
 
+#include <stddef.h>
+#include <stdbool.h>
+
 #include "../src/findseeds.c"
 #include "../include/config.h"
 #include "../include/digraph.h"

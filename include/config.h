@@ -41,7 +41,7 @@
 //#define SCC_STABLE_CLUSTERING
 
 
-/** Type used for arc indices.
+/** Type used for arc indices. Must be unsigned.
  *  
  *  \note
  *  Number of arcs in any digraph must be less or equal to 
@@ -49,18 +49,28 @@
  */
 typedef uint32_t scc_Arci;
 
-/** Type used for cluster labels.
+/// Maximum number that can be stored in #scc_Arci.
+#define SCC_ARCI_MAX UINT32_MAX
+
+/** Type used for cluster labels. May be unsigned or signed.
  *  
  *  \note
- *  Number of clusters must be strictly less than the maximum number
- *  that can be stored in #scc_Clabel (i.e., less than #SCC_CLABEL_MAX).
+ *  Possible cluster labels are the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`. 
+ *  `SCC_CLABEL_NA` may not be in this sequence.
  */
 typedef uint32_t scc_Clabel;
 
 /// Maximum number that can be stored in #scc_Clabel.
 #define SCC_CLABEL_MAX UINT32_MAX
 
-/** Type used for vertex IDs.
+/** Number to indicate that an unassigned vertex.
+ *  
+ *  If #scc_Clabel is unsigned, `SCC_CLABEL_NA` will typically be `SCC_CLABEL_MAX`.
+ *  If #scc_Clabel is signed, `SCC_CLABEL_NA` will typically be negative or `SCC_CLABEL_MAX`.
+ */
+#define SCC_CLABEL_NA UINT32_MAX
+
+/** Type used for vertex IDs. Must be unsigned.
  *  
  *  \note
  *  Number of vertices must be strictly less than the maximum number

@@ -29,8 +29,8 @@
 #ifndef SCC_NNG_CLUSTERING_HG
 #define SCC_NNG_CLUSTERING_HG
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "config.h"
 #include "digraph.h"
 #include "clustering.h"
@@ -48,9 +48,9 @@ typedef enum scc_SeedMethod scc_SeedMethod;
 
 typedef struct scc_TempSeedClustering scc_TempSeedClustering;
 struct scc_TempSeedClustering {
-	scc_Vid vertices;
-	scc_Clabel num_clusters;
-	scc_Vid seed_capacity;
+	size_t vertices;
+	size_t num_clusters;
+	size_t seed_capacity;
 	bool* assigned;
 	scc_Vid* seeds;
 	scc_Clabel* cluster_label;
@@ -64,7 +64,7 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 
 scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
                                                scc_SeedMethod sm,
-                                               scc_Vid seed_init_capacity);
+                                               size_t seed_init_capacity,
                                                scc_Clabel external_cluster_label[]);
 
 scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl);

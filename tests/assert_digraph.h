@@ -42,7 +42,7 @@
 
 
 void _assert_initialized_digraph(const scc_Digraph* test_dg,
-                                 const scc_Vid vertices,
+                                 const size_t vertices,
                                  const char* const name_dg,
                                  const char* const file,
                                  const int line)
@@ -71,7 +71,7 @@ void _assert_free_digraph(scc_Digraph* test_dg,
 
 
 void _assert_valid_digraph(const scc_Digraph* test_dg,
-                           const scc_Vid vertices,
+                           const size_t vertices,
                            const char* const name_dg,
                            const char* const file,
                            const int line)
@@ -84,7 +84,7 @@ void _assert_valid_digraph(const scc_Digraph* test_dg,
 
 
 void _assert_empty_digraph(const scc_Digraph* test_dg,
-                           const scc_Vid vertices,
+                           const size_t vertices,
                            const char* const name_dg,
                            const char* const file,
                            const int line)
@@ -97,8 +97,8 @@ void _assert_empty_digraph(const scc_Digraph* test_dg,
 
 
 void _assert_balanced_digraph(const scc_Digraph* test_dg,
-                              const scc_Vid vertices,
-                              const scc_Vid arcs_per_vertex,
+                              const size_t vertices,
+                              const size_t arcs_per_vertex,
                               const char* const name_dg,
                               const char* const file,
                               const int line)

@@ -23,6 +23,7 @@
 #include "test_suite.h"
 #include "test_tools.h"
 
+#include <stddef.h>
 #include <stdbool.h>
 
 #include "../src/findseeds.h"

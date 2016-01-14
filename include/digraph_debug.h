@@ -33,6 +33,7 @@
 #define SCC_DIGRAPH_DEBUG_HG
 
 #include <stdbool.h>
+#include <stddef.h>
 #include "config.h"
 #include "digraph.h"
 
@@ -68,7 +69,7 @@ bool scc_is_empty_digraph(const scc_Digraph* dg);
  *  \return \c true if \p dg is balanced, otherwise \c false.
  */
 bool scc_is_balanced_digraph(const scc_Digraph* dg,
-                             scc_Vid arcs_per_vertex);
+                             size_t arcs_per_vertex);
 
 /** Checks whether two digraphs are logically identical.
  *
@@ -96,8 +97,8 @@ bool scc_digraphs_equal(const scc_Digraph* dg_a,
  *
  *  \return the constructed scc_Digraph.
  */
-scc_Digraph scc_digraph_from_pieces(scc_Vid vertices,
-                                    scc_Arci max_arcs,
+scc_Digraph scc_digraph_from_pieces(size_t vertices,
+                                    size_t max_arcs,
                                     const scc_Arci tail_ptr[],
                                     const scc_Vid head[]);
 

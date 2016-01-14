@@ -51,21 +51,21 @@ typedef struct scc_Digraph scc_Digraph;
  */
 struct scc_Digraph {
 
-	/** Number of vertices in the digraph.
+	/** Number of vertices in the digraph. Must be strictly less than `SCC_VID_MAX`.
 	 *  
-	 *  Valid vertices in this digraph is any `i` such that `0 <= i < #vertices`.
+	 *  \note Valid vertices in this digraph is any `i` such that `0 <= i < #vertices`.
 	 */
-	const scc_Vid vertices;
+	const size_t vertices;
 
 	/// Maximum number of arcs in digraph.
-	scc_Arci max_arcs;
+	size_t max_arcs;
 
 	/** Array of vertex IDs indicating arc heads.
 	 *  
 	 *  If `#max_arcs == 0`, #head must be `NULL`. If `#max_arcs > 0`,
 	 *  #head should point a memory area of length #max_arcs.
 	 *
-	 *  All elements of #head must be less than #vertices.
+	 *  \note All used elements of #head must be less than #vertices.
 	 */
 	scc_Vid* head;
 
@@ -99,8 +99,8 @@ static const scc_Digraph SCC_NULL_DIGRAPH = { 0, 0, NULL, NULL };
  *
  *  \return a scc_Digraph with allocated memory.
  */
-scc_Digraph scc_init_digraph(scc_Vid vertices,
-                             scc_Arci max_arcs);
+scc_Digraph scc_init_digraph(size_t vertices,
+                             size_t max_arcs);
 
 /** Checks whether provided digraph is initialized.
  *
@@ -135,7 +135,7 @@ void scc_free_digraph(scc_Digraph* dg);
  *  \return `true` if reallocation was successful, otherwise `false`.
  */
 bool scc_change_arc_storage(scc_Digraph* dg,
-                            scc_Arci new_max_arcs);
+                            size_t new_max_arcs);
 
 /** Construct an empty digraph.
  *
@@ -148,8 +148,8 @@ bool scc_change_arc_storage(scc_Digraph* dg,
  *
  *  \return a scc_Digraph representing an empty digraph.
  */
-scc_Digraph scc_empty_digraph(scc_Vid vertices,
-                              scc_Arci max_arcs);
+scc_Digraph scc_empty_digraph(size_t vertices,
+                              size_t max_arcs);
 
 /** Deep copy of a digraph.
  *
