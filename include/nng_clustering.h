@@ -51,12 +51,13 @@ struct scc_TempSeedClustering {
 	size_t vertices;
 	size_t num_clusters;
 	size_t seed_capacity;
+	bool external_labels;
 	bool* assigned;
 	scc_Vid* seeds;
 	scc_Clabel* cluster_label;
 };
 
-static const scc_TempSeedClustering SCC_NULL_TEMP_SEED_CLUSTERING = { 0, 0, 0, NULL, NULL, NULL };
+static const scc_TempSeedClustering SCC_NULL_TEMP_SEED_CLUSTERING = { 0, 0, 0, false, NULL, NULL, NULL };
 
 void scc_free_TempSeedClustering(scc_TempSeedClustering* cl);
 

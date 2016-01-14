@@ -31,7 +31,7 @@
 void scc_free_Clustering(scc_Clustering* const cl)
 {
 	if (cl) {
-		free(cl->cluster_label);
+		if (!cl->external_labels) free(cl->cluster_label);
 		*cl = SCC_NULL_CLUSTERING;
 	}
 }

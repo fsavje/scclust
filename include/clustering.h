@@ -23,16 +23,18 @@
 #define SCC_CLUSTERING_HG
 
 #include <stddef.h>
+#include <stdbool.h>
 #include "config.h"
 
 typedef struct scc_Clustering scc_Clustering;
 struct scc_Clustering {
 	size_t vertices;
 	size_t num_clusters;
+	bool external_labels;
 	scc_Clabel* cluster_label;
 };
 
-static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, NULL };
+static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, false, NULL };
 
 void scc_free_Clustering(scc_Clustering* cl);
 

@@ -160,6 +160,7 @@ void scc_ut_fs_add_seed(void** state)
 		.vertices = 10,
 		.num_clusters = 0,
 		.seed_capacity = 1,
+		.external_labels = false,
 		.assigned = NULL,
 		.seeds = malloc(sizeof(scc_Vid[1])),
 		.cluster_label = NULL,

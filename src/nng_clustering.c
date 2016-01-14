@@ -41,7 +41,7 @@ void scc_free_TempSeedClustering(scc_TempSeedClustering* const cl)
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
-		free(cl->cluster_label);
+		if (!cl->external_labels) free(cl->cluster_label);
 		*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 }
@@ -55,6 +55,7 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
 		.seed_capacity = cl->seed_capacity,
+		.external_labels = cl->external_labels,
 		.assigned = NULL,
 		.seeds = NULL,
 		.cluster_label = NULL,
@@ -68,7 +69,9 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 		cl_out.seeds = malloc(sizeof(scc_Vid[cl_out.seed_capacity]));
 		for (size_t v = 0; v < cl_out.seed_capacity; ++v) cl_out.seeds[v] = cl->seeds[v];
 	}
-	if (cl->cluster_label) {
+	if (cl->external_labels) {
+		cl_out.cluster_label = cl->cluster_label;
+	} else if (cl->cluster_label) {
 		cl_out.cluster_label = malloc(sizeof(scc_Clabel[cl_out.vertices]));
 		for (size_t v = 0; v < cl_out.vertices; ++v) cl_out.cluster_label[v] = cl->cluster_label[v];
 	}
@@ -118,38 +121,36 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 	}
 
 	clustering.assigned = calloc(nng->vertices, sizeof(bool));
-	if (!clustering.assigned) {
+	if (external_cluster_label) {
+		clustering.external_labels = true;
+		clustering.cluster_label = external_cluster_label;
+	} else {
+		clustering.external_labels = false;
+		clustering.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices]));
+	}
+
+	if (!clustering.assigned || !clustering.cluster_label) {
 		scc_free_TempSeedClustering(&clustering);
 		return SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 
-	if (external_cluster_label) {
-		clustering.cluster_label = external_cluster_label;
-	} else {
-		clustering.cluster_label = malloc(sizeof(scc_Clabel[nng->vertices]));
-		if (!clustering.cluster_label) {
-			scc_free_TempSeedClustering(&clustering);
-			return SCC_NULL_TEMP_SEED_CLUSTERING;
-		}
-	}
-
-	scc_Clabel cluster_label = 0;
+	scc_Clabel clabel = 0;
 	const scc_Vid* seed_stop = clustering.seeds + clustering.num_clusters;
 	for (const scc_Vid* seed = clustering.seeds;
-	        seed != seed_stop; ++seed, ++cluster_label) {
+	        seed != seed_stop; ++seed, ++clabel) {
 
-		assert(cluster_label != SCC_CLABEL_NA);
-		assert(cluster_label < SCC_CLABEL_MAX_NEW);
+		assert(clabel != SCC_CLABEL_NA);
+		assert(clabel < SCC_CLABEL_MAX);
 		assert(!clustering.assigned[*seed]);
 		clustering.assigned[*seed] = true;
-		clustering.cluster_label[*seed] = cluster_label;
+		clustering.cluster_label[*seed] = clabel;
 
 		const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[*seed + 1];
 		for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[*seed];
 		        s_arc != s_arc_stop; ++s_arc) {
 			assert(!clustering.assigned[*s_arc]);
 			clustering.assigned[*s_arc] = true;
-			clustering.cluster_label[*s_arc] = cluster_label;
+			clustering.cluster_label[*s_arc] = clabel;
 		}
 	}
 
@@ -169,6 +170,7 @@ scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl)
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
+		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
 	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
@@ -197,6 +199,7 @@ scc_Clustering scc_assign_remaining_lexical(scc_TempSeedClustering* const cl,
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
+		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
 	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
@@ -237,6 +240,7 @@ scc_Clustering scc_assign_remaining_desired_size(scc_TempSeedClustering* const c
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
+		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
 	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
