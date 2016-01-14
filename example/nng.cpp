@@ -41,11 +41,12 @@ extern "C" {
 
 scc_Digraph get_nng(const Matrix* const data_matrix,
                     const bool* const query_indicators,
-                    const scc_Vid n_search_points,
+                    const size_t n_search_points,
                     const scc_Vid* const search_indices,
                     const scc_Vid k,
                     const bool use_caliper,
-                    const double caliper)
+                    const double caliper,
+                    const bool accept_partial)
 {
 	if (!data_matrix || !data_matrix->elements || !query_indicators ||
 	        n_search_points < k || !search_indices || k == 0 || (use_caliper && caliper < 0.0)) {
@@ -103,7 +104,11 @@ scc_Digraph get_nng(const Matrix* const data_matrix,
 				}
 			}
 
-			nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi] + num_nn;
+			if (accept_partial || num_nn == k) {
+				nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi] + num_nn;
+			} else {
+				nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi];
+			}
 		}
 	}
 
@@ -122,7 +127,8 @@ scc_Digraph get_nng(const Matrix* const data_matrix,
 scc_Digraph get_all_nng(const Matrix* const data_matrix,
                         const scc_Vid k,
                         const bool use_caliper,
-                        const double caliper)
+                        const double caliper,
+                    	const bool accept_partial)
 {
 	if (!data_matrix || !data_matrix->elements || data_matrix->rows < k ||
 	        k == 0 || (use_caliper && caliper < 0.0)) {
@@ -172,7 +178,11 @@ scc_Digraph get_all_nng(const Matrix* const data_matrix,
 			}
 		}
 
-		nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi] + num_nn;
+		if (accept_partial || num_nn == k) {
+			nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi] + num_nn;
+		} else {
+			nng_out.tail_ptr[qi + 1] = nng_out.tail_ptr[qi];
+		}
 	}
 
 	delete[] search_points;

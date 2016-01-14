@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include "../include/config.h"
 #include "../include/digraph.h"
@@ -35,22 +36,24 @@ extern "C" {
 typedef struct Matrix Matrix;
 struct Matrix {
 	uint8_t cols;
-	scc_Vid rows;
+	size_t rows;
 	double* elements;
 };
 
 scc_Digraph get_nng(const Matrix* data_matrix,
                     const bool* query_indicators,
-                    scc_Vid n_search_points,
+                    size_t n_search_points,
                     const scc_Vid* search_indices,
                     scc_Vid k,
                     bool use_caliper,
-                    double caliper);
+                    double caliper,
+                    bool accept_partial);
 
 scc_Digraph get_all_nng(const Matrix* data_matrix,
                         scc_Vid k,
                         bool use_caliper,
-                        double caliper);
+                        double caliper,
+                    	const bool accept_partial);
 
 #ifdef __cplusplus
 }
