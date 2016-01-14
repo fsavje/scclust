@@ -21,7 +21,6 @@
 
 
 #include "test_suite.h"
-#include "test_tools.h"
 
 #include <stdbool.h>
 #include <stddef.h>
