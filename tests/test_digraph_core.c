@@ -175,6 +175,80 @@ void scc_ut_copy_digraph(void** state)
 }
 
 
+void scc_ut_delete_arcs_by_tails(void** state)
+{
+	(void) state;
+
+	scc_Digraph dg1 = scc_digraph_from_string("####/..../####/..../");
+
+	bool to_delete1[4] = { false, false, false, false };
+	bool to_delete2[4] = { true, true, true, true };
+	bool to_delete3[4] = { true, false, true, false };
+	bool to_delete4[4] = { false, false, true, true };
+
+	scc_Digraph temp_dg;
+	scc_Digraph ref;
+
+	temp_dg = scc_copy_digraph(&dg1);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete1);
+	assert_equal_digraph(&temp_dg, &dg1);
+	assert_free_digraph(&temp_dg);
+
+	ref = scc_empty_digraph(4, 0);
+	temp_dg = scc_copy_digraph(&dg1);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete2);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+	
+	ref = scc_empty_digraph(4, 0);
+	temp_dg = scc_copy_digraph(&dg1);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete3);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+	
+	ref = scc_digraph_from_string("####/..../..../..../");
+	temp_dg = scc_copy_digraph(&dg1);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete4);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+
+
+	scc_Digraph dg2 = scc_digraph_from_string("##../.#.#/..##/#.#./");
+
+	temp_dg = scc_copy_digraph(&dg2);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete1);
+	assert_equal_digraph(&temp_dg, &dg2);
+	assert_free_digraph(&temp_dg);
+
+	ref = scc_empty_digraph(4, 0);
+	temp_dg = scc_copy_digraph(&dg2);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete2);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+	
+	ref = scc_digraph_from_string("..../.#.#/..../#.#./");
+	temp_dg = scc_copy_digraph(&dg2);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete3);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+	
+	ref = scc_digraph_from_string("##../.#.#/..../..../");
+	temp_dg = scc_copy_digraph(&dg2);
+	scc_delete_arcs_by_tails(&temp_dg, to_delete4);
+	assert_equal_digraph(&temp_dg, &ref);
+	assert_free_digraph(&temp_dg);
+	assert_free_digraph(&ref);
+
+	assert_free_digraph(&dg1);
+	assert_free_digraph(&dg2);
+}
+
+
 int main(void)
 {
 	const struct CMUnitTest test_core[] = {
@@ -184,6 +258,7 @@ int main(void)
 		cmocka_unit_test(scc_ut_change_arc_storage),
 		cmocka_unit_test(scc_ut_empty_digraph),
 		cmocka_unit_test(scc_ut_copy_digraph),
+		cmocka_unit_test(scc_ut_delete_arcs_by_tails),
 	};
 	
 	return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);

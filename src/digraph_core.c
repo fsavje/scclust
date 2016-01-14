@@ -129,3 +129,30 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* const dg)
 
 	return dg_out;
 }
+
+
+void scc_delete_arcs_by_tails(const scc_Digraph* dg,
+                              const bool to_delete[])
+{
+	if (!scc_digraph_is_initialized(dg) || !to_delete) return;
+
+	scc_Arci head_write = 0;
+	for (scc_Vid v = 0; v < dg->vertices; ++v) {
+		if (to_delete[v]) {
+			dg->tail_ptr[v] = head_write;
+		} else if (dg->tail_ptr[v] == head_write) {
+			// No vertex has been deleted yet (or deleted vertices originally had no arcs).
+			head_write += dg->tail_ptr[v + 1] - dg->tail_ptr[v];
+		} else {
+			const scc_Vid* v_arc = dg->head + dg->tail_ptr[v];
+			const scc_Vid* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];
+			dg->tail_ptr[v] = head_write;
+
+			for (; v_arc != v_arc_stop; ++v_arc) {
+				dg->head[head_write] = *v_arc;
+				++head_write;
+			}
+		}
+	}
+	dg->tail_ptr[dg->vertices] = head_write;
+}

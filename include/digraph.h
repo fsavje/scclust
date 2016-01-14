@@ -164,6 +164,38 @@ scc_Digraph scc_empty_digraph(size_t vertices,
  */
 scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
 
+/** Delete arcs by tails.
+ *
+ *  This function deletes the arcs where the indicated vertices are tails. If `to_delete[i]`
+ *  is `true` for vertex `i`, all arcs pointing outwards from `i` will be deleted. All
+ *  arcs pointing towards `i` are kept (unless the corresponding tail is also marked for deletion).
+ * 
+ *  If the following first digraph is the input to `scc_delete_arcs_by_tails(dg, [false, false, true])`,
+ *  the second digraph is its output.
+ *  \dot
+ *  digraph example {
+ *      0 -> 1;
+ *      1 -> 2;
+ *      2 -> 0;
+
+ *      02 [ label="0" ];
+ *      12 [ label="1" ];
+ *      22 [ label="2" ];
+ *      02 -> 12;
+ *      12 -> 22;
+ *  }
+ *  \enddot
+ *
+ *  \param[in,out] dg digraph to delete arcs from.
+ *  \param[in] to_delete array of indicators of the tails whose arcs should be deleted. Must be at least of length \p dg->vertices.
+ *
+ *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
+ *
+ *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
+ */
+void scc_delete_arcs_by_tails(const scc_Digraph* dg,
+                              const bool to_delete[]);
+
 /** Calculates the union of arbitrary number of digraphs.
  *
  *  This function produces the union of the inputted digraphs. If no digraphs are inputted
