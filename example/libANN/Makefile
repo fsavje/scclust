@@ -1,26 +1,31 @@
-
-FLAGS=-O2 -Iinclude
+CXXFLAGS=-O2 -Iinclude
 
 OBJECTS = ANN.o brute.o kd_tree.o kd_util.o kd_split.o \
 	kd_dump.o kd_search.o kd_pr_search.o kd_fix_rad_search.o \
 	bd_tree.o bd_search.o bd_pr_search.o bd_fix_rad_search.o \
 	perf.o
+BUILDDIR=build
 
-BUILDOBJS=$(addprefix build/,$(OBJECTS))
+BUILDOBJS=$(addprefix $(BUILDDIR)/,$(OBJECTS))
 
-.PHONY: builddirs library clean
+
+.PHONY: all clean library
 
 all: library
 
 clean:
-	$(RM) -R build/ lib/
+	$(RM) -R $(BUILDDIR)/ lib/
 
-builddirs:
-	mkdir -p build lib
+$(BUILDOBJS): | $(BUILDDIR)
+
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
 
 
-library: builddirs $(BUILDOBJS)
-	$(AR) rcs lib/libANN.a $(BUILDOBJS)
+library: $(BUILDOBJS)
+	mkdir -p lib
+	$(AR) rcs lib/libANN.a $^
 
-build/%.o: src/%.cpp builddirs
-	$(CXX) $(FLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: src/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@

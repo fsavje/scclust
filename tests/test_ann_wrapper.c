@@ -20,10 +20,10 @@
  * ============================================================================== */
 
 
-#include "../tests/test_suite.h"
-#include "../tests/assert_digraph.h"
+#include "test_suite.h"
+#include "assert_digraph.h"
 
-#include "nng.h"
+#include "../example/nng.h"
 
 #include <stdbool.h>
 #include "../include/config.h"

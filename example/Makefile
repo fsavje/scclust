@@ -1,21 +1,22 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 CXXFLAGS=-std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 
-.PHONY: builddirs example clean
 
-all: example nng_test
+.PHONY: all clean examples
+
+all: examples
 
 clean:
-	$(RM) -R build/
-
-builddirs:
-	mkdir -p build
+	$(RM) *.o *.out
 
 
+examples: example.out
 
-example: builddirs build/nng.o ../lib/libscclust.a libANN/lib/libANN.a
+example.out: nng.o ../lib/libscclust.a libANN/lib/libANN.a
+	$(CC) $(CFLAGS) example1.c $^ -lstdc++ -o $@
 
-build/nng.o: nng.cpp builddirs
+
+nng.o: nng.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ../lib/libscclust.a:
@@ -23,13 +24,3 @@ build/nng.o: nng.cpp builddirs
 
 libANN/lib/libANN.a:
 	cd libANN && $(MAKE) library
-
-
-nng_test: clean builddirs build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a
-	$(CC) $(CFLAGS) nng_test.c build/nng.o build/t_digraph_core.o build/t_digraph_debug.o libANN/lib/libANN.a -lcmocka -lstdc++ -o build/$@.out
-
-build/t_digraph_core.o: ../src/digraph_core.c builddirs
-	$(CC) $(CFLAGS) -include ../tests/test_suite.h -c $< -o $@
-
-build/t_digraph_debug.o: ../src/digraph_debug.c builddirs
-	$(CC) $(CFLAGS) -include ../tests/test_suite.h -c $< -o $@
