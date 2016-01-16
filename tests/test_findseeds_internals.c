@@ -42,6 +42,11 @@ void scc_ut_exclusion_graph(void** state)
 {
 	(void) state;
 
+	bool excluded[18];
+	bool ref_excluded[18] = { false, false, false, false, false, false,
+	                          false, false, false, false, false, false,
+	                          false, false, false, false, false, false };
+
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
 	                                          "#...#............./"
 	                                          "....#..#........../"
@@ -61,40 +66,76 @@ void scc_ut_exclusion_graph(void** state)
 	                                          ".............##.../"
 	                                          "..............#.#./");
 
-	scc_Digraph exg = scc_digraph_from_string("#####............./"
-	                                          "#####............./"
-	                                          "######.#..#......./"
-	                                          "#####.#.........../"
-	                                          "#####.#.........../"
-	                                          "..#..#.##..#....../"
-	                                          "...##.##.#.....#../"
-	                                          "..#..####.##....../"
-	                                          ".....#.##..#....../"
-	                                          "......#..####..###/"
-	                                          "..#....#.###.##.#./"
-	                                          ".....#.#####....../"
-	                                          ".........#..#..###/"
-	                                          "..........#..##.##/"
-	                                          "..........#..##.##/"
-	                                          "......#..#..#..#../"
-	                                          ".........##.###.##/"
-	                                          ".........#..###.##/");
+	scc_Digraph exg = scc_digraph_from_string(".####............./"
+	                                          "#.###............./"
+	                                          "##.###.#..#......./"
+	                                          "###.#.#.........../"
+	                                          "####..#.........../"
+	                                          "..#....##..#....../"
+	                                          "...##..#.#.....#../"
+	                                          "..#..##.#.##....../"
+	                                          ".....#.#...#....../"
+	                                          "......#...###..###/"
+	                                          "..#....#.#.#.##.#./"
+	                                          ".....#.####......./"
+	                                          ".........#.....###/"
+	                                          "..........#...#.##/"
+	                                          "..........#..#..##/"
+	                                          "......#..#..#...../"
+	                                          ".........##.###..#/"
+	                                          ".........#..###.#./");
 
-	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng);
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng, excluded);
 
 	assert_equal_digraph(&exg, &exclusion_graph);
+	assert_memory_equal(excluded, ref_excluded, 18 * sizeof(bool));
+
+
+	bool excluded2[10];
+	bool ref_excluded2[10] = { false, true, false, false, true,
+	                           false, false, false, false, false };
+
+	scc_Digraph nng2 = scc_digraph_from_string(".#..# ...../"
+	                                           "..... ...../"
+	                                           ".#... ..#../"
+	                                           "..#.. #..../"
+	                                           "..... ...../"
+	                                           "#.... ...../"
+	                                           "..#.. ...../"
+	                                           "....# ...../"
+	                                           "..... ..#../"
+	                                           "..... ..##./");
+
+	scc_Digraph exg2 = scc_digraph_from_string(".##.# #.#../"
+	                                           "..... ...../"
+	                                           "##.#. .####/"
+	                                           "..#.. ##.../"
+	                                           "..... ...../"
+	                                           "#..#. ...../"
+	                                           "..##. ...../"
+	                                           "#.#.# ...##/"
+	                                           "..#.. ..#.#/"
+	                                           "..#.. ..##./");
+
+	scc_Digraph exclusion_graph2 = iscc_exclusion_graph(&nng2, excluded2);
+
+	assert_equal_digraph(&exg2, &exclusion_graph2);
+	assert_memory_equal(excluded2, ref_excluded2, 10 * sizeof(bool));
 
 	scc_free_digraph(&nng);
 	scc_free_digraph(&exg);
 	scc_free_digraph(&exclusion_graph);
+	scc_free_digraph(&nng2);
+	scc_free_digraph(&exg2);
+	scc_free_digraph(&exclusion_graph2);
 }
 
 
-void scc_ut_fs_make_clustering(void** state)
+void scc_ut_fs_init_clustering(void** state)
 {
 	(void) state;
 
-	scc_TempSeedClustering cl1 = iscc_fs_make_clustering(100, 500);
+	scc_TempSeedClustering cl1 = iscc_fs_init_clustering(100, 500);
 
 	assert_int_equal(cl1.vertices, 100);
 	assert_int_equal(cl1.num_clusters, 0);
@@ -104,7 +145,7 @@ void scc_ut_fs_make_clustering(void** state)
 	assert_null(cl1.cluster_label);
 	cl1.seeds[499] = 123;
 
-	scc_TempSeedClustering cl2 = iscc_fs_make_clustering(10, 10);
+	scc_TempSeedClustering cl2 = iscc_fs_init_clustering(10, 10);
 
 	assert_int_equal(cl2.vertices, 10);
 	assert_int_equal(cl2.num_clusters, 0);
@@ -123,7 +164,7 @@ void scc_ut_fs_shrink_seed_array(void** state)
 {
 	(void) state;
 
-	scc_TempSeedClustering cl = iscc_fs_make_clustering(100, 500);
+	scc_TempSeedClustering cl = iscc_fs_init_clustering(100, 500);
 	assert_int_equal(cl.vertices, 100);
 	assert_int_equal(cl.num_clusters, 0);
 	assert_int_equal(cl.seed_capacity, 500);
@@ -204,7 +245,7 @@ void scc_ut_fs_add_seed(void** state)
 	assert_null(cl.cluster_label);
 
 
-	scc_TempSeedClustering cl2 = iscc_fs_make_clustering(99999, 1);
+	scc_TempSeedClustering cl2 = iscc_fs_init_clustering(99999, 1);
 
 	for (scc_Vid s = 0; s < 10000; ++s) {
 		assert_true(iscc_fs_add_seed(10000 - s, &cl2));
@@ -585,7 +626,7 @@ int main(void)
 {
 	const struct CMUnitTest test_findseeds_internals[] = {
 		cmocka_unit_test(scc_ut_exclusion_graph),
-		cmocka_unit_test(scc_ut_fs_make_clustering),
+		cmocka_unit_test(scc_ut_fs_init_clustering),
 		cmocka_unit_test(scc_ut_fs_shrink_seed_array),
 		cmocka_unit_test(scc_ut_fs_add_seed),
 		cmocka_unit_test(scc_ut_fs_check_neighbors_marks),

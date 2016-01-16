@@ -48,9 +48,10 @@ struct iscc_fs_SortResult {
 // Internal function prototypes
 // ==============================================================================
 
-static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng,
+                                        bool excluded[static nng->vertices]);
 
-static scc_TempSeedClustering iscc_fs_make_clustering(size_t vertices,
+static scc_TempSeedClustering iscc_fs_init_clustering(size_t vertices,
                                                       size_t seed_init_capacity);
 
 static void iscc_fs_shrink_seed_array(scc_TempSeedClustering* cl);
@@ -103,7 +104,7 @@ scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
-	scc_TempSeedClustering cl = iscc_fs_make_clustering(nng->vertices, seed_init_capacity);
+	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!marks || !cl.seeds) {
 		free(marks);
@@ -113,6 +114,8 @@ scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 
 	for (scc_Vid cv = 0; cv < nng->vertices; ++cv) {
 		if (iscc_fs_check_neighbors_marks(cv, nng, marks)) {
+			assert(nng->tail_ptr[cv] != nng->tail_ptr[cv + 1]);
+
 			if (!iscc_fs_add_seed(cv, &cl)) {
 				free(marks);
 				scc_free_TempSeedClustering(&cl);
@@ -141,7 +144,7 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
-	scc_TempSeedClustering cl = iscc_fs_make_clustering(nng->vertices, seed_init_capacity);
+	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!sort.sorted_vertices || !marks || !cl.seeds) {
 		iscc_fs_free_SortResult(&sort);
@@ -159,6 +162,8 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 		#endif
 
 		if (iscc_fs_check_neighbors_marks(*sorted_v, nng, marks)) {
+			assert(nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]);
+
 			if (!iscc_fs_add_seed(*sorted_v, &cl)) {
 				iscc_fs_free_SortResult(&sort);
 				free(marks);
@@ -200,35 +205,22 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 {
 	assert(scc_digraph_is_initialized(nng));
 
-	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
+	bool* const excluded = malloc(sizeof(bool[nng->vertices]));
+	if (!excluded) return SCC_NULL_TEMP_SEED_CLUSTERING;
 
-	bool* const excluded = calloc(nng->vertices, sizeof(bool));
-
-	if (!scc_digraph_is_initialized(&exclusion_graph) || !excluded) {
-		scc_free_digraph(&exclusion_graph);
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng, excluded);
+	if (!scc_digraph_is_initialized(&exclusion_graph)) {
 		free(excluded);
 		return SCC_NULL_TEMP_SEED_CLUSTERING;
 	}
 
-	// Remove edges to vertices that cannot be seeds
-	for (scc_Vid v = 0; v < nng->vertices; ++v) {
-		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
-			excluded[v] = true;
-			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[v + 1];
-			for (scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[v];
-			        ex_arc != ex_arc_stop; ++ex_arc) {
-				*ex_arc = SCC_VID_MAX;
-			}
-		}
-	}
-
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&exclusion_graph, updating);
 
-	scc_TempSeedClustering cl = iscc_fs_make_clustering(nng->vertices, seed_init_capacity);
+	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!sort.sorted_vertices || !cl.seeds) {
-		scc_free_digraph(&exclusion_graph);
 		free(excluded);
+		scc_free_digraph(&exclusion_graph);
 		iscc_fs_free_SortResult(&sort);
 		scc_free_TempSeedClustering(&cl);
 		return SCC_NULL_TEMP_SEED_CLUSTERING;
@@ -243,9 +235,11 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 		#endif
 
 		if (!excluded[*sorted_v]) {
+			assert(nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]);
+
 			if (!iscc_fs_add_seed(*sorted_v, &cl)) {
-				scc_free_digraph(&exclusion_graph);
 				free(excluded);
+				scc_free_digraph(&exclusion_graph);
 				iscc_fs_free_SortResult(&sort);
 				scc_free_TempSeedClustering(&cl);
 				return SCC_NULL_TEMP_SEED_CLUSTERING;
@@ -256,7 +250,6 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 			const scc_Vid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
 			for (const scc_Vid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
 			        ex_arc != ex_arc_stop; ++ex_arc) {
-				assert(*ex_arc != SCC_VID_MAX);
 				if (!excluded[*ex_arc]) {
 					excluded[*ex_arc] = true;
 
@@ -264,7 +257,6 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 						const scc_Vid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
 						for (scc_Vid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
 						        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
-							assert(*ex_arc_arc != SCC_VID_MAX);
 							if (!excluded[*ex_arc_arc]) {
 								iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
 							}
@@ -275,8 +267,8 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 		}
 	}
 
-	scc_free_digraph(&exclusion_graph);
 	free(excluded);
+	scc_free_digraph(&exclusion_graph);
 	iscc_fs_free_SortResult(&sort);
 
 	iscc_fs_shrink_seed_array(&cl);
@@ -308,9 +300,11 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 // ==============================================================================
 
 
-static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng,
+                                        bool excluded[const static nng->vertices])
 {
 	assert(scc_digraph_is_initialized(nng));
+	assert(excluded);
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
 	if (!scc_digraph_is_initialized(&nng_transpose)) return SCC_NULL_DIGRAPH;
@@ -318,6 +312,42 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 	scc_Digraph nng_nng_transpose = scc_adjacency_product(nng, &nng_transpose, true, false);
 	scc_free_digraph(&nng_transpose);
 	if (!scc_digraph_is_initialized(&nng_nng_transpose)) return SCC_NULL_DIGRAPH;
+
+	/* nng_nng_transpose contains two type of irrelevant arcs:
+	 * 1. All vertices with non-zero outwards arcs in `nng` will have an arcs pointing
+	 *    to themselves. Obviously, a vertex assigned as seed excludes itself.
+	 * 2. All vertices with zero outwards arcs in `nng` will have arcs pointing to
+	 *    vertices that points to them in `nng`. These vertices are excluded from the
+	 *    the beginning (due to zero arcs), thus their outwards arcs are not necessary.
+	 *
+	 *  1 & 2 both lead to excessive memory use. 2 also leads to that the sorting on
+	 *  inwards arcs by `iscc_fs_sort_by_inwards()` becomes wrong.
+	 *
+	 *  This snippet removes all arcs falling under 1 & 2 from `nng_nng_transpose`
+	 *  (and thus from `exclusion_graph`). See `scc_delete_arcs_by_tails()` for
+	 *  more details on implementation.
+	 */
+	scc_Arci head_write = 0;
+	for (scc_Vid v = 0; v < nng->vertices; ++v) {
+		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
+			excluded[v] = true;
+			nng_nng_transpose.tail_ptr[v] = head_write;
+		} else {
+			excluded[v] = false;
+			const scc_Vid* v_arc = nng_nng_transpose.head + nng_nng_transpose.tail_ptr[v];
+			const scc_Vid* const v_arc_stop = nng_nng_transpose.head + nng_nng_transpose.tail_ptr[v + 1];
+			nng_nng_transpose.tail_ptr[v] = head_write;
+
+			for (; v_arc != v_arc_stop; ++v_arc) {
+				if (*v_arc != v) {
+					nng_nng_transpose.head[head_write] = *v_arc;
+					++head_write;
+				}
+			}
+		}
+	}
+	nng_nng_transpose.tail_ptr[nng->vertices] = head_write;
+	scc_change_arc_storage(&nng_nng_transpose, head_write);
 
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
 	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
@@ -328,7 +358,7 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 }
 
 
-static scc_TempSeedClustering iscc_fs_make_clustering(const size_t vertices,
+static scc_TempSeedClustering iscc_fs_init_clustering(const size_t vertices,
                                                       size_t seed_init_capacity)
 {
 	if (seed_init_capacity < 128) seed_init_capacity = 128;
@@ -432,20 +462,12 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 
 	if (!res.inwards_count || !res.sorted_vertices) {
 		iscc_fs_free_SortResult(&res);
-		return res;
-	}
-
-	if (make_indices) {
-		res.vertex_index = malloc(sizeof(scc_Vid*[vertices]));
-		if (!res.vertex_index) {
-			iscc_fs_free_SortResult(&res);
-			return res;
-		}
+		return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 	}
 
 	const scc_Vid* const arc_stop = nng->head + nng->tail_ptr[vertices];
 	for (const scc_Vid* arc = nng->head; arc != arc_stop; ++arc) {
-		if (*arc != SCC_VID_MAX) ++res.inwards_count[*arc];
+		++res.inwards_count[*arc];
 	}
 
 	// Dynamic alloc is slightly faster but more error-prone
@@ -460,7 +482,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 	if (!bucket_count || !res.bucket_index) {
 		free(bucket_count);
 		iscc_fs_free_SortResult(&res);
-		return res;
+		return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 	}
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
@@ -475,6 +497,11 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 	free(bucket_count);
 
 	if (make_indices) {
+		res.vertex_index = malloc(sizeof(scc_Vid*[vertices]));
+		if (!res.vertex_index) {
+			iscc_fs_free_SortResult(&res);
+			return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
+		}
 		for (scc_Vid v = (scc_Vid) vertices; v > 0; ) {
 			--v;
 			--res.bucket_index[res.inwards_count[v]];
