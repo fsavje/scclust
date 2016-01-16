@@ -5,7 +5,7 @@ EXLIBS=-lcmocka
 OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o findseeds.o nng_clustering.o
 BUILDDIR=build
 
-STDTESTS=test_clustering test_digraph_core test_digraph_debug test_digraph_operations test_findseeds test_nng_clustering
+STDTESTS=test_clustering test_digraph_core test_digraph_debug test_digraph_operations test_findseeds test_nng_caliper test_nng_clustering
 SPECTESTS=test_ann_wrapper test_findseeds_internals test_findseeds_stable
 
 ALLTESTS=$(STDTESTS) $(SPECTESTS)
