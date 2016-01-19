@@ -427,7 +427,7 @@ static inline void iscc_fs_mark_seed_neighbors(const scc_Vid s,
 	const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
 	for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[s];
 	        s_arc != s_arc_stop; ++s_arc) {
-		assert(!marks[*s_arc]);
+		assert(!marks[*s_arc] || (*s_arc == s));
 		marks[*s_arc] = true;
 	}
 }

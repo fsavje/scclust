@@ -16,8 +16,11 @@ run_test test_digraph_core
 run_test test_digraph_debug
 run_test test_digraph_operations
 run_test test_findseeds
+run_test test_findseeds_withdiag
 run_test test_nng_caliper
+run_test test_nng_caliper_withdiag
 run_test test_nng_clustering
+run_test test_nng_clustering_withdiag
 run_test test_ann_wrapper
 run_test test_findseeds_internals
 run_test test_findseeds_stable

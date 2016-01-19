@@ -146,7 +146,7 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 		const scc_Vid* const s_arc_stop = nng->head + nng->tail_ptr[*seed + 1];
 		for (const scc_Vid* s_arc = nng->head + nng->tail_ptr[*seed];
 		        s_arc != s_arc_stop; ++s_arc) {
-			assert(!clustering.assigned[*s_arc]);
+			assert(!clustering.assigned[*s_arc] || (*s_arc == *seed));
 			clustering.assigned[*s_arc] = true;
 			clustering.cluster_label[*s_arc] = clabel;
 		}

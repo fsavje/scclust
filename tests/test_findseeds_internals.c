@@ -107,9 +107,87 @@ void scc_ut_exclusion_graph(void** state)
 	                                           "..#.. ..##./");
 
 	scc_Digraph exclusion_graph2 = iscc_exclusion_graph(&nng2);
-
 	assert_equal_digraph(&exg2, &exclusion_graph2);
-	assert_memory_equal(excluded2, ref_excluded2, 10 * sizeof(bool));
+
+	scc_free_digraph(&nng);
+	scc_free_digraph(&exg);
+	scc_free_digraph(&exclusion_graph);
+	scc_free_digraph(&nng2);
+	scc_free_digraph(&exg2);
+	scc_free_digraph(&exclusion_graph2);
+}
+
+
+void scc_ut_exclusion_graph_withdiag(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("##..#............./"
+	                                          "##..#............./"
+	                                          "..#.#..#........../"
+	                                          "#..##............./"
+	                                          ".#.##............./"
+	                                          "..#..#..#........./"
+	                                          "...#..#..#......../"
+	                                          "......###........./"
+	                                          ".....#..#..#....../"
+	                                          ".........##.....#./"
+	                                          ".......#..#..#..../"
+	                                          "........#.##....../"
+	                                          "............#..##./"
+	                                          ".............##..#/"
+	                                          ".............##..#/"
+	                                          ".........#..#..#../"
+	                                          ".............##.#./"
+	                                          "..............#.##/");
+
+	scc_Digraph exg = scc_digraph_from_string(".####............./"
+	                                          "#.###............./"
+	                                          "##.###.#..#......./"
+	                                          "###.#.#.........../"
+	                                          "####..#.........../"
+	                                          "..#....##..#....../"
+	                                          "...##..#.#.....#../"
+	                                          "..#..##.#.##....../"
+	                                          ".....#.#...#....../"
+	                                          "......#...###..###/"
+	                                          "..#....#.#.#.##.#./"
+	                                          ".....#.####......./"
+	                                          ".........#.....###/"
+	                                          "..........#...#.##/"
+	                                          "..........#..#..##/"
+	                                          "......#..#..#...../"
+	                                          ".........##.###..#/"
+	                                          ".........#..###.#./");
+
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng);
+	assert_equal_digraph(&exg, &exclusion_graph);
+
+
+	scc_Digraph nng2 = scc_digraph_from_string("##..# ...../"
+	                                           "..... ...../"
+	                                           ".##.. ..#../"
+	                                           "..##. #..../"
+	                                           "..... ...../"
+	                                           "#.... #..../"
+	                                           "..#.. .#.../"
+	                                           "....# ..#../"
+	                                           "..... ..##./"
+	                                           "..... ..###/");
+
+	scc_Digraph exg2 = scc_digraph_from_string(".##.# #.#../"
+	                                           "#.#.. ...../"
+	                                           "##.#. .####/"
+	                                           "..#.. ##.../"
+	                                           "#.... ..#../"
+	                                           "#..#. ...../"
+	                                           "..##. ...../"
+	                                           "#.#.# ...##/"
+	                                           "..#.. ..#.#/"
+	                                           "..#.. ..##./");
+
+	scc_Digraph exclusion_graph2 = iscc_exclusion_graph(&nng2);
+	assert_equal_digraph(&exg2, &exclusion_graph2);
 
 	scc_free_digraph(&nng);
 	scc_free_digraph(&exg);
@@ -144,8 +222,8 @@ void scc_ut_fs_init_clustering(void** state)
 	assert_null(cl2.cluster_label);
 	cl2.seeds[127] = 123;
 
-	scc_free_TempSeedClustering(&cl1);
-	scc_free_TempSeedClustering(&cl2);
+	scc_free_SeedClustering(&cl1);
+	scc_free_SeedClustering(&cl2);
 }
 
 
@@ -305,6 +383,32 @@ void scc_ut_fs_check_neighbors_marks(void** state)
 }
 
 
+void scc_ut_fs_check_neighbors_marks_withdiag(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("#.##..#/"
+	                                          ".##.#.#/"
+	                                          "#.#.#.#/"
+	                                          "..##.##/"
+	                                          "....#../"
+	                                          "..#..#./"
+	                                          "......./");
+
+	bool marks[7] = {true, false, false, false, true, false, false};
+
+	assert_false(iscc_fs_check_neighbors_marks(0, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(1, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(2, &nng, marks));
+	assert_true(iscc_fs_check_neighbors_marks(3, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(4, &nng, marks));
+	assert_true(iscc_fs_check_neighbors_marks(5, &nng, marks));
+	assert_false(iscc_fs_check_neighbors_marks(6, &nng, marks));
+
+	scc_free_digraph(&nng);
+}
+
+
 void scc_ut_fs_mark_seed_neighbors(void** state)
 {
 	(void) state;
@@ -316,6 +420,58 @@ void scc_ut_fs_mark_seed_neighbors(void** state)
 	                                          "......./"
 	                                          "..#..../"
 	                                          "......./");
+
+	bool stc_marks[7] = {false, false, false, false, false, false, false};
+
+	iscc_fs_mark_seed_neighbors(0, &nng, stc_marks);
+	bool ref_marks0[7] = {true, false, true, true, false, false, true};
+	assert_memory_equal(stc_marks, ref_marks0, 7 * sizeof(bool));
+
+	stc_marks[0] = stc_marks[2] = stc_marks[3] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(1, &nng, stc_marks);
+	bool ref_marks1[7] = {false, true, true, false, true, false, true};
+	assert_memory_equal(stc_marks, ref_marks1, 7 * sizeof(bool));
+
+	stc_marks[2] = stc_marks[4] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(2, &nng, stc_marks);
+	bool ref_marks2[7] = {true, true, true, false, true, false, true};
+	assert_memory_equal(stc_marks, ref_marks2, 7 * sizeof(bool));
+
+	stc_marks[0] = stc_marks[1] = stc_marks[2] = stc_marks[4] = stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(5, &nng, stc_marks);
+	bool ref_marks5[7] = {false, false, true, false, false, true, false};
+	assert_memory_equal(stc_marks, ref_marks5, 7 * sizeof(bool));
+
+	stc_marks[2] = stc_marks[5] = false;
+
+	iscc_fs_mark_seed_neighbors(3, &nng, stc_marks);
+	bool ref_marks3[7] = {false, false, true, true, false, true, true};
+	assert_memory_equal(stc_marks, ref_marks3, 7 * sizeof(bool));
+
+	stc_marks[6] = false;
+
+	iscc_fs_mark_seed_neighbors(6, &nng, stc_marks);
+	bool ref_marks6[7] = {false, false, true, true, false, true, true};
+	assert_memory_equal(stc_marks, ref_marks6, 7 * sizeof(bool));
+
+	scc_free_digraph(&nng);
+}
+
+
+void scc_ut_fs_mark_seed_neighbors_withdiag(void** state)
+{
+	(void) state;
+
+	scc_Digraph nng = scc_digraph_from_string("#.##..#/"
+	                                          ".##.#.#/"
+	                                          "#.#.#.#/"
+	                                          "..##.##/"
+	                                          "....#../"
+	                                          "..#..#./"
+	                                          "......#/");
 
 	bool stc_marks[7] = {false, false, false, false, false, false, false};
 
@@ -615,11 +771,14 @@ int main(void)
 {
 	const struct CMUnitTest test_findseeds_internals[] = {
 		cmocka_unit_test(scc_ut_exclusion_graph),
+		cmocka_unit_test(scc_ut_exclusion_graph_withdiag),
 		cmocka_unit_test(scc_ut_fs_init_clustering),
 		cmocka_unit_test(scc_ut_fs_shrink_seed_array),
 		cmocka_unit_test(scc_ut_fs_add_seed),
 		cmocka_unit_test(scc_ut_fs_check_neighbors_marks),
+		cmocka_unit_test(scc_ut_fs_check_neighbors_marks_withdiag),
 		cmocka_unit_test(scc_ut_fs_mark_seed_neighbors),
+		cmocka_unit_test(scc_ut_fs_mark_seed_neighbors_withdiag),
 		cmocka_unit_test(scc_ut_fs_sort_by_inwards),
 		cmocka_unit_test(scc_ut_fs_free_SortResult),
 		cmocka_unit_test(scc_ut_fs_decrease_v_in_sort),
