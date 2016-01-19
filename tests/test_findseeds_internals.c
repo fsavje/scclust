@@ -124,7 +124,7 @@ void scc_ut_fs_init_clustering(void** state)
 {
 	(void) state;
 
-	scc_TempSeedClustering cl1 = iscc_fs_init_clustering(100, 500);
+	scc_SeedClustering cl1 = iscc_fs_init_clustering(100, 500);
 
 	assert_int_equal(cl1.vertices, 100);
 	assert_int_equal(cl1.num_clusters, 0);
@@ -134,7 +134,7 @@ void scc_ut_fs_init_clustering(void** state)
 	assert_null(cl1.cluster_label);
 	cl1.seeds[499] = 123;
 
-	scc_TempSeedClustering cl2 = iscc_fs_init_clustering(10, 10);
+	scc_SeedClustering cl2 = iscc_fs_init_clustering(10, 10);
 
 	assert_int_equal(cl2.vertices, 10);
 	assert_int_equal(cl2.num_clusters, 0);
@@ -153,7 +153,7 @@ void scc_ut_fs_shrink_seed_array(void** state)
 {
 	(void) state;
 
-	scc_TempSeedClustering cl = iscc_fs_init_clustering(100, 500);
+	scc_SeedClustering cl = iscc_fs_init_clustering(100, 500);
 	assert_int_equal(cl.vertices, 100);
 	assert_int_equal(cl.num_clusters, 0);
 	assert_int_equal(cl.seed_capacity, 500);
@@ -178,7 +178,7 @@ void scc_ut_fs_shrink_seed_array(void** state)
 	assert_non_null(cl.seeds);
 	assert_null(cl.cluster_label);
 
-	scc_free_TempSeedClustering(&cl);
+	scc_free_SeedClustering(&cl);
 }
 
 
@@ -186,7 +186,7 @@ void scc_ut_fs_add_seed(void** state)
 {
 	(void) state;
 
-	scc_TempSeedClustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = 10,
 		.num_clusters = 0,
 		.seed_capacity = 1,
@@ -234,7 +234,7 @@ void scc_ut_fs_add_seed(void** state)
 	assert_null(cl.cluster_label);
 
 
-	scc_TempSeedClustering cl2 = iscc_fs_init_clustering(99999, 1);
+	scc_SeedClustering cl2 = iscc_fs_init_clustering(99999, 1);
 
 	for (scc_Vid s = 0; s < 10000; ++s) {
 		assert_true(iscc_fs_add_seed(10000 - s, &cl2));
@@ -274,8 +274,8 @@ void scc_ut_fs_add_seed(void** state)
 	}
 	assert_null(cl2.cluster_label);
 
-	scc_free_TempSeedClustering(&cl);
-	scc_free_TempSeedClustering(&cl2);
+	scc_free_SeedClustering(&cl);
+	scc_free_SeedClustering(&cl2);
 }
 
 

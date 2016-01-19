@@ -29,16 +29,16 @@
 #include "../include/nng_clustering.h"
 
 
-scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* nng,
-                                              size_t seed_init_capacity);
+scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* nng,
+                                          size_t seed_init_capacity);
 
-scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* nng,
-                                              size_t seed_init_capacity,
-                                              bool updating);
+scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* nng,
+                                          size_t seed_init_capacity,
+                                          bool updating);
 
-scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* nng,
-                                                size_t seed_init_capacity,
-                                                bool updating);
+scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* nng,
+                                            size_t seed_init_capacity,
+                                            bool updating);
 
 
 

@@ -48,16 +48,15 @@ struct iscc_fs_SortResult {
 // Internal function prototypes
 // ==============================================================================
 
-static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng,
-                                        bool excluded[static nng->vertices]);
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* nng);
 
-static scc_TempSeedClustering iscc_fs_init_clustering(size_t vertices,
-                                                      size_t seed_init_capacity);
+static scc_SeedClustering iscc_fs_init_clustering(size_t vertices,
+                                                  size_t seed_init_capacity);
 
-static void iscc_fs_shrink_seed_array(scc_TempSeedClustering* cl);
+static void iscc_fs_shrink_seed_array(scc_SeedClustering* cl);
 
 static inline bool iscc_fs_add_seed(scc_Vid s,
-                                    scc_TempSeedClustering* cl);
+                                    scc_SeedClustering* cl);
 
 static inline bool iscc_fs_check_neighbors_marks(scc_Vid cv,
                                                  const scc_Digraph* nng,
@@ -97,19 +96,19 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Vid v_to_decrease,
 // ==============================================================================
 
 
-scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
-                                              size_t seed_init_capacity)
+scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
+                                          size_t seed_init_capacity)
 {
 	assert(scc_digraph_is_initialized(nng));
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
-	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
+	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!marks || !cl.seeds) {
 		free(marks);
-		scc_free_TempSeedClustering(&cl);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		scc_free_SeedClustering(&cl);
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	for (scc_Vid cv = 0; cv < nng->vertices; ++cv) {
@@ -118,8 +117,8 @@ scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 
 			if (!iscc_fs_add_seed(cv, &cl)) {
 				free(marks);
-				scc_free_TempSeedClustering(&cl);
-				return SCC_NULL_TEMP_SEED_CLUSTERING;
+				scc_free_SeedClustering(&cl);
+				return SCC_NULL_SEED_CLUSTERING;
 			}
 
 			iscc_fs_mark_seed_neighbors(cv, nng, marks);
@@ -134,9 +133,9 @@ scc_TempSeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 }
 
 
-scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
-                                              const size_t seed_init_capacity,
-                                              const bool updating)
+scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
+                                          const size_t seed_init_capacity,
+                                          const bool updating)
 {
 	assert(scc_digraph_is_initialized(nng));
 
@@ -144,13 +143,13 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
 
-	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
+	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!sort.sorted_vertices || !marks || !cl.seeds) {
 		iscc_fs_free_SortResult(&sort);
 		free(marks);
-		scc_free_TempSeedClustering(&cl);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		scc_free_SeedClustering(&cl);
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
@@ -167,8 +166,8 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 			if (!iscc_fs_add_seed(*sorted_v, &cl)) {
 				iscc_fs_free_SortResult(&sort);
 				free(marks);
-				scc_free_TempSeedClustering(&cl);
-				return SCC_NULL_TEMP_SEED_CLUSTERING;
+				scc_free_SeedClustering(&cl);
+				return SCC_NULL_SEED_CLUSTERING;
 			}
 
 			iscc_fs_mark_seed_neighbors(*sorted_v, nng, marks);
@@ -199,9 +198,9 @@ scc_TempSeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 }
 
 
-scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
-                                                const size_t seed_init_capacity,
-                                                const bool updating)
+scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
+                                            const size_t seed_init_capacity,
+                                            const bool updating)
 {
 	assert(scc_digraph_is_initialized(nng));
 
@@ -238,14 +237,14 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&exclusion_graph, updating);
 
-	scc_TempSeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
+	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
 	if (!sort.sorted_vertices || !cl.seeds) {
 		free(excluded);
 		scc_free_digraph(&exclusion_graph);
 		iscc_fs_free_SortResult(&sort);
-		scc_free_TempSeedClustering(&cl);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		scc_free_SeedClustering(&cl);
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	const scc_Vid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
@@ -263,8 +262,8 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 				free(excluded);
 				scc_free_digraph(&exclusion_graph);
 				iscc_fs_free_SortResult(&sort);
-				scc_free_TempSeedClustering(&cl);
-				return SCC_NULL_TEMP_SEED_CLUSTERING;
+				scc_free_SeedClustering(&cl);
+				return SCC_NULL_SEED_CLUSTERING;
 			}
 
 			excluded[*sorted_v] = true;
@@ -346,12 +345,12 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 }
 
 
-static scc_TempSeedClustering iscc_fs_init_clustering(const size_t vertices,
-                                                      size_t seed_init_capacity)
+static scc_SeedClustering iscc_fs_init_clustering(const size_t vertices,
+                                                  size_t seed_init_capacity)
 {
 	if (seed_init_capacity < 128) seed_init_capacity = 128;
 
-	scc_TempSeedClustering cl = {
+	scc_SeedClustering cl = {
 		.vertices = vertices,
 		.num_clusters = 0,
 		.seed_capacity = seed_init_capacity,
@@ -361,13 +360,13 @@ static scc_TempSeedClustering iscc_fs_init_clustering(const size_t vertices,
 		.cluster_label = NULL,
 	};
 
-	if (!cl.seeds) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	if (!cl.seeds) return SCC_NULL_SEED_CLUSTERING;
 
 	return cl;
 }
 
 
-static void iscc_fs_shrink_seed_array(scc_TempSeedClustering* const cl)
+static void iscc_fs_shrink_seed_array(scc_SeedClustering* const cl)
 {
 	if (cl && cl->seeds && (cl->seed_capacity > cl->num_clusters) && (cl->num_clusters > 0)) {
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->num_clusters]));
@@ -380,7 +379,7 @@ static void iscc_fs_shrink_seed_array(scc_TempSeedClustering* const cl)
 
 
 static inline bool iscc_fs_add_seed(const scc_Vid s,
-                                    scc_TempSeedClustering* const cl)
+                                    scc_SeedClustering* const cl)
 {
 	assert(cl->seeds);
 	assert(cl->num_clusters <= cl->seed_capacity);

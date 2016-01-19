@@ -36,26 +36,26 @@
 // External function implementations
 // ==============================================================================
 
-void scc_free_TempSeedClustering(scc_TempSeedClustering* const cl)
+void scc_free_SeedClustering(scc_SeedClustering* const cl)
 {
 	if (cl) {
 		free(cl->assigned);
 		free(cl->seeds);
 		if (!cl->external_labels) free(cl->cluster_label);
-		*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
+		*cl = SCC_NULL_SEED_CLUSTERING;
 	}
 }
 
 
-scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering* const cl)
+scc_SeedClustering scc_copy_SeedClustering(const scc_SeedClustering* const cl)
 {
-	if (!cl) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	if (!cl) return SCC_NULL_SEED_CLUSTERING;
 
-	scc_TempSeedClustering cl_out = {
+	scc_SeedClustering cl_out = {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
 		.seed_capacity = cl->seed_capacity,
-		.external_labels = cl->external_labels,
+		.external_labels = false,
 		.assigned = NULL,
 		.seeds = NULL,
 		.cluster_label = NULL,
@@ -69,9 +69,7 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 		cl_out.seeds = malloc(sizeof(scc_Vid[cl_out.seed_capacity]));
 		for (size_t v = 0; v < cl_out.seed_capacity; ++v) cl_out.seeds[v] = cl->seeds[v];
 	}
-	if (cl->external_labels) {
-		cl_out.cluster_label = cl->cluster_label;
-	} else if (cl->cluster_label) {
+	if (cl->cluster_label) {
 		cl_out.cluster_label = malloc(sizeof(scc_Clabel[cl_out.vertices]));
 		for (size_t v = 0; v < cl_out.vertices; ++v) cl_out.cluster_label[v] = cl->cluster_label[v];
 	}
@@ -80,14 +78,14 @@ scc_TempSeedClustering scc_copy_TempSeedClustering(const scc_TempSeedClustering*
 }
 
 
-scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
-                                               const scc_SeedMethod sm,
-                                               size_t seed_init_capacity,
-                                               scc_Clabel external_cluster_label[const])
+scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
+                                           const scc_SeedMethod sm,
+                                           size_t seed_init_capacity,
+                                           scc_Clabel external_cluster_label[const])
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_SEED_CLUSTERING;
 
-	scc_TempSeedClustering clustering = SCC_NULL_TEMP_SEED_CLUSTERING;
+	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 
 	switch(sm) {
 
@@ -116,8 +114,8 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 	}
 
 	if (!clustering.seeds || (clustering.num_clusters >= SCC_CLABEL_MAX)) {
-		scc_free_TempSeedClustering(&clustering);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		scc_free_SeedClustering(&clustering);
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	clustering.assigned = calloc(nng->vertices, sizeof(bool));
@@ -130,8 +128,8 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 	}
 
 	if (!clustering.assigned || !clustering.cluster_label) {
-		scc_free_TempSeedClustering(&clustering);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		scc_free_SeedClustering(&clustering);
+		return SCC_NULL_SEED_CLUSTERING;
 	}
 
 	scc_Clabel clabel = 0;
@@ -158,7 +156,7 @@ scc_TempSeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 }
 
 
-scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl)
+scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl)
 {
 	if (!cl || !cl->assigned || !cl->cluster_label || 
 	        (cl->vertices >= SCC_VID_MAX) || (cl->num_clusters >= SCC_CLABEL_MAX)) {
@@ -171,8 +169,8 @@ scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl)
 		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
-	// Make labels in input temp clustering external so
-	// it's not freed when `scc_free_TempSeedClustering(cl);` is run
+	// Make labels in input seed clustering external so
+	// it's not freed when `scc_free_SeedClustering(cl);` is run
 	cl->external_labels = true;
 
 	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
@@ -183,7 +181,7 @@ scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl)
 }
 
 
-scc_Clustering scc_assign_remaining_lexical(scc_TempSeedClustering* const cl,
+scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* const cl,
                                             const scc_Digraph* const priority_graph)
 {
 	if (!cl || !cl->assigned || !cl->cluster_label || 
@@ -219,7 +217,7 @@ scc_Clustering scc_assign_remaining_lexical(scc_TempSeedClustering* const cl,
 }
 
 
-scc_Clustering scc_assign_remaining_desired_size(scc_TempSeedClustering* const cl,
+scc_Clustering scc_assign_remaining_desired_size(scc_SeedClustering* const cl,
                                                  const scc_Digraph* const priority_graph,
                                                  const scc_Vid desired_size)
 {
