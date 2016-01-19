@@ -36,6 +36,7 @@ static inline size_t iscc_do_union(size_t vertices,
                                    size_t num_dgs,
                                    const scc_Digraph* const dgs[static num_dgs],
                                    scc_Vid row_markers[restrict static vertices],
+                                   bool ignore_diagonal,
                                    bool write,
                                    scc_Arci out_tail_ptr[restrict],
                                    scc_Vid out_head[restrict]);
@@ -58,7 +59,8 @@ static inline size_t iscc_do_adjacency_product(size_t vertices,
 // ==============================================================================
 
 scc_Digraph scc_digraph_union(const size_t num_dgs,
-                              const scc_Digraph* const dgs[const static num_dgs])
+                              const scc_Digraph* const dgs[const static num_dgs],
+                              const bool ignore_diagonal)
 {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
 	if (!dgs || !scc_digraph_is_initialized(*dgs)) return SCC_NULL_DIGRAPH;
@@ -81,8 +83,8 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
 		// union without writing.
-		out_arcs_write = iscc_do_union(vertices, num_dgs, dgs,
-		                               row_markers, false, NULL, NULL);
+		out_arcs_write = iscc_do_union(vertices, num_dgs, dgs, row_markers,
+		                               ignore_diagonal, false, NULL, NULL);
 
 		// Try again. If fail, give up.
 		dg_out = scc_init_digraph(vertices, out_arcs_write);
@@ -92,8 +94,8 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 		}
 	}
 
-	out_arcs_write = iscc_do_union(vertices, num_dgs, dgs,
-	                               row_markers, true, dg_out.tail_ptr, dg_out.head);
+	out_arcs_write = iscc_do_union(vertices, num_dgs, dgs, row_markers,
+	                               ignore_diagonal, true, dg_out.tail_ptr, dg_out.head);
 
 	free(row_markers);
 
@@ -216,6 +218,7 @@ static inline size_t iscc_do_union(const size_t vertices,
                                    const size_t num_dgs,
                                    const scc_Digraph* const dgs[const static num_dgs],
                                    scc_Vid row_markers[restrict const static vertices],
+                                   const bool ignore_diagonal,
                                    const bool write,
                                    scc_Arci out_tail_ptr[restrict const],
                                    scc_Vid out_head[restrict const])
@@ -225,6 +228,7 @@ static inline size_t iscc_do_union(const size_t vertices,
 	for (scc_Vid v = 0; v < vertices; ++v) row_markers[v] = SCC_VID_MAX;
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
+		if (ignore_diagonal) row_markers[v] = v;
 		for (size_t i = 0; i < num_dgs; ++i) {
 			const scc_Vid* const arc_i_stop = dgs[i]->head + dgs[i]->tail_ptr[v + 1];
 			for (const scc_Vid* arc_i = dgs[i]->head + dgs[i]->tail_ptr[v];

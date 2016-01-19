@@ -205,13 +205,35 @@ scc_TempSeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 {
 	assert(scc_digraph_is_initialized(nng));
 
-	bool* const excluded = malloc(sizeof(bool[nng->vertices]));
-	if (!excluded) return SCC_NULL_TEMP_SEED_CLUSTERING;
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng);
 
-	scc_Digraph exclusion_graph = iscc_exclusion_graph(nng, excluded);
-	if (!scc_digraph_is_initialized(&exclusion_graph)) {
+	bool* const excluded = malloc(sizeof(bool[nng->vertices]));
+
+	if (!scc_digraph_is_initialized(&exclusion_graph) || !excluded) {
+		scc_free_digraph(&exclusion_graph);
 		free(excluded);
-		return SCC_NULL_TEMP_SEED_CLUSTERING;
+		return SCC_NULL_SEED_CLUSTERING;
+	}
+
+	bool any_init_excluded = false;
+	for (scc_Vid v = 0; v < nng->vertices; ++v) {
+		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
+			excluded[v] = true;
+			any_init_excluded = true;
+		} else {
+			excluded[v] = false;
+		}
+	}
+
+	/* In `exclusion_graph`, all vertices with zero outwards arcs in `nng` will have
+	 * arcs pointing to vertices that points to them in `nng`. These vertices are
+	 * excluded from the the beginning (due to zero arcs), thus their outwards arcs
+	 * are not necessary. In fact, to keep these arcs leads to that the sorting on
+	 * inwards arcs by `iscc_fs_sort_by_inwards()` becomes wrong.
+	 */
+	if (any_init_excluded) {
+		scc_delete_arcs_by_tails(&exclusion_graph, excluded);
+		scc_change_arc_storage(&exclusion_graph, exclusion_graph.tail_ptr[exclusion_graph.vertices]);
 	}
 
 	iscc_fs_SortResult sort = iscc_fs_sort_by_inwards(&exclusion_graph, updating);
@@ -300,11 +322,9 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 // ==============================================================================
 
 
-static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng,
-                                        bool excluded[const static nng->vertices])
+static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 {
 	assert(scc_digraph_is_initialized(nng));
-	assert(excluded);
 
 	scc_Digraph nng_transpose = scc_digraph_transpose(nng);
 	if (!scc_digraph_is_initialized(&nng_transpose)) return SCC_NULL_DIGRAPH;
@@ -313,44 +333,12 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng,
 	scc_free_digraph(&nng_transpose);
 	if (!scc_digraph_is_initialized(&nng_nng_transpose)) return SCC_NULL_DIGRAPH;
 
-	/* nng_nng_transpose contains two type of irrelevant arcs:
-	 * 1. All vertices with non-zero outwards arcs in `nng` will have an arcs pointing
-	 *    to themselves. Obviously, a vertex assigned as seed excludes itself.
-	 * 2. All vertices with zero outwards arcs in `nng` will have arcs pointing to
-	 *    vertices that points to them in `nng`. These vertices are excluded from the
-	 *    the beginning (due to zero arcs), thus their outwards arcs are not necessary.
-	 *
-	 *  1 & 2 both lead to excessive memory use. 2 also leads to that the sorting on
-	 *  inwards arcs by `iscc_fs_sort_by_inwards()` becomes wrong.
-	 *
-	 *  This snippet removes all arcs falling under 1 & 2 from `nng_nng_transpose`
-	 *  (and thus from `exclusion_graph`). See `scc_delete_arcs_by_tails()` for
-	 *  more details on implementation.
+	/* All vertices with non-zero outwards arcs in `nng` will have an arcs pointing
+	 * to themselves. These arcs are redudant, call `scc_digraph_union` with
+	 * `ignore_diagonal` flag.
 	 */
-	scc_Arci head_write = 0;
-	for (scc_Vid v = 0; v < nng->vertices; ++v) {
-		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
-			excluded[v] = true;
-			nng_nng_transpose.tail_ptr[v] = head_write;
-		} else {
-			excluded[v] = false;
-			const scc_Vid* v_arc = nng_nng_transpose.head + nng_nng_transpose.tail_ptr[v];
-			const scc_Vid* const v_arc_stop = nng_nng_transpose.head + nng_nng_transpose.tail_ptr[v + 1];
-			nng_nng_transpose.tail_ptr[v] = head_write;
-
-			for (; v_arc != v_arc_stop; ++v_arc) {
-				if (*v_arc != v) {
-					nng_nng_transpose.head[head_write] = *v_arc;
-					++head_write;
-				}
-			}
-		}
-	}
-	nng_nng_transpose.tail_ptr[nng->vertices] = head_write;
-	scc_change_arc_storage(&nng_nng_transpose, head_write);
-
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
-	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum);
+	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum, true);
 	scc_free_digraph(&nng_nng_transpose);
 	if (!scc_digraph_is_initialized(&exclusion_graph)) return SCC_NULL_DIGRAPH;
 

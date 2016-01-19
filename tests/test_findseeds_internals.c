@@ -42,11 +42,6 @@ void scc_ut_exclusion_graph(void** state)
 {
 	(void) state;
 
-	bool excluded[18];
-	bool ref_excluded[18] = { false, false, false, false, false, false,
-	                          false, false, false, false, false, false,
-	                          false, false, false, false, false, false };
-
 	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
 	                                          "#...#............./"
 	                                          "....#..#........../"
@@ -85,15 +80,9 @@ void scc_ut_exclusion_graph(void** state)
 	                                          ".........##.###..#/"
 	                                          ".........#..###.#./");
 
-	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng, excluded);
-
+	scc_Digraph exclusion_graph = iscc_exclusion_graph(&nng);
 	assert_equal_digraph(&exg, &exclusion_graph);
-	assert_memory_equal(excluded, ref_excluded, 18 * sizeof(bool));
 
-
-	bool excluded2[10];
-	bool ref_excluded2[10] = { false, true, false, false, true,
-	                           false, false, false, false, false };
 
 	scc_Digraph nng2 = scc_digraph_from_string(".#..# ...../"
 	                                           "..... ...../"
@@ -107,17 +96,17 @@ void scc_ut_exclusion_graph(void** state)
 	                                           "..... ..##./");
 
 	scc_Digraph exg2 = scc_digraph_from_string(".##.# #.#../"
-	                                           "..... ...../"
+	                                           "#.#.. ...../"
 	                                           "##.#. .####/"
 	                                           "..#.. ##.../"
-	                                           "..... ...../"
+	                                           "#.... ..#../"
 	                                           "#..#. ...../"
 	                                           "..##. ...../"
 	                                           "#.#.# ...##/"
 	                                           "..#.. ..#.#/"
 	                                           "..#.. ..##./");
 
-	scc_Digraph exclusion_graph2 = iscc_exclusion_graph(&nng2, excluded2);
+	scc_Digraph exclusion_graph2 = iscc_exclusion_graph(&nng2);
 
 	assert_equal_digraph(&exg2, &exclusion_graph2);
 	assert_memory_equal(excluded2, ref_excluded2, 10 * sizeof(bool));
