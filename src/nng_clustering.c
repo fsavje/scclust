@@ -165,21 +165,19 @@ scc_Clustering scc_ignore_remaining(scc_TempSeedClustering* cl)
 		return SCC_NULL_CLUSTERING;
 	}
 
-	free(cl->seeds);
-	bool* const assigned = cl->assigned;
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
 		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
-	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
+	// Make labels in input temp clustering external so
+	// it's not freed when `scc_free_TempSeedClustering(cl);` is run
+	cl->external_labels = true;
 
 	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
-		if (!assigned[v]) out_cl.cluster_label[v] = SCC_CLABEL_NA;
+		if (!cl->assigned[v]) out_cl.cluster_label[v] = SCC_CLABEL_NA;
 	}
-
-	free(assigned);
 
 	return out_cl;
 }
@@ -194,32 +192,28 @@ scc_Clustering scc_assign_remaining_lexical(scc_TempSeedClustering* const cl,
 		return SCC_NULL_CLUSTERING;
 	}
 
-	free(cl->seeds);
-	bool* const assigned = cl->assigned;
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
 		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
-	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
+	cl->external_labels = true;
 	
 	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
-		if (!assigned[v]) {
+		if (!cl->assigned[v]) {
 			out_cl.cluster_label[v] = SCC_CLABEL_NA;
 
 			const scc_Vid* const v_arc_stop = priority_graph->head + priority_graph->tail_ptr[v + 1];
 			for (const scc_Vid* v_arc = priority_graph->head + priority_graph->tail_ptr[v];
 			        v_arc != v_arc_stop; ++v_arc) {
-				if (assigned[*v_arc]) {
+				if (cl->assigned[*v_arc]) {
 					out_cl.cluster_label[v] = out_cl.cluster_label[*v_arc];
 					break;
 				}
 			}
 		}
 	}
-
-	free(assigned);
 
 	return out_cl;
 }
@@ -235,32 +229,26 @@ scc_Clustering scc_assign_remaining_desired_size(scc_TempSeedClustering* const c
 		return SCC_NULL_CLUSTERING;
 	}
 
-	free(cl->seeds);
-	bool* const assigned = cl->assigned;
+	scc_Vid* cluster_size = calloc(cl->num_clusters, sizeof(scc_Vid));
+	if (!cluster_size) return SCC_NULL_CLUSTERING;
+
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
 		.num_clusters = cl->num_clusters,
 		.external_labels = cl->external_labels,
 		.cluster_label = cl->cluster_label,
 	};
-	*cl = SCC_NULL_TEMP_SEED_CLUSTERING;
-
-	scc_Vid* cluster_size = calloc(out_cl.num_clusters, sizeof(scc_Vid));
-	if (!cluster_size) {
-		free(assigned);
-		scc_free_Clustering(&out_cl);
-		return SCC_NULL_CLUSTERING;
-	}
+	cl->external_labels = true;
 
 	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
-		if (!assigned[v]) {
+		if (!cl->assigned[v]) {
 			scc_Clabel best_cluster = SCC_CLABEL_NA;
 			scc_Vid best_size = 0;
 
 			const scc_Vid* const v_arc_stop = priority_graph->head + priority_graph->tail_ptr[v + 1];
 			for (const scc_Vid* v_arc = priority_graph->head + priority_graph->tail_ptr[v];
 			        v_arc != v_arc_stop; ++v_arc) {
-				if (assigned[*v_arc]) {
+				if (cl->assigned[*v_arc]) {
 					if ((best_cluster == SCC_CLABEL_NA) || (best_size < cluster_size[out_cl.cluster_label[*v_arc]])) {
 						best_cluster = out_cl.cluster_label[*v_arc];
 						best_size = cluster_size[best_cluster];
@@ -278,7 +266,6 @@ scc_Clustering scc_assign_remaining_desired_size(scc_TempSeedClustering* const c
 		}
 	}
 
-	free(assigned);
 	free(cluster_size);
 
 	return out_cl;

@@ -168,10 +168,15 @@ void scc_ut_nng_caliper_ignore(void** state)
 	assert_memory_equal(exupdat_clustering.cluster_label, ref_exupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_free_digraph(&nng);
+	scc_free_TempSeedClustering(&lexical_tmp_clustering);
 	scc_free_Clustering(&lexical_clustering);
+	scc_free_TempSeedClustering(&inwards_tmp_clustering);
 	scc_free_Clustering(&inwards_clustering);
+	scc_free_TempSeedClustering(&inupdat_tmp_clustering);
 	scc_free_Clustering(&inupdat_clustering);
+	scc_free_TempSeedClustering(&exclusi_tmp_clustering);
 	scc_free_Clustering(&exclusi_clustering);
+	scc_free_TempSeedClustering(&exupdat_tmp_clustering);
 	scc_free_Clustering(&exupdat_clustering);
 }
 
@@ -233,10 +238,15 @@ void scc_ut_nng_caliper_assign(void** state)
 	assert_memory_equal(exupdat_clustering.cluster_label, ref_exupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_free_digraph(&nng);
+	scc_free_TempSeedClustering(&lexical_tmp_clustering);
 	scc_free_Clustering(&lexical_clustering);
+	scc_free_TempSeedClustering(&inwards_tmp_clustering);
 	scc_free_Clustering(&inwards_clustering);
+	scc_free_TempSeedClustering(&inupdat_tmp_clustering);
 	scc_free_Clustering(&inupdat_clustering);
+	scc_free_TempSeedClustering(&exclusi_tmp_clustering);
 	scc_free_Clustering(&exclusi_clustering);
+	scc_free_TempSeedClustering(&exupdat_tmp_clustering);
 	scc_free_Clustering(&exupdat_clustering);
 }
 

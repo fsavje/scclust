@@ -415,13 +415,18 @@ void scc_ut_ignore_remaining(void** state)
 
 	scc_TempSeedClustering cl = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out = scc_ignore_remaining(&cl);
-	assert_int_equal(cl.vertices, 0);
-	assert_int_equal(cl.num_clusters, 0);
-	assert_int_equal(cl.seed_capacity, 0);
-	assert_false(cl.external_labels);
-	assert_null(cl.assigned);
-	assert_null(cl.seeds);
-	assert_null(cl.cluster_label);
+	assert_int_equal(cl.vertices, 20);
+	assert_int_equal(cl.num_clusters, 5);
+	assert_int_equal(cl.seed_capacity, 5);
+	assert_true(cl.external_labels);
+	assert_non_null(cl.assigned);
+	assert_memory_equal(cl.assigned, assigned, cl.vertices * sizeof(bool));
+	assert_non_null(cl.seeds);
+	assert_memory_equal(cl.seeds, seeds, cl.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl.cluster_label);
+	assert_memory_equal(cl.cluster_label, ref_cluster_label, cl.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl.cluster_label, out.cluster_label);
+
 	assert_int_equal(out.vertices, 20);
 	assert_int_equal(out.num_clusters, 5);
 	assert_true(out.external_labels);
@@ -523,13 +528,18 @@ void scc_ut_assign_remaining_lexical(void** state)
 
 	scc_TempSeedClustering cl1 = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out1 = scc_assign_remaining_lexical(&cl1, &prio1);
-	assert_int_equal(cl1.vertices, 0);
-	assert_int_equal(cl1.num_clusters, 0);
-	assert_int_equal(cl1.seed_capacity, 0);
-	assert_false(cl1.external_labels);
-	assert_null(cl1.assigned);
-	assert_null(cl1.seeds);
-	assert_null(cl1.cluster_label);
+	assert_int_equal(cl1.vertices, 20);
+	assert_int_equal(cl1.num_clusters, 5);
+	assert_int_equal(cl1.seed_capacity, 5);
+	assert_true(cl1.external_labels);
+	assert_non_null(cl1.assigned);
+	assert_memory_equal(cl1.assigned, assigned, cl1.vertices * sizeof(bool));
+	assert_non_null(cl1.seeds);
+	assert_memory_equal(cl1.seeds, seeds, cl1.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl1.cluster_label);
+	assert_memory_equal(cl1.cluster_label, ref_cluster_label1, cl1.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl1.cluster_label, out1.cluster_label);
+
 	assert_int_equal(out1.vertices, 20);
 	assert_int_equal(out1.num_clusters, 5);
 	assert_false(out1.external_labels);
@@ -538,13 +548,18 @@ void scc_ut_assign_remaining_lexical(void** state)
 
 	scc_TempSeedClustering cl2 = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out2 = scc_assign_remaining_lexical(&cl2, &prio2);
-	assert_int_equal(cl2.vertices, 0);
-	assert_int_equal(cl2.num_clusters, 0);
-	assert_int_equal(cl2.seed_capacity, 0);
-	assert_false(cl2.external_labels);
-	assert_null(cl2.assigned);
-	assert_null(cl2.seeds);
-	assert_null(cl2.cluster_label);
+	assert_int_equal(cl2.vertices, 20);
+	assert_int_equal(cl2.num_clusters, 5);
+	assert_int_equal(cl2.seed_capacity, 5);
+	assert_true(cl2.external_labels);
+	assert_non_null(cl2.assigned);
+	assert_memory_equal(cl2.assigned, assigned, cl2.vertices * sizeof(bool));
+	assert_non_null(cl2.seeds);
+	assert_memory_equal(cl2.seeds, seeds, cl2.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl2.cluster_label);
+	assert_memory_equal(cl2.cluster_label, ref_cluster_label2, cl2.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl2.cluster_label, out2.cluster_label);
+
 	assert_int_equal(out2.vertices, 20);
 	assert_int_equal(out2.num_clusters, 5);
 	assert_false(out2.external_labels);
@@ -655,13 +670,18 @@ void scc_ut_assign_remaining_desired_size(void** state)
 
 	scc_TempSeedClustering cl1 = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out1 = scc_assign_remaining_desired_size(&cl1, &prio1, 2);
-	assert_int_equal(cl1.vertices, 0);
-	assert_int_equal(cl1.num_clusters, 0);
-	assert_int_equal(cl1.seed_capacity, 0);
-	assert_false(cl1.external_labels);
-	assert_null(cl1.assigned);
-	assert_null(cl1.seeds);
-	assert_null(cl1.cluster_label);
+	assert_int_equal(cl1.vertices, 20);
+	assert_int_equal(cl1.num_clusters, 5);
+	assert_int_equal(cl1.seed_capacity, 5);
+	assert_true(cl1.external_labels);
+	assert_non_null(cl1.assigned);
+	assert_memory_equal(cl1.assigned, assigned, cl1.vertices * sizeof(bool));
+	assert_non_null(cl1.seeds);
+	assert_memory_equal(cl1.seeds, seeds, cl1.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl1.cluster_label);
+	assert_memory_equal(cl1.cluster_label, ref_cluster_label1, cl1.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl1.cluster_label, out1.cluster_label);
+
 	assert_int_equal(out1.vertices, 20);
 	assert_int_equal(out1.num_clusters, 5);
 	assert_true(out1.external_labels);
@@ -670,13 +690,18 @@ void scc_ut_assign_remaining_desired_size(void** state)
 
 	scc_TempSeedClustering cl2 = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out2 = scc_assign_remaining_desired_size(&cl2, &prio2, 2);
-	assert_int_equal(cl2.vertices, 0);
-	assert_int_equal(cl2.num_clusters, 0);
-	assert_int_equal(cl2.seed_capacity, 0);
-	assert_false(cl2.external_labels);
-	assert_null(cl2.assigned);
-	assert_null(cl2.seeds);
-	assert_null(cl2.cluster_label);
+	assert_int_equal(cl2.vertices, 20);
+	assert_int_equal(cl2.num_clusters, 5);
+	assert_int_equal(cl2.seed_capacity, 5);
+	assert_true(cl2.external_labels);
+	assert_non_null(cl2.assigned);
+	assert_memory_equal(cl2.assigned, assigned, cl2.vertices * sizeof(bool));
+	assert_non_null(cl2.seeds);
+	assert_memory_equal(cl2.seeds, seeds, cl2.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl2.cluster_label);
+	assert_memory_equal(cl2.cluster_label, ref_cluster_label2, cl2.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl2.cluster_label, out2.cluster_label);
+
 	assert_int_equal(out2.vertices, 20);
 	assert_int_equal(out2.num_clusters, 5);
 	assert_true(out2.external_labels);
@@ -685,13 +710,18 @@ void scc_ut_assign_remaining_desired_size(void** state)
 
 	scc_TempSeedClustering cl3 = scc_copy_TempSeedClustering(&cl_template);
 	scc_Clustering out3 = scc_assign_remaining_desired_size(&cl3, &prio2, 3);
-	assert_int_equal(cl3.vertices, 0);
-	assert_int_equal(cl3.num_clusters, 0);
-	assert_int_equal(cl3.seed_capacity, 0);
-	assert_false(cl3.external_labels);
-	assert_null(cl3.assigned);
-	assert_null(cl3.seeds);
-	assert_null(cl3.cluster_label);
+	assert_int_equal(cl3.vertices, 20);
+	assert_int_equal(cl3.num_clusters, 5);
+	assert_int_equal(cl3.seed_capacity, 5);
+	assert_true(cl3.external_labels);
+	assert_non_null(cl3.assigned);
+	assert_memory_equal(cl3.assigned, assigned, cl3.vertices * sizeof(bool));
+	assert_non_null(cl3.seeds);
+	assert_memory_equal(cl3.seeds, seeds, cl3.seed_capacity * sizeof(scc_Vid));
+	assert_non_null(cl3.cluster_label);
+	assert_memory_equal(cl3.cluster_label, ref_cluster_label3, cl3.vertices * sizeof(scc_Clabel));
+	assert_ptr_equal(cl3.cluster_label, out3.cluster_label);
+
 	assert_int_equal(out3.vertices, 20);
 	assert_int_equal(out3.num_clusters, 5);
 	assert_true(out3.external_labels);
