@@ -249,6 +249,41 @@ void scc_ut_delete_arcs_by_tails(void** state)
 }
 
 
+void scc_ut_delete_loops(void** state)
+{
+	(void) state;
+
+	scc_Digraph dg1 = scc_digraph_from_string("#####/#####/#####/#####/#####/");
+	scc_Digraph dg2 = scc_digraph_from_string("...../...../...../...../...../");
+	scc_Digraph dg3 = scc_digraph_from_string(".####/#.###/##.##/###.#/####./");
+	scc_Digraph dg4 = scc_digraph_from_string("#..../.#.../..#../...#./....#/");
+	scc_Digraph dg5 = scc_digraph_from_string("#.#../#..../#.#../##.../##..#/");
+
+	scc_delete_loops(&dg1);
+	scc_delete_loops(&dg2);
+	scc_delete_loops(&dg3);
+	scc_delete_loops(&dg4);
+	scc_delete_loops(&dg5);
+
+	scc_Digraph ref1 = scc_digraph_from_string(".####/#.###/##.##/###.#/####./");
+	scc_Digraph ref2 = scc_digraph_from_string("...../...../...../...../...../");
+	scc_Digraph ref3 = scc_digraph_from_string(".####/#.###/##.##/###.#/####./");
+	scc_Digraph ref4 = scc_digraph_from_string("...../...../...../...../...../");
+	scc_Digraph ref5 = scc_digraph_from_string("..#../#..../#..../##.../##.../");
+
+	assert_free_digraph(&dg1);
+	assert_free_digraph(&dg2);
+	assert_free_digraph(&dg3);
+	assert_free_digraph(&dg4);
+	assert_free_digraph(&dg5);
+	assert_free_digraph(&ref1);
+	assert_free_digraph(&ref2);
+	assert_free_digraph(&ref3);
+	assert_free_digraph(&ref4);
+	assert_free_digraph(&ref5);
+}
+
+
 int main(void)
 {
 	const struct CMUnitTest test_core[] = {
@@ -259,6 +294,7 @@ int main(void)
 		cmocka_unit_test(scc_ut_empty_digraph),
 		cmocka_unit_test(scc_ut_copy_digraph),
 		cmocka_unit_test(scc_ut_delete_arcs_by_tails),
+		cmocka_unit_test(scc_ut_delete_loops),
 	};
 	
 	return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);

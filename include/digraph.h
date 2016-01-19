@@ -194,8 +194,20 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-void scc_delete_arcs_by_tails(const scc_Digraph* dg,
+void scc_delete_arcs_by_tails(scc_Digraph* dg,
                               const bool to_delete[]);
+
+/** Delete all self-loops.
+ *
+ *  This function deletes all arcs where the tail and the head is the same vertex.
+ *
+ *  \param[in,out] dg digraph to delete self-loops from.
+ *
+ *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
+ *
+ *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
+ */
+void scc_delete_loops(scc_Digraph* dg);
 
 /** Calculates the union of arbitrary number of digraphs.
  *
@@ -232,8 +244,8 @@ void scc_delete_arcs_by_tails(const scc_Digraph* dg,
  *
  *  \param num_dgs number of digraph to calculate union for.
  *  \param[in] dgs the digraphs. Must be of length \p num_dgs.
- *  \param     ignore_diagonal when \c true, ignores the diagonal of all digraphs in \p dgs (i.e., all arcs where the tail and head is the same vertex
- *                             are ignored).
+ *  \param     ignore_loops when \c true, ignores self-loops in all digraphs in \p dgs (i.e., all arcs where the tail and head is the same vertex
+ *                          are ignored).
  *
  *  \return the union of \p dgs.
  *
@@ -241,7 +253,7 @@ void scc_delete_arcs_by_tails(const scc_Digraph* dg,
  */
 scc_Digraph scc_digraph_union(size_t num_dgs,
                               const scc_Digraph* const dgs[],
-                              bool ignore_diagonal);
+                              bool ignore_loops);
 
 /** Derives the digraph transpose a digraph.
  *
@@ -308,20 +320,20 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);
  *  
  *  \param[in] dg_a the first digraph of the product.
  *  \param[in] dg_b the second digraph of the product.
- *  \param     force_diagonal when \c true, forces the diagonal of \p dg_a to be one (i.e., all vertices have an arc to themselves).
- *  \param     ignore_diagonal when \c true, ignores the diagonal of \p dg_a (i.e., all arcs where the tail and head is the same vertex
- *                             in \p dg_a are ignored).
+ *  \param     force_loops when \c true, forces self-loops in \p dg_a (i.e., all vertices have an arc to themselves).
+ *  \param     ignore_loops when \c true, ignores self-loops in \p dg_a (i.e., all arcs where the tail and head is the same vertex
+ *                          are ignored).
  *
  *  \return The digraph described by the product of the adjacency matrices of \p dg_a and \p dg_b.
  *
  *  \note \p dg_a and \p dg_b must contain equally many vertices.
  *
- *  \note \p force_diagonal and \p ignore_diagonal cannot both be \c true. 
+ *  \note \p force_loops and \p ignore_loops cannot both be \c true. 
  */
 scc_Digraph scc_adjacency_product(const scc_Digraph* dg_a,
                                   const scc_Digraph* dg_b,
-                                  bool force_diagonal,
-                                  bool ignore_diagonal);
+                                  bool force_loops,
+                                  bool ignore_loops);
 
 
 #endif

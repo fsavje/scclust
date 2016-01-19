@@ -334,7 +334,7 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 
 	/* All vertices with non-zero outwards arcs in `nng` will have an arcs pointing
 	 * to themselves. These arcs are redudant, call `scc_digraph_union` with
-	 * `ignore_diagonal` flag.
+	 * `ignore_loops` flag.
 	 */
 	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
 	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum, true);
