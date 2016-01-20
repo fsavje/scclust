@@ -37,9 +37,6 @@
 #include "config.h"
 
 
-/// Typedef for scc_Digraph struct
-typedef struct scc_Digraph scc_Digraph;
-
 /** Main digraph struct stored as sparse matrix.
  *
  *  Stores the digraph in Yale sparse matrix format. For any vertex `i` in the digraph,
@@ -80,6 +77,8 @@ struct scc_Digraph {
 	scc_Arci* const tail_ptr;
 };
 
+/// Typedef for scc_Digraph struct
+typedef struct scc_Digraph scc_Digraph;
 
 /** The null digraph.
  *

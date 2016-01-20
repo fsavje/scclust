@@ -19,6 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
+
+/** @file
+ *
+ *  Generic size constrained clustering declarations.
+ */
+
+
 #ifndef SCC_CLUSTERING_HG
 #define SCC_CLUSTERING_HG
 
@@ -26,16 +33,49 @@
 #include <stdbool.h>
 #include "config.h"
 
-typedef struct scc_Clustering scc_Clustering;
+
+/** Clustering struct.
+ *
+ *  This struct describes clusterings by enumerating a cluster label for each vertex.
+ */
 struct scc_Clustering {
+
+	/// Number of vertices in the clustering problem.
 	size_t vertices;
+
+	/// Number of clusters.
 	size_t num_clusters;
+
+	/** Indicator whether the #cluster_label array was assigned by the user (rather than the library). If #external_labels is \c true, 
+     *  #cluster_label will not be freed when the instance of #scc_Clustering is destroyed.
+     */
 	bool external_labels;
+
+	/** Array of length #vertices with cluster labels of the assigned vertices. 
+     *  Unassigned vertices have the value #SCC_CLABEL_NA.
+     */
 	scc_Clabel* cluster_label;
 };
 
+/// Typedef for the scc_Clustering struct
+typedef struct scc_Clustering scc_Clustering;
+
+/** The null clustering.
+ *
+ *  The null clustering is an easily detectable invalid clustering. It is mainly used as return
+ *  value when functions encounter errors.
+ */
 static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, false, NULL };
 
+/** Destructor for clusterings.
+ *
+ *  Frees the memory allocated by the input and writes the null clustering to it.
+ *  Assumes the memory was allocated by the standard `malloc`, `calloc` or `realloc` functions.
+ *
+ *  \param[in,out] cl clustering to destroy. When #scc_free_Clustering returns, \p cl is set to #SCC_NULL_CLUSTERING.
+ *
+ *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_Clustering.
+ */
 void scc_free_Clustering(scc_Clustering* cl);
 
 #endif

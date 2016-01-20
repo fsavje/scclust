@@ -35,13 +35,14 @@
 // Internal structs
 // ==============================================================================
 
-typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 struct iscc_fs_SortResult {
 	scc_Vid* inwards_count;
 	scc_Vid* sorted_vertices;
 	scc_Vid** vertex_index;
 	scc_Vid** bucket_index;
 };
+
+typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 
 
 // ==============================================================================
