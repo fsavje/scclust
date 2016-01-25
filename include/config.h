@@ -70,6 +70,9 @@ typedef uint32_t scc_Clabel;
  */
 #define SCC_CLABEL_NA UINT32_MAX
 
+/// Type used for distances. Must be float, and distances must be non-negative.
+typedef double scc_Distance;
+
 /** Type used for vertex IDs. Must be unsigned.
  *  
  *  \note
