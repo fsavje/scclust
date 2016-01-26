@@ -119,7 +119,7 @@ static bool iscc_gr_find_centers(const iscc_gr_Cluster* cl,
 
 static bool iscc_gr_init_search_object(const iscc_gr_Cluster* cl);
 
-static bool iscc_gr_free_search_object();
+static bool iscc_gr_free_search_object(void);
 
 static bool iscc_gr_populate_dist_list(scc_Vid v_id,
                                        const iscc_gr_Cluster* cl);
@@ -203,12 +203,13 @@ bool scc_get_greedy_clustering(void* const data_object,
 
 		if (iscc_gr_peek_at_stack(&cl_stack)->size < 2 * k) {
 			iscc_gr_Cluster unbreakable_cluster = iscc_gr_pop_from_stack(&cl_stack);
-			for (size_t v = 0; v < unbreakable_cluster.size; ++v) {
-				input_clustering->cluster_label[unbreakable_cluster.members[v]] = curr_label;
+			if (unbreakable_cluster.size > 0) {
+				for (size_t v = 0; v < unbreakable_cluster.size; ++v) {
+					input_clustering->cluster_label[unbreakable_cluster.members[v]] = curr_label;
+				}
+				++curr_label;
+				free(unbreakable_cluster.members);
 			}
-			++curr_label;
-			free(unbreakable_cluster.members);
-
 		} else {
 			iscc_gr_Cluster new_cluster = iscc_gr_break_cluster_into_two(iscc_gr_peek_at_stack(&cl_stack), k, batch_assign);
 			if (new_cluster.members == NULL) iscc_gr_panic_free_everything(&cl_stack, input_clustering->vertices);
@@ -256,6 +257,7 @@ static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const in
 	}
 
 	for (size_t c = 0; c < cl_stack.first_empty_pos; ++c) {
+		if (cl_stack.clusters[c].size == 0) continue;
 		cl_stack.clusters[c].members = malloc(sizeof(scc_Vid[cl_stack.clusters[c].size]));
 		if (cl_stack.clusters[c].members == NULL) {
 			for (size_t c_free = 0; c_free < c; ++c_free) {
@@ -281,6 +283,8 @@ static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const in
 
 static iscc_gr_ClusterStack iscc_gr_empty_cl_stack(const size_t num_vertices)
 {
+	assert(num_vertices >= 2);
+
 	iscc_gr_ClusterStack cl_stack = {
 		.capacity = 1 + (size_t) (20 * log2((double) num_vertices)),
 		.first_empty_pos = 1,
@@ -362,6 +366,7 @@ static void iscc_gr_panic_free_everything(iscc_gr_ClusterStack* cl_stack,
 		free(cl_stack->clusters[c].members);
 	}
 	free(cl_stack->clusters);
+	*cl_stack = ISCC_GR_NULL_CLUSTER_STACK;
 
 	free(iscc_gr_vertex_store);
 	iscc_gr_vertex_store = NULL;
@@ -500,6 +505,9 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(iscc_gr_Cluster* const clu
 		return ISCC_GR_NULL_CLUSTER;
 	}
 
+	assert(cluster1->size >= k);
+	assert(cluster2->size >= k);
+
 	return new_cluster;
 }
 
@@ -587,7 +595,7 @@ static bool iscc_gr_init_search_object(const iscc_gr_Cluster* const cl)
 }
 
 
-static bool iscc_gr_free_search_object()
+static bool iscc_gr_free_search_object(void)
 {
 	bool success = scc_close_search_object(iscc_gr_search_object);
 	free(iscc_gr_index_scratch);
@@ -759,8 +767,10 @@ static inline void iscc_gr_move_v_to_cluster(const scc_Vid v_id,
 static bool iscc_gr_adjust_cluster_memory(iscc_gr_Cluster* const cl,
                                           const size_t k)
 {
+	assert(cl != NULL);
+
 	if (cl->size < 2 * k) {
-		// Cluster cannot be split anymore, deallocate distance lists
+		// Cluster cannot be split anymore, free distance lists
 		for (size_t i = 0; i < cl->size; ++i) {
 			if (iscc_gr_vertex_store[cl->members[i]].dist_list != NULL) {
 				free(iscc_gr_vertex_store[cl->members[i]].dist_list->distances_store);

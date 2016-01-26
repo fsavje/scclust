@@ -7,7 +7,7 @@ BUILDDIR=build
 
 STDTESTS=test_digraph_core test_digraph_debug test_digraph_operations test_findseeds test_nng_clustering \
          test_nng_clust_caliper test_nng_clust_loops test_clustering
-SPECTESTS=test_ann_wrapper test_findseeds_internals test_findseeds_stable
+SPECTESTS=test_ann_wrapper test_findseeds_internals test_findseeds_stable test_greedy_internals
 
 ALLTESTS=$(STDTESTS) $(SPECTESTS)
 BUILDOBJS=$(addprefix $(BUILDDIR)/,$(OBJECTS))
@@ -33,6 +33,9 @@ test_findseeds_internals: $(filter-out $(BUILDDIR)/findseeds.o,$(BUILDOBJS))
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_findseeds_stable: $(filter-out $(BUILDDIR)/findseeds.o,$(BUILDOBJS))
+	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
+
+test_greedy_internals: $(filter-out $(BUILDDIR)/greedy.o,$(BUILDOBJS))
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_ann_wrapper: $(BUILDOBJS) $(BUILDDIR)/nng.o ../example/libANN/lib/libANN.a
