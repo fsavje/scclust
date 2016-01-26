@@ -35,14 +35,13 @@
 // Internal structs
 // ==============================================================================
 
+typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 struct iscc_fs_SortResult {
 	scc_Vid* inwards_count;
 	scc_Vid* sorted_vertices;
 	scc_Vid** vertex_index;
 	scc_Vid** bucket_index;
 };
-
-typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 
 
 // ==============================================================================
@@ -106,7 +105,7 @@ scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 
 	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
-	if (!marks || !cl.seeds) {
+	if ((marks == NULL) || (cl.seeds == NULL)) {
 		free(marks);
 		scc_free_SeedClustering(&cl);
 		return SCC_NULL_SEED_CLUSTERING;
@@ -146,7 +145,7 @@ scc_SeedClustering iscc_findseeds_inwards(const scc_Digraph* const nng,
 
 	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
-	if (!sort.sorted_vertices || !marks || !cl.seeds) {
+	if ((sort.sorted_vertices == NULL) || (marks == NULL) || (cl.seeds == NULL)) {
 		iscc_fs_free_SortResult(&sort);
 		free(marks);
 		scc_free_SeedClustering(&cl);
@@ -209,7 +208,7 @@ scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 
 	bool* const excluded = malloc(sizeof(bool[nng->vertices]));
 
-	if (!scc_digraph_is_initialized(&exclusion_graph) || !excluded) {
+	if (!scc_digraph_is_initialized(&exclusion_graph) || (excluded == NULL)) {
 		scc_free_digraph(&exclusion_graph);
 		free(excluded);
 		return SCC_NULL_SEED_CLUSTERING;
@@ -240,7 +239,7 @@ scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 
 	scc_SeedClustering cl = iscc_fs_init_clustering(nng->vertices, seed_init_capacity);
 
-	if (!sort.sorted_vertices || !cl.seeds) {
+	if ((sort.sorted_vertices == NULL) || (cl.seeds == NULL)) {
 		free(excluded);
 		scc_free_digraph(&exclusion_graph);
 		iscc_fs_free_SortResult(&sort);
@@ -361,7 +360,7 @@ static scc_SeedClustering iscc_fs_init_clustering(const size_t vertices,
 		.cluster_label = NULL,
 	};
 
-	if (!cl.seeds) return SCC_NULL_SEED_CLUSTERING;
+	if (cl.seeds == NULL) return SCC_NULL_SEED_CLUSTERING;
 
 	return cl;
 }
@@ -371,7 +370,7 @@ static void iscc_fs_shrink_seed_array(scc_SeedClustering* const cl)
 {
 	if (cl && cl->seeds && (cl->seed_capacity > cl->num_clusters) && (cl->num_clusters > 0)) {
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->num_clusters]));
-		if (tmp_ptr) {
+		if (tmp_ptr != NULL) {
 			cl->seeds = tmp_ptr;
 			cl->seed_capacity = cl->num_clusters;
 		}
@@ -389,7 +388,7 @@ static inline bool iscc_fs_add_seed(const scc_Vid s,
 		cl->seed_capacity = cl->seed_capacity + (cl->seed_capacity >> 3) + 1024;
 		if (cl->seed_capacity >= SCC_CLABEL_MAX) cl->seed_capacity = SCC_CLABEL_MAX - 1;
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->seed_capacity]));
-		if (!tmp_ptr) return false;
+		if (tmp_ptr == NULL) return false;
 		cl->seeds = tmp_ptr;
 	}
 	cl->seeds[cl->num_clusters] = s;
@@ -448,7 +447,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 		.bucket_index = NULL,
 	};
 
-	if (!res.inwards_count || !res.sorted_vertices) {
+	if ((res.inwards_count == NULL) || (res.sorted_vertices == NULL)) {
 		iscc_fs_free_SortResult(&res);
 		return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 	}
@@ -467,7 +466,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 
 	scc_Vid* bucket_count = calloc(max_inwards + 1, sizeof(scc_Vid));
 	res.bucket_index = malloc(sizeof(scc_Vid*[max_inwards + 1]));
-	if (!bucket_count || !res.bucket_index) {
+	if ((bucket_count == NULL) || (res.bucket_index == NULL)) {
 		free(bucket_count);
 		iscc_fs_free_SortResult(&res);
 		return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
@@ -486,7 +485,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 
 	if (make_indices) {
 		res.vertex_index = malloc(sizeof(scc_Vid*[vertices]));
-		if (!res.vertex_index) {
+		if (res.vertex_index == NULL) {
 			iscc_fs_free_SortResult(&res);
 			return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 		}

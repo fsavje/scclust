@@ -74,15 +74,17 @@ bool scc_is_balanced_digraph(const scc_Digraph* const dg,
 bool scc_digraphs_equal(const scc_Digraph* const dg_a,
                         const scc_Digraph* const dg_b)
 {
-	if (!dg_a) return !dg_b;
-	if (!dg_a->tail_ptr) return !dg_b->tail_ptr;
+	if (dg_a == NULL) return (dg_b == NULL);
+	if (dg_a->tail_ptr == NULL) return (dg_b->tail_ptr == NULL);
 	if (dg_a->vertices != dg_b->vertices) return false;
 
 	int_fast8_t* const single_row = malloc(sizeof(int_fast8_t[dg_a->vertices]));
 
 	for (size_t v = 0; v < dg_a->vertices; ++v) {
 
-		for (size_t i = 0; i < dg_a->vertices; ++i) single_row[i] = 0;
+		for (size_t i = 0; i < dg_a->vertices; ++i) {
+			single_row[i] = 0;
+		}
 
 		const scc_Vid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
@@ -118,13 +120,17 @@ scc_Digraph scc_digraph_from_pieces(const size_t vertices,
                                     const scc_Arci tail_ptr[const static vertices + 1],
                                     const scc_Vid head[const])
 {
-	if (!tail_ptr) return SCC_NULL_DIGRAPH;
-	if (max_arcs > 0 && !head) return SCC_NULL_DIGRAPH;
+	if (tail_ptr == NULL) return SCC_NULL_DIGRAPH;
+	if (max_arcs > 0 && head == NULL) return SCC_NULL_DIGRAPH;
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;
 
-	for (size_t v = 0; v <= vertices; ++v) dg.tail_ptr[v] = tail_ptr[v];
-	for (size_t a = 0; a < max_arcs; ++a) dg.head[a] = head[a];
+	for (size_t v = 0; v <= vertices; ++v) {
+		dg.tail_ptr[v] = tail_ptr[v];
+	}
+	for (size_t a = 0; a < max_arcs; ++a) {
+		dg.head[a] = head[a];
+	}
 
 	return dg;
 }
@@ -189,7 +195,7 @@ void scc_print_digraph(const scc_Digraph* const dg)
 	}
 
 	bool* const single_row = calloc(dg->vertices, sizeof(bool));
-	if (!single_row) {
+	if (single_row == NULL) {
 		printf("Out of memory.\n\n");
 		return;
 	}

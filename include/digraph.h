@@ -37,6 +37,9 @@
 #include "config.h"
 
 
+/// Typedef for scc_Digraph struct
+typedef struct scc_Digraph scc_Digraph;
+
 /** Main digraph struct stored as sparse matrix.
  *
  *  Stores the digraph in Yale sparse matrix format. For any vertex `i` in the digraph,
@@ -76,9 +79,6 @@ struct scc_Digraph {
 	 */
 	scc_Arci* const tail_ptr;
 };
-
-/// Typedef for scc_Digraph struct
-typedef struct scc_Digraph scc_Digraph;
 
 /** The null digraph.
  *
@@ -189,11 +189,13 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
  *  \param[in,out] dg digraph to delete arcs from.
  *  \param[in] to_delete array of indicators of the tails whose arcs should be deleted. Must be at least of length \p dg->vertices.
  *
+ *  \return \c true on successful deletion, \c false otherwise. On fail, \p dg is in a undefined state.
+ *
  *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-void scc_delete_arcs_by_tails(scc_Digraph* dg,
+bool scc_delete_arcs_by_tails(scc_Digraph* dg,
                               const bool to_delete[]);
 
 /** Delete all self-loops.
@@ -202,11 +204,13 @@ void scc_delete_arcs_by_tails(scc_Digraph* dg,
  *
  *  \param[in,out] dg digraph to delete self-loops from.
  *
+ *  \return \c true on successful deletion, \c false otherwise. On fail, \p dg is in a undefined state.
+ *
  *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-void scc_delete_loops(scc_Digraph* dg);
+bool scc_delete_loops(scc_Digraph* dg);
 
 /** Calculates the union of arbitrary number of digraphs.
  *

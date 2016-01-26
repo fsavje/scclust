@@ -63,7 +63,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
                               const bool ignore_loops)
 {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
-	if (!dgs || !scc_digraph_is_initialized(*dgs)) return SCC_NULL_DIGRAPH;
+	if ((dgs == NULL) || !scc_digraph_is_initialized(*dgs)) return SCC_NULL_DIGRAPH;
 
 	const size_t vertices = dgs[0]->vertices;
 
@@ -76,7 +76,7 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 	}
 
 	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
-	if (!row_markers) return SCC_NULL_DIGRAPH;
+	if (row_markers == NULL) return SCC_NULL_DIGRAPH;
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, out_arcs_write);
 	if (!scc_digraph_is_initialized(&dg_out)) {
@@ -112,7 +112,7 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 
 	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Vid));
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if (!row_count || !scc_digraph_is_initialized(&dg_out)) {
+	if ((row_count == NULL) || !scc_digraph_is_initialized(&dg_out)) {
 		free(row_count);
 		scc_free_digraph(&dg_out);
 		return SCC_NULL_DIGRAPH;
@@ -158,7 +158,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 	const size_t vertices = dg_a->vertices;
 
 	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
-	if (!row_markers) return SCC_NULL_DIGRAPH;
+	if (row_markers == NULL) return SCC_NULL_DIGRAPH;
 
 	size_t out_arcs_write = 0;
 
@@ -225,7 +225,9 @@ static inline size_t iscc_do_union(const size_t vertices,
 {
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
-	for (scc_Vid v = 0; v < vertices; ++v) row_markers[v] = SCC_VID_MAX;
+	for (scc_Vid v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_VID_MAX;
+	}
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (ignore_loops) row_markers[v] = v;
@@ -262,7 +264,9 @@ static inline size_t iscc_do_adjacency_product(const size_t vertices,
 {
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
-	for (scc_Vid v = 0; v < vertices; ++v) row_markers[v] = SCC_VID_MAX;
+	for (scc_Vid v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_VID_MAX;
+	}
 
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (force_loops) {

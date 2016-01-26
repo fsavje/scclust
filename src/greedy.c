@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include "../include/config.h"
 #include "../include/clustering.h"
-#include "../include/search.h"
+#include "nn_search.h"
 
 
 // ==============================================================================
@@ -258,7 +258,9 @@ static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const in
 	for (size_t c = 0; c < cl_stack.first_empty_pos; ++c) {
 		cl_stack.clusters[c].members = malloc(sizeof(scc_Vid[cl_stack.clusters[c].size]));
 		if (cl_stack.clusters[c].members == NULL) {
-			for (size_t c_free = 0; c_free < c; ++c_free) free(cl_stack.clusters[c_free].members);
+			for (size_t c_free = 0; c_free < c; ++c_free) {
+				free(cl_stack.clusters[c_free].members);
+			}
 			free(cl_stack.clusters);
 			return ISCC_GR_NULL_CLUSTER_STACK;
 		}
@@ -356,7 +358,9 @@ static void iscc_gr_panic_free_everything(iscc_gr_ClusterStack* cl_stack,
 		}
 	}
 
-	for (size_t c = 0; c < cl_stack->first_empty_pos; ++c) free(cl_stack->clusters[c].members);
+	for (size_t c = 0; c < cl_stack->first_empty_pos; ++c) {
+		free(cl_stack->clusters[c].members);
+	}
 	free(cl_stack->clusters);
 
 	free(iscc_gr_vertex_store);
@@ -422,17 +426,25 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(iscc_gr_Cluster* const clu
 	temp_dist1 = iscc_gr_get_first_k_nn(vertex1->dist_list, k - 1, k_nn_array1, old_sub_label);
 	temp_dist2 = iscc_gr_get_first_k_nn(vertex2->dist_list, k - 1, k_nn_array2, old_sub_label);
 	if (temp_dist1->distance >= temp_dist2->distance) {
-		for (size_t i = 0; i < k - 1; ++i) iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+		for (size_t i = 0; i < k - 1; ++i) {
+			iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+		}
 		last_assigned_dist1 = temp_dist1;
 
 		last_assigned_dist2 = iscc_gr_get_first_k_nn(vertex2->dist_list, k - 1, k_nn_array2, old_sub_label);
-		for (size_t i = 0; i < k - 1; ++i) iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+		for (size_t i = 0; i < k - 1; ++i) {
+			iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+		}
 	} else {
-		for (size_t i = 0; i < k - 1; ++i) iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+		for (size_t i = 0; i < k - 1; ++i) {
+			iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+		}
 		last_assigned_dist2 = temp_dist2;
 
 		last_assigned_dist1 = iscc_gr_get_first_k_nn(vertex1->dist_list, k - 1, k_nn_array1, old_sub_label);
-		for (size_t i = 0; i < k - 1; ++i) iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+		for (size_t i = 0; i < k - 1; ++i) {
+			iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+		}
 	}
 
 	assert(cluster1->size + cluster2->size == 2 * k);
@@ -450,10 +462,14 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(iscc_gr_Cluster* const clu
 			temp_dist2 = iscc_gr_get_next_k_nn(last_assigned_dist2, num_assign_in_batch, k_nn_array2, old_sub_label);
 
 			if (temp_dist1->distance <= temp_dist2->distance) {
-				for (size_t i = 0; i < num_assign_in_batch; ++i) iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+				for (size_t i = 0; i < num_assign_in_batch; ++i) {
+					iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, sub_label1);
+				}
 				last_assigned_dist1 = temp_dist1;
 			} else {
-				for (size_t i = 0; i < num_assign_in_batch; ++i) iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+				for (size_t i = 0; i < num_assign_in_batch; ++i) {
+					iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, sub_label2);
+				}
 				last_assigned_dist2 = temp_dist2;
 			}
 		}

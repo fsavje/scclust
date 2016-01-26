@@ -1,6 +1,6 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 
-OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o findseeds.o nng_clustering.o
+OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o findseeds.o greedy.o nn_search.o nng_clustering.o
 BUILDDIR=build
 
 BUILDOBJS=$(addprefix $(BUILDDIR)/,$(OBJECTS))

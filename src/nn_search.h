@@ -19,9 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
+#ifndef SCC_NN_SEARCH_HG
+#define SCC_NN_SEARCH_HG
+
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
+#include "../include/config.h"
 
 
 void* scc_init_search_object(void* data_object,
@@ -40,3 +43,6 @@ bool scc_nearest_neighbor_search(void* search_object,
 bool scc_close_search_object(void* search_object);
 
 //scc_Vid scc_get_number_of_observations(void* data_object);
+
+
+#endif

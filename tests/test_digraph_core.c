@@ -190,27 +190,27 @@ void scc_ut_delete_arcs_by_tails(void** state)
 	scc_Digraph ref;
 
 	temp_dg = scc_copy_digraph(&dg1);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete1);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete1));
 	assert_equal_digraph(&temp_dg, &dg1);
 	assert_free_digraph(&temp_dg);
 
 	ref = scc_empty_digraph(4, 0);
 	temp_dg = scc_copy_digraph(&dg1);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete2);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete2));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
 	
 	ref = scc_empty_digraph(4, 0);
 	temp_dg = scc_copy_digraph(&dg1);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete3);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete3));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
 	
 	ref = scc_digraph_from_string("####/..../..../..../");
 	temp_dg = scc_copy_digraph(&dg1);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete4);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete4));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
@@ -219,27 +219,27 @@ void scc_ut_delete_arcs_by_tails(void** state)
 	scc_Digraph dg2 = scc_digraph_from_string("##../.#.#/..##/#.#./");
 
 	temp_dg = scc_copy_digraph(&dg2);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete1);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete1));
 	assert_equal_digraph(&temp_dg, &dg2);
 	assert_free_digraph(&temp_dg);
 
 	ref = scc_empty_digraph(4, 0);
 	temp_dg = scc_copy_digraph(&dg2);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete2);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete2));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
 	
 	ref = scc_digraph_from_string("..../.#.#/..../#.#./");
 	temp_dg = scc_copy_digraph(&dg2);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete3);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete3));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
 	
 	ref = scc_digraph_from_string("##../.#.#/..../..../");
 	temp_dg = scc_copy_digraph(&dg2);
-	scc_delete_arcs_by_tails(&temp_dg, to_delete4);
+	assert_true(scc_delete_arcs_by_tails(&temp_dg, to_delete4));
 	assert_equal_digraph(&temp_dg, &ref);
 	assert_free_digraph(&temp_dg);
 	assert_free_digraph(&ref);
@@ -259,11 +259,11 @@ void scc_ut_delete_loops(void** state)
 	scc_Digraph dg4 = scc_digraph_from_string("#..../.#.../..#../...#./....#/");
 	scc_Digraph dg5 = scc_digraph_from_string("#.#../#..../#.#../##.../##..#/");
 
-	scc_delete_loops(&dg1);
-	scc_delete_loops(&dg2);
-	scc_delete_loops(&dg3);
-	scc_delete_loops(&dg4);
-	scc_delete_loops(&dg5);
+	assert_true(scc_delete_loops(&dg1));
+	assert_true(scc_delete_loops(&dg2));
+	assert_true(scc_delete_loops(&dg3));
+	assert_true(scc_delete_loops(&dg4));
+	assert_true(scc_delete_loops(&dg5));
 
 	scc_Digraph ref1 = scc_digraph_from_string(".####/#.###/##.##/###.#/####./");
 	scc_Digraph ref2 = scc_digraph_from_string("...../...../...../...../...../");

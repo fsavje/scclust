@@ -2,7 +2,7 @@ CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 CXXFLAGS=-std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 EXLIBS=-lcmocka
 
-OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o findseeds.o nng_clustering.o
+OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o findseeds.o greedy.o nn_search.o nng_clustering.o
 BUILDDIR=build
 
 STDTESTS=test_digraph_core test_digraph_debug test_digraph_operations test_findseeds test_nng_clustering \

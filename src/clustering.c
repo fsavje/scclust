@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-#include "../include/nng_clustering.h"
+#include "../include/clustering.h"
 
 #include <stdlib.h>
+#include "../include/config.h"
 
 
 // ==============================================================================
@@ -30,7 +31,7 @@
 
 void scc_free_Clustering(scc_Clustering* const cl)
 {
-	if (cl) {
+	if (cl != NULL) {
 		if (!cl->external_labels) free(cl->cluster_label);
 		*cl = SCC_NULL_CLUSTERING;
 	}

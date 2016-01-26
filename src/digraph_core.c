@@ -45,11 +45,11 @@ scc_Digraph scc_init_digraph(const size_t vertices,
 		.tail_ptr = malloc(sizeof(scc_Arci[vertices + 1])),
 	};
 
-	if (!dg.tail_ptr) return SCC_NULL_DIGRAPH;
+	if (dg.tail_ptr == NULL) return SCC_NULL_DIGRAPH;
 
 	if (max_arcs > 0) {
 		dg.head = malloc(sizeof(scc_Vid[max_arcs]));
-		if (!dg.head) {
+		if (dg.head == NULL) {
 			scc_free_digraph(&dg);
 			return SCC_NULL_DIGRAPH;
 		}
@@ -63,7 +63,7 @@ scc_Digraph scc_init_digraph(const size_t vertices,
 
 bool scc_digraph_is_initialized(const scc_Digraph* const dg)
 {
-	if (!dg || !dg->tail_ptr) return false;
+	if ((dg == NULL) || (dg->tail_ptr == NULL)) return false;
 	if ((dg->vertices >= SCC_VID_MAX) || (dg->max_arcs > SCC_ARCI_MAX)) return false;
 	if (dg->max_arcs == 0 && dg->head) return false;
 	if (dg->max_arcs > 0 && !dg->head) return false;
@@ -73,7 +73,7 @@ bool scc_digraph_is_initialized(const scc_Digraph* const dg)
 
 void scc_free_digraph(scc_Digraph* const dg)
 {
-	if (dg) {
+	if (dg != NULL) {
 		free(dg->head);
 		free(dg->tail_ptr);
 		*dg = SCC_NULL_DIGRAPH;
@@ -95,7 +95,7 @@ bool scc_change_arc_storage(scc_Digraph* const dg,
 		dg->max_arcs = 0;
 	} else {
 		scc_Vid* const tmp_ptr = realloc(dg->head, sizeof(scc_Vid[new_max_arcs]));
-		if (!tmp_ptr) return false;
+		if (tmp_ptr == NULL) return false;
 		dg->head = tmp_ptr;
 		dg->max_arcs = new_max_arcs;
 	}
@@ -110,7 +110,9 @@ scc_Digraph scc_empty_digraph(const size_t vertices,
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;
 	
-	for (scc_Vid v = 0; v <= vertices; ++v) dg.tail_ptr[v] = 0;
+	for (scc_Vid v = 0; v <= vertices; ++v) {
+		dg.tail_ptr[v] = 0;
+	}
 
 	return dg;
 }
@@ -124,17 +126,21 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* const dg)
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
 	if (!scc_digraph_is_initialized(&dg_out)) return SCC_NULL_DIGRAPH;
 
-	for (scc_Vid v = 0; v <= dg->vertices; ++v) dg_out.tail_ptr[v] = dg->tail_ptr[v];
-	for (scc_Arci a = 0; a < dg->tail_ptr[dg->vertices]; ++a) dg_out.head[a] = dg->head[a];
+	for (scc_Vid v = 0; v <= dg->vertices; ++v) {
+		dg_out.tail_ptr[v] = dg->tail_ptr[v];
+	}
+	for (scc_Arci a = 0; a < dg->tail_ptr[dg->vertices]; ++a) {
+		dg_out.head[a] = dg->head[a];
+	}
 
 	return dg_out;
 }
 
 
-void scc_delete_arcs_by_tails(scc_Digraph* const dg,
+bool scc_delete_arcs_by_tails(scc_Digraph* const dg,
                               const bool to_delete[const])
 {
-	if (!scc_digraph_is_initialized(dg) || !to_delete) return;
+	if (!scc_digraph_is_initialized(dg) || (to_delete == NULL)) return false;
 
 	scc_Arci head_write = 0;
 	for (scc_Vid v = 0; v < dg->vertices; ++v) {
@@ -155,12 +161,14 @@ void scc_delete_arcs_by_tails(scc_Digraph* const dg,
 		}
 	}
 	dg->tail_ptr[dg->vertices] = head_write;
+
+	return true;
 }
 
 
-void scc_delete_loops(scc_Digraph* const dg)
+bool scc_delete_loops(scc_Digraph* const dg)
 {
-	if (!scc_digraph_is_initialized(dg)) return;
+	if (!scc_digraph_is_initialized(dg)) return false;
 
 	scc_Arci head_write = 0;
 	for (scc_Vid v = 0; v < dg->vertices; ++v) {
@@ -176,4 +184,6 @@ void scc_delete_loops(scc_Digraph* const dg)
 		}
 	}
 	dg->tail_ptr[dg->vertices] = head_write;
+
+	return true;
 }

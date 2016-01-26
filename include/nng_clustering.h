@@ -35,6 +35,7 @@
 #include "digraph.h"
 #include "clustering.h"
 
+
 /** Enum to specify seed finding methods.
  *
  *  The NNG-based clustering algorithms find seeds to build the clustering on. This enum specifies which method is used to find the seeds.
@@ -92,6 +93,9 @@ enum scc_SeedMethod {
 /// Typedef for the scc_SeedMethod enum
 typedef enum scc_SeedMethod scc_SeedMethod;
 
+/// Typedef for the scc_SeedClustering struct
+typedef struct scc_SeedClustering scc_SeedClustering;
+
 /** Clustering struct with seed information.
  *
  *  The NNG-based clustering functions declared in this header construct clusters by growing them from "seeds".
@@ -131,9 +135,6 @@ struct scc_SeedClustering {
      */
 	scc_Clabel* cluster_label;
 };
-
-/// Typedef for the scc_SeedClustering struct
-typedef struct scc_SeedClustering scc_SeedClustering;
 
 /** The null seed clustering.
  *
@@ -268,7 +269,7 @@ scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* cl,
  *
  *  \param[in,out] cl seed clustering to build final clustering from.
  *  \param[in] priority_graph digraph to search for assigned vertices in.
- *  \param desired_size the desired size of the clusters. It is assumed that each cluster is of this size in the inputted \p cl.
+ *  \param desired_size the desired size of the clusters.
  *
  *  \return the final clustering in the form of a #scc_Clustering struct. 
  *
@@ -276,6 +277,7 @@ scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* cl,
  *        not free the cluster labels as they are used by the output struct as well.
  *  \note `cl->assigned` is not updated by this function and refer to whether vertices were assigned to a cluster in the
  *        original partial seed clustering.
+ *  \note If \p desired_size is set to `0`, vertices will be assigned to the largest possible cluster.
  */
 scc_Clustering scc_assign_remaining_desired_size(scc_SeedClustering* cl,
                                                  const scc_Digraph* priority_graph,
