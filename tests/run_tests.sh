@@ -22,6 +22,5 @@ run_test test_nng_clust_caliper
 run_test test_nng_clust_loops
 run_test test_greedy_internals
 run_test test_clustering
-run_test test_ann_wrapper
 
 echo "\n*** ALL TESTS PASSED! ***"
