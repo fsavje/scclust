@@ -27,9 +27,6 @@
 #include "../include/config.h"
 
 
-typedef struct scc_DataSetObject scc_DataSetObject;
-
-
 // ==============================================================================
 // Miscellaneous functions
 // ==============================================================================
@@ -56,26 +53,46 @@ bool scc_close_dist_column_object(scc_DistColObject* dist_column_object);
 
 
 // ==============================================================================
+// Max dist functions
+// ==============================================================================
+
+typedef struct scc_MaxDistObject scc_MaxDistObject;
+
+scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* data_set_object,
+                                            bool get_distances,
+                                            size_t n_search_points,
+                                            const scc_Vid* search_indices);
+
+bool scc_get_max_dist(scc_MaxDistObject* max_dist_object,
+                      size_t n_query_points,
+                      const scc_Vid* query_indices,
+                      scc_Vid* max_indices,
+                      scc_Distance* max_dists);
+
+bool scc_close_max_dist_object(scc_MaxDistObject* max_dist_object);
+
+
+// ==============================================================================
 // Nearest neighbor search functions
 // ==============================================================================
 
-typedef struct scc_SearchObject scc_SearchObject;
+typedef struct scc_NNSearchObject scc_NNSearchObject;
 
-scc_SearchObject* scc_init_search_object(scc_DataSetObject* data_set_object,
-                                         size_t k,
-                                         bool get_distances,
-                                         bool radius_search,
-                                         scc_Distance radius,
-                                         size_t n_search_points,
-                                         const scc_Vid* search_indices);
+scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* data_set_object,
+                                              size_t k,
+                                              bool get_distances,
+                                              bool radius_search,
+                                              scc_Distance radius,
+                                              size_t n_search_points,
+                                              const scc_Vid* search_indices);
 
-bool scc_nearest_neighbor_search(scc_SearchObject* search_object,
+bool scc_nearest_neighbor_search(scc_NNSearchObject* nn_search_object,
                                  size_t n_query_points,
                                  const scc_Vid* query_indices,
                                  scc_Vid* nn_indices,
                                  scc_Distance* nn_dists);
 
-bool scc_close_search_object(scc_SearchObject* search_object);
+bool scc_close_nn_search_object(scc_NNSearchObject* nn_search_object);
 
 
 #endif

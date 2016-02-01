@@ -46,7 +46,7 @@ struct scc_DistColObject {
     const scc_Vid* column_indices;
 };
 
-struct scc_SearchObject {
+struct scc_NNSearchObject {
 	scc_DataSetObject* data_set_object;
 	size_t k;
 	bool get_distances;
@@ -145,13 +145,13 @@ bool scc_close_dist_column_object(scc_DistColObject* const dist_column_object)
 }
 
 
-scc_SearchObject* scc_init_search_object(scc_DataSetObject* const data_set_object,
-                                         const size_t k,
-                                         const bool get_distances,
-                                         const bool radius_search,
-                                         const scc_Distance radius,
-                                         const size_t n_search_points,
-                                         const scc_Vid* const search_indices)
+scc_NNSearchObject* scc_init_search_object(scc_DataSetObject* const data_set_object,
+                                           const size_t k,
+                                           const bool get_distances,
+                                           const bool radius_search,
+                                           const scc_Distance radius,
+                                           const size_t n_search_points,
+                                           const scc_Vid* const search_indices)
 {
 	assert(data_set_object != NULL);
 	assert(k > 0);
@@ -166,10 +166,10 @@ scc_SearchObject* scc_init_search_object(scc_DataSetObject* const data_set_objec
 		}
 	}
 
-	scc_SearchObject* so = malloc(sizeof(scc_SearchObject));
+	scc_NNSearchObject* so = malloc(sizeof(scc_NNSearchObject));
 	if (so == NULL) return NULL;
 
-	*so = (scc_SearchObject) {
+	*so = (scc_NNSearchObject) {
 		.data_set_object = data_set_object,
 		.k = k,
 		.get_distances = get_distances,
@@ -197,14 +197,14 @@ scc_SearchObject* scc_init_search_object(scc_DataSetObject* const data_set_objec
 }
 
 
-bool scc_nearest_neighbor_search(scc_SearchObject* const search_object,
+bool scc_nearest_neighbor_search(scc_NNSearchObject* const nn_search_object,
                                  const size_t n_query_points,
                                  const scc_Vid* const query_indices,
                                  scc_Vid* const nn_indices,
                                  scc_Distance* const nn_dists)
 {
-	assert(search_object != NULL);
-	scc_SearchObject so = *search_object;
+	assert(nn_search_object != NULL);
+	scc_NNSearchObject so = *nn_search_object;
 
 	assert(so.n_search_points > 0);
 	assert((so.n_search_points == so.data_set_object->rows) || (so.search_indices != NULL));
@@ -273,11 +273,11 @@ bool scc_nearest_neighbor_search(scc_SearchObject* const search_object,
 }
 
 
-bool scc_close_search_object(scc_SearchObject* const search_object)
+bool scc_close_search_object(scc_NNSearchObject* const nn_search_object)
 {
-	free(search_object->dist_scratch);
-	if (!search_object->get_distances) free(search_object->sort_scratch);
-	free(search_object);
+	free(nn_search_object->dist_scratch);
+	if (!nn_search_object->get_distances) free(nn_search_object->sort_scratch);
+	free(nn_search_object);
 
 	return true;
 }

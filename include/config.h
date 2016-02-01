@@ -84,5 +84,7 @@ typedef uint32_t scc_Vid;
 /// Maximum number that can be stored in #scc_Vid.
 #define SCC_VID_MAX UINT32_MAX
 
+typedef struct scc_DataSetObject scc_DataSetObject;
+
 
 #endif

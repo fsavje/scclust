@@ -29,12 +29,18 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "config.h"
 #include "clustering.h"
 
 
-bool scc_get_greedy_clustering(void* data_object,
-                               size_t k,
-                               scc_Clustering* input_clustering,
-                               bool batch_assign);
+bool scc_greedy_break_clustering(scc_Clustering* input_clustering,
+                                 scc_DataSetObject* data_set_object,
+                                 size_t k,
+                                 bool batch_assign);
+
+scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* data_set_object,
+                                         size_t k,
+                                         bool batch_assign);
+
 
 #endif
