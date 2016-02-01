@@ -43,8 +43,8 @@ struct iscc_gr_DistanceEdge {
 	iscc_gr_DistanceEdge* next_dist;
 };
 
-typedef struct iscc_gr_Cluster iscc_gr_Cluster;
-struct iscc_gr_Cluster {
+typedef struct iscc_gr_ClusterItem iscc_gr_ClusterItem;
+struct iscc_gr_ClusterItem {
 	size_t size;
 	scc_Vid* members;
 };
@@ -53,7 +53,7 @@ typedef struct iscc_gr_ClusterStack iscc_gr_ClusterStack;
 struct iscc_gr_ClusterStack {
 	size_t capacity;
 	size_t items;
-	iscc_gr_Cluster* clusters;
+	iscc_gr_ClusterItem* clusters;
 };
 
 
@@ -61,7 +61,7 @@ struct iscc_gr_ClusterStack {
 // Internal variables
 // ==============================================================================
 
-static const iscc_gr_Cluster ISCC_GR_NULL_CLUSTER = { 0, NULL };
+static const iscc_gr_ClusterItem ISCC_GR_NULL_CLUSTER_ITEM = { 0, NULL };
 static bool* iscc_gr_vertex_mark = NULL;
 
 
@@ -75,31 +75,31 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* data_set_object,
                                           size_t k,
                                           bool batch_assign);
 
-static inline iscc_gr_Cluster* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack* cl_stack);
+static inline iscc_gr_ClusterItem* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack* cl_stack);
 
-static inline iscc_gr_Cluster iscc_gr_pop_from_stack(iscc_gr_ClusterStack* cl_stack);
+static inline iscc_gr_ClusterItem iscc_gr_pop_from_stack(iscc_gr_ClusterStack* cl_stack);
 
 static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* cl_stack,
-                                  iscc_gr_Cluster cl);
+                                  iscc_gr_ClusterItem cl);
 
-static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* data_set_object,
-                                                      iscc_gr_Cluster* cluster_to_break,
-                                                      size_t k,
-                                                      bool batch_assign);
+static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* data_set_object,
+                                                          iscc_gr_ClusterItem* cluster_to_break,
+                                                          size_t k,
+                                                          bool batch_assign);
 
 static bool iscc_gr_find_centers(scc_DataSetObject* data_set_object,
-                                 const iscc_gr_Cluster* cl,
+                                 const iscc_gr_ClusterItem* cl,
                                  scc_Vid* center1,
                                  scc_Vid* center2);
 
 static bool iscc_gr_populate_dist_lists(scc_DataSetObject* data_set_object,
-                                        const iscc_gr_Cluster* cl,
+                                        const iscc_gr_ClusterItem* cl,
                                         scc_Vid center1,
                                         scc_Vid center2,
                                         iscc_gr_DistanceEdge dist_store1[static cl->size],
                                         iscc_gr_DistanceEdge dist_store2[static cl->size]);
 
-static inline void iscc_gr_sort_dist_list(const iscc_gr_Cluster* cl,
+static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* cl,
                                           scc_Vid center,
                                           const scc_Distance output_dists[static cl->size],
                                           iscc_gr_DistanceEdge dist_edge_store[static cl->size]);
@@ -108,7 +108,7 @@ static int iscc_gr_compare_dist_edges(const void* a,
                                       const void* b);
 
 static inline void iscc_gr_move_v_to_cluster(scc_Vid v_id,
-                                             iscc_gr_Cluster* cl);
+                                             iscc_gr_ClusterItem* cl);
 
 static inline iscc_gr_DistanceEdge* iscc_gr_get_next_dist(iscc_gr_DistanceEdge* prev_dist);
 
@@ -141,7 +141,7 @@ bool scc_greedy_break_clustering(scc_Clustering* const input_clustering,
 	iscc_gr_ClusterStack cl_stack;
 	cl_stack.capacity = input_clustering->num_clusters + (size_t) (10 * log2((double) input_clustering->vertices)),
 	cl_stack.items = input_clustering->num_clusters,
-	cl_stack.clusters = calloc(cl_stack.capacity, sizeof(iscc_gr_Cluster));
+	cl_stack.clusters = calloc(cl_stack.capacity, sizeof(iscc_gr_ClusterItem));
 
 	if ((iscc_gr_vertex_mark == NULL) || (cl_stack.clusters == NULL)) {
 		free(iscc_gr_vertex_mark);
@@ -173,7 +173,7 @@ bool scc_greedy_break_clustering(scc_Clustering* const input_clustering,
 
 	for (scc_Vid v = 0; v < input_clustering->vertices; ++v) {
 		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
-			iscc_gr_Cluster* cl = &cl_stack.clusters[input_clustering->cluster_label[v]];
+			iscc_gr_ClusterItem* cl = &cl_stack.clusters[input_clustering->cluster_label[v]];
 			cl->members[cl->size] = v;
 			++(cl->size);
 		}
@@ -222,7 +222,7 @@ scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_objec
 	iscc_gr_ClusterStack cl_stack;
 	cl_stack.capacity = 1 + (size_t) (20 * log2((double) num_vertices));
 	cl_stack.items = 1;
-	cl_stack.clusters = malloc(sizeof(iscc_gr_Cluster[cl_stack.capacity]));
+	cl_stack.clusters = malloc(sizeof(iscc_gr_ClusterItem[cl_stack.capacity]));
 
 	scc_Vid* const tmp_members = malloc(sizeof(scc_Vid[num_vertices]));
 
@@ -281,7 +281,7 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 	while (iscc_gr_peek_at_stack(cl_stack) != NULL) {
 
 		if (iscc_gr_peek_at_stack(cl_stack)->size < 2 * k) {
-			iscc_gr_Cluster unbreakable_cluster = iscc_gr_pop_from_stack(cl_stack);
+			iscc_gr_ClusterItem unbreakable_cluster = iscc_gr_pop_from_stack(cl_stack);
 			if (unbreakable_cluster.size > 0) {
 				for (size_t v = 0; v < unbreakable_cluster.size; ++v) {
 					assert(unbreakable_cluster.members[v] < input_clustering->vertices);
@@ -291,7 +291,7 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 				free(unbreakable_cluster.members);
 			}
 		} else {
-			iscc_gr_Cluster new_cluster = iscc_gr_break_cluster_into_two(data_set_object, iscc_gr_peek_at_stack(cl_stack), k, batch_assign);
+			iscc_gr_ClusterItem new_cluster = iscc_gr_break_cluster_into_two(data_set_object, iscc_gr_peek_at_stack(cl_stack), k, batch_assign);
 			if (new_cluster.members == NULL) return false;
 			if (!iscc_gr_push_to_stack(cl_stack, new_cluster)) {
 				free(new_cluster.members);
@@ -308,7 +308,7 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 }
 
 
-static inline iscc_gr_Cluster* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack* const cl_stack)
+static inline iscc_gr_ClusterItem* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack* const cl_stack)
 {
 	assert(cl_stack != NULL);
 	assert(cl_stack->clusters != NULL);
@@ -318,7 +318,7 @@ static inline iscc_gr_Cluster* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack*
 }
 
 
-static inline iscc_gr_Cluster iscc_gr_pop_from_stack(iscc_gr_ClusterStack* const cl_stack)
+static inline iscc_gr_ClusterItem iscc_gr_pop_from_stack(iscc_gr_ClusterStack* const cl_stack)
 {
 	assert(cl_stack != NULL);
 	assert(cl_stack->clusters != NULL);
@@ -330,14 +330,14 @@ static inline iscc_gr_Cluster iscc_gr_pop_from_stack(iscc_gr_ClusterStack* const
 
 
 static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
-                                  const iscc_gr_Cluster cl)
+                                  const iscc_gr_ClusterItem cl)
 {
 	assert(cl_stack != NULL);
 	assert(cl_stack->clusters != NULL);
 
 	if (cl_stack->items == cl_stack->capacity) {
 		size_t new_capacity = cl_stack->capacity + 1 + (size_t) (20 * log2((double) cl.size));
-		iscc_gr_Cluster* const clusters_tmp = realloc(cl_stack->clusters, sizeof(iscc_gr_Cluster[new_capacity]));
+		iscc_gr_ClusterItem* const clusters_tmp = realloc(cl_stack->clusters, sizeof(iscc_gr_ClusterItem[new_capacity]));
 		if (!clusters_tmp) return false;
 		cl_stack->capacity = new_capacity;
 		cl_stack->clusters = clusters_tmp;
@@ -350,10 +350,10 @@ static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
 }
 
 
-static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* const data_set_object,
-                                                      iscc_gr_Cluster* const cluster_to_break,
-                                                      const size_t k,
-                                                      const bool batch_assign)
+static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* const data_set_object,
+                                                          iscc_gr_ClusterItem* const cluster_to_break,
+                                                          const size_t k,
+                                                          const bool batch_assign)
 {
 	assert(cluster_to_break != NULL);
 	assert(k >= 2);
@@ -363,7 +363,7 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* const d
 	const size_t old_cluster_size = cluster_to_break->size;
 
 	scc_Vid center1, center2;
-	if (!iscc_gr_find_centers(data_set_object, cluster_to_break, &center1, &center2)) return ISCC_GR_NULL_CLUSTER;
+	if (!iscc_gr_find_centers(data_set_object, cluster_to_break, &center1, &center2)) return ISCC_GR_NULL_CLUSTER_ITEM;
 
 	for (size_t i = 0; i < old_cluster_size; ++i) {
 		assert(iscc_gr_vertex_mark[cluster_to_break->members[i]]);
@@ -375,34 +375,26 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* const d
 	scc_Vid* const k_nn_array1 = malloc(sizeof(scc_Vid[k]));
 	scc_Vid* const k_nn_array2 = malloc(sizeof(scc_Vid[k]));
 
-	iscc_gr_Cluster new_cluster = {
+	iscc_gr_ClusterItem new_cluster = {
 		.size = 0,
 		.members = malloc(sizeof(scc_Vid[old_cluster_size])),
 	};
 
 	if ((dist_store1 == NULL) || (dist_store2 == NULL) || (k_nn_array1 == NULL) ||
-	        (k_nn_array2 == NULL) || (new_cluster.members == NULL)) {
+	        (k_nn_array2 == NULL) || (new_cluster.members == NULL) ||
+	        !iscc_gr_populate_dist_lists(data_set_object, cluster_to_break, center1, center2, dist_store1, dist_store2)) {
 		free(dist_store1);
 		free(dist_store2);
 		free(k_nn_array1);
 		free(k_nn_array2);
 		free(new_cluster.members);
-		return ISCC_GR_NULL_CLUSTER;
+		return ISCC_GR_NULL_CLUSTER_ITEM;
 	}
 
-	if (!iscc_gr_populate_dist_lists(data_set_object, cluster_to_break, center1, center2, dist_store1, dist_store2)) {
-		free(dist_store1);
-		free(dist_store2);
-		free(k_nn_array1);
-		free(k_nn_array2);
-		free(new_cluster.members);
-		return ISCC_GR_NULL_CLUSTER;
-	}
-
-	iscc_gr_Cluster* const cluster1 = cluster_to_break;
+	iscc_gr_ClusterItem* const cluster1 = cluster_to_break;
 	cluster1->size = 0;
 
-	iscc_gr_Cluster* const cluster2 = &new_cluster;
+	iscc_gr_ClusterItem* const cluster2 = &new_cluster;
 
 	iscc_gr_move_v_to_cluster(center1, cluster1);
 	iscc_gr_move_v_to_cluster(center2, cluster2);
@@ -496,7 +488,7 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* const d
 		free(members_tmp1);
 		free(members_tmp2);
 		if (cluster2->members != members_tmp2) free(cluster2->members);
-		return ISCC_GR_NULL_CLUSTER;
+		return ISCC_GR_NULL_CLUSTER_ITEM;
 	}
 	cluster1->members = members_tmp1;
 	cluster2->members = members_tmp2;
@@ -506,7 +498,7 @@ static iscc_gr_Cluster iscc_gr_break_cluster_into_two(scc_DataSetObject* const d
 
 
 static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
-                                 const iscc_gr_Cluster* const cl,
+                                 const iscc_gr_ClusterItem* const cl,
                                  scc_Vid* const center1,
                                  scc_Vid* const center2)
 {
@@ -592,7 +584,7 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 
 
 static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object,
-                                        const iscc_gr_Cluster* const cl,
+                                        const iscc_gr_ClusterItem* const cl,
                                         const scc_Vid center1,
                                         const scc_Vid center2,
                                         iscc_gr_DistanceEdge dist_store1[const static cl->size],
@@ -629,7 +621,7 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
 }
 
 
-static inline void iscc_gr_sort_dist_list(const iscc_gr_Cluster* const cl,
+static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* const cl,
                                           const scc_Vid center,
                                           const scc_Distance output_dists[const static cl->size],
                                           iscc_gr_DistanceEdge dist_edge_store[const static cl->size])
@@ -670,7 +662,7 @@ static int iscc_gr_compare_dist_edges(const void* const a,
 
 
 static inline void iscc_gr_move_v_to_cluster(const scc_Vid v_id,
-                                             iscc_gr_Cluster* const cl)
+                                             iscc_gr_ClusterItem* const cl)
 {
 	assert(iscc_gr_vertex_mark != NULL);
 	assert(iscc_gr_vertex_mark[v_id]);
