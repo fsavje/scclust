@@ -42,7 +42,8 @@ typedef struct scc_DistColObject scc_DistColObject;
 
 scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* data_set_object,
                                                size_t n_columns,
-                                               const scc_Vid* column_indices);
+                                               const scc_Vid* column_indices,
+                                               size_t n_query_hint);
 
 bool scc_get_dist_row(scc_DistColObject* dist_column_object,
                       size_t n_query_rows,
@@ -59,9 +60,9 @@ bool scc_close_dist_column_object(scc_DistColObject* dist_column_object);
 typedef struct scc_MaxDistObject scc_MaxDistObject;
 
 scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* data_set_object,
-                                            bool get_distances,
                                             size_t n_search_points,
-                                            const scc_Vid* search_indices);
+                                            const scc_Vid* search_indices,
+                                            size_t n_query_hint);
 
 bool scc_get_max_dist(scc_MaxDistObject* max_dist_object,
                       size_t n_query_points,
@@ -80,11 +81,11 @@ typedef struct scc_NNSearchObject scc_NNSearchObject;
 
 scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* data_set_object,
                                               size_t k,
-                                              bool get_distances,
                                               bool radius_search,
                                               scc_Distance radius,
                                               size_t n_search_points,
-                                              const scc_Vid* search_indices);
+                                              const scc_Vid* search_indices,
+                                              size_t n_query_hint);
 
 bool scc_nearest_neighbor_search(scc_NNSearchObject* nn_search_object,
                                  size_t n_query_points,

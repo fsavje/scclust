@@ -511,17 +511,16 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 		assert(!iscc_gr_vertex_mark[cl->members[i]]);
 	}
 
-	scc_MaxDistObject* max_dist_object = scc_init_max_dist_object(data_set_object, true, cl->size, cl->members);
-	if (max_dist_object == NULL) return false;
-
 	size_t step = cl->size / 1000;
 	if (step < 2) step = 2;
 	size_t num_to_check = 1 + (cl->size - 1) / step;
+
 	scc_Vid* to_check = malloc(sizeof(scc_Vid[num_to_check]));
 	scc_Vid* max_indices = malloc(sizeof(scc_Vid[num_to_check]));
 	scc_Distance* max_dists = malloc(sizeof(scc_Distance[num_to_check]));
-
-	if ((to_check == NULL) || (max_indices == NULL) || (max_dists == NULL)) {
+	scc_MaxDistObject* max_dist_object = scc_init_max_dist_object(data_set_object, cl->size, cl->members, 2 * num_to_check);
+	if ((to_check == NULL) || (max_indices == NULL) ||
+	        (max_dists == NULL) || (max_dist_object == NULL)) {
 		free(to_check);
 		free(max_indices);
 		free(max_dists);
@@ -595,7 +594,7 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
 	assert(dist_store2 != NULL);
 
 	scc_Distance* const output_dists = malloc(sizeof(scc_Distance[2 * cl->size]));
-	scc_DistColObject* const dist_column_object = scc_init_dist_column_object(data_set_object, cl->size, cl->members);
+	scc_DistColObject* const dist_column_object = scc_init_dist_column_object(data_set_object, cl->size, cl->members, 2);
 	if ((output_dists == NULL) || (dist_column_object == NULL)) {
 		free(output_dists);
 		scc_close_dist_column_object(dist_column_object);
