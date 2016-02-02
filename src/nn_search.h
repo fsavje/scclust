@@ -34,6 +34,13 @@
 scc_Vid scc_get_data_point_count(scc_DataSetObject* data_set_object);
 
 
+// `output_dists` must be of length `(n_points - 1) n_points / 2`
+bool scc_get_dist_matrix(scc_DataSetObject* data_set_object,
+                         size_t n_points,
+                         const scc_Vid* point_indices,
+                         scc_Distance* output_dists);
+
+
 // ==============================================================================
 // Distance row generation functions
 // ==============================================================================
@@ -45,6 +52,7 @@ scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* data_set_objec
                                                const scc_Vid* column_indices,
                                                size_t n_query_hint);
 
+// `output_dists` must be of length `n_columns * n_query_rows`
 bool scc_get_dist_row(scc_DistColObject* dist_column_object,
                       size_t n_query_rows,
                       const scc_Vid* query_indices,
@@ -64,6 +72,7 @@ scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* data_set_object,
                                             const scc_Vid* search_indices,
                                             size_t n_query_hint);
 
+// `max_indices` and `max_dists` must be of length `n_query_points`
 bool scc_get_max_dist(scc_MaxDistObject* max_dist_object,
                       size_t n_query_points,
                       const scc_Vid* query_indices,
@@ -87,6 +96,7 @@ scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* data_set_object
                                               const scc_Vid* search_indices,
                                               size_t n_query_hint);
 
+// `nn_indices` and `nn_dists` must be of length `k * n_query_points`
 bool scc_nearest_neighbor_search(scc_NNSearchObject* nn_search_object,
                                  size_t n_query_points,
                                  const scc_Vid* query_indices,

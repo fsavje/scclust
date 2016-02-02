@@ -38,6 +38,75 @@ void scc_ut_get_data_point_count(void** state)
 }
 
 
+void scc_ut_get_dist_matrix(void** state)
+{
+	(void) state;
+
+	scc_Vid mat1[2] = { 76, 33 };
+	scc_Distance output1[1];
+    scc_Distance ref_mat1[1] = { 68.691324 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_large, 2, mat1, output1));
+	for (size_t i = 0; i < 1; ++i) {
+		assert_double_equal(output1[i], ref_mat1[i]);
+	}
+
+	scc_Vid mat2[5] = { 54, 11, 44, 38, 2 };
+	scc_Distance output2[10];
+    scc_Distance ref_mat2[10] = { 4.148036, 80.860085, 4.148036, 92.694933, 81.821457, 0.000000, 96.308263, 81.821457, 71.445761, 96.308263 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_large, 5, mat2, output2));
+	for (size_t i = 0; i < 10; ++i) {
+		assert_double_equal(output2[i], ref_mat2[i]);
+	}
+
+	scc_Vid mat3[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	scc_Distance output3[45];
+    scc_Distance ref_mat3[45] = { 91.684744, 58.356349, 77.155022, 38.696197, 12.578183, 70.499958, 47.339958, 72.284286,
+                                  62.749693, 63.103580, 103.030113, 104.702555, 102.986773, 74.637958, 48.931105, 83.120587,
+                                  134.211258, 72.125847, 89.098152, 67.606177, 47.737270, 53.822010, 79.327414, 84.164591,
+                                  82.249050, 76.285875, 30.550623, 80.566800, 43.918798, 58.452034, 35.180283, 83.442765,
+                                  56.243067, 62.616031, 75.469357, 74.667871, 57.641926, 73.970019, 54.646819, 61.219489,
+                                  43.831474, 73.953108, 57.093204, 97.699151, 84.582562 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_large, 10, mat3, output3));
+	for (size_t i = 0; i < 45; ++i) {
+		assert_double_equal(output3[i], ref_mat3[i]);
+	}
+
+	scc_Vid mat4[2] = { 0, 6 };
+	scc_Distance output4[1];
+    scc_Distance ref_mat4[1] = { 1.308683 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_small, 2, mat4, output4));
+	for (size_t i = 0; i < 1; ++i) {
+		assert_double_equal(output4[i], ref_mat4[i]);
+	}
+
+	scc_Vid mat5[5] = { 5, 2, 7, 3, 8 };
+	scc_Distance output5[10];
+    scc_Distance ref_mat5[10] = { 1.018566, 2.332226, 0.302972, 2.800108, 1.313659, 0.715594, 1.781541, 2.029254, 0.467882, 2.497136 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_small, 5, mat5, output5));
+	for (size_t i = 0; i < 10; ++i) {
+		assert_double_equal(output5[i], ref_mat5[i]);
+	}
+
+	scc_Vid* mat6 = NULL;
+	scc_Distance output6[105];
+    scc_Distance ref_mat6[105] = { 0.573467, 1.691795, 2.407390, 0.974924, 2.710362, 1.308683, 0.378136, 0.089747, 2.065667, 1.387826,
+                                   3.583157, 1.327829, 1.049713, 1.271829, 1.118329, 1.833923, 0.401458, 2.136896, 0.735216, 0.195331,
+                                   0.663213, 1.492201, 0.814359, 3.009690, 0.754362, 0.476246, 0.698362, 0.715595, 0.716871, 1.018567,
+                                   0.383112, 1.313660, 1.781542, 0.373872, 0.303970, 1.891361, 0.363966, 0.642083, 0.419966, 1.432466,
+                                   0.302972, 1.098707, 2.029254, 2.497137, 0.341723, 1.019564, 1.175767, 1.079561, 1.357677, 1.135561,
+                                   1.735438, 0.333759, 0.596789, 1.064671, 1.090743, 0.412901, 2.608232, 0.352905, 0.074788, 0.296905,
+                                   1.401679, 2.332226, 2.800109, 0.644695, 1.322537, 0.872795, 1.382533, 1.660649, 1.438533, 0.930547,
+                                   1.398430, 0.756984, 0.079143, 2.274474, 0.019146, 0.258970, 0.036854, 0.467882, 1.687532, 1.009690,
+                                   3.205021, 0.949693, 0.671577, 0.893693, 2.155414, 1.477572, 3.672903, 1.417576, 1.139459, 1.361576,
+                                   0.677842, 1.517489, 0.737838, 1.015955, 0.793838, 2.195331, 0.059997, 0.338113, 0.115997, 2.255328,
+                                   2.533444, 2.311328, 0.278116, 0.056000, 0.222116 };
+	assert_true(scc_get_dist_matrix(&scc_ut_test_data_small, 15, mat6, output6));
+	for (size_t i = 0; i < 105; ++i) {
+		assert_double_equal(output6[i], ref_mat6[i]);
+	}
+}
+
+
 void scc_ut_init_close_max_dist_object(void** state)
 {
 	(void) state;
@@ -853,6 +922,7 @@ int main(void)
 {
 	const struct CMUnitTest test_nn_search[] = {
 		cmocka_unit_test(scc_ut_get_data_point_count),
+		cmocka_unit_test(scc_ut_get_dist_matrix),
 		cmocka_unit_test(scc_ut_init_close_dist_column_object),
 		cmocka_unit_test(scc_ut_get_dist_row),
 		cmocka_unit_test(scc_ut_init_close_max_dist_object),

@@ -59,7 +59,6 @@ struct scc_NNSearchObject {
 	scc_Distance radius;
 	size_t n_search_points;
 	const scc_Vid* search_indices;
-	scc_Distance* dist_scratch;
 };
 
 
@@ -67,11 +66,9 @@ struct scc_NNSearchObject {
 // Internal function prototypes
 // ==============================================================================
 
-static inline void iscc_nns_populate_dist_list(const scc_DataSetObject* data_set_object,
-                                               scc_Distance* dist_list,
-                                               scc_Vid query_index,
-                                               size_t n_search_points,
-                                               const scc_Vid* search_indices);
+static inline scc_Distance iscc_get_dist(const scc_DataSetObject* data_set_object,
+                                         scc_Vid index1,
+                                         scc_Vid index2);
 
 
 // ==============================================================================
@@ -85,6 +82,36 @@ scc_Vid scc_get_data_point_count(scc_DataSetObject* const data_set_object)
 }
 
 
+bool scc_get_dist_matrix(scc_DataSetObject* const data_set_object,
+                         const size_t n_points,
+                         const scc_Vid* const point_indices,
+                         scc_Distance* output_dists)
+{
+	assert(data_set_object != NULL);
+	assert(n_points > 1);
+	assert((n_points == data_set_object->rows) || (point_indices != NULL));
+	assert(output_dists != NULL);
+
+	if (point_indices == NULL) {
+		for (scc_Vid p1 = 0; p1 < n_points; ++p1) {
+			for (scc_Vid p2 = p1 + 1; p2 < n_points; ++p2) {
+				*output_dists = iscc_get_dist(data_set_object, p1, p2);
+				++output_dists;
+			}
+		}
+	} else {
+		for (size_t p1 = 0; p1 < n_points; ++p1) {
+			for (size_t p2 = p1 + 1; p2 < n_points; ++p2) {
+				*output_dists = iscc_get_dist(data_set_object, point_indices[p1], point_indices[p2]);
+				++output_dists;
+			}
+		}
+	}
+	
+	return true;
+}
+
+
 scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* const data_set_object,
                                                const size_t n_columns,
                                                const scc_Vid* const column_indices,
@@ -95,12 +122,6 @@ scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* const data_set
 	assert((n_columns == data_set_object->rows) || (column_indices != NULL));
 
 	(void) n_query_hint;
-
-	if (column_indices != NULL) {
-		for (size_t c = 0; c < n_columns; ++c) {
-			assert(column_indices[c] < data_set_object->rows);
-		}
-	}
 
 	scc_DistColObject* dco = malloc(sizeof(scc_DistColObject));
 	if (dco == NULL) return NULL;
@@ -118,29 +139,34 @@ scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* const data_set
 bool scc_get_dist_row(scc_DistColObject* const dist_column_object,
                       const size_t n_query_rows,
                       const scc_Vid* const query_indices,
-                      scc_Distance* const output_dists)
+                      scc_Distance* output_dists)
 {
 	assert(dist_column_object != NULL);
 	scc_DistColObject dco = *dist_column_object;
-
-	assert(dco.n_columns > 0);
-	assert((dco.n_columns == dco.data_set_object->rows) || (dco.column_indices != NULL));
 	assert(n_query_rows > 0);
 	assert((n_query_rows == dco.data_set_object->rows) || (query_indices != NULL));
 	assert(output_dists != NULL);
 
-	scc_Distance* dist_pos = output_dists;
 	scc_Vid current_query;
-	for (size_t qp = 0; qp < n_query_rows; ++qp, dist_pos += dco.n_columns) {
+	for (size_t qp = 0; qp < n_query_rows; ++qp) {
 		if (query_indices == NULL) {
 			current_query = (scc_Vid) qp;
 		} else {
 			current_query = query_indices[qp];
-			assert(current_query < dco.data_set_object->rows);
 		}
-		iscc_nns_populate_dist_list(dco.data_set_object, dist_pos, current_query, dco.n_columns, dco.column_indices);
-	}
+		scc_Vid current_column;
+		for (size_t c = 0; c < dco.n_columns; ++c) {
+			if (dco.column_indices == NULL) {
+				current_column = (scc_Vid) c;
+			} else {
+				current_column = dco.column_indices[c];
+			}
 
+			*output_dists = iscc_get_dist(dco.data_set_object, current_query, current_column);
+			++output_dists;
+		}
+	}
+	
 	return true;
 }
 
@@ -163,12 +189,6 @@ scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* const data_set_ob
 
 	(void) n_query_hint;
 
-	if (search_indices != NULL) {
-		for (size_t sp = 0; sp < n_search_points; ++sp) {
-			assert(search_indices[sp] < data_set_object->rows);
-		}
-	}
-
 	scc_MaxDistObject* mdo = malloc(sizeof(scc_MaxDistObject));
 	if (mdo == NULL) return NULL;
 
@@ -190,9 +210,6 @@ bool scc_get_max_dist(scc_MaxDistObject* const max_dist_object,
 {
 	assert(max_dist_object != NULL);
 	scc_MaxDistObject mdo = *max_dist_object;
-
-	assert(mdo.n_search_points > 0);
-	assert((mdo.n_search_points == mdo.data_set_object->rows) || (mdo.search_indices != NULL));
 	assert(n_query_points > 0);
 	assert((n_query_points == mdo.data_set_object->rows) || (query_indices != NULL));
 	assert(max_indices != NULL);
@@ -220,13 +237,7 @@ bool scc_get_max_dist(scc_MaxDistObject* const max_dist_object,
 				assert(search_point < mdo.data_set_object->rows);
 			}
 
-			tmp_dist = 0.0;
-			for (size_t dim = 0; dim < mdo.data_set_object->cols; ++dim) {
-				const double value_diff = mdo.data_set_object->elements[mdo.data_set_object->cols * current_query + dim] -
-				                              mdo.data_set_object->elements[mdo.data_set_object->cols * search_point + dim];
-				tmp_dist += value_diff * value_diff;
-			}
-			tmp_dist = sqrt(tmp_dist);
+			tmp_dist = iscc_get_dist(mdo.data_set_object, current_query, search_point);
 
 			if (max_dist < tmp_dist) {
 				max_dist = tmp_dist;
@@ -265,12 +276,6 @@ scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* const data_set_
 	
 	(void) n_query_hint;
 
-	if (search_indices != NULL) {
-		for (size_t sp = 0; sp < n_search_points; ++sp) {
-			assert(search_indices[sp] < data_set_object->rows);
-		}
-	}
-
 	scc_NNSearchObject* so = malloc(sizeof(scc_NNSearchObject));
 	if (so == NULL) return NULL;
 
@@ -281,12 +286,7 @@ scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* const data_set_
 		.radius = radius,
 		.n_search_points = n_search_points,
 		.search_indices = search_indices,
-		.dist_scratch = malloc(sizeof(scc_Distance[n_search_points])),
 	};
-	if (so->dist_scratch == NULL) {
-		free(so);
-		return NULL;
-	}
 
 	return so;
 }
@@ -300,9 +300,6 @@ bool scc_nearest_neighbor_search(scc_NNSearchObject* const nn_search_object,
 {
 	assert(nn_search_object != NULL);
 	scc_NNSearchObject so = *nn_search_object;
-
-	assert(so.n_search_points > 0);
-	assert((so.n_search_points == so.data_set_object->rows) || (so.search_indices != NULL));
 	assert(n_query_points > 0);
 	assert((n_query_points == so.data_set_object->rows) || (query_indices != NULL));
 	assert(nn_indices != NULL);
@@ -325,34 +322,32 @@ bool scc_nearest_neighbor_search(scc_NNSearchObject* const nn_search_object,
 			current_query = (scc_Vid) qp;
 		} else {
 			current_query = query_indices[qp];
-			assert(current_query < so.data_set_object->rows);
 		}
 		if (nn_dists == NULL) dist_pos = sort_scratch;
 
-		iscc_nns_populate_dist_list(so.data_set_object, so.dist_scratch, current_query, so.n_search_points, so.search_indices);
 
+		scc_Vid search_point;
 		const scc_Distance* const start_dist_pos = dist_pos;
 		const scc_Distance* const stop_dist_pos = dist_pos + so.k;
-
 		for (size_t sp = 0; sp < so.n_search_points; ++sp) {
-			if (so.radius_search && so.dist_scratch[sp] >= so.radius) continue;
+			if (so.search_indices == NULL) {
+				search_point = (scc_Vid) sp;
+			} else {
+				search_point = so.search_indices[sp];
+			}
+
+			scc_Distance tmp_dist = iscc_get_dist(so.data_set_object, current_query, search_point);
+
+			if (so.radius_search && tmp_dist >= so.radius) continue;
 
 			if (dist_pos != stop_dist_pos) {
-				if (so.search_indices == NULL) {
-					index_pos[0] = (scc_Vid) sp;
-				} else {
-					index_pos[0] = so.search_indices[sp];
-				}
-				dist_pos[0] = so.dist_scratch[sp];
+				index_pos[0] = search_point;
+				dist_pos[0] = tmp_dist;
 				++index_pos;
 				++dist_pos;
-			} else if (dist_pos[-1] > so.dist_scratch[sp]) {
-				if (so.search_indices == NULL) {
-					index_pos[-1] = (scc_Vid) sp;
-				} else {
-					index_pos[-1] = so.search_indices[sp];
-				}
-				dist_pos[-1] = so.dist_scratch[sp];
+			} else if (dist_pos[-1] > tmp_dist) {
+				index_pos[-1] = search_point;
+				dist_pos[-1] = tmp_dist;
 			}
 
 			scc_Vid* check_index = &index_pos[-1];
@@ -381,7 +376,6 @@ bool scc_nearest_neighbor_search(scc_NNSearchObject* const nn_search_object,
 
 bool scc_close_nn_search_object(scc_NNSearchObject* const nn_search_object)
 {
-	free(nn_search_object->dist_scratch);
 	free(nn_search_object);
 	return true;
 }
@@ -391,28 +385,18 @@ bool scc_close_nn_search_object(scc_NNSearchObject* const nn_search_object)
 // Internal function implementations 
 // ==============================================================================
 
-static inline void iscc_nns_populate_dist_list(const scc_DataSetObject* const data_set_object,
-                                               scc_Distance* const dist_list,
-                                               const scc_Vid query_index,
-                                               const size_t n_search_points,
-                                               const scc_Vid* const search_indices)
+static inline scc_Distance iscc_get_dist(const scc_DataSetObject* const data_set_object,
+                                         const scc_Vid index1,
+                                         const scc_Vid index2)
 {
-	assert(query_index < data_set_object->rows);
-	assert((n_search_points == data_set_object->rows) || (search_indices != NULL));
-	scc_Vid search_point;
-	for (size_t sp = 0; sp < n_search_points; ++sp) {
-		if (search_indices == NULL) {
-			search_point = (scc_Vid) sp;
-		} else {
-			search_point = search_indices[sp];
-			assert(search_point < data_set_object->rows);
-		}
-		dist_list[sp] = 0.0;
-		for (size_t dim = 0; dim < data_set_object->cols; ++dim) {
-			const double value_diff = data_set_object->elements[data_set_object->cols * query_index + dim] -
-			                              data_set_object->elements[data_set_object->cols * search_point + dim];
-			dist_list[sp] += value_diff * value_diff;
-		}
-		dist_list[sp] = sqrt(dist_list[sp]);
+	assert(index1 < data_set_object->rows);
+	assert(index2 < data_set_object->rows);
+
+	scc_Distance tmp_dist = 0.0;
+	for (size_t dim = 0; dim < data_set_object->cols; ++dim) {
+		const double value_diff = data_set_object->elements[data_set_object->cols * index1 + dim] -
+		                              data_set_object->elements[data_set_object->cols * index2 + dim];
+		tmp_dist += value_diff * value_diff;
 	}
+	return(sqrt(tmp_dist));
 }
