@@ -32,6 +32,7 @@
 #ifndef SCC_CONFIG_HG
 #define SCC_CONFIG_HG
 
+#include <float.h>
 #include <stdint.h>
 
 
@@ -72,6 +73,8 @@ typedef uint32_t scc_Clabel;
 
 /// Type used for distances. Must be float, and distances must be non-negative.
 typedef double scc_Distance;
+
+#define SCC_DISTANCE_MAX DBL_MAX
 
 /** Type used for vertex IDs. Must be unsigned.
  *  
