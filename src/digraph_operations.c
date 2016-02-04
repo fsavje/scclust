@@ -34,7 +34,7 @@
 
 static inline size_t iscc_do_union(size_t vertices,
                                    size_t num_dgs,
-                                   const scc_Digraph* const dgs[static num_dgs],
+                                   const scc_Digraph dgs[static num_dgs],
                                    scc_Vid row_markers[restrict static vertices],
                                    bool ignore_loops,
                                    bool write,
@@ -59,20 +59,20 @@ static inline size_t iscc_do_adjacency_product(size_t vertices,
 // ==============================================================================
 
 scc_Digraph scc_digraph_union(const size_t num_dgs,
-                              const scc_Digraph* const dgs[const static num_dgs],
+                              const scc_Digraph dgs[const static num_dgs],
                               const bool ignore_loops)
 {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
-	if ((dgs == NULL) || !scc_digraph_is_initialized(*dgs)) return SCC_NULL_DIGRAPH;
+	if ((dgs == NULL) || !scc_digraph_is_initialized(dgs)) return SCC_NULL_DIGRAPH;
 
-	const size_t vertices = dgs[0]->vertices;
+	const size_t vertices = dgs[0].vertices;
 
 	size_t out_arcs_write = 0;
 
 	// Try greedy memory count first
 	for (size_t i = 0; i < num_dgs; ++i) {
-		if (!scc_digraph_is_initialized(dgs[i]) || dgs[i]->vertices != vertices) return SCC_NULL_DIGRAPH;
-		out_arcs_write += dgs[i]->tail_ptr[vertices];
+		if (!scc_digraph_is_initialized(&dgs[i]) || dgs[i].vertices != vertices) return SCC_NULL_DIGRAPH;
+		out_arcs_write += dgs[i].tail_ptr[vertices];
 	}
 
 	scc_Vid* const row_markers = malloc(sizeof(scc_Vid[vertices]));
@@ -216,7 +216,7 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 
 static inline size_t iscc_do_union(const size_t vertices,
                                    const size_t num_dgs,
-                                   const scc_Digraph* const dgs[const static num_dgs],
+                                   const scc_Digraph dgs[const static num_dgs],
                                    scc_Vid row_markers[restrict const static vertices],
                                    const bool ignore_loops,
                                    const bool write,
@@ -232,8 +232,8 @@ static inline size_t iscc_do_union(const size_t vertices,
 	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (ignore_loops) row_markers[v] = v;
 		for (size_t i = 0; i < num_dgs; ++i) {
-			const scc_Vid* const arc_i_stop = dgs[i]->head + dgs[i]->tail_ptr[v + 1];
-			for (const scc_Vid* arc_i = dgs[i]->head + dgs[i]->tail_ptr[v];
+			const scc_Vid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
+			for (const scc_Vid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
 			        arc_i != arc_i_stop; ++arc_i) {
 				if (row_markers[*arc_i] != v) {
 					row_markers[*arc_i] = v;

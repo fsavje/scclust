@@ -255,7 +255,7 @@ bool scc_delete_loops(scc_Digraph* dg);
  *  \note All digraphs in \p dgs must contain equally many vertices.
  */
 scc_Digraph scc_digraph_union(size_t num_dgs,
-                              const scc_Digraph* const dgs[],
+                              const scc_Digraph dgs[],
                               bool ignore_loops);
 
 /** Derives the digraph transpose a digraph.

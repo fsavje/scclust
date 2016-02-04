@@ -39,7 +39,7 @@ void scc_ut_union_digraphs(void** state)
 	scc_Digraph ut_dg3 = scc_digraph_from_string("#.../#.../#.../#.../");
 
 
-	const scc_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
+	const scc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
 	scc_Digraph ut_make12_a = scc_digraph_union(2, sum_12, false);
 	assert_valid_digraph(&ut_make12_a, 4);
 	scc_Arci tail_ptr12[5] = {0,2,4,6,8};
@@ -48,7 +48,7 @@ void scc_ut_union_digraphs(void** state)
 	assert_identical_digraph(&ut_control12, &ut_make12_a);
 
 
-	const scc_Digraph* sum_13[2] = {&ut_dg1, &ut_dg3};
+	const scc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 	scc_Digraph ut_make13_a = scc_digraph_union(2, sum_13, false);
 	assert_valid_digraph(&ut_make13_a, 4);
 	scc_Arci tail_ptr13[5] = {0,1,3,5,7};
@@ -57,7 +57,7 @@ void scc_ut_union_digraphs(void** state)
 	assert_identical_digraph(&ut_control13, &ut_make13_a);
 
 
-	const scc_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
+	const scc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 	scc_Digraph ut_make31_a = scc_digraph_union(2, sum_31, false);
 	assert_valid_digraph(&ut_make31_a, 4);
 	scc_Arci tail_ptr31[5] = {0,1,3,5,7};
@@ -68,7 +68,7 @@ void scc_ut_union_digraphs(void** state)
 	assert_equal_digraph(&ut_make31_a, &ut_make13_a);
 
 
-	const scc_Digraph* sum_123[3] = {&ut_dg1, &ut_dg2, &ut_dg3};
+	const scc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 	scc_Digraph ut_make123 = scc_digraph_union(3, sum_123, false);
 	assert_valid_digraph(&ut_make123, 4);
 	scc_Arci tail_ptr123[5] = {0,2,5,8,10};
@@ -76,7 +76,7 @@ void scc_ut_union_digraphs(void** state)
 	scc_Digraph ut_control123 = scc_digraph_from_pieces(4, 10, tail_ptr123, head123);
 	assert_identical_digraph(&ut_control123, &ut_make123);
 
-	const scc_Digraph* sum_132[3] = {&ut_dg1, &ut_dg3, &ut_dg2};
+	const scc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 	scc_Digraph ut_make132 = scc_digraph_union(3, sum_132, false);
 	assert_valid_digraph(&ut_make132, 4);
 	scc_Arci tail_ptr132[5] = {0,2,5,8,10};
@@ -84,7 +84,7 @@ void scc_ut_union_digraphs(void** state)
 	scc_Digraph ut_control132 = scc_digraph_from_pieces(4, 10, tail_ptr132, head132);
 	assert_identical_digraph(&ut_control132, &ut_make132);
 
-	const scc_Digraph* sum_213[3] = {&ut_dg2, &ut_dg1, &ut_dg3};
+	const scc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 	scc_Digraph ut_make213 = scc_digraph_union(3, sum_213, false);
 	assert_valid_digraph(&ut_make213, 4);
 	scc_Arci tail_ptr213[5] = {0,2,5,8,10};
@@ -92,7 +92,7 @@ void scc_ut_union_digraphs(void** state)
 	scc_Digraph ut_control213 = scc_digraph_from_pieces(4, 10, tail_ptr213, head213);
 	assert_identical_digraph(&ut_control213, &ut_make213);
 
-	const scc_Digraph* sum_321[3] = {&ut_dg3, &ut_dg2, &ut_dg1};
+	const scc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 	scc_Digraph ut_make321 = scc_digraph_union(3, sum_321, false);
 	assert_valid_digraph(&ut_make321, 4);
 	scc_Arci tail_ptr321[5] = {0,2,5,8,10};
@@ -103,7 +103,6 @@ void scc_ut_union_digraphs(void** state)
 	assert_equal_digraph(&ut_make123, &ut_make132);
 	assert_equal_digraph(&ut_make123, &ut_make213);
 	assert_equal_digraph(&ut_make123, &ut_make321);
-
 
 	assert_free_digraph(&ut_dg1);
 	assert_free_digraph(&ut_dg2);
@@ -134,7 +133,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	scc_Digraph ut_dg3 = scc_digraph_from_string("#.../#.../#.../#.../");
 
 
-	const scc_Digraph* sum_12[2] = {&ut_dg1, &ut_dg2};
+	const scc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
 	scc_Digraph ut_make12_a = scc_digraph_union(2, sum_12, true);
 	assert_valid_digraph(&ut_make12_a, 4);
 	scc_Arci tail_ptr12[5] = {0,1,2,3,4};
@@ -143,7 +142,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	assert_identical_digraph(&ut_control12, &ut_make12_a);
 
 
-	const scc_Digraph* sum_13[2] = {&ut_dg1, &ut_dg3};
+	const scc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 	scc_Digraph ut_make13_a = scc_digraph_union(2, sum_13, true);
 	assert_valid_digraph(&ut_make13_a, 4);
 	scc_Arci tail_ptr13[5] = {0,0,1,2,3};
@@ -152,7 +151,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	assert_identical_digraph(&ut_control13, &ut_make13_a);
 
 
-	const scc_Digraph* sum_31[2] = {&ut_dg3, &ut_dg1};
+	const scc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 	scc_Digraph ut_make31_a = scc_digraph_union(2, sum_31, true);
 	assert_valid_digraph(&ut_make31_a, 4);
 	scc_Arci tail_ptr31[5] = {0,0,1,2,3};
@@ -163,7 +162,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	assert_equal_digraph(&ut_make31_a, &ut_make13_a);
 
 
-	const scc_Digraph* sum_123[3] = {&ut_dg1, &ut_dg2, &ut_dg3};
+	const scc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 	scc_Digraph ut_make123 = scc_digraph_union(3, sum_123, true);
 	assert_valid_digraph(&ut_make123, 4);
 	scc_Arci tail_ptr123[5] = {0,1,3,5,6};
@@ -171,7 +170,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	scc_Digraph ut_control123 = scc_digraph_from_pieces(4, 6, tail_ptr123, head123);
 	assert_identical_digraph(&ut_control123, &ut_make123);
 
-	const scc_Digraph* sum_132[3] = {&ut_dg1, &ut_dg3, &ut_dg2};
+	const scc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 	scc_Digraph ut_make132 = scc_digraph_union(3, sum_132, true);
 	assert_valid_digraph(&ut_make132, 4);
 	scc_Arci tail_ptr132[5] = {0,1,3,5,6};
@@ -179,7 +178,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	scc_Digraph ut_control132 = scc_digraph_from_pieces(4, 6, tail_ptr132, head132);
 	assert_identical_digraph(&ut_control132, &ut_make132);
 
-	const scc_Digraph* sum_213[3] = {&ut_dg2, &ut_dg1, &ut_dg3};
+	const scc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 	scc_Digraph ut_make213 = scc_digraph_union(3, sum_213, true);
 	assert_valid_digraph(&ut_make213, 4);
 	scc_Arci tail_ptr213[5] = {0,1,3,5,6};
@@ -187,7 +186,7 @@ void scc_ut_union_digraphs_ignore_diag(void** state)
 	scc_Digraph ut_control213 = scc_digraph_from_pieces(4, 6, tail_ptr213, head213);
 	assert_identical_digraph(&ut_control213, &ut_make213);
 
-	const scc_Digraph* sum_321[3] = {&ut_dg3, &ut_dg2, &ut_dg1};
+	const scc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 	scc_Digraph ut_make321 = scc_digraph_union(3, sum_321, true);
 	assert_valid_digraph(&ut_make321, 4);
 	scc_Arci tail_ptr321[5] = {0,1,3,5,6};

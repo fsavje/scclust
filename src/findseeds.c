@@ -336,7 +336,7 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 	 * to themselves. These arcs are redudant, call `scc_digraph_union` with
 	 * `ignore_loops` flag.
 	 */
-	const scc_Digraph* nng_sum[2] = {nng, &nng_nng_transpose};
+	const scc_Digraph nng_sum[2] = { *nng, nng_nng_transpose };
 	scc_Digraph exclusion_graph = scc_digraph_union(2, nng_sum, true);
 	scc_free_digraph(&nng_nng_transpose);
 	if (!scc_digraph_is_initialized(&exclusion_graph)) return SCC_NULL_DIGRAPH;
