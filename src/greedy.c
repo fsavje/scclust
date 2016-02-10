@@ -62,12 +62,17 @@ struct iscc_gr_ClusterStack {
 // ==============================================================================
 
 static const iscc_gr_ClusterItem ISCC_GR_NULL_CLUSTER_ITEM = { 0, NULL };
+static const iscc_gr_ClusterStack ISCC_GR_NULL_CLUSTER_STACK = { 0, 0, NULL };
 static bool* iscc_gr_vertex_mark = NULL;
 
 
 // ==============================================================================
 // Internal function prototypes
 // ==============================================================================
+
+static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* input_clustering);
+
+static iscc_gr_ClusterStack iscc_gr_empty_cl_stack(size_t num_vertices);
 
 static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* data_set_object,
                                           iscc_gr_ClusterStack* cl_stack,
@@ -138,45 +143,13 @@ bool scc_greedy_break_clustering(scc_Clustering* const input_clustering,
 	// Allocate global vertex mark storage
 	iscc_gr_vertex_mark = calloc(input_clustering->vertices, sizeof(bool));
 
-	iscc_gr_ClusterStack cl_stack;
-	cl_stack.capacity = input_clustering->num_clusters + (size_t) (10 * log2((double) input_clustering->vertices)),
-	cl_stack.items = input_clustering->num_clusters,
-	cl_stack.clusters = calloc(cl_stack.capacity, sizeof(iscc_gr_ClusterItem));
+	iscc_gr_ClusterStack cl_stack = iscc_gr_init_cl_stack(input_clustering);
 
 	if ((iscc_gr_vertex_mark == NULL) || (cl_stack.clusters == NULL)) {
 		free(iscc_gr_vertex_mark);
 		iscc_gr_vertex_mark = NULL;
 		free(cl_stack.clusters);
 		return false;
-	}
-
-	for (size_t v = 0; v < input_clustering->vertices; ++v) {
-		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
-			++(cl_stack.clusters[input_clustering->cluster_label[v]].size);
-		}
-	}
-
-	for (size_t c = 0; c < cl_stack.items; ++c) {
-		if (cl_stack.clusters[c].size == 0) continue;
-		cl_stack.clusters[c].members = malloc(sizeof(scc_Vid[cl_stack.clusters[c].size]));
-		if (cl_stack.clusters[c].members == NULL) {
-			for (size_t c_free = 0; c_free < c; ++c_free) {
-				free(cl_stack.clusters[c_free].members);
-			}
-			free(iscc_gr_vertex_mark);
-			iscc_gr_vertex_mark = NULL;
-			free(cl_stack.clusters);
-			return false;
-		}
-		cl_stack.clusters[c].size = 0;
-	}
-
-	for (scc_Vid v = 0; v < input_clustering->vertices; ++v) {
-		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
-			iscc_gr_ClusterItem* cl = &cl_stack.clusters[input_clustering->cluster_label[v]];
-			cl->members[cl->size] = v;
-			++(cl->size);
-		}
 	}
 
 	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, input_clustering, k, batch_assign)) {
@@ -219,29 +192,15 @@ scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_objec
 		.cluster_label = malloc(sizeof(scc_Clabel[num_vertices])),
 	};
 
-	iscc_gr_ClusterStack cl_stack;
-	cl_stack.capacity = 1 + (size_t) (20 * log2((double) num_vertices));
-	cl_stack.items = 1;
-	cl_stack.clusters = malloc(sizeof(iscc_gr_ClusterItem[cl_stack.capacity]));
+	iscc_gr_ClusterStack cl_stack = iscc_gr_empty_cl_stack(num_vertices);
 
-	scc_Vid* const tmp_members = malloc(sizeof(scc_Vid[num_vertices]));
-
-	if ((iscc_gr_vertex_mark == NULL) || (out_cl.cluster_label == NULL) ||
-	        (cl_stack.clusters == NULL) || (tmp_members == NULL)) {
+	if ((iscc_gr_vertex_mark == NULL) || (out_cl.cluster_label == NULL) || (cl_stack.clusters == NULL)) {
 		free(iscc_gr_vertex_mark);
 		iscc_gr_vertex_mark = NULL;
 		free(out_cl.cluster_label);
 		free(cl_stack.clusters);
-		free(tmp_members);
 		return SCC_NULL_CLUSTERING;
 	}
-
-	for (scc_Vid v = 0; v < num_vertices; ++v) {
-		tmp_members[v] = v;
-	}
-
-	cl_stack.clusters[0].size = num_vertices;
-	cl_stack.clusters[0].members = tmp_members;
 
 	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, &out_cl, k, batch_assign)) {
 		for (size_t i = 0; i < cl_stack.items; ++i) {
@@ -265,6 +224,78 @@ scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_objec
 // ==============================================================================
 // Internal function implementations 
 // ==============================================================================
+
+static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const input_clustering)
+{
+	assert(input_clustering != NULL);
+	assert(input_clustering->num_clusters > 0);
+	assert(input_clustering->cluster_label != NULL);
+	assert(input_clustering->vertices >= 2);
+
+	iscc_gr_ClusterStack cl_stack;
+	cl_stack.capacity = input_clustering->num_clusters + (size_t) (10 * log2((double) input_clustering->vertices)),
+	cl_stack.items = input_clustering->num_clusters,
+	cl_stack.clusters = calloc(cl_stack.capacity, sizeof(iscc_gr_ClusterItem));
+	if (cl_stack.clusters == NULL) return ISCC_GR_NULL_CLUSTER_STACK;
+
+	for (size_t v = 0; v < input_clustering->vertices; ++v) {
+		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
+			++(cl_stack.clusters[input_clustering->cluster_label[v]].size);
+		}
+	}
+
+	for (size_t c = 0; c < cl_stack.items; ++c) {
+		if (cl_stack.clusters[c].size == 0) continue;
+		cl_stack.clusters[c].members = malloc(sizeof(scc_Vid[cl_stack.clusters[c].size]));
+		if (cl_stack.clusters[c].members == NULL) {
+			for (size_t c_free = 0; c_free < c; ++c_free) {
+				free(cl_stack.clusters[c_free].members);
+			}
+			free(cl_stack.clusters);
+			return ISCC_GR_NULL_CLUSTER_STACK;
+		}
+		cl_stack.clusters[c].size = 0;
+	}
+
+	for (scc_Vid v = 0; v < input_clustering->vertices; ++v) {
+		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
+			iscc_gr_ClusterItem* cl = &cl_stack.clusters[input_clustering->cluster_label[v]];
+			cl->members[cl->size] = v;
+			++(cl->size);
+		}
+	}
+
+	return cl_stack;
+}
+
+
+static iscc_gr_ClusterStack iscc_gr_empty_cl_stack(const size_t num_vertices)
+{
+	assert(num_vertices >= 2);
+
+	iscc_gr_ClusterStack cl_stack;
+	cl_stack.capacity = 1 + (size_t) (20 * log2((double) num_vertices));
+	cl_stack.items = 1;
+	cl_stack.clusters = malloc(sizeof(iscc_gr_ClusterItem[cl_stack.capacity]));
+
+	scc_Vid* const tmp_members = malloc(sizeof(scc_Vid[num_vertices]));
+
+	if ((cl_stack.clusters == NULL) || (tmp_members == NULL)) {
+		free(cl_stack.clusters);
+		free(tmp_members);
+		return ISCC_GR_NULL_CLUSTER_STACK;
+	}
+
+	for (scc_Vid v = 0; v < num_vertices; ++v) {
+		tmp_members[v] = v;
+	}
+
+	cl_stack.clusters[0].size = num_vertices;
+	cl_stack.clusters[0].members = tmp_members;
+
+	return cl_stack;
+}
+
 
 static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_object,
                                           iscc_gr_ClusterStack* const cl_stack,
@@ -457,8 +488,7 @@ static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* con
 		}
 
 	} else {
-		for (size_t assigned = cluster1->size + cluster2->size;
-		        assigned < old_cluster_size; ++assigned) {
+		for (size_t assigned = 2 * k; assigned < old_cluster_size; ++assigned) {
 
 			temp_dist1 = iscc_gr_get_next_dist(last_assigned_dist1);
 			temp_dist2 = iscc_gr_get_next_dist(last_assigned_dist2);
@@ -528,7 +558,7 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 		return false;
 	}
 
-	for (size_t i = 0; i < num_to_check; i += step) {
+	for (size_t i = 0; i < num_to_check; ++i) {
 		to_check[i] = cl->members[i * step];
 		iscc_gr_vertex_mark[to_check[i]] = true;
 	}
@@ -616,6 +646,8 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
 	iscc_gr_sort_dist_list(cl, center1, output_dists, dist_store1);
 	iscc_gr_sort_dist_list(cl, center2, output_dists + cl->size, dist_store2);
 
+	free(output_dists);
+
 	return true;
 }
 
@@ -655,7 +687,7 @@ static int iscc_gr_compare_dist_edges(const void* const a,
     const scc_Distance dist_b = ((const iscc_gr_DistanceEdge*)b)->distance;
  
     if (dist_a < dist_b) return -1;
-    if (dist_b > dist_b) return 1;
+    if (dist_a > dist_b) return 1;
     return 0;
 }
 
