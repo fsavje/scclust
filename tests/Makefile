@@ -21,22 +21,20 @@ clean:
 	cd .. && $(MAKE) clean-debug
 	$(RM) -R $(BUILDDIR)
 
-$(ALLTESTS): | $(BUILDDIR)
-
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
-
-
 $(STDTESTS): $(DEBUGOBJS)
+	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_findseeds_internals: $(filter-out $(DEBUGDIR)/findseeds.o,$(DEBUGOBJS))
+	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_findseeds_stable: $(filter-out $(DEBUGDIR)/findseeds.o,$(DEBUGOBJS))
+	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_greedy_internals: $(filter-out $(DEBUGDIR)/greedy.o,$(DEBUGOBJS))
+	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 $(DEBUGOBJS):
