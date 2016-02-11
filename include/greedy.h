@@ -33,14 +33,15 @@
 #include "clustering.h"
 
 
-bool scc_greedy_break_clustering(scc_Clustering* input_clustering,
-                                 scc_DataSetObject* data_set_object,
+bool scc_greedy_break_clustering(scc_DataSetObject* data_set_object,
+                                 scc_Clustering* input_clustering,
                                  size_t k,
                                  bool batch_assign);
 
 scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* data_set_object,
                                          size_t k,
-                                         bool batch_assign);
+                                         bool batch_assign,
+                                         scc_Clabel external_cluster_label[]);
 
 
 #endif
