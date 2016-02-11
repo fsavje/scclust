@@ -25,7 +25,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../src/nn_search.h"
+#include "../src/dist_search.h"
 #include "data_object_test.h"
 
 

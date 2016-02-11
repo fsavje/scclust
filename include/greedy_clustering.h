@@ -27,8 +27,8 @@
 #ifndef SCC_GREEDY_HG
 #define SCC_GREEDY_HG
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "config.h"
 #include "clustering.h"
 

@@ -26,8 +26,8 @@
 #include <stddef.h>
 
 #include "../include/config.h"
-#include "../include/digraph.h"
-#include "../include/digraph_debug.h"
+#include "../src/digraph_core.h"
+#include "../src/digraph_debug.h"
 
 
 void scc_ut_init_digraph(void** state)

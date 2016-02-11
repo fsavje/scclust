@@ -20,7 +20,7 @@
  * ============================================================================== */
 
 
-#include "../include/digraph_debug.h"
+#include "digraph_debug.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/config.h"
-#include "../include/digraph.h"
+#include "digraph_core.h"
 
 
 // ==============================================================================

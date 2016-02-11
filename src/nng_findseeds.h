@@ -25,8 +25,8 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/digraph.h"
-#include "../include/nng_clustering.h"
+#include "digraph_core.h"
+#include "nng_core.h"
 
 
 scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* nng,

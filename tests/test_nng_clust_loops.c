@@ -24,13 +24,12 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-
 #include "../include/config.h"
-#include "../include/digraph.h"
-#include "../include/digraph_debug.h"
-#include "../src/findseeds.h"
 #include "../include/clustering.h"
-#include "../include/nng_clustering.h"
+#include "../src/digraph_core.h"
+#include "../src/digraph_debug.h"
+#include "../src/nng_core.h"
+#include "../src/nng_findseeds.h"
 
 
 #ifdef SCC_STABLE_CLUSTERING

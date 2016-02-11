@@ -27,14 +27,14 @@
  * Sparse digraphs are the backbone of the scclust library.
  * This header defines the digraph struct and functions to generate and manipulate them.
  */
+ 
 
-
-#ifndef SCC_DIGRAPH_HG
-#define SCC_DIGRAPH_HG
+#ifndef SCC_DIGRAPH_CORE_HG
+#define SCC_DIGRAPH_CORE_HG
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
+#include "../include/config.h"
 
 
 /// Typedef for scc_Digraph struct
@@ -56,7 +56,7 @@ struct scc_Digraph {
 	 *  
 	 *  \note Valid vertices in this digraph is any `i` such that `0 <= i < #vertices`.
 	 */
-	const size_t vertices;
+	size_t vertices;
 
 	/// Maximum number of arcs in digraph.
 	size_t max_arcs;
@@ -77,7 +77,7 @@ struct scc_Digraph {
 	 *  The first element of #tail_ptr must be zero (`#tail_ptr[0] == 0`). For all `i < #vertices`, 
 	 *  we must have `#tail_ptr[i] <= #tail_ptr[i+1] <= #max_arcs`.
 	 */
-	scc_Arci* const tail_ptr;
+	scc_Arci* tail_ptr;
 };
 
 /** The null digraph.
@@ -211,132 +211,6 @@ bool scc_delete_arcs_by_tails(scc_Digraph* dg,
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
 bool scc_delete_loops(scc_Digraph* dg);
-
-/** Calculates the union of arbitrary number of digraphs.
- *
- *  This function produces the union of the inputted digraphs. If no digraphs are inputted
- *  (i.e., `num_dgs == 0`), the function returns an empty digraph with no vertices.
- *
- *  The union of the following first two digraphs is the third digraph:
- *  \dot
- *  digraph example {
- *      A -> C;
- *      B -> C;
- *      C -> D;
- *
- *      A2 [ label="A" ];
- *      B2 [ label="B" ];
- *      C2 [ label="C" ];
- *      D2 [ label="D" ];
- *      A2 -> C2;
- *      B2 -> D2;
- *      A2 -> D2;
- *
- *      A3 [ label="A" ];
- *      B3 [ label="B" ];
- *      C3 [ label="C" ];
- *      D3 [ label="D" ];
- *
- *      A3 -> C3;
- *      B3 -> C3;
- *      C3 -> D3;
- *      B3 -> D3;
- *      A3 -> D3;
- *  }
- *  \enddot
- *
- *  \param num_dgs number of digraph to calculate union for.
- *  \param[in] dgs the digraphs. Must be of length \p num_dgs.
- *  \param     ignore_loops when \c true, ignores self-loops in all digraphs in \p dgs (i.e., all arcs where the tail and head is the same vertex
- *                          are ignored).
- *
- *  \return the union of \p dgs.
- *
- *  \note All digraphs in \p dgs must contain equally many vertices.
- */
-scc_Digraph scc_digraph_union(size_t num_dgs,
-                              const scc_Digraph dgs[],
-                              bool ignore_loops);
-
-/** Derives the digraph transpose a digraph.
- *
- *  This function produces the transpose of the inputted digraph. That is, a digraph where
- *  all the arcs are reversed.
- *
- *  The transpose of the following first digraph is the second digraph:
- *  \dot
- *  digraph example {
- *      A -> C;
- *      B -> C;
- *      C -> D;
- *
- *      A2 [ label="A" ];
- *      B2 [ label="B" ];
- *      C2 [ label="C" ];
- *      D2 [ label="D" ];
- *      C2 -> A2;
- *      C2 -> B2;
- *      D2 -> C2;
- *  }
- *  \enddot
- *
- *  \param[in] dg digraph to transpose.
- *
- *  \return the transpose of \p dg.
- */
-scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);
-
-/** Calculates the product of the adjacency matrices of two digraphs.
- *
- *  Digraphs are stored as sparse adjacency matrices. By multiplying the underlying
- *  matrices one can derive paths and powers of the graphs.
- *
- *  Let \f$A\f$ and \f$B\f$ be the adjacency matrices of two arbitrary digraph. #scc_adjacency_product
- *  returns \f$A B\f$.
- *
- *  The main purpose of this function is to derive paths and powers. Let \f$A\f$ be an adjacency matrix of some digraph.
- *  \f$A A\f$ then gives the adjacency matrix of the digraph that contains all path of length two in the original digraph.
- *  Let \f$I\f$ be the identity matrix, then \f$(A + I) A\f$ gives the second power of the digraph. That is,
- *  all possible paths of length two or less. Moreover, if \f$A_2 = A A\f$ then \f$A A_2\f$ gives
- *  all paths of length three and \f$A_2 A_2\f$ of length four. If \f$A_p = (A + I) A\f$, then \f$(A + I) A_p\f$
- *  gives the third power and \f$(A_p + I) A_p\f$ gives the fourth power.
- *
- *  \code
- *	// Dummy digraph generator
- *  scc_Digraph my_dg = some_digraph(); 
- *
- *  // All paths of length 2 in `my_dg`
- *  scc_Digraph my_dg_path2 = scc_adjacency_product(&my_dg, &my_dg, false, false);
- *  
- *  // All paths of length 3 in `my_dg`
- *  scc_Digraph my_dg_path3 = scc_adjacency_product(&my_dg, &my_dg_path2, false, false);
- *  
- *  // Second power of `my_dg`
- *  scc_Digraph my_dg_power2 = scc_adjacency_product(&my_dg, &my_dg, true, false);
- *  
- *  // Fourth power of `my_dg`
- *  scc_Digraph my_dg_power4 = scc_adjacency_product(&my_dg_power2, &my_dg_power2, true, false);
- *  
- *  // Free all digraphs
- *  scc_free_digraph(&my_dg); scc_free_digraph(&my_dg_path2); [...]
- *  \endcode
- *  
- *  \param[in] dg_a the first digraph of the product.
- *  \param[in] dg_b the second digraph of the product.
- *  \param     force_loops when \c true, forces self-loops in \p dg_a (i.e., all vertices have an arc to themselves).
- *  \param     ignore_loops when \c true, ignores self-loops in \p dg_a (i.e., all arcs where the tail and head is the same vertex
- *                          are ignored).
- *
- *  \return The digraph described by the product of the adjacency matrices of \p dg_a and \p dg_b.
- *
- *  \note \p dg_a and \p dg_b must contain equally many vertices.
- *
- *  \note \p force_loops and \p ignore_loops cannot both be \c true. 
- */
-scc_Digraph scc_adjacency_product(const scc_Digraph* dg_a,
-                                  const scc_Digraph* dg_b,
-                                  bool force_loops,
-                                  bool ignore_loops);
 
 
 #endif

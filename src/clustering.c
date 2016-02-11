@@ -19,11 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
+
 #include "../include/clustering.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include "../include/config.h"
-#include "nn_search.h"
+#include "dist_search.h"
 
 
 // ==============================================================================

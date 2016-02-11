@@ -37,8 +37,8 @@
 #define assert_balanced_digraph(test_dg, vertices, arcs_per_vertex) _assert_balanced_digraph(test_dg, vertices, arcs_per_vertex, #test_dg, __FILE__, __LINE__)
 
 #include "../include/config.h"
-#include "../include/digraph.h"
-#include "../include/digraph_debug.h"
+#include "../src/digraph_core.h"
+#include "../src/digraph_debug.h"
 
 
 void _assert_initialized_digraph(const scc_Digraph* test_dg,

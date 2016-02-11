@@ -34,8 +34,8 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
-#include "digraph.h"
+#include "../include/config.h"
+#include "digraph_core.h"
 
 /** Checks whether provided digraph is valid.
  *

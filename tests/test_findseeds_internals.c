@@ -22,15 +22,13 @@
 
 #include "test_suite.h"
 #include "assert_digraph.h"
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-
-#include "../src/findseeds.c"
 #include "../include/config.h"
-#include "../include/digraph.h"
-#include "../include/digraph_debug.h"
+#include "../src/digraph_core.h"
+#include "../src/digraph_debug.h"
+#include "../src/nng_findseeds.c"
 
 
 #ifdef SCC_STABLE_CLUSTERING

@@ -20,12 +20,13 @@
  * ============================================================================== */
 
 
-#include "../include/digraph.h"
+#include "digraph_operations.h"
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "../include/config.h"
+#include "digraph_core.h"
 
 
 // ==============================================================================

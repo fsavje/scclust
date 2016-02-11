@@ -25,7 +25,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/greedy.h"
+#include "../include/greedy_clustering.h"
 #include "data_object_test.h"
 
 

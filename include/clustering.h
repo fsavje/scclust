@@ -29,8 +29,8 @@
 #ifndef SCC_CLUSTERING_HG
 #define SCC_CLUSTERING_HG
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "config.h"
 
 

@@ -20,7 +20,7 @@
  * ============================================================================== */
 
 
-#include "../include/digraph.h"
+#include "digraph_core.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -148,7 +148,7 @@ bool scc_delete_arcs_by_tails(scc_Digraph* const dg,
 			dg->tail_ptr[v] = head_write;
 		} else if (dg->tail_ptr[v] == head_write) {
 			// No vertex has been deleted yet (or deleted vertices originally had no arcs).
-			head_write += dg->tail_ptr[v + 1] - dg->tail_ptr[v];
+			head_write = dg->tail_ptr[v + 1];
 		} else {
 			const scc_Vid* v_arc = dg->head + dg->tail_ptr[v];
 			const scc_Vid* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];

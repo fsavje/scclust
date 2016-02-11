@@ -20,7 +20,7 @@
  * ============================================================================== */
 
 
-#include "../include/greedy.h"
+#include "../include/greedy_clustering.h"
 
 #include <assert.h>
 #include <math.h>
@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include "../include/config.h"
 #include "../include/clustering.h"
-#include "nn_search.h"
+#include "dist_search.h"
 
 
 // ==============================================================================

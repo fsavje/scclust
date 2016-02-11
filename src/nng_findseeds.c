@@ -20,15 +20,16 @@
  * ============================================================================== */
 
 
-#include "findseeds.h"
+#include "nng_findseeds.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "../include/config.h"
-#include "../include/digraph.h"
-#include "../include/nng_clustering.h"
+#include "digraph_core.h"
+#include "digraph_operations.h"
+#include "nng_core.h"
 
 
 // ==============================================================================

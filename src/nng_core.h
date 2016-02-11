@@ -31,9 +31,9 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
-#include "digraph.h"
-#include "clustering.h"
+#include "../include/config.h"
+#include "../include/clustering.h"
+#include "digraph_core.h"
 
 
 /** Enum to specify seed finding methods.

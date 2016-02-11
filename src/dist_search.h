@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-#ifndef SCC_NN_SEARCH_HG
-#define SCC_NN_SEARCH_HG
+#ifndef SCC_DIST_SEARCH_HG
+#define SCC_DIST_SEARCH_HG
 
 #include <stdbool.h>
 #include <stddef.h>

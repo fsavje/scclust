@@ -23,7 +23,7 @@
 #ifndef SCC_UT_DATA_OBJ_HG
 #define SCC_UT_DATA_OBJ_HG
 
-#include "../src/nn_search.h"
+#include "../src/dist_search.h"
 
 struct scc_DataSetObject {
 	size_t cols;
