@@ -31,7 +31,7 @@
 // Miscellaneous functions
 // ==============================================================================
 
-scc_Vid scc_get_data_point_count(scc_DataSetObject* data_set_object);
+size_t scc_get_data_point_count(scc_DataSetObject* data_set_object);
 
 
 // `output_dists` must be of length `(n_points - 1) n_points / 2`

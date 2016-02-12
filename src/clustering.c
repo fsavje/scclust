@@ -22,6 +22,7 @@
 
 #include "../include/clustering.h"
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "../include/config.h"
@@ -46,12 +47,14 @@ scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* const cl
 {
 	if (cl == NULL) return SCC_NULL_CLUSTERING_STATS;
 	if (cl->num_clusters == 0) return SCC_NULL_CLUSTERING_STATS;
+	if (cl->num_clusters >= SCC_CLABEL_MAX) return SCC_NULL_CLUSTERING_STATS;
 	if (cl->cluster_label == NULL) return SCC_NULL_CLUSTERING_STATS;
 	if (cl->vertices < 2) return SCC_NULL_CLUSTERING_STATS;
+	if (cl->vertices >= SCC_VID_MAX) return SCC_NULL_CLUSTERING_STATS;
 	if (data_set_object == NULL) return SCC_NULL_CLUSTERING_STATS;
 	if (cl->vertices > scc_get_data_point_count(data_set_object)) return SCC_NULL_CLUSTERING_STATS;
 	
-	scc_Vid* const cluster_size = calloc(cl->num_clusters, sizeof(scc_Vid));
+	size_t* const cluster_size = calloc(cl->num_clusters, sizeof(size_t));
 	if (cluster_size == NULL) return SCC_NULL_CLUSTERING_STATS;
 
 	for (size_t v = 0; v < cl->vertices; ++v) {
@@ -68,7 +71,7 @@ scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* const cl
 		.avg_cluster_size = -1.0,
 		.sum_dists = 0.0,
 		.min_dist = SCC_DISTANCE_MAX,
-		.max_dist = -1.0,
+		.max_dist = 0.0,
 		.cl_avg_min_dist = 0.0,
 		.cl_avg_max_dist = 0.0,
 		.cl_avg_dist_weighted = 0.0,
@@ -109,7 +112,9 @@ scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* const cl
 		cl_members[c] = cl_members[c - 1] + cluster_size[c];
 	}
 
-	for (scc_Vid v = 0; v < cl->vertices; ++v) {
+	assert(cl->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) cl->vertices; // If `scc_Vid` is signed
+	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (cl->cluster_label[v] != SCC_CLABEL_NA) {
 			--cl_members[cl->cluster_label[v]];
 			*cl_members[cl->cluster_label[v]] = v;
@@ -130,11 +135,11 @@ scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* const cl
 			return SCC_NULL_CLUSTERING_STATS;
 		}
 
-		scc_Distance cluster_average = 0.0;
+		scc_Distance cluster_average = dist_scratch[0];
 		scc_Distance cluster_min = dist_scratch[0];
 		scc_Distance cluster_max = dist_scratch[0];
 
-		for (size_t d = 0; d < size_dist_matrix; ++d) {
+		for (size_t d = 1; d < size_dist_matrix; ++d) {
 			cluster_average += dist_scratch[d];
 			if (cluster_min > dist_scratch[d]) {
 				cluster_min = dist_scratch[d];

@@ -22,6 +22,7 @@
 
 #include "digraph_operations.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -111,7 +112,7 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 	if (!scc_digraph_is_initialized(dg)) return SCC_NULL_DIGRAPH;
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
-	scc_Vid* const row_count = calloc(dg->vertices + 1, sizeof(scc_Vid));
+	scc_Arci* const row_count = calloc(dg->vertices + 1, sizeof(scc_Arci));
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
 	if ((row_count == NULL) || !scc_digraph_is_initialized(&dg_out)) {
 		free(row_count);
@@ -126,12 +127,14 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 	}
 
 	dg_out.tail_ptr[0] = 0;
-	for (scc_Vid v = 1; v <= dg->vertices; ++v) {
+	for (size_t v = 1; v <= dg->vertices; ++v) {
 		row_count[v] += row_count[v - 1];
 		dg_out.tail_ptr[v] = row_count[v];
 	}
 
-	for (scc_Vid v = 0; v < dg->vertices; ++v) {
+	assert(dg->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) dg->vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices; ++v) {
 		const scc_Vid* const arc_stop = dg->head + dg->tail_ptr[v + 1];
 		for (const scc_Vid* arc = dg->head + dg->tail_ptr[v];
 		        arc != arc_stop; ++arc) {
@@ -164,14 +167,16 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
 	size_t out_arcs_write = 0;
 
 	// Try greedy memory count first
-	for (scc_Vid v = 0; v < vertices; ++v) {
+	assert(vertices < SCC_VID_MAX);
+	const scc_Vid vertices_vid = (scc_Vid) vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices_vid; ++v) {
 		if (force_loops) {
 			out_arcs_write += dg_b->tail_ptr[v + 1] - dg_b->tail_ptr[v];
 		}
 		const scc_Vid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
 		for (const scc_Vid* arc_a = dg_a->head + dg_a->tail_ptr[v];
 		        arc_a != arc_a_stop; ++arc_a) {
-			if (*arc_a == v && (force_loops || ignore_loops)) continue;
+			if ((*arc_a == v) && (force_loops || ignore_loops)) continue;
 			out_arcs_write += dg_b->tail_ptr[*arc_a + 1] - dg_b->tail_ptr[*arc_a];
 		}
 	}
@@ -226,11 +231,13 @@ static inline size_t iscc_do_union(const size_t vertices,
 {
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
-	for (scc_Vid v = 0; v < vertices; ++v) {
-		row_markers[v] = SCC_VID_MAX;
+	for (size_t v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_VID_NA;
 	}
 
-	for (scc_Vid v = 0; v < vertices; ++v) {
+	assert(vertices < SCC_VID_MAX);
+	const scc_Vid vertices_vid = (scc_Vid) vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices_vid; ++v) {
 		if (ignore_loops) row_markers[v] = v;
 		for (size_t i = 0; i < num_dgs; ++i) {
 			const scc_Vid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
@@ -265,11 +272,13 @@ static inline size_t iscc_do_adjacency_product(const size_t vertices,
 {
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
-	for (scc_Vid v = 0; v < vertices; ++v) {
-		row_markers[v] = SCC_VID_MAX;
+	for (size_t v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_VID_NA;
 	}
 
-	for (scc_Vid v = 0; v < vertices; ++v) {
+	assert(vertices < SCC_VID_MAX);
+	const scc_Vid vertices_vid = (scc_Vid) vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices_vid; ++v) {
 		if (force_loops) {
 			const scc_Vid* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
 			for (const scc_Vid* v_arc_b = dg_b_head + dg_b_tail_ptr[v];

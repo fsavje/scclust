@@ -112,7 +112,9 @@ scc_SeedClustering iscc_findseeds_lexical(const scc_Digraph* const nng,
 		return SCC_NULL_SEED_CLUSTERING;
 	}
 
-	for (scc_Vid cv = 0; cv < nng->vertices; ++cv) {
+	assert(nng->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) nng->vertices; // If `scc_Vid` is signed
+	for (scc_Vid cv = 0; cv < vertices; ++cv) {
 		if (iscc_fs_check_neighbors_marks(cv, nng, marks)) {
 			assert(nng->tail_ptr[cv] != nng->tail_ptr[cv + 1]);
 
@@ -216,7 +218,7 @@ scc_SeedClustering iscc_findseeds_exclusion(const scc_Digraph* const nng,
 	}
 
 	bool any_init_excluded = false;
-	for (scc_Vid v = 0; v < nng->vertices; ++v) {
+	for (size_t v = 0; v < nng->vertices; ++v) {
 		if (nng->tail_ptr[v] == nng->tail_ptr[v + 1]) {
 			excluded[v] = true;
 			any_init_excluded = true;
@@ -394,7 +396,7 @@ static inline bool iscc_fs_add_seed(const scc_Vid s,
 	}
 	cl->seeds[cl->num_clusters] = s;
 	++(cl->num_clusters);
-	assert(cl->num_clusters < SCC_CLABEL_MAX);
+	if (cl->num_clusters == SCC_CLABEL_MAX) return false;
 
 	return true;
 }
@@ -460,12 +462,14 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 
 	// Dynamic alloc is slightly faster but more error-prone
 	// Add if turns out to be bottleneck
-	scc_Vid max_inwards = 0;
-	for (scc_Vid v = 0; v < vertices; ++v) {
-		if (max_inwards < res.inwards_count[v]) max_inwards = res.inwards_count[v];
+	scc_Vid max_inwards_tmp = 0;
+	for (size_t v = 0; v < vertices; ++v) {
+		if (max_inwards_tmp < res.inwards_count[v]) max_inwards_tmp = res.inwards_count[v];
 	}
+	assert(max_inwards_tmp >= 0);
+	const size_t max_inwards = (size_t) max_inwards_tmp; // If `scc_Vid` is signed
 
-	scc_Vid* bucket_count = calloc(max_inwards + 1, sizeof(scc_Vid));
+	size_t* bucket_count = calloc(max_inwards + 1, sizeof(size_t));
 	res.bucket_index = malloc(sizeof(scc_Vid*[max_inwards + 1]));
 	if ((bucket_count == NULL) || (res.bucket_index == NULL)) {
 		free(bucket_count);
@@ -473,7 +477,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 		return (iscc_fs_SortResult) { NULL, NULL, NULL, NULL };
 	}
 
-	for (scc_Vid v = 0; v < vertices; ++v) {
+	for (size_t v = 0; v < vertices; ++v) {
 		++bucket_count[res.inwards_count[v]];
 	}
 
@@ -484,6 +488,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 	}
 	free(bucket_count);
 
+	assert(vertices < SCC_VID_MAX);
 	if (make_indices) {
 		res.vertex_index = malloc(sizeof(scc_Vid*[vertices]));
 		if (res.vertex_index == NULL) {

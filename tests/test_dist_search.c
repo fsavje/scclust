@@ -510,7 +510,7 @@ void scc_ut_nearest_neighbor_search(void** state)
 {
 	(void) state;
 
-	const scc_Vid M = SCC_VID_MAX;
+	const scc_Vid M = SCC_VID_NA;
 
 	scc_Vid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 	scc_Vid search2[5] = { 5, 2, 7, 3, 8 };

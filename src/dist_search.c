@@ -75,10 +75,10 @@ static inline scc_Distance iscc_get_dist(const scc_DataSetObject* data_set_objec
 // External function implementations
 // ==============================================================================
 
-scc_Vid scc_get_data_point_count(scc_DataSetObject* const data_set_object)
+size_t scc_get_data_point_count(scc_DataSetObject* const data_set_object)
 {
 	assert(data_set_object != NULL);
-	return (scc_Vid) data_set_object->rows;
+	return data_set_object->rows;
 }
 
 
@@ -93,8 +93,10 @@ bool scc_get_dist_matrix(scc_DataSetObject* const data_set_object,
 	assert(output_dists != NULL);
 
 	if (point_indices == NULL) {
-		for (scc_Vid p1 = 0; p1 < n_points; ++p1) {
-			for (scc_Vid p2 = p1 + 1; p2 < n_points; ++p2) {
+		assert(n_points < SCC_VID_MAX);
+		const scc_Vid n_points_vid = (scc_Vid) n_points; // If `n_points` is signed
+		for (scc_Vid p1 = 0; p1 < n_points_vid; ++p1) {
+			for (scc_Vid p2 = p1 + 1; p2 < n_points_vid; ++p2) {
 				*output_dists = iscc_get_dist(data_set_object, p1, p2);
 				++output_dists;
 			}
@@ -224,7 +226,7 @@ bool scc_get_max_dist(scc_MaxDistObject* const max_dist_object,
 			current_query = (scc_Vid) qp;
 		} else {
 			current_query = query_indices[qp];
-			assert(current_query < mdo.data_set_object->rows);
+			assert(((size_t) current_query) < mdo.data_set_object->rows);
 		}
 
 		max_dist = -1.0;
@@ -234,7 +236,7 @@ bool scc_get_max_dist(scc_MaxDistObject* const max_dist_object,
 				search_point = (scc_Vid) sp;
 			} else {
 				search_point = mdo.search_indices[sp];
-				assert(search_point < mdo.data_set_object->rows);
+				assert(((size_t) search_point) < mdo.data_set_object->rows);
 			}
 
 			tmp_dist = iscc_get_dist(mdo.data_set_object, current_query, search_point);
@@ -363,7 +365,7 @@ bool scc_nearest_neighbor_search(scc_NNSearchObject* const nn_search_object,
 		}
 
 		for (; dist_pos != stop_dist_pos; ++index_pos, ++dist_pos) {
-			index_pos[0] = SCC_VID_MAX;
+			index_pos[0] = SCC_VID_NA;
 			dist_pos[0] = -1.0;
 		}
 	}
@@ -389,14 +391,14 @@ static inline scc_Distance iscc_get_dist(const scc_DataSetObject* const data_set
                                          const scc_Vid index1,
                                          const scc_Vid index2)
 {
-	assert(index1 < data_set_object->rows);
-	assert(index2 < data_set_object->rows);
+	assert(((size_t) index1) < data_set_object->rows);
+	assert(((size_t) index2) < data_set_object->rows);
 
 	scc_Distance tmp_dist = 0.0;
 	for (size_t dim = 0; dim < data_set_object->cols; ++dim) {
-		const double value_diff = data_set_object->elements[data_set_object->cols * index1 + dim] -
-		                              data_set_object->elements[data_set_object->cols * index2 + dim];
+		const double value_diff = data_set_object->elements[data_set_object->cols * ((size_t) index1) + dim] -
+		                              data_set_object->elements[data_set_object->cols * ((size_t) index2) + dim];
 		tmp_dist += value_diff * value_diff;
 	}
-	return(sqrt(tmp_dist));
+	return ((scc_Distance) sqrt(tmp_dist)); // If `scc_Distance` is not `double`
 }

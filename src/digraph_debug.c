@@ -44,7 +44,7 @@ bool scc_is_valid_digraph(const scc_Digraph* const dg)
 		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
 	}
 	for (size_t i = 0; i < dg->tail_ptr[dg->vertices]; ++i) {
-		if (dg->head[i] >= dg->vertices) return false;
+		if (((size_t) dg->head[i]) >= dg->vertices) return false;
 	}
 	return true;
 }
@@ -145,11 +145,8 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const])
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
 		if (dg_str[c] == '#' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '#') ++max_arcs;
-		if (dg_str[c] == '/' && vertices == 0) {
-			if (all_arcs > SCC_VID_MAX) return SCC_NULL_DIGRAPH;
-			vertices = all_arcs;
-		} 
-		if (dg_str[c] == '/' && all_arcs % vertices != 0) return SCC_NULL_DIGRAPH;
+		if (dg_str[c] == '/' && vertices == 0) vertices = all_arcs;
+		if (dg_str[c] == '/' && (all_arcs % vertices) != 0) return SCC_NULL_DIGRAPH;
 	}
 
 	scc_Digraph dg_out = scc_init_digraph(vertices, max_arcs);

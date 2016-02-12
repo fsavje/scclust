@@ -110,7 +110,7 @@ scc_Digraph scc_empty_digraph(const size_t vertices,
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;
 	
-	for (scc_Vid v = 0; v <= vertices; ++v) {
+	for (size_t v = 0; v <= vertices; ++v) {
 		dg.tail_ptr[v] = 0;
 	}
 
@@ -126,7 +126,7 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* const dg)
 	scc_Digraph dg_out = scc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
 	if (!scc_digraph_is_initialized(&dg_out)) return SCC_NULL_DIGRAPH;
 
-	for (scc_Vid v = 0; v <= dg->vertices; ++v) {
+	for (size_t v = 0; v <= dg->vertices; ++v) {
 		dg_out.tail_ptr[v] = dg->tail_ptr[v];
 	}
 	for (scc_Arci a = 0; a < dg->tail_ptr[dg->vertices]; ++a) {
@@ -143,7 +143,7 @@ bool scc_delete_arcs_by_tails(scc_Digraph* const dg,
 	if (!scc_digraph_is_initialized(dg) || (to_delete == NULL)) return false;
 
 	scc_Arci head_write = 0;
-	for (scc_Vid v = 0; v < dg->vertices; ++v) {
+	for (size_t v = 0; v < dg->vertices; ++v) {
 		if (to_delete[v]) {
 			dg->tail_ptr[v] = head_write;
 		} else if (dg->tail_ptr[v] == head_write) {
@@ -171,7 +171,9 @@ bool scc_delete_loops(scc_Digraph* const dg)
 	if (!scc_digraph_is_initialized(dg)) return false;
 
 	scc_Arci head_write = 0;
-	for (scc_Vid v = 0; v < dg->vertices; ++v) {
+	assert(dg->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) dg->vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices; ++v) {
 		const scc_Vid* v_arc = dg->head + dg->tail_ptr[v];
 		const scc_Vid* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];
 		dg->tail_ptr[v] = head_write;

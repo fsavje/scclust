@@ -94,7 +94,6 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 
 	switch(sm) {
-
 		case SCC_LEXICAL:
 			clustering = iscc_findseeds_lexical(nng, seed_init_capacity);
 			break;
@@ -119,10 +118,7 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 			break;
 	}
 
-	if ((clustering.seeds == NULL) || (clustering.num_clusters >= SCC_CLABEL_MAX)) {
-		scc_free_SeedClustering(&clustering);
-		return SCC_NULL_SEED_CLUSTERING;
-	}
+	if (clustering.seeds == NULL) return SCC_NULL_SEED_CLUSTERING;
 
 	if (external_cluster_label != NULL) {
 		clustering.external_labels = true;
@@ -180,7 +176,7 @@ scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl)
 	// it's not freed when `scc_free_SeedClustering(cl);` is run
 	cl->external_labels = true;
 
-	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
+	for (size_t v = 0; v < out_cl.vertices; ++v) {
 		if (!cl->assigned[v]) out_cl.cluster_label[v] = SCC_CLABEL_NA;
 	}
 
@@ -205,7 +201,7 @@ scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* const cl,
 	};
 	cl->external_labels = true;
 	
-	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
+	for (size_t v = 0; v < out_cl.vertices; ++v) {
 		if (!cl->assigned[v]) {
 			out_cl.cluster_label[v] = SCC_CLABEL_NA;
 
@@ -245,11 +241,11 @@ scc_Clustering scc_assign_remaining_desired_size(scc_SeedClustering* const cl,
 	scc_Vid* cluster_size = calloc(out_cl.num_clusters, sizeof(scc_Vid));
 	if (cluster_size == NULL) return SCC_NULL_CLUSTERING;
 
-	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
+	for (size_t v = 0; v < out_cl.vertices; ++v) {
 		if (cl->assigned[v]) ++cluster_size[out_cl.cluster_label[v]];
 	}
 
-	for (scc_Vid v = 0; v < out_cl.vertices; ++v) {
+	for (size_t v = 0; v < out_cl.vertices; ++v) {
 		if (!cl->assigned[v]) {
 			scc_Clabel best_cluster = SCC_CLABEL_NA;
 			scc_Vid best_size = 0;

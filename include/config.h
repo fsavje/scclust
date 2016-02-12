@@ -42,17 +42,6 @@
 //#define SCC_STABLE_CLUSTERING
 
 
-/** Type used for arc indices. Must be unsigned.
- *  
- *  \note
- *  Number of arcs in any digraph must be less or equal to 
- *  the maximum number that can be stored in #scc_Arci.
- */
-typedef uint32_t scc_Arci;
-
-/// Maximum number that can be stored in #scc_Arci.
-#define SCC_ARCI_MAX UINT32_MAX
-
 /** Type used for cluster labels. May be unsigned or signed.
  *  
  *  \note
@@ -64,30 +53,70 @@ typedef uint32_t scc_Clabel;
 /// Maximum number that can be stored in #scc_Clabel.
 #define SCC_CLABEL_MAX UINT32_MAX
 
-/** Number to indicate that an unassigned vertex.
+/** Value to indicate that an unassigned vertex.
  *  
  *  If #scc_Clabel is unsigned, `SCC_CLABEL_NA` will typically be `SCC_CLABEL_MAX`.
  *  If #scc_Clabel is signed, `SCC_CLABEL_NA` will typically be negative or `SCC_CLABEL_MAX`.
  */
 #define SCC_CLABEL_NA UINT32_MAX
 
-/// Type used for distances. Must be float, and distances must be non-negative.
+
+/// Type used for data set objects. This struct is defined in `src/dist_search.c` (or by user). 
+typedef struct scc_DataSetObject scc_DataSetObject;
+
+
+/// Type used for distances. Must be float (of any precision), and distances must be non-negative.
 typedef double scc_Distance;
 
+/// Maximum value that can be stored in #scc_Distance.
 #define SCC_DISTANCE_MAX DBL_MAX
 
-/** Type used for vertex IDs. Must be unsigned.
- *  
+
+/** Type used for vertex IDs. May be unsigned or signed.
+ *
  *  \note
- *  Number of vertices must be strictly less than the maximum number
- *  that can be stored in #scc_Vid (i.e., less than #SCC_VID_MAX).
+ *  Possible vertex IDs are the sequence `[0, 1, ..., SCC_VID_MAX - 1]`. 
+ *  `SCC_VID_NA` may not be in this sequence.
+ *  \note
+ *  Number of vertices in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_Vid (i.e., less
+ *  than #SCC_VID_MAX).
  */
 typedef uint32_t scc_Vid;
 
 /// Maximum number that can be stored in #scc_Vid.
 #define SCC_VID_MAX UINT32_MAX
 
-typedef struct scc_DataSetObject scc_DataSetObject;
+/** Value to indicate that an invalid vertex.
+ *  
+ *  If #scc_Vid is unsigned, `SCC_VID_NA` will typically be `SCC_VID_MAX`.
+ *  If #scc_Vid is signed, `SCC_VID_NA` will typically be negative or `SCC_VID_MAX`.
+ */
+#define SCC_VID_NA UINT32_MAX
 
+
+/** Type used for arc indices. Must be unsigned.
+ *  
+ *  \note
+ *  Number of arcs in any digraph must be less or equal to 
+ *  the maximum number that can be stored in #scc_Arci.
+ */
+typedef uint32_t scc_Arci;
+
+/// Maximum number that can be stored in #scc_Arci.
+#define SCC_ARCI_MAX UINT32_MAX
+
+
+
+// ==============================================================================
+// Non-serviceable parts below
+// ============================================================================== 
+
+#if (SCC_CLABEL_NA >= 0) && (SCC_CLABEL_NA < SCC_CLABEL_MAX)
+	#error SCC_CLABEL_NA is the valid interval of scc_Clabel
+#endif
+#if (SCC_VID_NA >= 0) && (SCC_VID_NA < SCC_VID_MAX)
+	#error SCC_VID_NA is the valid interval of scc_Vid
+#endif
 
 #endif

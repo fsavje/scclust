@@ -242,7 +242,9 @@ static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const in
 		cl_stack.clusters[c].marker = 0;
 	}
 
-	for (scc_Vid v = 0; v < input_clustering->vertices; ++v) {
+	assert(input_clustering->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) input_clustering->vertices; // If `scc_Vid` is signed
+	for (scc_Vid v = 0; v < vertices; ++v) {
 		if (input_clustering->cluster_label[v] != SCC_CLABEL_NA) {
 			iscc_gr_ClusterItem* cl = &cl_stack.clusters[input_clustering->cluster_label[v]];
 			cl->members[cl->size] = v;
@@ -271,7 +273,9 @@ static iscc_gr_ClusterStack iscc_gr_empty_cl_stack(const size_t num_vertices)
 		return ISCC_GR_NULL_CLUSTER_STACK;
 	}
 
-	for (scc_Vid v = 0; v < num_vertices; ++v) {
+	assert(num_vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) num_vertices; // If `scc_Vid` is signed
+	for (scc_Vid v = 0; v < vertices; ++v) {
 		tmp_members[v] = v;
 	}
 
@@ -317,7 +321,7 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 			iscc_gr_ClusterItem unbreakable_cluster = iscc_gr_pop_from_stack(cl_stack);
 			if (unbreakable_cluster.size > 0) {
 				for (size_t v = 0; v < unbreakable_cluster.size; ++v) {
-					assert(unbreakable_cluster.members[v] < input_clustering->vertices);
+					assert(((size_t) unbreakable_cluster.members[v]) < input_clustering->vertices);
 					input_clustering->cluster_label[unbreakable_cluster.members[v]] = curr_label;
 				}
 				++curr_label;
@@ -333,7 +337,8 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 		}
 	}
 
-	input_clustering->num_clusters = curr_label;
+	assert(curr_label >= 0);
+	input_clustering->num_clusters = (size_t) curr_label;
 
 	assert(cl_stack->items == 0);
 
