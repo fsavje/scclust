@@ -51,7 +51,7 @@ enum scc_SeedMethod {
 	 *
 	 *  This method finds seed sequentially by checking whether adding the next seed satisfy the four conditions described in #scc_get_seed_clustering.
 	 */
-	SCC_LEXICAL,
+	SCC_FINDSEEDS_LEXICAL,
 
 	/** Find seeds ordered by inwards pointing arcs. 
 	 *
@@ -59,7 +59,7 @@ enum scc_SeedMethod {
 	 *  themselves be seeds, thus a vertex with many inwards pointing arcs will exclude many vertices from being seeds. Heuristically, picking such
 	 *  a vertex as seed will lead to fewer clusters. 
 	 */
-	SCC_INWARDS_ORDER,
+	SCC_FINDSEEDS_INWARDS_ORDER,
 
 	/** Find seeds ordered by inwards pointing arcs from unassigned vertices. 
 	 *
@@ -70,7 +70,7 @@ enum scc_SeedMethod {
 	 *  If the desired size is two, this method ensures that the maximum distance between any two vertices in a common cluster in the
 	 *  final clustering is bounded by twice the maximum distance in the NNG.
 	 */
-	SCC_INWARDS_UPDATING,
+	SCC_FINDSEEDS_INWARDS_UPDATING,
 
 	/** Find seeds ordered by edge count in the exclusion graph.
 	 *
@@ -78,7 +78,7 @@ enum scc_SeedMethod {
 	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each vertex in this
 	 *  graph and find seeds in ascending order.
 	 */
-	SCC_EXCLUSION_ORDER,
+	SCC_FINDSEEDS_EXCLUSION_ORDER,
 
 	/** Find seeds ordered by edge count in the exclusion graph from non-excluded vertices.
 	 *
@@ -87,7 +87,7 @@ enum scc_SeedMethod {
 	 *  and find seeds in ascending order by this count. Unlike the #SCC_EXCLUSION_ORDER, this method updates the edge count after finding a
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
-	SCC_EXCLUSION_UPDATING,
+	SCC_FINDSEEDS_EXCLUSION_UPDATING,
 };
 
 /// Typedef for the scc_SeedMethod enum

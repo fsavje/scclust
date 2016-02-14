@@ -82,12 +82,21 @@ size_t scc_get_data_point_count(scc_DataSetObject* const data_set_object)
 }
 
 
+bool scc_is_valid_data_set_object(scc_DataSetObject* const data_set_object)
+{
+	if ((data_set_object == NULL) || (data_set_object->elements == NULL)) return false;
+	if (data_set_object->cols == 0) return false;
+	if (data_set_object->rows == 0) return false;
+	return true;
+}
+
+
 bool scc_get_dist_matrix(scc_DataSetObject* const data_set_object,
                          const size_t n_points,
                          const scc_Vid* const point_indices,
                          scc_Distance* output_dists)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(n_points > 1);
 	assert((n_points == data_set_object->rows) || (point_indices != NULL));
 	assert(output_dists != NULL);
@@ -119,7 +128,7 @@ scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* const data_set
                                                const scc_Vid* const column_indices,
                                                const size_t n_query_hint)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(n_columns > 0);
 	assert((n_columns == data_set_object->rows) || (column_indices != NULL));
 
@@ -185,7 +194,7 @@ scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* const data_set_ob
                                             const scc_Vid* const search_indices,
                                             const size_t n_query_hint)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(n_search_points > 0);
 	assert((n_search_points == data_set_object->rows) || (search_indices != NULL));
 
@@ -269,7 +278,7 @@ scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* const data_set_
                                               const scc_Vid* const search_indices,
                                               const size_t n_query_hint)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(k > 0);
 	assert(!radius_search || (radius > 0.0));
 	assert(n_search_points > 0);

@@ -351,6 +351,8 @@ static scc_Digraph iscc_exclusion_graph(const scc_Digraph* const nng)
 static scc_SeedClustering iscc_fs_init_clustering(const size_t vertices,
                                                   size_t seed_init_capacity)
 {
+	assert(vertices < SCC_VID_MAX);
+
 	if (seed_init_capacity < 128) seed_init_capacity = 128;
 
 	scc_SeedClustering cl = {
@@ -371,7 +373,10 @@ static scc_SeedClustering iscc_fs_init_clustering(const size_t vertices,
 
 static void iscc_fs_shrink_seed_array(scc_SeedClustering* const cl)
 {
-	if (cl && cl->seeds && (cl->seed_capacity > cl->num_clusters) && (cl->num_clusters > 0)) {
+	assert(cl != NULL);
+	assert(cl->seeds != NULL);
+
+	if ((cl->seed_capacity > cl->num_clusters) && (cl->num_clusters > 0)) {
 		scc_Vid* const tmp_ptr = realloc(cl->seeds, sizeof(scc_Vid[cl->num_clusters]));
 		if (tmp_ptr != NULL) {
 			cl->seeds = tmp_ptr;
@@ -384,7 +389,8 @@ static void iscc_fs_shrink_seed_array(scc_SeedClustering* const cl)
 static inline bool iscc_fs_add_seed(const scc_Vid s,
                                     scc_SeedClustering* const cl)
 {
-	assert(cl->seeds);
+	assert(cl != NULL);
+	assert(cl->seeds != NULL);
 	assert(cl->num_clusters <= cl->seed_capacity);
 	
 	if (cl->num_clusters == cl->seed_capacity) {
@@ -520,7 +526,7 @@ static iscc_fs_SortResult iscc_fs_sort_by_inwards(const scc_Digraph* const nng,
 
 static void iscc_fs_free_SortResult(iscc_fs_SortResult* const sr)
 {
-	if (sr) {
+	if (sr != NULL) {
 		free(sr->inwards_count);
 		free(sr->sorted_vertices);
 		free(sr->vertex_index);

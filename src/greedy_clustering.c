@@ -80,7 +80,7 @@ static void iscc_gr_free_cl_strack(iscc_gr_ClusterStack* cl_stack);
 static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* data_set_object,
                                           iscc_gr_ClusterStack* cl_stack,
                                           scc_Clustering* input_clustering,
-                                          size_t k,
+                                          size_t size_constraint,
                                           bool batch_assign);
 
 static inline iscc_gr_ClusterItem* iscc_gr_peek_at_stack(const iscc_gr_ClusterStack* cl_stack);
@@ -92,7 +92,7 @@ static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* cl_stack,
 
 static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* data_set_object,
                                                           iscc_gr_ClusterItem* cluster_to_break,
-                                                          size_t k,
+                                                          size_t size_constraint,
                                                           bool batch_assign,
                                                           uint_fast16_t* vertex_markers);
 
@@ -140,22 +140,21 @@ static inline iscc_gr_DistanceEdge* iscc_gr_get_next_k_nn(iscc_gr_DistanceEdge* 
 // External function implementations
 // ==============================================================================
 
-bool scc_greedy_break_clustering(scc_DataSetObject* const data_set_object,
-                                 scc_Clustering* const input_clustering,
-                                 const size_t k,
+bool scc_greedy_break_clustering(scc_Clustering* const cl,
+                                 scc_DataSetObject* const data_set_object,
+                                 const size_t size_constraint,
                                  const bool batch_assign)
 {
-	if (data_set_object == NULL) return false;
-	if (input_clustering == NULL) return false;
-	if (input_clustering->num_clusters == 0) return false;
-	if (input_clustering->cluster_label == NULL) return false;
-	if (input_clustering->vertices < 2) return false;
-	if (k < 2) return false;
+	if (!scc_is_valid_clustering(cl)) return false;
+	if (cl->vertices < 2) return false;
+	if (!scc_is_valid_data_set_object(data_set_object)) return false;
+	if (cl->vertices > scc_get_data_point_count(data_set_object)) return false;
+	if (size_constraint < 2) return false;
 
-	iscc_gr_ClusterStack cl_stack = iscc_gr_init_cl_stack(input_clustering);
+	iscc_gr_ClusterStack cl_stack = iscc_gr_init_cl_stack(cl);
 	if (cl_stack.clusters == NULL) return false;
 
-	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, input_clustering, k, batch_assign)) {
+	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, cl, size_constraint, batch_assign)) {
 		iscc_gr_free_cl_strack(&cl_stack);
 		return false;
 	}
@@ -166,19 +165,19 @@ bool scc_greedy_break_clustering(scc_DataSetObject* const data_set_object,
 
 
 scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_object,
-                                         const size_t k,
+                                         const size_t size_constraint,
                                          const bool batch_assign,
                                          scc_Clabel external_cluster_label[const])
 {
-	if (data_set_object == NULL) return SCC_NULL_CLUSTERING;
-	if (k < 2) return SCC_NULL_CLUSTERING;
+	if (!scc_is_valid_data_set_object(data_set_object)) return SCC_NULL_CLUSTERING;
+	if (size_constraint < 2) return SCC_NULL_CLUSTERING;
 
 	size_t num_vertices = scc_get_data_point_count(data_set_object);
 	if (num_vertices < 2) return SCC_NULL_CLUSTERING;
+	if (num_vertices >= SCC_VID_MAX) return SCC_NULL_CLUSTERING;
 
 	scc_Clustering out_cl;
 	out_cl.vertices = num_vertices;
-
 	if (external_cluster_label != NULL) {
 		out_cl.external_labels = true;
 		out_cl.cluster_label = external_cluster_label;
@@ -194,7 +193,7 @@ scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_objec
 		return SCC_NULL_CLUSTERING;
 	}
 
-	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, &out_cl, k, batch_assign)) {
+	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, &out_cl, size_constraint, batch_assign)) {
 		iscc_gr_free_cl_strack(&cl_stack);
 		scc_free_Clustering(&out_cl);
 		return SCC_NULL_CLUSTERING;
@@ -211,9 +210,7 @@ scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_objec
 
 static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const input_clustering)
 {
-	assert(input_clustering != NULL);
-	assert(input_clustering->num_clusters > 0);
-	assert(input_clustering->cluster_label != NULL);
+	assert(scc_is_valid_clustering(input_clustering));
 	assert(input_clustering->vertices >= 2);
 
 	iscc_gr_ClusterStack cl_stack;
@@ -290,36 +287,48 @@ static iscc_gr_ClusterStack iscc_gr_empty_cl_stack(const size_t num_vertices)
 
 
 static void iscc_gr_free_cl_strack(iscc_gr_ClusterStack* const cl_stack) {
-	assert(cl_stack != NULL);
-	for (size_t i = 0; i < cl_stack->items; ++i) {
-		free(cl_stack->clusters[i].members);
+	if (cl_stack != NULL) {
+		if (cl_stack->clusters != NULL) {
+			for (size_t i = 0; i < cl_stack->items; ++i) {
+				free(cl_stack->clusters[i].members);
+			}
+		}
+		free(cl_stack->clusters);
+		*cl_stack = ISCC_GR_NULL_CLUSTER_STACK;
 	}
-	free(cl_stack->clusters);
 }
 
 
 static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_object,
                                           iscc_gr_ClusterStack* const cl_stack,
                                           scc_Clustering* const input_clustering,
-                                          const size_t k,
+                                          const size_t size_constraint,
                                           const bool batch_assign)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(cl_stack != NULL);
 	assert(cl_stack->items > 0);
+	assert(cl_stack->items <= cl_stack->capacity);
 	assert(cl_stack->clusters != NULL);
 	assert(input_clustering != NULL);
+	assert(input_clustering->vertices > 0);
+	assert(input_clustering->vertices < SCC_VID_MAX);
 	assert(input_clustering->cluster_label != NULL);
-	assert(k >= 2);
+	assert(size_constraint >= 2);
 
 	uint_fast16_t* const vertex_markers = calloc(input_clustering->vertices, sizeof(uint_fast16_t));
 	if (vertex_markers == NULL) return false;
 
 	scc_Clabel curr_label = 0;
 	while (iscc_gr_peek_at_stack(cl_stack) != NULL) {
-		if (iscc_gr_peek_at_stack(cl_stack)->size < 2 * k) {
+		if (iscc_gr_peek_at_stack(cl_stack)->size < 2 * size_constraint) {
 			iscc_gr_ClusterItem unbreakable_cluster = iscc_gr_pop_from_stack(cl_stack);
 			if (unbreakable_cluster.size > 0) {
+				if (curr_label == SCC_CLABEL_MAX) {
+					free(unbreakable_cluster.members);
+					free(vertex_markers);
+					return false;
+				}
 				for (size_t v = 0; v < unbreakable_cluster.size; ++v) {
 					assert(((size_t) unbreakable_cluster.members[v]) < input_clustering->vertices);
 					input_clustering->cluster_label[unbreakable_cluster.members[v]] = curr_label;
@@ -328,7 +337,7 @@ static bool iscc_gr_run_greedy_clustering(scc_DataSetObject* const data_set_obje
 				free(unbreakable_cluster.members);
 			}
 		} else {
-			iscc_gr_ClusterItem new_cluster = iscc_gr_break_cluster_into_two(data_set_object, iscc_gr_peek_at_stack(cl_stack), k, batch_assign, vertex_markers);
+			iscc_gr_ClusterItem new_cluster = iscc_gr_break_cluster_into_two(data_set_object, iscc_gr_peek_at_stack(cl_stack), size_constraint, batch_assign, vertex_markers);
 			if ((new_cluster.members == NULL) || !iscc_gr_push_to_stack(cl_stack, new_cluster)) {
 				free(new_cluster.members);
 				free(vertex_markers);
@@ -361,8 +370,8 @@ static inline iscc_gr_ClusterItem* iscc_gr_peek_at_stack(const iscc_gr_ClusterSt
 static inline iscc_gr_ClusterItem iscc_gr_pop_from_stack(iscc_gr_ClusterStack* const cl_stack)
 {
 	assert(cl_stack != NULL);
+	assert(cl_stack->items > 0);
 	assert(cl_stack->clusters != NULL);
-	assert(cl_stack->items != 0);
 
 	--(cl_stack->items);
 	return cl_stack->clusters[cl_stack->items];
@@ -374,6 +383,7 @@ static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
 {
 	assert(cl_stack != NULL);
 	assert(cl_stack->clusters != NULL);
+	assert(cl_stack->items <= cl_stack->capacity);
 
 	if (cl_stack->items == cl_stack->capacity) {
 		size_t new_capacity = cl_stack->capacity + 1 + (size_t) (20 * log2((double) cl.size));
@@ -392,14 +402,15 @@ static bool iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
 
 static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* const data_set_object,
                                                           iscc_gr_ClusterItem* const cluster_to_break,
-                                                          const size_t k,
+                                                          const size_t size_constraint,
                                                           const bool batch_assign,
                                                           uint_fast16_t* const vertex_markers)
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(cluster_to_break != NULL);
-	assert(k >= 2);
-	assert(cluster_to_break->size >= 2 * k);
+	assert(cluster_to_break->size >= 2 * size_constraint);
+	assert(cluster_to_break->members != NULL);
+	assert(size_constraint >= 2);
 	assert(vertex_markers != NULL);
 
 	const size_t old_cluster_size = cluster_to_break->size;
@@ -414,8 +425,8 @@ static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* con
 	iscc_gr_DistanceEdge* const dist_store1 = malloc(sizeof(iscc_gr_DistanceEdge[old_cluster_size]));
 	iscc_gr_DistanceEdge* const dist_store2 = malloc(sizeof(iscc_gr_DistanceEdge[old_cluster_size]));
 
-	scc_Vid* const k_nn_array1 = malloc(sizeof(scc_Vid[k]));
-	scc_Vid* const k_nn_array2 = malloc(sizeof(scc_Vid[k]));
+	scc_Vid* const k_nn_array1 = malloc(sizeof(scc_Vid[size_constraint]));
+	scc_Vid* const k_nn_array2 = malloc(sizeof(scc_Vid[size_constraint]));
 
 	iscc_gr_ClusterItem new_cluster = {
 		.size = 0,
@@ -448,36 +459,36 @@ static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* con
 	iscc_gr_DistanceEdge* temp_dist1;
 	iscc_gr_DistanceEdge* temp_dist2;
 
-	temp_dist1 = iscc_gr_get_next_k_nn(last_assigned_dist1, k - 1, k_nn_array1, vertex_markers, curr_marker);
-	temp_dist2 = iscc_gr_get_next_k_nn(last_assigned_dist2, k - 1, k_nn_array2, vertex_markers, curr_marker);
+	temp_dist1 = iscc_gr_get_next_k_nn(last_assigned_dist1, size_constraint - 1, k_nn_array1, vertex_markers, curr_marker);
+	temp_dist2 = iscc_gr_get_next_k_nn(last_assigned_dist2, size_constraint - 1, k_nn_array2, vertex_markers, curr_marker);
 
 	if (temp_dist1->distance >= temp_dist2->distance) {
-		for (size_t i = 0; i < k - 1; ++i) {
+		for (size_t i = 0; i < size_constraint - 1; ++i) {
 			iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, vertex_markers, curr_marker);
 		}
 		last_assigned_dist1 = temp_dist1;
 
-		last_assigned_dist2 = iscc_gr_get_next_k_nn(last_assigned_dist2, k - 1, k_nn_array2, vertex_markers, curr_marker);
-		for (size_t i = 0; i < k - 1; ++i) {
+		last_assigned_dist2 = iscc_gr_get_next_k_nn(last_assigned_dist2, size_constraint - 1, k_nn_array2, vertex_markers, curr_marker);
+		for (size_t i = 0; i < size_constraint - 1; ++i) {
 			iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, vertex_markers, curr_marker);
 		}
 	} else {
-		for (size_t i = 0; i < k - 1; ++i) {
+		for (size_t i = 0; i < size_constraint - 1; ++i) {
 			iscc_gr_move_v_to_cluster(k_nn_array2[i], cluster2, vertex_markers, curr_marker);
 		}
 		last_assigned_dist2 = temp_dist2;
 
-		last_assigned_dist1 = iscc_gr_get_next_k_nn(last_assigned_dist1, k - 1, k_nn_array1, vertex_markers, curr_marker);
-		for (size_t i = 0; i < k - 1; ++i) {
+		last_assigned_dist1 = iscc_gr_get_next_k_nn(last_assigned_dist1, size_constraint - 1, k_nn_array1, vertex_markers, curr_marker);
+		for (size_t i = 0; i < size_constraint - 1; ++i) {
 			iscc_gr_move_v_to_cluster(k_nn_array1[i], cluster1, vertex_markers, curr_marker);
 		}
 	}
 
-	assert(cluster1->size == k && cluster2->size == k);
+	assert(cluster1->size == size_constraint && cluster2->size == size_constraint);
 
 	if (batch_assign) {
-		size_t num_assign_in_batch = k;
-		for (size_t assigned = 2 * k; assigned < old_cluster_size; assigned += num_assign_in_batch) {
+		size_t num_assign_in_batch = size_constraint;
+		for (size_t assigned = 2 * size_constraint; assigned < old_cluster_size; assigned += num_assign_in_batch) {
 			
 			if (assigned + num_assign_in_batch > old_cluster_size) {
 				num_assign_in_batch = old_cluster_size - assigned;
@@ -500,7 +511,7 @@ static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* con
 		}
 
 	} else {
-		for (size_t assigned = 2 * k; assigned < old_cluster_size; ++assigned) {
+		for (size_t assigned = 2 * size_constraint; assigned < old_cluster_size; ++assigned) {
 
 			temp_dist1 = iscc_gr_get_next_dist(last_assigned_dist1, vertex_markers, curr_marker);
 			temp_dist2 = iscc_gr_get_next_dist(last_assigned_dist2, vertex_markers, curr_marker);
@@ -521,8 +532,8 @@ static iscc_gr_ClusterItem iscc_gr_break_cluster_into_two(scc_DataSetObject* con
 	free(k_nn_array1);
 	free(k_nn_array2);
 
-	assert(cluster1->size >= k);
-	assert(cluster2->size >= k);
+	assert(cluster1->size >= size_constraint);
+	assert(cluster2->size >= size_constraint);
 
 	scc_Vid* const members_tmp1 = realloc(cluster1->members, sizeof(scc_Vid[cluster1->size]));
 	scc_Vid* const members_tmp2 = realloc(cluster2->members, sizeof(scc_Vid[cluster2->size]));
@@ -545,9 +556,11 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
                                  scc_Vid* const center2,
                                  uint_fast16_t* const vertex_markers)
 {
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(cl != NULL);
 	assert(cl->size >= 4);
-	assert(center1 != NULL && center2 != NULL);
+	assert(cl->members != NULL);
+	assert((center1 != NULL) && (center2 != NULL));
 	assert(vertex_markers != NULL);
 
 	const uint_fast16_t curr_marker = iscc_gr_get_next_marker(cl, vertex_markers);
@@ -614,6 +627,10 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 static inline uint_fast16_t iscc_gr_get_next_marker(iscc_gr_ClusterItem* const cl,
                                                     uint_fast16_t* const vertex_markers)
 {
+	assert(cl != NULL);
+	assert(cl->members != NULL);
+	assert(vertex_markers != NULL);
+
 	if (cl->marker == UINT_FAST16_MAX) {
 		for (size_t i = 0; i < cl->size; ++i) {
 			vertex_markers[cl->members[i]] = 0;
@@ -632,9 +649,10 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
                                         iscc_gr_DistanceEdge dist_store1[const static cl->size],
                                         iscc_gr_DistanceEdge dist_store2[const static cl->size])
 {
-	assert(data_set_object != NULL);
+	assert(scc_is_valid_data_set_object(data_set_object));
 	assert(cl != NULL);
-	assert(cl->size > 2);
+	assert(cl->size >= 2);
+	assert(cl->members != NULL);
 	assert(dist_store1 != NULL);
 	assert(dist_store2 != NULL);
 
@@ -672,7 +690,9 @@ static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* const cl,
                                           const scc_Distance output_dists[const static cl->size],
                                           iscc_gr_DistanceEdge dist_edge_store[const static cl->size])
 {
-	assert(cl->size > 2);
+	assert(cl != NULL);
+	assert(cl->size >= 2);
+	assert(cl->members != NULL);
 	assert(output_dists != NULL);
 	assert(dist_edge_store != NULL);
 
@@ -712,8 +732,11 @@ static inline void iscc_gr_move_v_to_cluster(const scc_Vid v_id,
                                              uint_fast16_t* const vertex_markers,
                                              const uint_fast16_t curr_marker)
 {
+	assert(cl != NULL);
+	assert(cl->members != NULL);
 	assert(vertex_markers != NULL);
 	assert(vertex_markers[v_id] != curr_marker);
+
 	vertex_markers[v_id] = curr_marker;
 	cl->members[cl->size] = v_id;
 	++(cl->size);
@@ -743,6 +766,8 @@ static inline iscc_gr_DistanceEdge* iscc_gr_get_next_k_nn(iscc_gr_DistanceEdge* 
                                                           const uint_fast16_t* const vertex_markers,
                                                           const uint_fast16_t curr_marker)
 {
+	assert(prev_dist != NULL);
+	assert(prev_dist->next_dist != NULL); // We should never reach the end!
 	assert(k > 0);
 	assert(out_dist_array != NULL);
 	assert(vertex_markers != NULL);

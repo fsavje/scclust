@@ -46,7 +46,7 @@ void scc_ut_greedy_break_clustering(void** state)
 		.external_labels = true,
 		.cluster_label = cluster_label1,
 	};
-	assert_true(scc_greedy_break_clustering(&scc_ut_test_data_large, &cl1, 20, true));
+	assert_true(scc_greedy_break_clustering(&cl1, &scc_ut_test_data_large, 20, true));
 	scc_Clabel ref_label1[100] = { 1, 1, 2, 2, 2, 0, 0, 3, 0, 0, 2, 1, 3, 3, 2,
 	                               1, 0, 2, 1, 0, 0, 3, 1, 1, 1, 0, 1, 3, 0, 3,
 	                               2, 0, 0, 1, 3, 0, 2, 3, 1, 1, 1, 2, 3, 2, 1,
@@ -73,7 +73,7 @@ void scc_ut_greedy_break_clustering(void** state)
 		.external_labels = true,
 		.cluster_label = cluster_label2,
 	};
-	assert_true(scc_greedy_break_clustering(&scc_ut_test_data_large, &cl2, 20, false));
+	assert_true(scc_greedy_break_clustering(&cl2, &scc_ut_test_data_large, 20, false));
 	scc_Clabel ref_label2[100] = { 1, 0, 2, 2, 2, 0, 0, 3, 0, 0, 2, 0, 3, 3, 2, 1, 0,
 	                               2, 1, 0, 0, 3, 1, 1, 1, 0, 0, 3, 0, 3, 2, 0, 0, 1,
 	                               3, 0, 2, 2, 0, 0, 1, 2, 3, 2, 1, 3, 3, 3, 0, 0, 3,

@@ -195,8 +195,8 @@ scc_Digraph scc_copy_digraph(const scc_Digraph* dg);
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-bool scc_delete_arcs_by_tails(scc_Digraph* dg,
-                              const bool to_delete[]);
+void scc_delete_arcs_by_tails(scc_Digraph* dg,
+                              const bool to_delete[static dg->vertices]);
 
 /** Delete all self-loops.
  *
@@ -210,7 +210,7 @@ bool scc_delete_arcs_by_tails(scc_Digraph* dg,
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-bool scc_delete_loops(scc_Digraph* dg);
+void scc_delete_loops(scc_Digraph* dg);
 
 
 #endif

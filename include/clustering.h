@@ -104,6 +104,8 @@ static const scc_ClusteringStatistics SCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 
  */
 void scc_free_Clustering(scc_Clustering* cl);
 
+bool scc_is_valid_clustering(const scc_Clustering* cl);
+
 scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* cl,
                                                   scc_DataSetObject* data_set_object);
 

@@ -33,6 +33,7 @@
 
 size_t scc_get_data_point_count(scc_DataSetObject* data_set_object);
 
+bool scc_is_valid_data_set_object(scc_DataSetObject* data_set_object);
 
 // `output_dists` must be of length `(n_points - 1) n_points / 2`
 bool scc_get_dist_matrix(scc_DataSetObject* data_set_object,

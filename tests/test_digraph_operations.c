@@ -235,16 +235,12 @@ void scc_ut_digraph_transpose(void** state)
 	scc_Digraph control3 = scc_digraph_from_string("####/..../..../..../");
 	scc_Digraph control4 = scc_empty_digraph(4, 0);
 	scc_Digraph control5 = scc_empty_digraph(0, 0);
-	scc_Digraph control6 = SCC_NULL_DIGRAPH;
-	scc_Digraph control7 = SCC_NULL_DIGRAPH;
 
 	scc_Digraph res1 = scc_digraph_transpose(&ut_dg1);
 	scc_Digraph res2 = scc_digraph_transpose(&ut_dg2);
 	scc_Digraph res3 = scc_digraph_transpose(&ut_dg3);
 	scc_Digraph res4 = scc_digraph_transpose(&ut_dg4);
 	scc_Digraph res5 = scc_digraph_transpose(&ut_dg5);
-	scc_Digraph res6 = scc_digraph_transpose(NULL);
-	scc_Digraph res7 = scc_digraph_transpose(&control7);
 
 	assert_valid_digraph(&res1, 4);
 	assert_valid_digraph(&res2, 4);
@@ -257,8 +253,6 @@ void scc_ut_digraph_transpose(void** state)
 	assert_equal_digraph(&res3, &control3);
 	assert_equal_digraph(&res4, &control4);
 	assert_equal_digraph(&res5, &control5);
-	assert_equal_digraph(&res6, &control6);
-	assert_equal_digraph(&res7, &control7);
 
 	assert_free_digraph(&ut_dg1);
 	assert_free_digraph(&ut_dg2);
@@ -288,10 +282,6 @@ void scc_ut_adjacency_product(void** state)
 	scc_Digraph dg2 = scc_digraph_from_string("..#../..##./...../..#../#.#../");
 	scc_Digraph dg2_i = scc_digraph_from_string("..#../..##./...../..#../#.#../");
 	scc_Digraph dg2_f = scc_digraph_from_string("#.#../.###./..#../..##./#.#.#/");
-
-	scc_Digraph prod0 = scc_adjacency_product(&dg1, &dg1, true, true);
-	scc_Digraph none = SCC_NULL_DIGRAPH;
-	assert_identical_digraph(&prod0, &none);
 
 
 	scc_Digraph prod1 = scc_adjacency_product(&dg1, &dg1, false, false);

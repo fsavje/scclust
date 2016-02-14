@@ -112,6 +112,15 @@ typedef uint32_t scc_Arci;
 // Non-serviceable parts below
 // ============================================================================== 
 
+#if (SCC_CLABEL_MAX <= 0)
+	#error SCC_CLABEL_MAX must be positive
+#endif
+#if (SCC_VID_MAX <= 0)
+	#error SCC_VID_MAX must be positive
+#endif
+#if (SCC_ARCI_MAX <= 0)
+	#error SCC_ARCI_MAX must be positive
+#endif
 #if (SCC_CLABEL_NA >= 0) && (SCC_CLABEL_NA < SCC_CLABEL_MAX)
 	#error SCC_CLABEL_NA is the valid interval of scc_Clabel
 #endif

@@ -65,15 +65,16 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
                               const bool ignore_loops)
 {
 	if (num_dgs == 0) return scc_empty_digraph(0, 0);
-	if ((dgs == NULL) || !scc_digraph_is_initialized(dgs)) return SCC_NULL_DIGRAPH;
+	assert(dgs != NULL);
+	assert(scc_digraph_is_initialized(&dgs[0]));
 
 	const size_t vertices = dgs[0].vertices;
 
-	size_t out_arcs_write = 0;
-
 	// Try greedy memory count first
+	size_t out_arcs_write = 0;
 	for (size_t i = 0; i < num_dgs; ++i) {
-		if (!scc_digraph_is_initialized(&dgs[i]) || dgs[i].vertices != vertices) return SCC_NULL_DIGRAPH;
+		assert(scc_digraph_is_initialized(&dgs[i]));
+		assert(dgs[0].vertices == vertices);
 		out_arcs_write += dgs[i].tail_ptr[vertices];
 	}
 
@@ -107,9 +108,43 @@ scc_Digraph scc_digraph_union(const size_t num_dgs,
 }
 
 
+/*
+// Alternative implementation, quicker and less memory. But changes the order of the arcs.
+// Most rewrite the tests for the exclusion updating find seed method if used.
 scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
 {
 	if (!scc_digraph_is_initialized(dg)) return SCC_NULL_DIGRAPH;
+	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
+
+	scc_Digraph dg_out = scc_empty_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
+	if (!scc_digraph_is_initialized(&dg_out)) return SCC_NULL_DIGRAPH;
+
+	const scc_Vid* const arc_c_stop = dg->head + dg->tail_ptr[dg->vertices];
+	for (const scc_Vid* arc_c = dg->head;
+	        arc_c != arc_c_stop; ++arc_c) {
+		++dg_out.tail_ptr[*arc_c];
+	}
+
+	for (size_t v = 0; v < dg->vertices; ++v) {
+		dg_out.tail_ptr[v + 1] += dg_out.tail_ptr[v];
+	}
+
+	assert(dg->vertices < SCC_VID_MAX);
+	const scc_Vid vertices = (scc_Vid) dg->vertices; // If `scc_Vid` is signed 
+	for (scc_Vid v = 0; v < vertices; ++v) {
+		const scc_Vid* const arc_stop = dg->head + dg->tail_ptr[v + 1];
+		for (const scc_Vid* arc = dg->head + dg->tail_ptr[v];
+		        arc != arc_stop; ++arc) {
+			--dg_out.tail_ptr[*arc];
+			dg_out.head[dg_out.tail_ptr[*arc]] = v;
+		}
+	}
+
+	return dg_out;
+}*/
+scc_Digraph scc_digraph_transpose(const scc_Digraph* const dg)
+{
+	assert(scc_digraph_is_initialized(dg));
 	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
 
 	scc_Arci* const row_count = calloc(dg->vertices + 1, sizeof(scc_Arci));
@@ -154,9 +189,10 @@ scc_Digraph scc_adjacency_product(const scc_Digraph* const dg_a,
                                   const bool force_loops,
                                   const bool ignore_loops)
 {
-	if (force_loops && ignore_loops) return SCC_NULL_DIGRAPH;
-	if (!scc_digraph_is_initialized(dg_a) || !scc_digraph_is_initialized(dg_b)) return SCC_NULL_DIGRAPH;
-	if (dg_a->vertices != dg_b->vertices) return SCC_NULL_DIGRAPH;
+	assert(scc_digraph_is_initialized(dg_a));
+	assert(scc_digraph_is_initialized(dg_b));
+	assert(dg_a->vertices == dg_b->vertices);
+	assert(!force_loops || !ignore_loops);
 	if (dg_a->vertices == 0) return scc_empty_digraph(0, 0);
 
 	const size_t vertices = dg_a->vertices;
@@ -229,6 +265,9 @@ static inline size_t iscc_do_union(const size_t vertices,
                                    scc_Arci out_tail_ptr[restrict const],
                                    scc_Vid out_head[restrict const])
 {
+	assert(!write || (out_tail_ptr != NULL));
+	assert(!write || (out_head != NULL));
+
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
 	for (size_t v = 0; v < vertices; ++v) {
@@ -270,6 +309,9 @@ static inline size_t iscc_do_adjacency_product(const size_t vertices,
                                                scc_Arci out_tail_ptr[restrict const],
                                                scc_Vid out_head[restrict const])
 {
+	assert(!write || (out_tail_ptr != NULL));
+	assert(!write || (out_head != NULL));
+
 	size_t counter = 0;
 	if (write) out_tail_ptr[0] = 0;
 	for (size_t v = 0; v < vertices; ++v) {

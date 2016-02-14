@@ -22,6 +22,7 @@
 
 #include "digraph_debug.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -120,8 +121,8 @@ scc_Digraph scc_digraph_from_pieces(const size_t vertices,
                                     const scc_Arci tail_ptr[const static vertices + 1],
                                     const scc_Vid head[const])
 {
-	if (tail_ptr == NULL) return SCC_NULL_DIGRAPH;
-	if (max_arcs > 0 && head == NULL) return SCC_NULL_DIGRAPH;
+	assert(tail_ptr != NULL);
+	assert((max_arcs == 0) || (head != NULL));
 	scc_Digraph dg = scc_init_digraph(vertices, max_arcs);
 	if (!scc_digraph_is_initialized(&dg)) return SCC_NULL_DIGRAPH;
 
@@ -138,6 +139,8 @@ scc_Digraph scc_digraph_from_pieces(const size_t vertices,
 
 scc_Digraph scc_digraph_from_string(const char dg_str[const])
 {
+	assert(dg_str != NULL);
+	
 	size_t vertices = 0;
 	size_t all_arcs = 0;
 	size_t max_arcs = 0;
@@ -182,10 +185,8 @@ scc_Digraph scc_digraph_from_string(const char dg_str[const])
 
 void scc_print_digraph(const scc_Digraph* const dg)
 {
-	if (!scc_digraph_is_initialized(dg)) {
-		printf("Unvalid digraph.\n\n");
-		return;
-	} 
+	assert(scc_digraph_is_initialized(dg));
+	
 	if (dg->vertices == 0) {
 		printf("[]\n\n");
 		return;

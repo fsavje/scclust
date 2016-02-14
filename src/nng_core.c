@@ -49,7 +49,7 @@ void scc_free_SeedClustering(scc_SeedClustering* const cl)
 
 scc_SeedClustering scc_copy_SeedClustering(const scc_SeedClustering* const cl)
 {
-	if (cl == NULL) return SCC_NULL_SEED_CLUSTERING;
+	assert(cl != NULL);
 
 	scc_SeedClustering cl_out = {
 		.vertices = cl->vertices,
@@ -89,32 +89,33 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
                                            size_t seed_init_capacity,
                                            scc_Clabel external_cluster_label[const])
 {
-	if (!scc_digraph_is_initialized(nng)) return SCC_NULL_SEED_CLUSTERING;
+	assert(scc_digraph_is_initialized(nng));
 
 	scc_SeedClustering clustering = SCC_NULL_SEED_CLUSTERING;
 
 	switch(sm) {
-		case SCC_LEXICAL:
+		case SCC_FINDSEEDS_LEXICAL:
 			clustering = iscc_findseeds_lexical(nng, seed_init_capacity);
 			break;
 
-		case SCC_INWARDS_ORDER:
+		case SCC_FINDSEEDS_INWARDS_ORDER:
 			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, false);
 			break;
 
-		case SCC_INWARDS_UPDATING:
+		case SCC_FINDSEEDS_INWARDS_UPDATING:
 			clustering = iscc_findseeds_inwards(nng, seed_init_capacity, true);
 			break;
 
-		case SCC_EXCLUSION_ORDER:
+		case SCC_FINDSEEDS_EXCLUSION_ORDER:
 			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, false);
 			break;
 
-		case SCC_EXCLUSION_UPDATING:
+		case SCC_FINDSEEDS_EXCLUSION_UPDATING:
 			clustering = iscc_findseeds_exclusion(nng, seed_init_capacity, true);
 			break;
 
 		default:
+			return SCC_NULL_SEED_CLUSTERING;
 			break;
 	}
 
@@ -161,10 +162,11 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* const nng,
 
 scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl)
 {
-	if ((cl == NULL) || (cl->assigned == NULL) || (cl->cluster_label == NULL) || 
-	        (cl->vertices >= SCC_VID_MAX) || (cl->num_clusters >= SCC_CLABEL_MAX)) {
-		return SCC_NULL_CLUSTERING;
-	}
+	assert(cl != NULL);
+	assert(cl->assigned != NULL);
+	assert(cl->cluster_label != NULL);
+	assert(cl->vertices < SCC_VID_MAX);
+	assert(cl->num_clusters < SCC_CLABEL_MAX);
 
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
@@ -187,11 +189,11 @@ scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl)
 scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* const cl,
                                             const scc_Digraph* const priority_graph)
 {
-	if ((cl == NULL) || (cl->assigned == NULL) || (cl->cluster_label == NULL) || 
-	        (cl->vertices >= SCC_VID_MAX) || (cl->num_clusters >= SCC_CLABEL_MAX) ||
-	        !scc_digraph_is_initialized(priority_graph)) {
-		return SCC_NULL_CLUSTERING;
-	}
+	assert(cl != NULL);
+	assert(cl->assigned != NULL);
+	assert(cl->cluster_label != NULL);
+	assert(cl->vertices < SCC_VID_MAX);
+	assert(cl->num_clusters < SCC_CLABEL_MAX);
 
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,
@@ -224,11 +226,11 @@ scc_Clustering scc_assign_remaining_desired_size(scc_SeedClustering* const cl,
                                                  const scc_Digraph* const priority_graph,
                                                  const scc_Vid desired_size)
 {
-	if ((cl == NULL) || (cl->assigned == NULL) || (cl->cluster_label == NULL) || 
-	        (cl->vertices >= SCC_VID_MAX) || (cl->num_clusters >= SCC_CLABEL_MAX) ||
-	        !scc_digraph_is_initialized(priority_graph)) {
-		return SCC_NULL_CLUSTERING;
-	}
+	assert(cl != NULL);
+	assert(cl->assigned != NULL);
+	assert(cl->cluster_label != NULL);
+	assert(cl->vertices < SCC_VID_MAX);
+	assert(cl->num_clusters < SCC_CLABEL_MAX);
 
 	scc_Clustering out_cl =  {
 		.vertices = cl->vertices,

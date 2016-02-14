@@ -361,7 +361,7 @@ void scc_ut_nng_caliper_ignore_withdiag(void** state)
 	                                          "...#. .#..#/");
 
 	scc_Clabel ref_lexical_cluster_label[10] = {SCC_CLABEL_NA, 0, SCC_CLABEL_NA, 1, 1, 0, SCC_CLABEL_NA, 0, 1, 1};
-	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 1, NULL);
+	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 1, NULL);
 	scc_Clustering lexical_clustering = scc_ignore_remaining(&lexical_tmp_clustering);
 	assert_int_equal(lexical_clustering.vertices, 10);
 	assert_int_equal(lexical_clustering.num_clusters, 2);
@@ -369,7 +369,7 @@ void scc_ut_nng_caliper_ignore_withdiag(void** state)
 	assert_memory_equal(lexical_clustering.cluster_label, ref_lexical_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inwards_cluster_label[10] = {SCC_CLABEL_NA, 1, SCC_CLABEL_NA, 0, 0, 1, SCC_CLABEL_NA, 1, 0, 0};
-	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 1, NULL);
+	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 1, NULL);
 	scc_Clustering inwards_clustering = scc_ignore_remaining(&inwards_tmp_clustering);
 	assert_int_equal(inwards_clustering.vertices, 10);
 	assert_int_equal(inwards_clustering.num_clusters, 2);
@@ -377,7 +377,7 @@ void scc_ut_nng_caliper_ignore_withdiag(void** state)
 	assert_memory_equal(inwards_clustering.cluster_label, ref_inwards_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inupdat_cluster_label[10] = {SCC_CLABEL_NA, 1, 2, 0, 0, 2, 1, 1, 0, 0};
-	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 1, NULL);
+	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 1, NULL);
 	scc_Clustering inupdat_clustering = scc_ignore_remaining(&inupdat_tmp_clustering);
 	assert_int_equal(inupdat_clustering.vertices, 10);
 	assert_int_equal(inupdat_clustering.num_clusters, 3);
@@ -385,7 +385,7 @@ void scc_ut_nng_caliper_ignore_withdiag(void** state)
 	assert_memory_equal(inupdat_clustering.cluster_label, ref_inupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exclusi_cluster_label[10] = {SCC_CLABEL_NA, 2, 0, 1, 1, 0, 2, 2, 1, 1};
-	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 1, NULL);
+	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 1, NULL);
 	scc_Clustering exclusi_clustering = scc_ignore_remaining(&exclusi_tmp_clustering);
 	assert_int_equal(exclusi_clustering.vertices, 10);
 	assert_int_equal(exclusi_clustering.num_clusters, 3);
@@ -393,7 +393,7 @@ void scc_ut_nng_caliper_ignore_withdiag(void** state)
 	assert_memory_equal(exclusi_clustering.cluster_label, ref_exclusi_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exupdat_cluster_label[10] = {SCC_CLABEL_NA, 2, 0, 1, 1, 0, 2, 2, 1, 1};
-	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 1, NULL);
+	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 1, NULL);
 	scc_Clustering exupdat_clustering = scc_ignore_remaining(&exupdat_tmp_clustering);
 	assert_int_equal(exupdat_clustering.vertices, 10);
 	assert_int_equal(exupdat_clustering.num_clusters, 3);
@@ -431,7 +431,7 @@ void scc_ut_nng_caliper_assign_withdiag(void** state)
 	                                          "...#. .#..#/");
 
 	scc_Clabel ref_lexical_cluster_label[10] = {SCC_CLABEL_NA, 0, 0, 1, 1, 0, 0, 0, 1, 1};
-	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 1, NULL);
+	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 1, NULL);
 	scc_Clustering lexical_clustering = scc_assign_remaining_lexical(&lexical_tmp_clustering, &nng);
 	assert_int_equal(lexical_clustering.vertices, 10);
 	assert_int_equal(lexical_clustering.num_clusters, 2);
@@ -439,7 +439,7 @@ void scc_ut_nng_caliper_assign_withdiag(void** state)
 	assert_memory_equal(lexical_clustering.cluster_label, ref_lexical_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inwards_cluster_label[10] = {SCC_CLABEL_NA, 1, 1, 0, 0, 1, 1, 1, 0, 0};
-	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 1, NULL);
+	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 1, NULL);
 	scc_Clustering inwards_clustering = scc_assign_remaining_lexical(&inwards_tmp_clustering, &nng);
 	assert_int_equal(inwards_clustering.vertices, 10);
 	assert_int_equal(inwards_clustering.num_clusters, 2);
@@ -447,7 +447,7 @@ void scc_ut_nng_caliper_assign_withdiag(void** state)
 	assert_memory_equal(inwards_clustering.cluster_label, ref_inwards_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inupdat_cluster_label[10] = {SCC_CLABEL_NA, 1, 2, 0, 0, 2, 1, 1, 0, 0};
-	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 1, NULL);
+	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 1, NULL);
 	scc_Clustering inupdat_clustering = scc_assign_remaining_lexical(&inupdat_tmp_clustering, &nng);
 	assert_int_equal(inupdat_clustering.vertices, 10);
 	assert_int_equal(inupdat_clustering.num_clusters, 3);
@@ -455,7 +455,7 @@ void scc_ut_nng_caliper_assign_withdiag(void** state)
 	assert_memory_equal(inupdat_clustering.cluster_label, ref_inupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exclusi_cluster_label[10] = {SCC_CLABEL_NA, 2, 0, 1, 1, 0, 2, 2, 1, 1};
-	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 1, NULL);
+	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 1, NULL);
 	scc_Clustering exclusi_clustering = scc_assign_remaining_lexical(&exclusi_tmp_clustering, &nng);
 	assert_int_equal(exclusi_clustering.vertices, 10);
 	assert_int_equal(exclusi_clustering.num_clusters, 3);
@@ -463,7 +463,7 @@ void scc_ut_nng_caliper_assign_withdiag(void** state)
 	assert_memory_equal(exclusi_clustering.cluster_label, ref_exclusi_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exupdat_cluster_label[10] = {SCC_CLABEL_NA, 2, 0, 1, 1, 0, 2, 2, 1, 1};
-	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 1, NULL);
+	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 1, NULL);
 	scc_Clustering exupdat_clustering = scc_assign_remaining_lexical(&exupdat_tmp_clustering, &nng);
 	assert_int_equal(exupdat_clustering.vertices, 10);
 	assert_int_equal(exupdat_clustering.num_clusters, 3);
@@ -576,7 +576,7 @@ void scc_ut_nng_caliper_ignore_selfpointing_withdiag(void** state)
 	                                          "...#. .#..#/");
 
 	scc_Clabel ref_lexical_cluster_label[10] = {0, 1, SCC_CLABEL_NA, 2, 2, 1, SCC_CLABEL_NA, 1, 2, 2};
-	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 1, NULL);
+	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 1, NULL);
 	scc_Clustering lexical_clustering = scc_ignore_remaining(&lexical_tmp_clustering);
 	assert_int_equal(lexical_clustering.vertices, 10);
 	assert_int_equal(lexical_clustering.num_clusters, 3);
@@ -584,7 +584,7 @@ void scc_ut_nng_caliper_ignore_selfpointing_withdiag(void** state)
 	assert_memory_equal(lexical_clustering.cluster_label, ref_lexical_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inwards_cluster_label[10] = {0, 2, SCC_CLABEL_NA, 1, 1, 2, SCC_CLABEL_NA, 2, 1, 1};
-	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 1, NULL);
+	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 1, NULL);
 	scc_Clustering inwards_clustering = scc_ignore_remaining(&inwards_tmp_clustering);
 	assert_int_equal(inwards_clustering.vertices, 10);
 	assert_int_equal(inwards_clustering.num_clusters, 3);
@@ -592,7 +592,7 @@ void scc_ut_nng_caliper_ignore_selfpointing_withdiag(void** state)
 	assert_memory_equal(inwards_clustering.cluster_label, ref_inwards_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inupdat_cluster_label[10] = {0, 2, 3, 1, 1, 3, 2, 2, 1, 1};
-	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 1, NULL);
+	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 1, NULL);
 	scc_Clustering inupdat_clustering = scc_ignore_remaining(&inupdat_tmp_clustering);
 	assert_int_equal(inupdat_clustering.vertices, 10);
 	assert_int_equal(inupdat_clustering.num_clusters, 4);
@@ -600,7 +600,7 @@ void scc_ut_nng_caliper_ignore_selfpointing_withdiag(void** state)
 	assert_memory_equal(inupdat_clustering.cluster_label, ref_inupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exclusi_cluster_label[10] = {0, 3, SCC_CLABEL_NA, 2, 2, 1, 3, 3, 2, 2};
-	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 1, NULL);
+	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 1, NULL);
 	scc_Clustering exclusi_clustering = scc_ignore_remaining(&exclusi_tmp_clustering);
 	assert_int_equal(exclusi_clustering.vertices, 10);
 	assert_int_equal(exclusi_clustering.num_clusters, 4);
@@ -608,7 +608,7 @@ void scc_ut_nng_caliper_ignore_selfpointing_withdiag(void** state)
 	assert_memory_equal(exclusi_clustering.cluster_label, ref_exclusi_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exupdat_cluster_label[10] = {0, 3, SCC_CLABEL_NA, 2, 2, 1, 3, 3, 2, 2};
-	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 1, NULL);
+	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 1, NULL);
 	scc_Clustering exupdat_clustering = scc_ignore_remaining(&exupdat_tmp_clustering);
 	assert_int_equal(exupdat_clustering.vertices, 10);
 	assert_int_equal(exupdat_clustering.num_clusters, 4);
@@ -646,7 +646,7 @@ void scc_ut_nng_caliper_assign_selfpointing_withdiag(void** state)
 	                                          "...#. .#..#/");
 
 	scc_Clabel ref_lexical_cluster_label[10] = {0, 1, 1, 2, 2, 1, 1, 1, 2, 2};
-	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 1, NULL);
+	scc_SeedClustering lexical_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 1, NULL);
 	scc_Clustering lexical_clustering = scc_assign_remaining_lexical(&lexical_tmp_clustering, &nng);
 	assert_int_equal(lexical_clustering.vertices, 10);
 	assert_int_equal(lexical_clustering.num_clusters, 3);
@@ -654,7 +654,7 @@ void scc_ut_nng_caliper_assign_selfpointing_withdiag(void** state)
 	assert_memory_equal(lexical_clustering.cluster_label, ref_lexical_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inwards_cluster_label[10] = {0, 2, 2, 1, 1, 2, 2, 2, 1, 1};
-	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 1, NULL);
+	scc_SeedClustering inwards_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 1, NULL);
 	scc_Clustering inwards_clustering = scc_assign_remaining_lexical(&inwards_tmp_clustering, &nng);
 	assert_int_equal(inwards_clustering.vertices, 10);
 	assert_int_equal(inwards_clustering.num_clusters, 3);
@@ -662,7 +662,7 @@ void scc_ut_nng_caliper_assign_selfpointing_withdiag(void** state)
 	assert_memory_equal(inwards_clustering.cluster_label, ref_inwards_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_inupdat_cluster_label[10] = {0, 2, 3, 1, 1, 3, 2, 2, 1, 1};
-	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 1, NULL);
+	scc_SeedClustering inupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 1, NULL);
 	scc_Clustering inupdat_clustering = scc_assign_remaining_lexical(&inupdat_tmp_clustering, &nng);
 	assert_int_equal(inupdat_clustering.vertices, 10);
 	assert_int_equal(inupdat_clustering.num_clusters, 4);
@@ -670,7 +670,7 @@ void scc_ut_nng_caliper_assign_selfpointing_withdiag(void** state)
 	assert_memory_equal(inupdat_clustering.cluster_label, ref_inupdat_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exclusi_cluster_label[10] = {0, 3, 1, 2, 2, 1, 3, 3, 2, 2};
-	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 1, NULL);
+	scc_SeedClustering exclusi_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 1, NULL);
 	scc_Clustering exclusi_clustering = scc_assign_remaining_lexical(&exclusi_tmp_clustering, &nng);
 	assert_int_equal(exclusi_clustering.vertices, 10);
 	assert_int_equal(exclusi_clustering.num_clusters, 4);
@@ -678,7 +678,7 @@ void scc_ut_nng_caliper_assign_selfpointing_withdiag(void** state)
 	assert_memory_equal(exclusi_clustering.cluster_label, ref_exclusi_cluster_label, 10 * sizeof(scc_Clabel));
 
 	scc_Clabel ref_exupdat_cluster_label[10] = {0, 3, 1, 2, 2, 1, 3, 3, 2, 2};
-	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 1, NULL);
+	scc_SeedClustering exupdat_tmp_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 1, NULL);
 	scc_Clustering exupdat_clustering = scc_assign_remaining_lexical(&exupdat_tmp_clustering, &nng);
 	assert_int_equal(exupdat_clustering.vertices, 10);
 	assert_int_equal(exupdat_clustering.num_clusters, 4);
@@ -718,7 +718,7 @@ void scc_ut_clustering_lexical_withdiag(void** state)
 	scc_Vid fp_seeds[3] = {0, 4, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 0, SCC_CLABEL_NA, SCC_CLABEL_NA, 1, 1, 2, 2, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6, NULL);
+	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 3);
 	assert_int_equal(seed_clustering.seed_capacity, 3);
@@ -733,7 +733,7 @@ void scc_ut_clustering_lexical_withdiag(void** state)
 	assert_int_equal(seed_clustering.cluster_label[7], fp_cluster_label[7]);
 
 	scc_Clabel external_cluster_label[10];
-	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_LEXICAL, 6, external_cluster_label);
+	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_LEXICAL, 6, external_cluster_label);
 	assert_int_equal(seed_clustering2.vertices, 10);
 	assert_int_equal(seed_clustering2.num_clusters, 3);
 	assert_int_equal(seed_clustering2.seed_capacity, 3);
@@ -774,7 +774,7 @@ void scc_ut_clustering_inwards_withdiag(void** state)
 	scc_Vid fp_seeds[4] = {2, 7, 4, 1};
 	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 6, NULL);
+	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
 	assert_int_equal(seed_clustering.seed_capacity, 4);
@@ -784,7 +784,7 @@ void scc_ut_clustering_inwards_withdiag(void** state)
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
 	scc_Clabel external_cluster_label[10];
-	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_INWARDS_ORDER, 6, external_cluster_label);
+	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_ORDER, 6, external_cluster_label);
 	assert_int_equal(seed_clustering2.vertices, 10);
 	assert_int_equal(seed_clustering2.num_clusters, 4);
 	assert_int_equal(seed_clustering2.seed_capacity, 4);
@@ -820,7 +820,7 @@ void scc_ut_clustering_inwards_updating_withdiag(void** state)
 	scc_Vid fp_seeds[4] = {2, 7, 4, 3};
 	scc_Clabel fp_cluster_label[10] = {0, 3, 0, 3, 2, 2, 1, 1, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 6, NULL);
+	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
 	assert_int_equal(seed_clustering.seed_capacity, 4);
@@ -830,7 +830,7 @@ void scc_ut_clustering_inwards_updating_withdiag(void** state)
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
 	scc_Clabel external_cluster_label[10];
-	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_INWARDS_UPDATING, 6, external_cluster_label);
+	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_INWARDS_UPDATING, 6, external_cluster_label);
 	assert_int_equal(seed_clustering2.vertices, 10);
 	assert_int_equal(seed_clustering2.num_clusters, 4);
 	assert_int_equal(seed_clustering2.seed_capacity, 4);
@@ -866,7 +866,7 @@ void scc_ut_clustering_exclusion_withdiag(void** state)
 	scc_Vid fp_seeds[4] = {0, 4, 2, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 2, 2, 0, 1, 1, 3, 3, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 6, NULL);
+	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
 	assert_int_equal(seed_clustering.seed_capacity, 4);
@@ -876,7 +876,7 @@ void scc_ut_clustering_exclusion_withdiag(void** state)
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
 	scc_Clabel external_cluster_label[10];
-	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_EXCLUSION_ORDER, 6, external_cluster_label);
+	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_ORDER, 6, external_cluster_label);
 	assert_int_equal(seed_clustering2.vertices, 10);
 	assert_int_equal(seed_clustering2.num_clusters, 4);
 	assert_int_equal(seed_clustering2.seed_capacity, 4);
@@ -912,7 +912,7 @@ void scc_ut_clustering_exclusion_updating_withdiag(void** state)
 	scc_Vid fp_seeds[4] = {0, 2, 4, 7};
 	scc_Clabel fp_cluster_label[10] = {0, 1, 1, 0, 2, 2, 3, 3, SCC_CLABEL_NA, SCC_CLABEL_NA};
 
-	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 6, NULL);
+	scc_SeedClustering seed_clustering = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 6, NULL);
 	assert_int_equal(seed_clustering.vertices, 10);
 	assert_int_equal(seed_clustering.num_clusters, 4);
 	assert_int_equal(seed_clustering.seed_capacity, 4);
@@ -922,7 +922,7 @@ void scc_ut_clustering_exclusion_updating_withdiag(void** state)
 	assert_memory_equal(seed_clustering.cluster_label, fp_cluster_label, 8 * sizeof(scc_Clabel));
 
 	scc_Clabel external_cluster_label[10];
-	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_EXCLUSION_UPDATING, 6, external_cluster_label);
+	scc_SeedClustering seed_clustering2 = scc_get_seed_clustering(&nng, SCC_FINDSEEDS_EXCLUSION_UPDATING, 6, external_cluster_label);
 	assert_int_equal(seed_clustering2.vertices, 10);
 	assert_int_equal(seed_clustering2.num_clusters, 4);
 	assert_int_equal(seed_clustering2.seed_capacity, 4);

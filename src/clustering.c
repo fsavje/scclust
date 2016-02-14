@@ -42,16 +42,33 @@ void scc_free_Clustering(scc_Clustering* const cl)
 }
 
 
+bool scc_is_valid_clustering(const scc_Clustering* cl)
+{
+	if (cl == NULL) return false;
+	if (cl->vertices == 0) return false;
+	if (cl->vertices >= SCC_VID_MAX) return false;
+	if (cl->num_clusters == 0) return false;
+	if (cl->num_clusters >= SCC_CLABEL_MAX) return false;
+	if (cl->cluster_label == NULL) return false;
+
+	#ifndef NDEBUG
+		for (size_t i = 0; i < cl->vertices; ++i) {
+			if (cl->cluster_label[i] == SCC_CLABEL_NA) continue;
+			if (cl->cluster_label[i] == 0) continue; // To avoid compiler error when `scc_Clabel` is unsigned
+			if ((cl->cluster_label[i] > 0) && (cl->cluster_label[i] < cl->num_clusters)) continue;
+			return false;
+		}
+	#endif
+
+	return true;
+}
+
+
 scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* const cl,
                                                   scc_DataSetObject* const data_set_object)
 {
-	if (cl == NULL) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->num_clusters == 0) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->num_clusters >= SCC_CLABEL_MAX) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->cluster_label == NULL) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->vertices < 2) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->vertices >= SCC_VID_MAX) return SCC_NULL_CLUSTERING_STATS;
-	if (data_set_object == NULL) return SCC_NULL_CLUSTERING_STATS;
+	if (!scc_is_valid_clustering(cl)) return SCC_NULL_CLUSTERING_STATS;
+	if (!scc_is_valid_data_set_object(data_set_object)) return SCC_NULL_CLUSTERING_STATS;
 	if (cl->vertices > scc_get_data_point_count(data_set_object)) return SCC_NULL_CLUSTERING_STATS;
 	
 	size_t* const cluster_size = calloc(cl->num_clusters, sizeof(size_t));
