@@ -21,10 +21,11 @@
 
 
 #include "test_suite.h"
+
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/config.h"
-#include "../include/clustering.h"
+#include "../include/scclust.h"
+#include "../src/clustering.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
 #include "../src/nng_core.h"
@@ -444,7 +445,7 @@ void scc_ut_ignore_remaining(void** state)
 	assert_memory_equal(out.cluster_label, ref_cluster_label, 20 * sizeof(scc_Clabel));
 
 	scc_free_SeedClustering(&ref);
-	scc_free_Clustering(&out);
+	scc_free_clustering(&out);
 }
 
 
@@ -580,10 +581,10 @@ void scc_ut_assign_remaining_lexical(void** state)
 
 	scc_free_digraph(&prio1);
 	scc_free_SeedClustering(&cl1);
-	scc_free_Clustering(&out1);
+	scc_free_clustering(&out1);
 	scc_free_digraph(&prio2);
 	scc_free_SeedClustering(&cl2);
-	scc_free_Clustering(&out2);
+	scc_free_clustering(&out2);
 }
 
 
@@ -792,14 +793,14 @@ void scc_ut_assign_remaining_desired_size(void** state)
 
 	scc_free_digraph(&prio1);
 	scc_free_SeedClustering(&cl1);
-	scc_free_Clustering(&out1);
+	scc_free_clustering(&out1);
 	scc_free_digraph(&prio2);
 	scc_free_SeedClustering(&cl2);
-	scc_free_Clustering(&out2);
+	scc_free_clustering(&out2);
 	scc_free_SeedClustering(&cl3);
-	scc_free_Clustering(&out3);
+	scc_free_clustering(&out3);
 	scc_free_SeedClustering(&cl4);
-	scc_free_Clustering(&out4);
+	scc_free_clustering(&out4);
 }
 
 

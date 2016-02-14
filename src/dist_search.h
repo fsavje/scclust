@@ -24,7 +24,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/config.h"
+#include "../include/scclust.h"
 
 
 // ==============================================================================
@@ -39,7 +39,7 @@ bool scc_is_valid_data_set_object(scc_DataSetObject* data_set_object);
 bool scc_get_dist_matrix(scc_DataSetObject* data_set_object,
                          size_t n_points,
                          const scc_Vid* point_indices,
-                         scc_Distance* output_dists);
+                         double* output_dists);
 
 
 // ==============================================================================
@@ -57,7 +57,7 @@ scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* data_set_objec
 bool scc_get_dist_row(scc_DistColObject* dist_column_object,
                       size_t n_query_rows,
                       const scc_Vid* query_indices,
-                      scc_Distance* output_dists);
+                      double* output_dists);
 
 bool scc_close_dist_column_object(scc_DistColObject* dist_column_object);
 
@@ -78,7 +78,7 @@ bool scc_get_max_dist(scc_MaxDistObject* max_dist_object,
                       size_t n_query_points,
                       const scc_Vid* query_indices,
                       scc_Vid* max_indices,
-                      scc_Distance* max_dists);
+                      double* max_dists);
 
 bool scc_close_max_dist_object(scc_MaxDistObject* max_dist_object);
 
@@ -92,7 +92,7 @@ typedef struct scc_NNSearchObject scc_NNSearchObject;
 scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* data_set_object,
                                               size_t k,
                                               bool radius_search,
-                                              scc_Distance radius,
+                                              double radius,
                                               size_t n_search_points,
                                               const scc_Vid* search_indices,
                                               size_t n_query_hint);
@@ -102,7 +102,7 @@ bool scc_nearest_neighbor_search(scc_NNSearchObject* nn_search_object,
                                  size_t n_query_points,
                                  const scc_Vid* query_indices,
                                  scc_Vid* nn_indices,
-                                 scc_Distance* nn_dists);
+                                 double* nn_dists);
 
 bool scc_close_nn_search_object(scc_NNSearchObject* nn_search_object);
 

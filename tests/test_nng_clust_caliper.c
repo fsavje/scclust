@@ -24,8 +24,8 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "../include/config.h"
-#include "../include/clustering.h"
+#include "../include/scclust.h"
+#include "../src/clustering.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
 #include "../src/nng_core.h"
@@ -170,15 +170,15 @@ void scc_ut_nng_caliper_ignore(void** state)
 
 	scc_free_digraph(&nng);
 	scc_free_SeedClustering(&lexical_tmp_clustering);
-	scc_free_Clustering(&lexical_clustering);
+	scc_free_clustering(&lexical_clustering);
 	scc_free_SeedClustering(&inwards_tmp_clustering);
-	scc_free_Clustering(&inwards_clustering);
+	scc_free_clustering(&inwards_clustering);
 	scc_free_SeedClustering(&inupdat_tmp_clustering);
-	scc_free_Clustering(&inupdat_clustering);
+	scc_free_clustering(&inupdat_clustering);
 	scc_free_SeedClustering(&exclusi_tmp_clustering);
-	scc_free_Clustering(&exclusi_clustering);
+	scc_free_clustering(&exclusi_clustering);
 	scc_free_SeedClustering(&exupdat_tmp_clustering);
-	scc_free_Clustering(&exupdat_clustering);
+	scc_free_clustering(&exupdat_clustering);
 }
 
 
@@ -240,15 +240,15 @@ void scc_ut_nng_caliper_assign(void** state)
 
 	scc_free_digraph(&nng);
 	scc_free_SeedClustering(&lexical_tmp_clustering);
-	scc_free_Clustering(&lexical_clustering);
+	scc_free_clustering(&lexical_clustering);
 	scc_free_SeedClustering(&inwards_tmp_clustering);
-	scc_free_Clustering(&inwards_clustering);
+	scc_free_clustering(&inwards_clustering);
 	scc_free_SeedClustering(&inupdat_tmp_clustering);
-	scc_free_Clustering(&inupdat_clustering);
+	scc_free_clustering(&inupdat_clustering);
 	scc_free_SeedClustering(&exclusi_tmp_clustering);
-	scc_free_Clustering(&exclusi_clustering);
+	scc_free_clustering(&exclusi_clustering);
 	scc_free_SeedClustering(&exupdat_tmp_clustering);
-	scc_free_Clustering(&exupdat_clustering);
+	scc_free_clustering(&exupdat_clustering);
 }
 
 

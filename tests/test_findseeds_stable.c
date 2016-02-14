@@ -23,9 +23,10 @@
 #define SCC_STABLE_CLUSTERING
 
 #include "test_suite.h"
+
 #include <stddef.h>
 #include <stdbool.h>
-#include "../include/config.h"
+#include "../include/scclust.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
 #include "../src/nng_findseeds.c"

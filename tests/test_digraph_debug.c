@@ -24,8 +24,7 @@
 #include "assert_digraph.h"
 
 #include <stddef.h>
-
-#include "../include/config.h"
+#include "../include/scclust.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
 

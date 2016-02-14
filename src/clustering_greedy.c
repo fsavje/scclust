@@ -20,7 +20,7 @@
  * ============================================================================== */
 
 
-#include "../include/greedy_clustering.h"
+#include "../include/scclust.h"
 
 #include <assert.h>
 #include <math.h>
@@ -28,8 +28,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/config.h"
-#include "../include/clustering.h"
+#include "clustering.h"
 #include "dist_search.h"
 
 
@@ -40,7 +39,7 @@
 typedef struct iscc_gr_DistanceEdge iscc_gr_DistanceEdge;
 struct iscc_gr_DistanceEdge {
 	scc_Vid head;
-	scc_Distance distance;
+	double distance;
 	iscc_gr_DistanceEdge* next_dist;
 };
 
@@ -114,7 +113,7 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* data_set_object,
 
 static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* cl,
                                           scc_Vid center,
-                                          const scc_Distance output_dists[static cl->size],
+                                          const double output_dists[static cl->size],
                                           iscc_gr_DistanceEdge dist_edge_store[static cl->size]);
 
 static int iscc_gr_compare_dist_edges(const void* a,
@@ -140,19 +139,35 @@ static inline iscc_gr_DistanceEdge* iscc_gr_get_next_k_nn(iscc_gr_DistanceEdge* 
 // External function implementations
 // ==============================================================================
 
-bool scc_greedy_break_clustering(scc_Clustering* const cl,
-                                 scc_DataSetObject* const data_set_object,
-                                 const size_t size_constraint,
-                                 const bool batch_assign)
+bool scc_top_down_greedy_clustering(scc_Clustering* const cl,
+                                    scc_DataSetObject* const data_set_object,
+                                    const size_t size_constraint,
+                                    const bool batch_assign)
 {
-	if (!scc_is_valid_clustering(cl)) return false;
-	if (cl->vertices < 2) return false;
+	if (!iscc_check_input_clustering(cl)) return false;
 	if (!scc_is_valid_data_set_object(data_set_object)) return false;
 	if (cl->vertices > scc_get_data_point_count(data_set_object)) return false;
 	if (size_constraint < 2) return false;
 
-	iscc_gr_ClusterStack cl_stack = iscc_gr_init_cl_stack(cl);
-	if (cl_stack.clusters == NULL) return false;
+	iscc_gr_ClusterStack cl_stack;
+	if (cl->num_clusters == 0) {
+		if (cl->cluster_label == NULL) {
+			cl->external_labels = false;
+			cl->cluster_label = malloc(sizeof(scc_Clabel[cl->vertices]));
+			if (cl->cluster_label == NULL) {
+				iscc_gr_free_cl_strack(&cl_stack);
+				return false;
+			}
+		}
+
+		cl_stack = iscc_gr_empty_cl_stack(cl->vertices);
+		if (cl_stack.clusters == NULL) return false;
+	} else {
+		cl_stack = iscc_gr_init_cl_stack(cl);
+		if (cl_stack.clusters == NULL) return false;
+	}
+
+	assert(cl_stack.clusters != NULL);
 
 	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, cl, size_constraint, batch_assign)) {
 		iscc_gr_free_cl_strack(&cl_stack);
@@ -164,53 +179,13 @@ bool scc_greedy_break_clustering(scc_Clustering* const cl,
 }
 
 
-scc_Clustering scc_get_greedy_clustering(scc_DataSetObject* const data_set_object,
-                                         const size_t size_constraint,
-                                         const bool batch_assign,
-                                         scc_Clabel external_cluster_label[const])
-{
-	if (!scc_is_valid_data_set_object(data_set_object)) return SCC_NULL_CLUSTERING;
-	if (size_constraint < 2) return SCC_NULL_CLUSTERING;
-
-	size_t num_vertices = scc_get_data_point_count(data_set_object);
-	if (num_vertices < 2) return SCC_NULL_CLUSTERING;
-	if (num_vertices >= SCC_VID_MAX) return SCC_NULL_CLUSTERING;
-
-	scc_Clustering out_cl;
-	out_cl.vertices = num_vertices;
-	if (external_cluster_label != NULL) {
-		out_cl.external_labels = true;
-		out_cl.cluster_label = external_cluster_label;
-	} else {
-		out_cl.external_labels = false;
-		out_cl.cluster_label = malloc(sizeof(scc_Clabel[num_vertices]));
-		if (out_cl.cluster_label == NULL) return SCC_NULL_CLUSTERING;
-	}
-
-	iscc_gr_ClusterStack cl_stack = iscc_gr_empty_cl_stack(num_vertices);
-	if (cl_stack.clusters == NULL) {
-		scc_free_Clustering(&out_cl);
-		return SCC_NULL_CLUSTERING;
-	}
-
-	if (!iscc_gr_run_greedy_clustering(data_set_object, &cl_stack, &out_cl, size_constraint, batch_assign)) {
-		iscc_gr_free_cl_strack(&cl_stack);
-		scc_free_Clustering(&out_cl);
-		return SCC_NULL_CLUSTERING;
-	}
-
-	iscc_gr_free_cl_strack(&cl_stack);
-	return out_cl;
-}
-
-
 // ==============================================================================
 // Internal function implementations 
 // ==============================================================================
 
 static iscc_gr_ClusterStack iscc_gr_init_cl_stack(const scc_Clustering* const input_clustering)
 {
-	assert(scc_is_valid_clustering(input_clustering));
+	assert(iscc_check_input_clustering(input_clustering));
 	assert(input_clustering->vertices >= 2);
 
 	iscc_gr_ClusterStack cl_stack;
@@ -571,7 +546,7 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 
 	scc_Vid* to_check = malloc(sizeof(scc_Vid[num_to_check]));
 	scc_Vid* max_indices = malloc(sizeof(scc_Vid[num_to_check]));
-	scc_Distance* max_dists = malloc(sizeof(scc_Distance[num_to_check]));
+	double* max_dists = malloc(sizeof(double[num_to_check]));
 	scc_MaxDistObject* max_dist_object = scc_init_max_dist_object(data_set_object, cl->size, cl->members, 2 * num_to_check);
 	if ((to_check == NULL) || (max_indices == NULL) ||
 	        (max_dists == NULL) || (max_dist_object == NULL)) {
@@ -587,7 +562,7 @@ static bool iscc_gr_find_centers(scc_DataSetObject* const data_set_object,
 		vertex_markers[to_check[i]] = curr_marker;
 	}
 
-	scc_Distance max_dist = -1.0;
+	double max_dist = -1.0;
 	while (num_to_check > 0) {
 		if (!scc_get_max_dist(max_dist_object, num_to_check, to_check, max_indices, max_dists)) {
 			free(to_check);
@@ -656,7 +631,7 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
 	assert(dist_store1 != NULL);
 	assert(dist_store2 != NULL);
 
-	scc_Distance* const output_dists = malloc(sizeof(scc_Distance[2 * cl->size]));
+	double* const output_dists = malloc(sizeof(double[2 * cl->size]));
 	scc_DistColObject* const dist_column_object = scc_init_dist_column_object(data_set_object, cl->size, cl->members, 2);
 	if ((output_dists == NULL) || (dist_column_object == NULL)) {
 		free(output_dists);
@@ -687,7 +662,7 @@ static bool iscc_gr_populate_dist_lists(scc_DataSetObject* const data_set_object
 
 static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* const cl,
                                           const scc_Vid center,
-                                          const scc_Distance output_dists[const static cl->size],
+                                          const double output_dists[const static cl->size],
                                           iscc_gr_DistanceEdge dist_edge_store[const static cl->size])
 {
 	assert(cl != NULL);
@@ -718,8 +693,8 @@ static inline void iscc_gr_sort_dist_list(const iscc_gr_ClusterItem* const cl,
 static int iscc_gr_compare_dist_edges(const void* const a,
                                       const void* const b)
 {
-    const scc_Distance dist_a = ((const iscc_gr_DistanceEdge*)a)->distance;
-    const scc_Distance dist_b = ((const iscc_gr_DistanceEdge*)b)->distance;
+    const double dist_a = ((const iscc_gr_DistanceEdge*)a)->distance;
+    const double dist_b = ((const iscc_gr_DistanceEdge*)b)->distance;
  
     if (dist_a < dist_b) return -1;
     if (dist_a > dist_b) return 1;

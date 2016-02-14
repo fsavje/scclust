@@ -26,7 +26,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/config.h"
+#include "../include/scclust.h"
 #include "digraph_core.h"
 
 

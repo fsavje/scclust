@@ -25,7 +25,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/greedy_clustering.h"
+#include "../include/scclust.h"
+#include "../src/clustering.h"
 #include "data_object_test.h"
 
 
@@ -40,13 +41,8 @@ void scc_ut_greedy_break_clustering(void** state)
 	                                   0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1,
 	                                   0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0,
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
-	scc_Clustering cl1 = {
-		.vertices = 100,
-		.num_clusters = 2,
-		.external_labels = true,
-		.cluster_label = cluster_label1,
-	};
-	assert_true(scc_greedy_break_clustering(&cl1, &scc_ut_test_data_large, 20, true));
+	scc_Clustering cl1 = scc_init_existing_clustering(100, 2, cluster_label1, false);	
+	assert_true(scc_top_down_greedy_clustering(&cl1, &scc_ut_test_data_large, 20, true));
 	scc_Clabel ref_label1[100] = { 1, 1, 2, 2, 2, 0, 0, 3, 0, 0, 2, 1, 3, 3, 2,
 	                               1, 0, 2, 1, 0, 0, 3, 1, 1, 1, 0, 1, 3, 0, 3,
 	                               2, 0, 0, 1, 3, 0, 2, 3, 1, 1, 1, 2, 3, 2, 1,
@@ -67,13 +63,8 @@ void scc_ut_greedy_break_clustering(void** state)
 	                                   0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1,
 	                                   0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0,
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
-	scc_Clustering cl2 = {
-		.vertices = 100,
-		.num_clusters = 2,
-		.external_labels = true,
-		.cluster_label = cluster_label2,
-	};
-	assert_true(scc_greedy_break_clustering(&cl2, &scc_ut_test_data_large, 20, false));
+	scc_Clustering cl2 = scc_init_existing_clustering(100, 2, cluster_label2, false);
+	assert_true(scc_top_down_greedy_clustering(&cl2, &scc_ut_test_data_large, 20, false));
 	scc_Clabel ref_label2[100] = { 1, 0, 2, 2, 2, 0, 0, 3, 0, 0, 2, 0, 3, 3, 2, 1, 0,
 	                               2, 1, 0, 0, 3, 1, 1, 1, 0, 0, 3, 0, 3, 2, 0, 0, 1,
 	                               3, 0, 2, 2, 0, 0, 1, 2, 3, 2, 1, 3, 3, 3, 0, 0, 3,
@@ -85,8 +76,8 @@ void scc_ut_greedy_break_clustering(void** state)
 	assert_true(cl2.external_labels);
 	assert_memory_equal(cl2.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));
 
-	scc_free_Clustering(&cl1);
-	scc_free_Clustering(&cl2);
+	scc_free_clustering(&cl1);
+	scc_free_clustering(&cl2);
 }
 
 
@@ -95,8 +86,10 @@ void scc_ut_get_greedy_clustering(void** state)
 	(void) state;
 
 	scc_Clabel* ext_cluster_label1 = malloc(sizeof(scc_Clabel[100]));
-	scc_Clustering cl1a = scc_get_greedy_clustering(&scc_ut_test_data_large, 20, true, ext_cluster_label1);
-	scc_Clustering cl1b = scc_get_greedy_clustering(&scc_ut_test_data_large, 20, true, NULL);
+	scc_Clustering cl1a = scc_init_empty_clustering(100, ext_cluster_label1);
+	scc_Clustering cl1b = scc_init_empty_clustering(100, NULL);
+	assert_true(scc_top_down_greedy_clustering(&cl1a, &scc_ut_test_data_large, 20, true));
+	assert_true(scc_top_down_greedy_clustering(&cl1b, &scc_ut_test_data_large, 20, true));
 	scc_Clabel ref_label1[100] = { 2, 3, 3, 2, 2, 3, 0, 0, 4, 3, 2, 1, 1, 0, 4,
 	                               3, 0, 2, 0, 4, 3, 1, 3, 0, 0, 0, 4, 0, 4, 0,
 	                               3, 4, 3, 1, 0, 0, 3, 4, 1, 0, 3, 2, 1, 2, 2,
@@ -118,8 +111,10 @@ void scc_ut_get_greedy_clustering(void** state)
 
 
 	scc_Clabel* ext_cluster_label2 = malloc(sizeof(scc_Clabel[100]));
-	scc_Clustering cl2a = scc_get_greedy_clustering(&scc_ut_test_data_large, 20, false, ext_cluster_label2);
-	scc_Clustering cl2b = scc_get_greedy_clustering(&scc_ut_test_data_large, 20, false, NULL);
+	scc_Clustering cl2a = scc_init_empty_clustering(100, ext_cluster_label2);
+	scc_Clustering cl2b = scc_init_empty_clustering(100, NULL);
+	assert_true(scc_top_down_greedy_clustering(&cl2a, &scc_ut_test_data_large, 20, false));
+	assert_true(scc_top_down_greedy_clustering(&cl2b, &scc_ut_test_data_large, 20, false));
 	scc_Clabel ref_label2[100] = { 3, 0, 2, 3, 3, 2, 1, 1, 3, 2, 3, 0, 1, 0, 2, 2, 1, 3,
 	                               0, 2, 2, 0, 1, 1, 0, 1, 2, 1, 2, 0, 2, 2, 2, 0, 1, 1,
 	                               2, 2, 0, 0, 3, 3, 0, 3, 3, 0, 1, 3, 0, 2, 0, 2, 2, 2,
@@ -140,11 +135,11 @@ void scc_ut_get_greedy_clustering(void** state)
 
 
 	free(ext_cluster_label1);
-	scc_free_Clustering(&cl1a);
-	scc_free_Clustering(&cl1b);
+	scc_free_clustering(&cl1a);
+	scc_free_clustering(&cl1b);
 	free(ext_cluster_label2);
-	scc_free_Clustering(&cl2a);
-	scc_free_Clustering(&cl2b);
+	scc_free_clustering(&cl2a);
+	scc_free_clustering(&cl2b);
 }
 
 

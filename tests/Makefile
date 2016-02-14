@@ -1,8 +1,8 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 EXLIBS=-lcmocka
 
-OBJECTS=clustering.o digraph_core.o digraph_debug.o digraph_operations.o dist_search.o greedy_clustering.o \
-        nng_core.o nng_findseeds.o
+OBJECTS=clustering_greedy.o digraph_core.o digraph_debug.o digraph_operations.o dist_search.o nng_core.o \
+			nng_findseeds.o scclust.o
 DEBUGDIR=../dbg
 BUILDDIR=build
 
@@ -34,7 +34,7 @@ test_findseeds_stable: $(filter-out $(DEBUGDIR)/nng_findseeds.o,$(DEBUGOBJS))
 	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
-test_greedy_internals: $(filter-out $(DEBUGDIR)/greedy_clustering.o,$(DEBUGOBJS))
+test_greedy_internals: $(filter-out $(DEBUGDIR)/clustering_greedy.o,$(DEBUGOBJS))
 	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 

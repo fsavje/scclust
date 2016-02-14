@@ -31,11 +31,8 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
+#include "../include/scclust.h"
 
-
-/// Typedef for the scc_Clustering struct
-typedef struct scc_Clustering scc_Clustering;
 
 /** Clustering struct.
  *
@@ -67,47 +64,13 @@ struct scc_Clustering {
  */
 static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, false, NULL };
 
-/// Typedef for the scc_ClusteringStatistics struct
-typedef struct scc_ClusteringStatistics scc_ClusteringStatistics;
 
-/** Clustering statistics struct.
- */
-struct scc_ClusteringStatistics {
-	size_t num_populated_clusters;
-	size_t num_assigned;
-	size_t min_cluster_size;
-	size_t max_cluster_size;
-	double avg_cluster_size;
-	scc_Distance sum_dists;
-	scc_Distance min_dist;
-	scc_Distance max_dist;
-	scc_Distance cl_avg_min_dist;
-	scc_Distance cl_avg_max_dist;
-	scc_Distance cl_avg_dist_weighted;
-	scc_Distance cl_avg_dist_unweighted;
-};
 
-/** The null clustering statistics struct.
- *
- *  This is an easily detectable invalid struct used as return value on errors.
- */
-static const scc_ClusteringStatistics SCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-/** Destructor for clusterings.
- *
- *  Frees the memory allocated by the input and writes the null clustering to it.
- *  Assumes the memory was allocated by the standard `malloc`, `calloc` or `realloc` functions.
- *
- *  \param[in,out] cl clustering to destroy. When #scc_free_Clustering returns, \p cl is set to #SCC_NULL_CLUSTERING.
- *
- *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_Clustering.
- */
-void scc_free_Clustering(scc_Clustering* cl);
-
-bool scc_is_valid_clustering(const scc_Clustering* cl);
-
-scc_ClusteringStatistics scc_get_clustering_stats(const scc_Clustering* cl,
-                                                  scc_DataSetObject* data_set_object);
+#if defined(SCC_EXTENSIVE_INPUT_CHECK) || !defined(NDEBUG)
+	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
+#else
+	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, false)
+#endif
 
 
 #endif

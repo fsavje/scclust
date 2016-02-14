@@ -22,10 +22,11 @@
 
 #include "test_suite.h"
 #include "assert_digraph.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/config.h"
+#include "../include/scclust.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
 #include "../src/nng_findseeds.c"

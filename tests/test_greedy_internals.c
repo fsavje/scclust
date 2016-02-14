@@ -26,7 +26,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../src/greedy_clustering.c"
+#include "../src/clustering_greedy.c"
 #include "data_object_test.h"
 
 
@@ -358,10 +358,10 @@ void scc_ut_run_greedy_clustering(void** state)
 	assert_memory_equal(cl4.cluster_label, ref_label4, 100 * sizeof(scc_Clabel));
 
 
-	scc_free_Clustering(&cl1);
-	scc_free_Clustering(&cl2);
-	scc_free_Clustering(&cl3);
-	scc_free_Clustering(&cl4);
+	scc_free_clustering(&cl1);
+	scc_free_clustering(&cl2);
+	scc_free_clustering(&cl3);
+	scc_free_clustering(&cl4);
 	iscc_gr_free_cl_strack(&cl_stack1);
 	iscc_gr_free_cl_strack(&cl_stack2);
 	iscc_gr_free_cl_strack(&cl_stack3);
@@ -912,7 +912,7 @@ void scc_ut_sort_dist_list(void** state)
 		.members = mem,
 	};
 
-	scc_Distance output_dists[10] = { 10.4, 1.4, 6.2, 5.2, 0.0, 1.2, 9.5, 3.3, 9.6, 3.1 };
+	double output_dists[10] = { 10.4, 1.4, 6.2, 5.2, 0.0, 1.2, 9.5, 3.3, 9.6, 3.1 };
 
 	iscc_gr_DistanceEdge* const dist_store = malloc(sizeof(iscc_gr_DistanceEdge[10]));
 

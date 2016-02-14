@@ -31,7 +31,6 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/config.h"
 #include "digraph_core.h"
 
 

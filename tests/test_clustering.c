@@ -24,7 +24,8 @@
 #include "test_suite.h"
 
 #include <stdlib.h>
-#include "../include/clustering.h"
+#include "../include/scclust.h"
+#include "../src/clustering.h"
 #include "data_object_test.h"
 
 
@@ -47,13 +48,13 @@ void scc_ut_free_Clustering(void** state)
 		.cluster_label = ext_cluster_label,
 	};
 
-	scc_free_Clustering(&test_cl1);
+	scc_free_clustering(&test_cl1);
 	assert_int_equal(test_cl1.vertices, 0);
 	assert_int_equal(test_cl1.num_clusters, 0);
 	assert_false(test_cl1.external_labels);
 	assert_null(test_cl1.cluster_label);
 
-	scc_free_Clustering(&test_cl2);
+	scc_free_clustering(&test_cl2);
 	assert_int_equal(test_cl2.vertices, 0);
 	assert_int_equal(test_cl2.num_clusters, 0);
 	assert_false(test_cl2.external_labels);
@@ -75,9 +76,9 @@ void scc_ut_get_clustering_stats(void** state)
 		.cluster_label = clabels,
 	};
 
-	scc_ClusteringStatistics out_stat = scc_get_clustering_stats(&cl, &scc_ut_test_data_small);
+	scc_ClusteringStats out_stat = scc_get_clustering_stats(&cl, &scc_ut_test_data_small);
 
-	scc_ClusteringStatistics cs_ref =  {
+	scc_ClusteringStats cs_ref =  {
 		.num_populated_clusters = 4,
 		.num_assigned = 15,
 		.min_cluster_size = 2,
@@ -124,9 +125,9 @@ void scc_ut_get_clustering_stats(void** state)
 		.cluster_label = clabels2,
 	};
 
-	scc_ClusteringStatistics out_stat2 = scc_get_clustering_stats(&cl2, &scc_ut_test_data_large);
+	scc_ClusteringStats out_stat2 = scc_get_clustering_stats(&cl2, &scc_ut_test_data_large);
 
-	scc_ClusteringStatistics cs_ref2 =  {
+	scc_ClusteringStats cs_ref2 =  {
 		.num_populated_clusters = 5,
 		.num_assigned = 14,
 		.min_cluster_size = 1,

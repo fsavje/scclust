@@ -34,7 +34,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/config.h"
+#include "../include/scclust.h"
 
 
 /// Typedef for scc_Digraph struct

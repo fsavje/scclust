@@ -26,8 +26,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/config.h"
-#include "../include/clustering.h"
+#include "../include/scclust.h"
+#include "clustering.h"
 #include "digraph_core.h"
 #include "nng_findseeds.h"
 

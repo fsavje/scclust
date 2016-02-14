@@ -31,8 +31,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/config.h"
-#include "../include/clustering.h"
+#include "../include/scclust.h"
 #include "digraph_core.h"
 
 
