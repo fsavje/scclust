@@ -36,49 +36,49 @@ void scc_ut_fs_debug_vid_sort(void** state)
 {
 	(void) state;
 
-	scc_Vid buckets1[7] = {1, 4, 3, 5, 6, 2, 0};
-	scc_Vid inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* vertex_index1[7];
-	for (scc_Vid* b = buckets1; b != buckets1 + 7; ++b) vertex_index1[*b] = b;
+	scc_Dpid buckets1[7] = {1, 4, 3, 5, 6, 2, 0};
+	scc_Dpid inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* vertex_index1[7];
+	for (scc_Dpid* b = buckets1; b != buckets1 + 7; ++b) vertex_index1[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets1 + 2, buckets1 + 5, inwards_count1, vertex_index1);
 
-	scc_Vid ref_buckets1[7] = {1, 4, 2, 3, 5, 6, 0};
-	scc_Vid ref_inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* ref_vertex_index1[7];
-	for (scc_Vid* b = ref_buckets1; b != ref_buckets1 + 7; ++b) ref_vertex_index1[*b] = b - ref_buckets1 + buckets1;
-	assert_memory_equal(buckets1, ref_buckets1, 7 * sizeof(scc_Vid));
-	assert_memory_equal(inwards_count1, ref_inwards_count1, 7 * sizeof(scc_Vid));
-	assert_memory_equal(vertex_index1, ref_vertex_index1, 7 * sizeof(scc_Vid*));
+	scc_Dpid ref_buckets1[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_Dpid ref_inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* ref_vertex_index1[7];
+	for (scc_Dpid* b = ref_buckets1; b != ref_buckets1 + 7; ++b) ref_vertex_index1[*b] = b - ref_buckets1 + buckets1;
+	assert_memory_equal(buckets1, ref_buckets1, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(inwards_count1, ref_inwards_count1, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(vertex_index1, ref_vertex_index1, 7 * sizeof(scc_Dpid*));
 
 
-	scc_Vid buckets2[7] = {1, 4, 2, 5, 6, 3, 0};
-	scc_Vid inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* vertex_index2[7];
-	for (scc_Vid* b = buckets2; b != buckets2 + 7; ++b) vertex_index2[*b] = b;
+	scc_Dpid buckets2[7] = {1, 4, 2, 5, 6, 3, 0};
+	scc_Dpid inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* vertex_index2[7];
+	for (scc_Dpid* b = buckets2; b != buckets2 + 7; ++b) vertex_index2[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets2 + 2, buckets2 + 5, inwards_count2, vertex_index2);
 
-	scc_Vid ref_buckets2[7] = {1, 4, 2, 3, 5, 6, 0};
-	scc_Vid ref_inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* ref_vertex_index2[7];
-	for (scc_Vid* b = ref_buckets2; b != ref_buckets2 + 7; ++b) ref_vertex_index2[*b] = b - ref_buckets2 + buckets2;
-	assert_memory_equal(buckets2, ref_buckets2, 7 * sizeof(scc_Vid));
-	assert_memory_equal(inwards_count2, ref_inwards_count2, 7 * sizeof(scc_Vid));
-	assert_memory_equal(vertex_index2, ref_vertex_index2, 7 * sizeof(scc_Vid*));
+	scc_Dpid ref_buckets2[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_Dpid ref_inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* ref_vertex_index2[7];
+	for (scc_Dpid* b = ref_buckets2; b != ref_buckets2 + 7; ++b) ref_vertex_index2[*b] = b - ref_buckets2 + buckets2;
+	assert_memory_equal(buckets2, ref_buckets2, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(inwards_count2, ref_inwards_count2, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(vertex_index2, ref_vertex_index2, 7 * sizeof(scc_Dpid*));
 
 
-	scc_Vid buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
-	scc_Vid inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* vertex_index3[7];
-	for (scc_Vid* b = buckets3; b != buckets3 + 7; ++b) vertex_index3[*b] = b;
+	scc_Dpid buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_Dpid inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* vertex_index3[7];
+	for (scc_Dpid* b = buckets3; b != buckets3 + 7; ++b) vertex_index3[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets3 + 6, buckets3 + 6, inwards_count3, vertex_index3);
 
-	scc_Vid ref_buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
-	scc_Vid ref_inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
-	scc_Vid* ref_vertex_index3[7];
-	for (scc_Vid* b = ref_buckets3; b != ref_buckets3 + 7; ++b) ref_vertex_index3[*b] = b - ref_buckets3 + buckets3;
-	assert_memory_equal(buckets3, ref_buckets3, 7 * sizeof(scc_Vid));
-	assert_memory_equal(inwards_count3, ref_inwards_count3, 7 * sizeof(scc_Vid));
-	assert_memory_equal(vertex_index3, ref_vertex_index3, 7 * sizeof(scc_Vid*));
+	scc_Dpid ref_buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_Dpid ref_inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_Dpid* ref_vertex_index3[7];
+	for (scc_Dpid* b = ref_buckets3; b != ref_buckets3 + 7; ++b) ref_vertex_index3[*b] = b - ref_buckets3 + buckets3;
+	assert_memory_equal(buckets3, ref_buckets3, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(inwards_count3, ref_inwards_count3, 7 * sizeof(scc_Dpid));
+	assert_memory_equal(vertex_index3, ref_vertex_index3, 7 * sizeof(scc_Dpid*));
 }
 
 
@@ -86,7 +86,7 @@ void scc_ut_findseeds_checkseeds18_debug(void** state)
 {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string(".#..#............./"
+	iscc_Digraph nng = iscc_digraph_from_string(".#..#............./"
 	                                          "#...#............./"
 	                                          "....#..#........../"
 	                                          "#...#............./"
@@ -105,29 +105,29 @@ void scc_ut_findseeds_checkseeds18_debug(void** state)
 	                                          ".............##.../"
 	                                          "..............#.#./");
 
-	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
-	scc_SeedClustering cl_inupdat = iscc_findseeds_inwards(&nng, 128, true);
-	assert_int_equal(cl_inupdat.vertices, 18);
+	scc_Dpid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
+	iscc_SeedClustering cl_inupdat = iscc_findseeds_inwards(&nng, 128, true);
+	assert_int_equal(cl_inupdat.num_data_points, 18);
 	assert_int_equal(cl_inupdat.num_clusters, 5);
 	assert_int_equal(cl_inupdat.seed_capacity, 5);
 	assert_null(cl_inupdat.assigned);
 	assert_non_null(cl_inupdat.seeds);
-	assert_memory_equal(cl_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(scc_Vid));
+	assert_memory_equal(cl_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(scc_Dpid));
 	assert_null(cl_inupdat.cluster_label);
 
-	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
-	scc_SeedClustering cl_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
-	assert_int_equal(cl_exupdat.vertices, 18);
+	scc_Dpid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
+	iscc_SeedClustering cl_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
+	assert_int_equal(cl_exupdat.num_data_points, 18);
 	assert_int_equal(cl_exupdat.num_clusters, 5);
 	assert_int_equal(cl_exupdat.seed_capacity, 5);
 	assert_null(cl_exupdat.assigned);
 	assert_non_null(cl_exupdat.seeds);
-	assert_memory_equal(cl_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(scc_Vid));
+	assert_memory_equal(cl_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(scc_Dpid));
 	assert_null(cl_exupdat.cluster_label);
 
-	scc_free_digraph(&nng);
-	scc_free_SeedClustering(&cl_inupdat);
-	scc_free_SeedClustering(&cl_exupdat);
+	iscc_free_digraph(&nng);
+	iscc_free_seed_clustering(&cl_inupdat);
+	iscc_free_seed_clustering(&cl_exupdat);
 }
 
 
@@ -135,7 +135,7 @@ void scc_ut_findseeds_checkseeds18_debug_withdiag(void** state)
 {
 	(void) state;
 
-	scc_Digraph nng = scc_digraph_from_string("##..#............./"
+	iscc_Digraph nng = iscc_digraph_from_string("##..#............./"
 	                                          "##..#............./"
 	                                          "..#.#..#........../"
 	                                          "#..##............./"
@@ -154,29 +154,29 @@ void scc_ut_findseeds_checkseeds18_debug_withdiag(void** state)
 	                                          ".............##.#./"
 	                                          "..............#.##/");
 
-	scc_Vid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
-	scc_SeedClustering cl_inupdat = iscc_findseeds_inwards(&nng, 128, true);
-	assert_int_equal(cl_inupdat.vertices, 18);
+	scc_Dpid ref_seeds_inupdat[5] = {2, 6, 11, 12, 13};
+	iscc_SeedClustering cl_inupdat = iscc_findseeds_inwards(&nng, 128, true);
+	assert_int_equal(cl_inupdat.num_data_points, 18);
 	assert_int_equal(cl_inupdat.num_clusters, 5);
 	assert_int_equal(cl_inupdat.seed_capacity, 5);
 	assert_null(cl_inupdat.assigned);
 	assert_non_null(cl_inupdat.seeds);
-	assert_memory_equal(cl_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(scc_Vid));
+	assert_memory_equal(cl_inupdat.seeds, ref_seeds_inupdat, 5 * sizeof(scc_Dpid));
 	assert_null(cl_inupdat.cluster_label);
 
-	scc_Vid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
-	scc_SeedClustering cl_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
-	assert_int_equal(cl_exupdat.vertices, 18);
+	scc_Dpid ref_seeds_exupdat[5] = {8, 15, 17, 10, 0};
+	iscc_SeedClustering cl_exupdat = iscc_findseeds_exclusion(&nng, 128, true);
+	assert_int_equal(cl_exupdat.num_data_points, 18);
 	assert_int_equal(cl_exupdat.num_clusters, 5);
 	assert_int_equal(cl_exupdat.seed_capacity, 5);
 	assert_null(cl_exupdat.assigned);
 	assert_non_null(cl_exupdat.seeds);
-	assert_memory_equal(cl_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(scc_Vid));
+	assert_memory_equal(cl_exupdat.seeds, ref_seeds_exupdat, 5 * sizeof(scc_Dpid));
 	assert_null(cl_exupdat.cluster_label);
 
-	scc_free_digraph(&nng);
-	scc_free_SeedClustering(&cl_inupdat);
-	scc_free_SeedClustering(&cl_exupdat);
+	iscc_free_digraph(&nng);
+	iscc_free_seed_clustering(&cl_inupdat);
+	iscc_free_seed_clustering(&cl_exupdat);
 }
 
 

@@ -46,7 +46,7 @@
  *
  *  \return \c true if \p dg is valid, otherwise \c false.
  */
-bool scc_is_valid_digraph(const scc_Digraph* dg);
+bool iscc_is_valid_digraph(const iscc_Digraph* dg);
 
 /** Checks whether provided digraph is empty.
  *
@@ -56,7 +56,7 @@ bool scc_is_valid_digraph(const scc_Digraph* dg);
  *
  *  \return \c true if \p dg is empty, otherwise \c false.
  */
-bool scc_is_empty_digraph(const scc_Digraph* dg);
+bool iscc_is_empty_digraph(const iscc_Digraph* dg);
 
 /** Checks whether provided digraph is a balanced digraph.
  *
@@ -68,7 +68,7 @@ bool scc_is_empty_digraph(const scc_Digraph* dg);
  *
  *  \return \c true if \p dg is balanced, otherwise \c false.
  */
-bool scc_is_balanced_digraph(const scc_Digraph* dg,
+bool iscc_is_balanced_digraph(const iscc_Digraph* dg,
                              size_t arcs_per_vertex);
 
 /** Checks whether two digraphs are logically identical.
@@ -82,8 +82,8 @@ bool scc_is_balanced_digraph(const scc_Digraph* dg,
  *
  *  \return \c true if \p dg_a and \p dg_b are identical.
  */
-bool scc_digraphs_equal(const scc_Digraph* dg_a,
-                        const scc_Digraph* dg_b);
+bool iscc_digraphs_equal(const iscc_Digraph* dg_a,
+                         const iscc_Digraph* dg_b);
 
 /** Constructs digraph from separate struct parts.
  *
@@ -97,10 +97,10 @@ bool scc_digraphs_equal(const scc_Digraph* dg_a,
  *
  *  \return the constructed scc_Digraph.
  */
-scc_Digraph scc_digraph_from_pieces(size_t vertices,
-                                    size_t max_arcs,
-                                    const scc_Arci tail_ptr[],
-                                    const scc_Vid head[]);
+iscc_Digraph iscc_digraph_from_pieces(size_t vertices,
+                                      size_t max_arcs,
+                                      const scc_Arci tail_ptr[],
+                                      const scc_Dpid head[]);
 
 /** Constructs digraph from human readable strings.
  *
@@ -124,7 +124,7 @@ scc_Digraph scc_digraph_from_pieces(size_t vertices,
  *
  *  \return the digraph described by \p dg_str.
  */
-scc_Digraph scc_digraph_from_string(const char dg_str[]);
+iscc_Digraph iscc_digraph_from_string(const char dg_str[]);
 
 /** Print a digraph in human readable format.
  *
@@ -153,7 +153,7 @@ scc_Digraph scc_digraph_from_string(const char dg_str[]);
  *
  *  \param[in] dg digraph to print.
  */
-void scc_print_digraph(const scc_Digraph* dg);
+void iscc_print_digraph(const iscc_Digraph* dg);
 
 
 #endif

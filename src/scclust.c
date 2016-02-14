@@ -36,7 +36,7 @@
  *
  *  This is an easily detectable invalid struct used as return value on errors.
  */
-static const scc_ClusteringStats SCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static const scc_ClusteringStats ISCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 
 // ==============================================================================
@@ -47,17 +47,17 @@ void scc_free_clustering(scc_Clustering* const cl)
 {
 	if (cl != NULL) {
 		if (!cl->external_labels) free(cl->cluster_label);
-		*cl = SCC_NULL_CLUSTERING;
+		*cl = ISCC_NULL_CLUSTERING;
 	}
 }
 
 scc_Clustering scc_init_empty_clustering(const size_t num_data_points,
                                          scc_Clabel external_cluster_labels[const])
 {
-	if (num_data_points < 2) return SCC_NULL_CLUSTERING;
+	if (num_data_points < 2) return ISCC_NULL_CLUSTERING;
 
 	return (scc_Clustering) {
-		.vertices = num_data_points,
+		.num_data_points = num_data_points,
 		.num_clusters = 0,
 		.external_labels = (external_cluster_labels != NULL),
 		.cluster_label = external_cluster_labels,
@@ -69,12 +69,12 @@ scc_Clustering scc_init_existing_clustering(const size_t num_data_points,
                                             scc_Clabel current_cluster_labels[const],
                                             const bool deep_label_copy)
 {
-	if (num_data_points < 2) return SCC_NULL_CLUSTERING;
-	if (num_clusters == 0) return SCC_NULL_CLUSTERING;
-	if (current_cluster_labels == NULL) return SCC_NULL_CLUSTERING;
+	if (num_data_points < 2) return ISCC_NULL_CLUSTERING;
+	if (num_clusters == 0) return ISCC_NULL_CLUSTERING;
+	if (current_cluster_labels == NULL) return ISCC_NULL_CLUSTERING;
 
 	scc_Clustering out_cl = {
-		.vertices = num_data_points,
+		.num_data_points = num_data_points,
 		.num_clusters = num_clusters,
 		.external_labels = !deep_label_copy,
 		.cluster_label = NULL,
@@ -82,7 +82,7 @@ scc_Clustering scc_init_existing_clustering(const size_t num_data_points,
 
 	if (deep_label_copy) {
 		out_cl.cluster_label = malloc(sizeof(scc_Clabel[num_data_points]));
-		if (out_cl.cluster_label == NULL) return SCC_NULL_CLUSTERING;
+		if (out_cl.cluster_label == NULL) return ISCC_NULL_CLUSTERING;
 		memcpy(out_cl.cluster_label, current_cluster_labels, num_data_points * sizeof(scc_Clabel));
 	} else {
 		out_cl.cluster_label = current_cluster_labels;
@@ -90,7 +90,7 @@ scc_Clustering scc_init_existing_clustering(const size_t num_data_points,
 
 	if (!iscc_check_input_clustering(&out_cl)) {
 		scc_free_clustering(&out_cl);
-		return SCC_NULL_CLUSTERING;
+		return ISCC_NULL_CLUSTERING;
 	}
 
 	return out_cl;
@@ -101,15 +101,15 @@ bool scc_check_clustering(const scc_Clustering* const cl,
                           const bool extensive_check)
 {
 	if (cl == NULL) return false;
-	if (cl->vertices < 2) return false;
-	if (cl->vertices >= SCC_VID_MAX) return false;
+	if (cl->num_data_points < 2) return false;
+	if (cl->num_data_points >= SCC_DPID_MAX) return false;
 	if (cl->num_clusters >= SCC_CLABEL_MAX) return false;
 	
 	if (cl->num_clusters != 0) {
 		if (cl->cluster_label == NULL) return false;
 
 		if (extensive_check) {
-			for (size_t i = 0; i < cl->vertices; ++i) {
+			for (size_t i = 0; i < cl->num_data_points; ++i) {
 				if (cl->cluster_label[i] > 0 && cl->cluster_label[i] < cl->num_clusters) continue;
 				if (cl->cluster_label[i] == 0) continue; // Since `scc_Clabel` can be unsigned
 				if (cl->cluster_label[i] == SCC_CLABEL_NA) continue;
@@ -133,14 +133,14 @@ void scc_make_labels_external(const scc_Clustering* cl);
 scc_ClusteringStats scc_get_clustering_stats(const scc_Clustering* const cl,
                                              scc_DataSetObject* const data_set_object)
 {
-	if (!iscc_check_input_clustering(cl)) return SCC_NULL_CLUSTERING_STATS;
-	if (!scc_is_valid_data_set_object(data_set_object)) return SCC_NULL_CLUSTERING_STATS;
-	if (cl->vertices > scc_get_data_point_count(data_set_object)) return SCC_NULL_CLUSTERING_STATS;
+	if (!iscc_check_input_clustering(cl)) return ISCC_NULL_CLUSTERING_STATS;
+	if (!iscc_is_valid_data_set_object(data_set_object)) return ISCC_NULL_CLUSTERING_STATS;
+	if (cl->num_data_points > iscc_get_data_point_count(data_set_object)) return ISCC_NULL_CLUSTERING_STATS;
 	
 	size_t* const cluster_size = calloc(cl->num_clusters, sizeof(size_t));
-	if (cluster_size == NULL) return SCC_NULL_CLUSTERING_STATS;
+	if (cluster_size == NULL) return ISCC_NULL_CLUSTERING_STATS;
 
-	for (size_t v = 0; v < cl->vertices; ++v) {
+	for (size_t v = 0; v < cl->num_data_points; ++v) {
 		if (cl->cluster_label[v] != SCC_CLABEL_NA) {
 			++cluster_size[cl->cluster_label[v]];
 		}
@@ -175,32 +175,32 @@ scc_ClusteringStats scc_get_clustering_stats(const scc_Clustering* const cl,
 
 	if (out_stat.num_populated_clusters == 0) {
 		free(cluster_size);
-		return SCC_NULL_CLUSTERING_STATS;
+		return ISCC_NULL_CLUSTERING_STATS;
 	}
 
-	scc_Vid* const vertex_store = malloc(sizeof(scc_Vid[out_stat.num_assigned]));
-	scc_Vid** const cl_members = malloc(sizeof(scc_Vid*[cl->num_clusters]));
+	scc_Dpid* const id_store = malloc(sizeof(scc_Dpid[out_stat.num_assigned]));
+	scc_Dpid** const cl_members = malloc(sizeof(scc_Dpid*[cl->num_clusters]));
 	const size_t largest_dist_matrix = (out_stat.max_cluster_size * (out_stat.max_cluster_size - 1)) / 2;
 	double* const dist_scratch = malloc(sizeof(double[largest_dist_matrix]));
-	if ((vertex_store == NULL) || (cl_members == NULL) || (dist_scratch == NULL)) {
+	if ((id_store == NULL) || (cl_members == NULL) || (dist_scratch == NULL)) {
 		free(cluster_size);
-		free(vertex_store);
+		free(id_store);
 		free(cl_members);
 		free(dist_scratch);
-		return SCC_NULL_CLUSTERING_STATS;
+		return ISCC_NULL_CLUSTERING_STATS;
 	}
 
-	cl_members[0] = vertex_store + cluster_size[0];
+	cl_members[0] = id_store + cluster_size[0];
 	for (size_t c = 1; c < cl->num_clusters; ++c) {
 		cl_members[c] = cl_members[c - 1] + cluster_size[c];
 	}
 
-	assert(cl->vertices < SCC_VID_MAX);
-	const scc_Vid vertices = (scc_Vid) cl->vertices; // If `scc_Vid` is signed
-	for (scc_Vid v = 0; v < vertices; ++v) {
-		if (cl->cluster_label[v] != SCC_CLABEL_NA) {
-			--cl_members[cl->cluster_label[v]];
-			*cl_members[cl->cluster_label[v]] = v;
+	assert(cl->num_data_points < SCC_DPID_MAX);
+	const scc_Dpid num_data_points = (scc_Dpid) cl->num_data_points; // If `scc_Dpid` is signed
+	for (scc_Dpid i = 0; i < num_data_points; ++i) {
+		if (cl->cluster_label[i] != SCC_CLABEL_NA) {
+			--cl_members[cl->cluster_label[i]];
+			*cl_members[cl->cluster_label[i]] = i;
 		}
 	}
 
@@ -210,12 +210,12 @@ scc_ClusteringStats scc_get_clustering_stats(const scc_Clustering* const cl,
 			continue;
 		}
 		const size_t size_dist_matrix = (cluster_size[c] * (cluster_size[c] - 1)) / 2;
-		if (!scc_get_dist_matrix(data_set_object, cluster_size[c], cl_members[c], dist_scratch)) {
+		if (!iscc_get_dist_matrix(data_set_object, cluster_size[c], cl_members[c], dist_scratch)) {
 			free(cluster_size);
-			free(vertex_store);
+			free(id_store);
 			free(cl_members);
 			free(dist_scratch);
-			return SCC_NULL_CLUSTERING_STATS;
+			return ISCC_NULL_CLUSTERING_STATS;
 		}
 
 		double cluster_average = dist_scratch[0];
@@ -256,7 +256,7 @@ scc_ClusteringStats scc_get_clustering_stats(const scc_Clustering* const cl,
 	out_stat.cl_avg_dist_unweighted = out_stat.cl_avg_dist_unweighted / ((double) out_stat.num_populated_clusters);
 
 	free(cluster_size);
-	free(vertex_store);
+	free(id_store);
 	free(cl_members);
 	free(dist_scratch);
 

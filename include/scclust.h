@@ -69,23 +69,23 @@ static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;
 /// Label given to unassigned vertices.
 static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
 
-/** Type used for vertex IDs. May be unsigned or signed.
+/** Type used for data point IDs. May be unsigned or signed.
  *
  *  \note
- *  Possible vertex IDs are the sequence `[0, 1, ..., SCC_VID_MAX - 1]`. 
- *  `SCC_VID_NA` may not be in this sequence.
+ *  Possible data point IDs are the sequence `[0, 1, ..., SCC_DPID_MAX - 1]`. 
+ *  `SCC_DPID_NA` may not be in this sequence.
  *  \note
- *  Number of vertices in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Vid (i.e., less
- *  than #SCC_VID_MAX).
+ *  Number of data points in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_Dpid (i.e., less
+ *  than #SCC_DPID_MAX).
  */
-typedef uint32_t scc_Vid;
+typedef uint32_t scc_Dpid;
 
-/// Maximum number that can be stored in #scc_Vid.
-static const scc_Vid SCC_VID_MAX = UINT32_MAX;
+/// Maximum number that can be stored in #scc_Dpid.
+static const scc_Dpid SCC_DPID_MAX = UINT32_MAX;
 
 /// Value to indicate that an invalid vertex.
-static const scc_Vid SCC_VID_NA = UINT32_MAX;
+static const scc_Dpid SCC_DPID_NA = UINT32_MAX;
 
 /** Type used for arc indices. Must be unsigned.
  *  

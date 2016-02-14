@@ -93,7 +93,7 @@ enum scc_SeedMethod {
 typedef enum scc_SeedMethod scc_SeedMethod;
 
 /// Typedef for the scc_SeedClustering struct
-typedef struct scc_SeedClustering scc_SeedClustering;
+typedef struct iscc_SeedClustering iscc_SeedClustering;
 
 /** Clustering struct with seed information.
  *
@@ -104,10 +104,10 @@ typedef struct scc_SeedClustering scc_SeedClustering;
  *  This struct describes such partial clusterings. In particular, apart from the fields in #scc_Clustering, it contain
  *  a list of seeds and an array of indicators of whether each vertex is assigned to a cluster.
  */
-struct scc_SeedClustering {
+struct iscc_SeedClustering {
 
-	/// Number of vertices in the clustering problem.
-	size_t vertices;
+	/// Number of data points in the clustering problem.
+	size_t num_data_points;
 
 	/// Number of clusters produced by the used NNG-based algorithm.
 	size_t num_clusters;
@@ -126,7 +126,7 @@ struct scc_SeedClustering {
 	bool* assigned;
 
 	/// Array of length #seed_capacity where the first #num_clusters elements contain the IDs of the seeds of each cluster.
-	scc_Vid* seeds;
+	scc_Dpid* seeds;
 
 	/** Array of length #vertices with cluster labels for the assigned vertices. 
      *  
@@ -140,7 +140,7 @@ struct scc_SeedClustering {
  *  The null seed clustering is an easily detectable invalid clustering. It is mainly used as return
  *  value when functions encounter errors.
  */
-static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, 0, false, NULL, NULL, NULL };
+static const iscc_SeedClustering ISCC_NULL_SEED_CLUSTERING = { 0, 0, 0, false, NULL, NULL, NULL };
 
 /** Destructor for seed clusterings.
  *
@@ -151,7 +151,7 @@ static const scc_SeedClustering SCC_NULL_SEED_CLUSTERING = { 0, 0, 0, false, NUL
  *
  *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_SeedClustering.
  */
-void scc_free_SeedClustering(scc_SeedClustering* cl);
+void iscc_free_seed_clustering(iscc_SeedClustering* cl);
 
 /** Deep copy of a seed clustering.
  *
@@ -164,7 +164,7 @@ void scc_free_SeedClustering(scc_SeedClustering* cl);
  *  \note This function takes a deep copy of `cl->cluster_label` even if
  *  `cl->external_labels` is \c true.
  */
-scc_SeedClustering scc_copy_SeedClustering(const scc_SeedClustering* cl);
+iscc_SeedClustering iscc_copy_seed_clustering(const iscc_SeedClustering* cl);
 
 /** Construct seed clustering using NNG-based algorithm.
  *
@@ -198,10 +198,10 @@ scc_SeedClustering scc_copy_SeedClustering(const scc_SeedClustering* cl);
  *        some vertices have self-loops and other do not. To improve performance, calling #scc_copy_SeedClustering without loops is recommended unless clusters of size one
  *        are allowed.
  */
-scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
-                                           scc_SeedMethod sm,
-                                           size_t seed_init_capacity,
-                                           scc_Clabel external_cluster_label[]);
+iscc_SeedClustering iscc_get_seed_clustering(const iscc_Digraph* nng,
+                                             scc_SeedMethod sm,
+                                             size_t seed_init_capacity,
+                                             scc_Clabel external_cluster_label[]);
 
 /** Construct final clustering by ignoring unassigned vertices.
  *  
@@ -218,7 +218,7 @@ scc_SeedClustering scc_get_seed_clustering(const scc_Digraph* nng,
  *  \note The `cl->external_labels` flag is set to true so that calling #scc_free_SeedClustering with \p cl does
  *        not free the cluster labels as they are used by the output struct as well.
  */
-scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl);
+scc_Clustering iscc_ignore_remaining(iscc_SeedClustering* cl);
 
 /** Construct final clustering by assigning unassigned vertices lexically.
  *  
@@ -244,8 +244,8 @@ scc_Clustering scc_ignore_remaining(scc_SeedClustering* cl);
  *  \note `cl->assigned` is not updated by this function and refer to whether vertices were assigned to a cluster in the
  *        original partial seed clustering.
  */
-scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* cl,
-                                            const scc_Digraph* priority_graph);
+scc_Clustering iscc_assign_remaining_lexical(iscc_SeedClustering* cl,
+                                             const iscc_Digraph* priority_graph);
 
 /** Construct final clustering by assigning unassigned vertices to cluster by size.
  *  
@@ -278,9 +278,9 @@ scc_Clustering scc_assign_remaining_lexical(scc_SeedClustering* cl,
  *        original partial seed clustering.
  *  \note If \p desired_size is set to `0`, vertices will be assigned to the largest possible cluster.
  */
-scc_Clustering scc_assign_remaining_desired_size(scc_SeedClustering* cl,
-                                                 const scc_Digraph* priority_graph,
-                                                 scc_Vid desired_size);
+scc_Clustering iscc_assign_remaining_desired_size(iscc_SeedClustering* cl,
+                                                  const iscc_Digraph* priority_graph,
+                                                  size_t desired_size);
 
 
 #endif

@@ -40,8 +40,8 @@
  */
 struct scc_Clustering {
 
-	/// Number of vertices in the clustering problem.
-	size_t vertices;
+	/// Number of data points in the clustering problem.
+	size_t num_data_points;
 
 	/// Number of clusters.
 	size_t num_clusters;
@@ -62,7 +62,7 @@ struct scc_Clustering {
  *  The null clustering is an easily detectable invalid clustering. It is mainly used as return
  *  value when functions encounter errors.
  */
-static const scc_Clustering SCC_NULL_CLUSTERING = { 0, 0, false, NULL };
+static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, false, NULL };
 
 
 

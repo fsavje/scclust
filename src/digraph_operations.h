@@ -76,9 +76,9 @@
  *
  *  \note All digraphs in \p dgs must contain equally many vertices.
  */
-scc_Digraph scc_digraph_union(size_t num_dgs,
-                              const scc_Digraph dgs[],
-                              bool ignore_loops);
+iscc_Digraph iscc_digraph_union(size_t num_dgs,
+                                const iscc_Digraph dgs[],
+                                bool ignore_loops);
 
 /** Derives the digraph transpose a digraph.
  *
@@ -106,7 +106,7 @@ scc_Digraph scc_digraph_union(size_t num_dgs,
  *
  *  \return the transpose of \p dg.
  */
-scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);
+iscc_Digraph iscc_digraph_transpose(const iscc_Digraph* dg);
 
 /** Calculates the product of the adjacency matrices of two digraphs.
  *
@@ -155,10 +155,10 @@ scc_Digraph scc_digraph_transpose(const scc_Digraph* dg);
  *
  *  \note \p force_loops and \p ignore_loops cannot both be \c true. 
  */
-scc_Digraph scc_adjacency_product(const scc_Digraph* dg_a,
-                                  const scc_Digraph* dg_b,
-                                  bool force_loops,
-                                  bool ignore_loops);
+iscc_Digraph iscc_adjacency_product(const iscc_Digraph* dg_a,
+                                    const iscc_Digraph* dg_b,
+                                    bool force_loops,
+                                    bool ignore_loops);
 
 
 #endif

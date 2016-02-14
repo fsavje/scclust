@@ -31,80 +31,80 @@
 // Miscellaneous functions
 // ==============================================================================
 
-size_t scc_get_data_point_count(scc_DataSetObject* data_set_object);
+size_t iscc_get_data_point_count(scc_DataSetObject* data_set_object);
 
-bool scc_is_valid_data_set_object(scc_DataSetObject* data_set_object);
+bool iscc_is_valid_data_set_object(scc_DataSetObject* data_set_object);
 
 // `output_dists` must be of length `(n_points - 1) n_points / 2`
-bool scc_get_dist_matrix(scc_DataSetObject* data_set_object,
-                         size_t n_points,
-                         const scc_Vid* point_indices,
-                         double* output_dists);
+bool iscc_get_dist_matrix(scc_DataSetObject* data_set_object,
+                          size_t n_points,
+                          const scc_Dpid* point_indices,
+                          double* output_dists);
 
 
 // ==============================================================================
 // Distance row generation functions
 // ==============================================================================
 
-typedef struct scc_DistColObject scc_DistColObject;
+typedef struct iscc_DistColObject iscc_DistColObject;
 
-scc_DistColObject* scc_init_dist_column_object(scc_DataSetObject* data_set_object,
-                                               size_t n_columns,
-                                               const scc_Vid* column_indices,
-                                               size_t n_query_hint);
+iscc_DistColObject* iscc_init_dist_column_object(scc_DataSetObject* data_set_object,
+                                                 size_t n_columns,
+                                                 const scc_Dpid* column_indices,
+                                                 size_t n_query_hint);
 
 // `output_dists` must be of length `n_columns * n_query_rows`
-bool scc_get_dist_row(scc_DistColObject* dist_column_object,
-                      size_t n_query_rows,
-                      const scc_Vid* query_indices,
-                      double* output_dists);
+bool iscc_get_dist_row(iscc_DistColObject* dist_column_object,
+                       size_t n_query_rows,
+                       const scc_Dpid* query_indices,
+                       double* output_dists);
 
-bool scc_close_dist_column_object(scc_DistColObject* dist_column_object);
+bool iscc_close_dist_column_object(iscc_DistColObject* dist_column_object);
 
 
 // ==============================================================================
 // Max dist functions
 // ==============================================================================
 
-typedef struct scc_MaxDistObject scc_MaxDistObject;
+typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
-scc_MaxDistObject* scc_init_max_dist_object(scc_DataSetObject* data_set_object,
-                                            size_t n_search_points,
-                                            const scc_Vid* search_indices,
-                                            size_t n_query_hint);
+iscc_MaxDistObject* iscc_init_max_dist_object(scc_DataSetObject* data_set_object,
+                                              size_t n_search_points,
+                                              const scc_Dpid* search_indices,
+                                              size_t n_query_hint);
 
 // `max_indices` and `max_dists` must be of length `n_query_points`
-bool scc_get_max_dist(scc_MaxDistObject* max_dist_object,
-                      size_t n_query_points,
-                      const scc_Vid* query_indices,
-                      scc_Vid* max_indices,
-                      double* max_dists);
+bool iscc_get_max_dist(iscc_MaxDistObject* max_dist_object,
+                       size_t n_query_points,
+                       const scc_Dpid* query_indices,
+                       scc_Dpid* max_indices,
+                       double* max_dists);
 
-bool scc_close_max_dist_object(scc_MaxDistObject* max_dist_object);
+bool iscc_close_max_dist_object(iscc_MaxDistObject* max_dist_object);
 
 
 // ==============================================================================
 // Nearest neighbor search functions
 // ==============================================================================
 
-typedef struct scc_NNSearchObject scc_NNSearchObject;
+typedef struct iscc_NNSearchObject iscc_NNSearchObject;
 
-scc_NNSearchObject* scc_init_nn_search_object(scc_DataSetObject* data_set_object,
-                                              size_t k,
-                                              bool radius_search,
-                                              double radius,
-                                              size_t n_search_points,
-                                              const scc_Vid* search_indices,
-                                              size_t n_query_hint);
+iscc_NNSearchObject* iscc_init_nn_search_object(scc_DataSetObject* data_set_object,
+                                                size_t k,
+                                                bool radius_search,
+                                                double radius,
+                                                size_t n_search_points,
+                                                const scc_Dpid* search_indices,
+                                                size_t n_query_hint);
 
 // `nn_indices` and `nn_dists` must be of length `k * n_query_points`
-bool scc_nearest_neighbor_search(scc_NNSearchObject* nn_search_object,
-                                 size_t n_query_points,
-                                 const scc_Vid* query_indices,
-                                 scc_Vid* nn_indices,
-                                 double* nn_dists);
+bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
+                                  size_t n_query_points,
+                                  const scc_Dpid* query_indices,
+                                  scc_Dpid* nn_indices,
+                                  double* nn_dists);
 
-bool scc_close_nn_search_object(scc_NNSearchObject* nn_search_object);
+bool iscc_close_nn_search_object(iscc_NNSearchObject* nn_search_object);
 
 
 #endif

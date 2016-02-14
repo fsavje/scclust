@@ -50,7 +50,7 @@ void scc_ut_greedy_break_clustering(void** state)
 	                               1, 3, 1, 0, 2, 2, 3, 3, 1, 0, 3, 0, 2, 1, 2,
 	                               0, 3, 1, 1, 1, 3, 1, 1, 3, 2, 1, 3, 3, 1, 1,
 	                               0, 1, 3, 2, 3, 3, 1, 2, 0, 3 };
-	assert_int_equal(cl1.vertices, 100);
+	assert_int_equal(cl1.num_data_points, 100);
 	assert_int_equal(cl1.num_clusters, 4);
 	assert_true(cl1.external_labels);
 	assert_memory_equal(cl1.cluster_label, ref_label1, 100 * sizeof(scc_Clabel));
@@ -71,7 +71,7 @@ void scc_ut_greedy_break_clustering(void** state)
 	                               2, 2, 2, 3, 3, 2, 1, 0, 3, 1, 3, 1, 0, 2, 2, 3, 3,
 	                               1, 0, 3, 0, 2, 0, 2, 0, 3, 1, 1, 1, 2, 1, 1, 3, 2,
 	                               1, 3, 2, 1, 1, 0, 1, 3, 2, 2, 3, 1, 2, 0, 3 };
-	assert_int_equal(cl2.vertices, 100);
+	assert_int_equal(cl2.num_data_points, 100);
 	assert_int_equal(cl2.num_clusters, 4);
 	assert_true(cl2.external_labels);
 	assert_memory_equal(cl2.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));
@@ -98,13 +98,13 @@ void scc_ut_get_greedy_clustering(void** state)
 	                               0, 0, 4, 1, 1, 3, 2, 1, 0, 2, 1, 0, 2, 2, 2,
 	                               4, 2, 1, 2, 2, 1, 3, 4, 3, 0 };
 	
-	assert_int_equal(cl1a.vertices, 100);
+	assert_int_equal(cl1a.num_data_points, 100);
 	assert_int_equal(cl1a.num_clusters, 5);
 	assert_true(cl1a.external_labels);
 	assert_ptr_equal(cl1a.cluster_label, ext_cluster_label1);
 	assert_memory_equal(cl1a.cluster_label, ref_label1, 100 * sizeof(scc_Clabel));
 
-	assert_int_equal(cl1b.vertices, 100);
+	assert_int_equal(cl1b.num_data_points, 100);
 	assert_int_equal(cl1b.num_clusters, 5);
 	assert_false(cl1b.external_labels);
 	assert_memory_equal(cl1b.cluster_label, ref_label1, 100 * sizeof(scc_Clabel));
@@ -122,13 +122,13 @@ void scc_ut_get_greedy_clustering(void** state)
 	                               3, 2, 2, 1, 1, 3, 0, 0, 2, 3, 0, 1, 3, 0, 1, 3, 3, 3,
 	                               3, 2, 0, 3, 3, 1, 0, 3, 2, 0 };
 	
-	assert_int_equal(cl2a.vertices, 100);
+	assert_int_equal(cl2a.num_data_points, 100);
 	assert_int_equal(cl2a.num_clusters, 4);
 	assert_true(cl2a.external_labels);
 	assert_ptr_equal(cl2a.cluster_label, ext_cluster_label2);
 	assert_memory_equal(cl2a.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));
 
-	assert_int_equal(cl2b.vertices, 100);
+	assert_int_equal(cl2b.num_data_points, 100);
 	assert_int_equal(cl2b.num_clusters, 4);
 	assert_false(cl2b.external_labels);
 	assert_memory_equal(cl2b.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));

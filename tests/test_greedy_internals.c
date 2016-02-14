@@ -46,13 +46,13 @@ void scc_ut_init_cl_stack(void** state)
 	                           6, M, 6, 6, 3  };
 
 	scc_Clustering cl1 = {
-		.vertices = 20,
+		.num_data_points = 20,
 		.num_clusters = 6,
 		.external_labels = true,
 		.cluster_label = labels1,
 	};
 	scc_Clustering cl2 = {
-		.vertices = 25,
+		.num_data_points = 25,
 		.num_clusters = 7,
 		.external_labels = true,
 		.cluster_label = labels2,
@@ -78,19 +78,19 @@ void scc_ut_init_cl_stack(void** state)
 	assert_int_equal(cl_stack1.clusters[4].marker, 0);
 	assert_int_equal(cl_stack1.clusters[5].marker, 0);
 
-	scc_Vid ref1_cl0[1] = { 16 };
-	scc_Vid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
-	scc_Vid ref1_cl2[4] = { 1, 5, 9, 11 };
-	scc_Vid ref1_cl3[4] = { 3, 10, 13, 15 };
-	scc_Vid ref1_cl4[3] = { 2, 14, 17 };
-	scc_Vid ref1_cl5[3] = { 7, 12, 19 };
+	scc_Dpid ref1_cl0[1] = { 16 };
+	scc_Dpid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
+	scc_Dpid ref1_cl2[4] = { 1, 5, 9, 11 };
+	scc_Dpid ref1_cl3[4] = { 3, 10, 13, 15 };
+	scc_Dpid ref1_cl4[3] = { 2, 14, 17 };
+	scc_Dpid ref1_cl5[3] = { 7, 12, 19 };
 
-	assert_memory_equal(cl_stack1.clusters[0].members, ref1_cl0, 1 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack1.clusters[1].members, ref1_cl1, 5 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack1.clusters[2].members, ref1_cl2, 4 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack1.clusters[3].members, ref1_cl3, 4 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack1.clusters[4].members, ref1_cl4, 3 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack1.clusters[5].members, ref1_cl5, 3 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack1.clusters[0].members, ref1_cl0, 1 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack1.clusters[1].members, ref1_cl1, 5 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack1.clusters[2].members, ref1_cl2, 4 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack1.clusters[3].members, ref1_cl3, 4 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack1.clusters[4].members, ref1_cl4, 3 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack1.clusters[5].members, ref1_cl5, 3 * sizeof(scc_Dpid));
 
 	for (size_t i = 6; i < cl_stack1.capacity; ++i) {
 		assert_int_equal(cl_stack1.clusters[i].size, 0);
@@ -120,20 +120,20 @@ void scc_ut_init_cl_stack(void** state)
 	assert_int_equal(cl_stack2.clusters[5].marker, 0);
 	assert_int_equal(cl_stack2.clusters[6].marker, 0);
 
-	scc_Vid ref2_cl0[3] = { 0, 7, 13 };
-	scc_Vid ref2_cl2[3] = { 2, 10, 17 };
-	scc_Vid ref2_cl3[4] = { 3, 4, 6, 24 };
-	scc_Vid ref2_cl4[2] = { 8, 12 };
-	scc_Vid ref2_cl5[5] = { 5, 14, 15, 16, 18 };
-	scc_Vid ref2_cl6[3] = { 20, 22, 23 };
+	scc_Dpid ref2_cl0[3] = { 0, 7, 13 };
+	scc_Dpid ref2_cl2[3] = { 2, 10, 17 };
+	scc_Dpid ref2_cl3[4] = { 3, 4, 6, 24 };
+	scc_Dpid ref2_cl4[2] = { 8, 12 };
+	scc_Dpid ref2_cl5[5] = { 5, 14, 15, 16, 18 };
+	scc_Dpid ref2_cl6[3] = { 20, 22, 23 };
 
-	assert_memory_equal(cl_stack2.clusters[0].members, ref2_cl0, 3 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack2.clusters[0].members, ref2_cl0, 3 * sizeof(scc_Dpid));
 	assert_null(cl_stack2.clusters[1].members);
-	assert_memory_equal(cl_stack2.clusters[2].members, ref2_cl2, 3 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack2.clusters[3].members, ref2_cl3, 4 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack2.clusters[4].members, ref2_cl4, 2 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack2.clusters[5].members, ref2_cl5, 5 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack2.clusters[6].members, ref2_cl6, 3 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack2.clusters[2].members, ref2_cl2, 3 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack2.clusters[3].members, ref2_cl3, 4 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack2.clusters[4].members, ref2_cl4, 2 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack2.clusters[5].members, ref2_cl5, 5 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack2.clusters[6].members, ref2_cl6, 3 * sizeof(scc_Dpid));
 
 	for (size_t i = 7; i < cl_stack2.capacity; ++i) {
 		assert_int_equal(cl_stack2.clusters[i].size, 0);
@@ -171,9 +171,9 @@ void scc_ut_empty_cl_stack(void** state)
 	assert_int_equal(cl_stack1.clusters[0].size, 10);
 	assert_int_equal(cl_stack1.clusters[0].marker, 0);
 
-	scc_Vid ref1_cl[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	scc_Dpid ref1_cl[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-	assert_memory_equal(cl_stack1.clusters[0].members, ref1_cl, 10 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack1.clusters[0].members, ref1_cl, 10 * sizeof(scc_Dpid));
 
 	cl_stack1.clusters[cl_stack1.capacity - 1].size = 0;
 
@@ -187,9 +187,9 @@ void scc_ut_empty_cl_stack(void** state)
 	assert_int_equal(cl_stack2.clusters[0].size, 20);
 	assert_int_equal(cl_stack2.clusters[0].marker, 0);
 
-	scc_Vid ref2_cl[20] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
+	scc_Dpid ref2_cl[20] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 
-	assert_memory_equal(cl_stack2.clusters[0].members, ref2_cl, 20 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack2.clusters[0].members, ref2_cl, 20 * sizeof(scc_Dpid));
 
 	cl_stack2.clusters[cl_stack2.capacity - 1].size = 0;
 
@@ -218,13 +218,13 @@ void scc_ut_free_cl_strack(void** state)
 	                           6, M, 6, 6, 3  };
 
 	scc_Clustering cl1 = {
-		.vertices = 20,
+		.num_data_points = 20,
 		.num_clusters = 6,
 		.external_labels = true,
 		.cluster_label = labels1,
 	};
 	scc_Clustering cl2 = {
-		.vertices = 25,
+		.num_data_points = 25,
 		.num_clusters = 7,
 		.external_labels = true,
 		.cluster_label = labels2,
@@ -243,7 +243,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	(void) state;
 
 	scc_Clustering cl1 = {
-		.vertices = 100,
+		.num_data_points = 100,
 		.num_clusters = 0,
 		.external_labels = false,
 		.cluster_label = malloc(sizeof(scc_Clabel[100])),
@@ -262,14 +262,14 @@ void scc_ut_run_greedy_clustering(void** state)
 	                               0, 0, 4, 1, 1, 3, 2, 1, 0, 2, 1, 0, 2, 2, 2,
 	                               4, 2, 1, 2, 2, 1, 3, 4, 3, 0 };
 	assert_int_equal(cl_stack1.items, 0);
-	assert_int_equal(cl1.vertices, 100);
+	assert_int_equal(cl1.num_data_points, 100);
 	assert_int_equal(cl1.num_clusters, 5);
 	assert_false(cl1.external_labels);
 	assert_memory_equal(cl1.cluster_label, ref_label1, 100 * sizeof(scc_Clabel));
 
 
 	scc_Clustering cl2 = {
-		.vertices = 100,
+		.num_data_points = 100,
 		.num_clusters = 0,
 		.external_labels = false,
 		.cluster_label = malloc(sizeof(scc_Clabel[100])),
@@ -287,7 +287,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	                               3, 2, 2, 1, 1, 3, 0, 0, 2, 3, 0, 1, 3, 0, 1, 3, 3, 3,
 	                               3, 2, 0, 3, 3, 1, 0, 3, 2, 0 };
 	assert_int_equal(cl_stack2.items, 0);
-	assert_int_equal(cl2.vertices, 100);
+	assert_int_equal(cl2.num_data_points, 100);
 	assert_int_equal(cl2.num_clusters, 4);
 	assert_false(cl2.external_labels);
 	assert_memory_equal(cl2.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));
@@ -301,7 +301,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	                                   0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0,
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
 	scc_Clustering cl3 = {
-		.vertices = 100,
+		.num_data_points = 100,
 		.num_clusters = 2,
 		.external_labels = true,
 		.cluster_label = cluster_label3,
@@ -320,7 +320,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	                               0, 3, 1, 1, 1, 3, 1, 1, 3, 2, 1, 3, 3, 1, 1,
 	                               0, 1, 3, 2, 3, 3, 1, 2, 0, 3 };
 	assert_int_equal(cl_stack3.items, 0);
-	assert_int_equal(cl3.vertices, 100);
+	assert_int_equal(cl3.num_data_points, 100);
 	assert_int_equal(cl3.num_clusters, 4);
 	assert_true(cl3.external_labels);
 	assert_memory_equal(cl3.cluster_label, ref_label3, 100 * sizeof(scc_Clabel));
@@ -334,7 +334,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	                                   0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0,
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
 	scc_Clustering cl4 = {
-		.vertices = 100,
+		.num_data_points = 100,
 		.num_clusters = 2,
 		.external_labels = true,
 		.cluster_label = cluster_label4,
@@ -352,7 +352,7 @@ void scc_ut_run_greedy_clustering(void** state)
 	                               1, 0, 3, 0, 2, 0, 2, 0, 3, 1, 1, 1, 2, 1, 1, 3, 2,
 	                               1, 3, 2, 1, 1, 0, 1, 3, 2, 2, 3, 1, 2, 0, 3 };
 	assert_int_equal(cl_stack4.items, 0);
-	assert_int_equal(cl4.vertices, 100);
+	assert_int_equal(cl4.num_data_points, 100);
 	assert_int_equal(cl4.num_clusters, 4);
 	assert_true(cl4.external_labels);
 	assert_memory_equal(cl4.cluster_label, ref_label4, 100 * sizeof(scc_Clabel));
@@ -378,7 +378,7 @@ void scc_ut_peek_at_stack(void** state)
 	                          3, 2, 5, 3, 4,
 	                          3, 0, 4, 1, 5  };
 	scc_Clustering cl = {
-		.vertices = 20,
+		.num_data_points = 20,
 		.num_clusters = 6,
 		.external_labels = true,
 		.cluster_label = labels,
@@ -430,19 +430,19 @@ void scc_ut_peek_at_stack(void** state)
 	assert_int_equal(cl_stack.clusters[4].marker, 0);
 	assert_int_equal(cl_stack.clusters[5].marker, 0);
 
-	scc_Vid ref1_cl0[1] = { 16 };
-	scc_Vid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
-	scc_Vid ref1_cl2[4] = { 1, 5, 9, 11 };
-	scc_Vid ref1_cl3[4] = { 3, 10, 13, 15 };
-	scc_Vid ref1_cl4[3] = { 2, 14, 17 };
-	scc_Vid ref1_cl5[3] = { 7, 12, 19 };
+	scc_Dpid ref1_cl0[1] = { 16 };
+	scc_Dpid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
+	scc_Dpid ref1_cl2[4] = { 1, 5, 9, 11 };
+	scc_Dpid ref1_cl3[4] = { 3, 10, 13, 15 };
+	scc_Dpid ref1_cl4[3] = { 2, 14, 17 };
+	scc_Dpid ref1_cl5[3] = { 7, 12, 19 };
 
-	assert_memory_equal(cl_stack.clusters[0].members, ref1_cl0, 1 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack.clusters[1].members, ref1_cl1, 5 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack.clusters[2].members, ref1_cl2, 4 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack.clusters[3].members, ref1_cl3, 4 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack.clusters[4].members, ref1_cl4, 3 * sizeof(scc_Vid));
-	assert_memory_equal(cl_stack.clusters[5].members, ref1_cl5, 3 * sizeof(scc_Vid));
+	assert_memory_equal(cl_stack.clusters[0].members, ref1_cl0, 1 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack.clusters[1].members, ref1_cl1, 5 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack.clusters[2].members, ref1_cl2, 4 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack.clusters[3].members, ref1_cl3, 4 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack.clusters[4].members, ref1_cl4, 3 * sizeof(scc_Dpid));
+	assert_memory_equal(cl_stack.clusters[5].members, ref1_cl5, 3 * sizeof(scc_Dpid));
 
 	for (size_t i = 6; i < cl_stack.capacity; ++i) {
 		assert_int_equal(cl_stack.clusters[i].size, 0);
@@ -468,7 +468,7 @@ void scc_ut_pop_from_stack(void** state)
 	                          3, 2, 5, 3, 4,
 	                          3, 0, 4, 1, 5  };
 	scc_Clustering cl = {
-		.vertices = 20,
+		.num_data_points = 20,
 		.num_clusters = 6,
 		.external_labels = true,
 		.cluster_label = labels,
@@ -480,12 +480,12 @@ void scc_ut_pop_from_stack(void** state)
 	assert_int_equal(cl_stack.items, 6);
 	assert_non_null(cl_stack.clusters);
 
-	scc_Vid ref1_cl0[1] = { 16 };
-	scc_Vid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
-	scc_Vid ref1_cl2[4] = { 1, 5, 9, 11 };
-	scc_Vid ref1_cl3[4] = { 3, 10, 13, 15 };
-	scc_Vid ref1_cl4[3] = { 2, 14, 17 };
-	scc_Vid ref1_cl5[3] = { 7, 12, 19 };
+	scc_Dpid ref1_cl0[1] = { 16 };
+	scc_Dpid ref1_cl1[5] = { 0, 4, 6, 8, 18 };
+	scc_Dpid ref1_cl2[4] = { 1, 5, 9, 11 };
+	scc_Dpid ref1_cl3[4] = { 3, 10, 13, 15 };
+	scc_Dpid ref1_cl4[3] = { 2, 14, 17 };
+	scc_Dpid ref1_cl5[3] = { 7, 12, 19 };
 
 	iscc_gr_ClusterItem next_cl;
 
@@ -495,7 +495,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 3);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl5, 3 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl5, 3 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	next_cl = iscc_gr_pop_from_stack(&cl_stack);
@@ -504,7 +504,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 3);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl4, 3 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl4, 3 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	next_cl = iscc_gr_pop_from_stack(&cl_stack);
@@ -513,7 +513,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 4);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl3, 4 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl3, 4 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	next_cl = iscc_gr_pop_from_stack(&cl_stack);
@@ -522,7 +522,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 4);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl2, 4 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl2, 4 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	next_cl = iscc_gr_pop_from_stack(&cl_stack);
@@ -531,7 +531,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 5);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl1, 5 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl1, 5 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	next_cl = iscc_gr_pop_from_stack(&cl_stack);
@@ -540,7 +540,7 @@ void scc_ut_pop_from_stack(void** state)
 	assert_non_null(cl_stack.clusters);
 	assert_int_equal(next_cl.size, 1);
 	assert_int_equal(next_cl.marker, 0);
-	assert_memory_equal(next_cl.members, ref1_cl0, 1 * sizeof(scc_Vid));
+	assert_memory_equal(next_cl.members, ref1_cl0, 1 * sizeof(scc_Dpid));
 	free(next_cl.members);
 
 	free(cl_stack.clusters);
@@ -560,17 +560,17 @@ void scc_ut_push_to_stack(void** state)
 	iscc_gr_ClusterItem cl1 = {
 		.size = 10,
 		.marker = 0,
-		.members = malloc(sizeof(scc_Vid[10])),
+		.members = malloc(sizeof(scc_Dpid[10])),
 	};
 	iscc_gr_ClusterItem cl2 = {
 		.size = 15,
 		.marker = 0,
-		.members = malloc(sizeof(scc_Vid[15])),
+		.members = malloc(sizeof(scc_Dpid[15])),
 	};
 	iscc_gr_ClusterItem cl3 = {
 		.size = 20,
 		.marker = 0,
-		.members = malloc(sizeof(scc_Vid[20])),
+		.members = malloc(sizeof(scc_Dpid[20])),
 	};
 
 	assert_true(iscc_gr_push_to_stack(&cl_stack, cl1));
@@ -607,9 +607,9 @@ void scc_ut_break_cluster_into_two(void** state)
 	iscc_gr_ClusterItem cl1 = {
 		.size = 10,
 		.marker = 0,
-		.members = malloc(sizeof(scc_Vid[10])),
+		.members = malloc(sizeof(scc_Dpid[10])),
 	};
-	scc_Vid members1_ref[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_Dpid members1_ref[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	for (size_t i = 0; i < 10; ++i) {
 		cl1.members[i] = members1_ref[i];
 	}
@@ -617,22 +617,22 @@ void scc_ut_break_cluster_into_two(void** state)
 	iscc_gr_ClusterItem cl2 = {
 		.size = 10,
 		.marker = 0,
-		.members = malloc(sizeof(scc_Vid[10])),
+		.members = malloc(sizeof(scc_Dpid[10])),
 	};
-	scc_Vid members2_ref[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
+	scc_Dpid members2_ref[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
 	for (size_t i = 0; i < 10; ++i) {
 		cl2.members[i] = members2_ref[i];
 	}
 
 	iscc_gr_ClusterItem cl1_a = iscc_gr_break_cluster_into_two(&scc_ut_test_data_large, &cl1, 3, true, vertex_markers);
-	scc_Vid ref_cl1[6] = { 2, 20, 14, 4, 12, 16 };
-	scc_Vid ref_cl2[4] = { 18, 10, 6, 8 };
+	scc_Dpid ref_cl1[6] = { 2, 20, 14, 4, 12, 16 };
+	scc_Dpid ref_cl2[4] = { 18, 10, 6, 8 };
 	assert_int_equal(cl1.size, 6);
 	assert_int_equal(cl1.marker, 2);
-	assert_memory_equal(cl1.members, ref_cl1, cl1.size * sizeof(scc_Vid));
+	assert_memory_equal(cl1.members, ref_cl1, cl1.size * sizeof(scc_Dpid));
 	assert_int_equal(cl1_a.size, 4);
 	assert_int_equal(cl1_a.marker, 2);
-	assert_memory_equal(cl1_a.members, ref_cl2, cl1_a.size * sizeof(scc_Vid));
+	assert_memory_equal(cl1_a.members, ref_cl2, cl1_a.size * sizeof(scc_Dpid));
 	assert_int_equal(vertex_markers[2], 2);
 	assert_int_equal(vertex_markers[4], 2);
 	assert_int_equal(vertex_markers[6], 2);
@@ -645,14 +645,14 @@ void scc_ut_break_cluster_into_two(void** state)
 	assert_int_equal(vertex_markers[20], 2);
 
 	iscc_gr_ClusterItem cl1_b = iscc_gr_break_cluster_into_two(&scc_ut_test_data_large, &cl1, 3, true, vertex_markers);
-	scc_Vid ref_cl3[3] = { 2, 20, 4 };
-	scc_Vid ref_cl4[3] = { 16, 12, 14 };
+	scc_Dpid ref_cl3[3] = { 2, 20, 4 };
+	scc_Dpid ref_cl4[3] = { 16, 12, 14 };
 	assert_int_equal(cl1.size, 3);
 	assert_int_equal(cl1.marker, 4);
-	assert_memory_equal(cl1.members, ref_cl3, cl1.size * sizeof(scc_Vid));
+	assert_memory_equal(cl1.members, ref_cl3, cl1.size * sizeof(scc_Dpid));
 	assert_int_equal(cl1_b.size, 3);
 	assert_int_equal(cl1_b.marker, 4);
-	assert_memory_equal(cl1_b.members, ref_cl4, cl1_b.size * sizeof(scc_Vid));
+	assert_memory_equal(cl1_b.members, ref_cl4, cl1_b.size * sizeof(scc_Dpid));
 	assert_int_equal(vertex_markers[2], 4);
 	assert_int_equal(vertex_markers[4], 4);
 	assert_int_equal(vertex_markers[6], 2);
@@ -666,14 +666,14 @@ void scc_ut_break_cluster_into_two(void** state)
 
 
 	iscc_gr_ClusterItem cl2_a = iscc_gr_break_cluster_into_two(&scc_ut_test_data_large, &cl2, 2, false, vertex_markers);
-	scc_Vid ref_cl5[5] = { 21, 30, 22, 29, 24 };
-	scc_Vid ref_cl6[5] = { 28, 26, 27, 25, 23 };
+	scc_Dpid ref_cl5[5] = { 21, 30, 22, 29, 24 };
+	scc_Dpid ref_cl6[5] = { 28, 26, 27, 25, 23 };
 	assert_int_equal(cl2.size, 5);
 	assert_int_equal(cl2.marker, 2);
-	assert_memory_equal(cl2.members, ref_cl5, cl2.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2.members, ref_cl5, cl2.size * sizeof(scc_Dpid));
 	assert_int_equal(cl2_a.size, 5);
 	assert_int_equal(cl2_a.marker, 2);
-	assert_memory_equal(cl2_a.members, ref_cl6, cl2_a.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2_a.members, ref_cl6, cl2_a.size * sizeof(scc_Dpid));
 	assert_int_equal(vertex_markers[21], 2);
 	assert_int_equal(vertex_markers[22], 2);
 	assert_int_equal(vertex_markers[23], 2);
@@ -686,14 +686,14 @@ void scc_ut_break_cluster_into_two(void** state)
 	assert_int_equal(vertex_markers[30], 2);
 
 	iscc_gr_ClusterItem cl2_b = iscc_gr_break_cluster_into_two(&scc_ut_test_data_large, &cl2_a, 2, false, vertex_markers);
-	scc_Vid ref_cl7[3] = { 23, 27, 25 };
-	scc_Vid ref_cl8[2] = { 26, 28 };
+	scc_Dpid ref_cl7[3] = { 23, 27, 25 };
+	scc_Dpid ref_cl8[2] = { 26, 28 };
 	assert_int_equal(cl2_a.size, 3);
 	assert_int_equal(cl2_a.marker, 4);
-	assert_memory_equal(cl2_a.members, ref_cl7, cl2_a.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2_a.members, ref_cl7, cl2_a.size * sizeof(scc_Dpid));
 	assert_int_equal(cl2_b.size, 2);
 	assert_int_equal(cl2_b.marker, 4);
-	assert_memory_equal(cl2_b.members, ref_cl8, cl2_b.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2_b.members, ref_cl8, cl2_b.size * sizeof(scc_Dpid));
 	assert_int_equal(vertex_markers[21], 2);
 	assert_int_equal(vertex_markers[22], 2);
 	assert_int_equal(vertex_markers[23], 4);
@@ -706,14 +706,14 @@ void scc_ut_break_cluster_into_two(void** state)
 	assert_int_equal(vertex_markers[30], 2);
 
 	iscc_gr_ClusterItem cl2_c = iscc_gr_break_cluster_into_two(&scc_ut_test_data_large, &cl2, 2, false, vertex_markers);
-	scc_Vid ref_cl9[2] = { 29, 24 };
-	scc_Vid ref_cl10[3] = { 30, 22, 21 };
+	scc_Dpid ref_cl9[2] = { 29, 24 };
+	scc_Dpid ref_cl10[3] = { 30, 22, 21 };
 	assert_int_equal(cl2.size, 2);
 	assert_int_equal(cl2.marker, 4);
-	assert_memory_equal(cl2.members, ref_cl9, cl2.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2.members, ref_cl9, cl2.size * sizeof(scc_Dpid));
 	assert_int_equal(cl2_c.size, 3);
 	assert_int_equal(cl2_c.marker, 4);
-	assert_memory_equal(cl2_c.members, ref_cl10, cl2_c.size * sizeof(scc_Vid));
+	assert_memory_equal(cl2_c.members, ref_cl10, cl2_c.size * sizeof(scc_Dpid));
 	assert_int_equal(vertex_markers[21], 4);
 	assert_int_equal(vertex_markers[22], 4);
 	assert_int_equal(vertex_markers[23], 4);
@@ -742,35 +742,35 @@ void scc_ut_find_centers(void** state)
 
 	uint_fast16_t* vertex_markers = calloc(100, sizeof(uint_fast16_t));
 
-	scc_Vid members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_Dpid members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_gr_ClusterItem cl1 = {
 		.size = 10,
 		.marker = 0,
 		.members = members1,
 	};
 	
-	scc_Vid members2[5] = { 2, 4, 6, 8, 12 };
+	scc_Dpid members2[5] = { 2, 4, 6, 8, 12 };
 	iscc_gr_ClusterItem cl2 = {
 		.size = 5,
 		.marker = 10,
 		.members = members2,
 	};
 
-	scc_Vid members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
+	scc_Dpid members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
 	iscc_gr_ClusterItem cl3 = {
 		.size = 10,
 		.marker = 20,
 		.members = members3,
 	};
 
-	scc_Vid members4[4] = { 21, 23, 25, 27 };
+	scc_Dpid members4[4] = { 21, 23, 25, 27 };
 	iscc_gr_ClusterItem cl4 = {
 		.size = 4,
 		.marker = 30,
 		.members = members4,
 	};
 
-	scc_Vid center1, center2;
+	scc_Dpid center1, center2;
 
 	assert_true(iscc_gr_find_centers(&scc_ut_test_data_large, &cl1, &center1, &center2, vertex_markers));
 	assert_int_equal(center1, 2);
@@ -807,8 +807,8 @@ void scc_ut_get_next_marker(void** state)
 		vertex_markers[i] = vertex_markers_ref[i];
 	}
 
-	scc_Vid mems_ref[5] = { 0, 4, 6, 8, 18 };
-	scc_Vid mems[5] = { 0, 4, 6, 8, 18 };
+	scc_Dpid mems_ref[5] = { 0, 4, 6, 8, 18 };
+	scc_Dpid mems[5] = { 0, 4, 6, 8, 18 };
 	iscc_gr_ClusterItem cl1 = {
 		.size = 5,
 		.marker = 0,
@@ -821,14 +821,14 @@ void scc_ut_get_next_marker(void** state)
 	assert_int_equal(next_marker, 1);
 	assert_int_equal(cl1.size, 5);
 	assert_int_equal(cl1.marker, 1);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Vid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 100 * sizeof(uint_fast16_t));
 
 	next_marker = iscc_gr_get_next_marker(&cl1, vertex_markers);
 	assert_int_equal(next_marker, 2);
 	assert_int_equal(cl1.size, 5);
 	assert_int_equal(cl1.marker, 2);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Vid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 100 * sizeof(uint_fast16_t));
 
 	vertex_markers[0] = 4;
@@ -842,14 +842,14 @@ void scc_ut_get_next_marker(void** state)
 	assert_int_equal(next_marker, 1);
 	assert_int_equal(cl1.size, 5);
 	assert_int_equal(cl1.marker, 1);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Vid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 100 * sizeof(uint_fast16_t));
 
 	next_marker = iscc_gr_get_next_marker(&cl1, vertex_markers);
 	assert_int_equal(next_marker, 2);
 	assert_int_equal(cl1.size, 5);
 	assert_int_equal(cl1.marker, 2);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Vid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 100 * sizeof(uint_fast16_t));
 
 	free(vertex_markers_ref);
@@ -861,7 +861,7 @@ void scc_ut_populate_dist_lists(void** state)
 {
 	(void) state;
 
-	scc_Vid members[4] = { 10, 3, 5, 2 };
+	scc_Dpid members[4] = { 10, 3, 5, 2 };
 	iscc_gr_ClusterItem cl = {
 		.size = 4,
 		.marker = 0,
@@ -904,7 +904,7 @@ void scc_ut_sort_dist_list(void** state)
 {
 	(void) state;
 
-	scc_Vid mem[10] = { 1, 6, 3, 8, 9, 4, 10, 12, 13, 14 };
+	scc_Dpid mem[10] = { 1, 6, 3, 8, 9, 4, 10, 12, 13, 14 };
 
 	iscc_gr_ClusterItem ci = {
 		.size = 10,
@@ -981,7 +981,7 @@ void scc_ut_move_v_to_cluster(void** state)
 	iscc_gr_ClusterItem cl = {
 		.size = 3,
 		.marker = 1,
-		.members = calloc(20, sizeof(scc_Vid)),
+		.members = calloc(20, sizeof(scc_Dpid)),
 	};
 	cl.members[0] = 4;
 	vertex_markers[4] = 1;
@@ -1008,12 +1008,12 @@ void scc_ut_move_v_to_cluster(void** state)
 
 	assert_memory_equal(vertex_markers, v_marks, 20 * sizeof(uint_fast16_t));
 
-	scc_Vid cl_members[20] = { 4, 1, 2, 11, 3,
+	scc_Dpid cl_members[20] = { 4, 1, 2, 11, 3,
 	                           6, 10, 14, 0, 0,
 	                           0, 0, 0, 0, 0,
 	                           0, 0, 0, 0, 0  };
 
-	assert_memory_equal(cl.members, cl_members, 20 * sizeof(scc_Vid));
+	assert_memory_equal(cl.members, cl_members, 20 * sizeof(scc_Dpid));
 
 	free(cl.members);
 	free(vertex_markers);
@@ -1026,7 +1026,7 @@ void scc_ut_get_next_dist(void** state)
 
 	uint_fast16_t* vertex_markers = calloc(100, sizeof(uint_fast16_t));
 
-	scc_Vid members[5] = { 2, 4, 6, 8, 10 };
+	scc_Dpid members[5] = { 2, 4, 6, 8, 10 };
 	iscc_gr_ClusterItem cl = {
 		.size = 5,
 		.marker = 0,
@@ -1142,7 +1142,7 @@ void scc_ut_get_next_k_nn(void** state)
 
 	uint_fast16_t* vertex_markers = calloc(100, sizeof(uint_fast16_t));
 
-	scc_Vid members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_Dpid members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_gr_ClusterItem cl = {
 		.size = 10,
 		.marker = 0,
@@ -1154,18 +1154,18 @@ void scc_ut_get_next_k_nn(void** state)
 
 	assert_true(iscc_gr_populate_dist_lists(&scc_ut_test_data_large, &cl, 6, 16, dist_store1, dist_store2));
 
-	scc_Vid out_dist_array0[4];
-	scc_Vid ref_dist_array0[4] = { 12, 16, 18, 4 };
+	scc_Dpid out_dist_array0[4];
+	scc_Dpid ref_dist_array0[4] = { 12, 16, 18, 4 };
 	iscc_gr_DistanceEdge* prev_dist0 = iscc_gr_get_next_k_nn(dist_store1, 4, out_dist_array0, vertex_markers, 1);
-	assert_memory_equal(out_dist_array0, ref_dist_array0, 4 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array0, ref_dist_array0, 4 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist0->head, 4);
 	assert_double_equal(prev_dist0->distance, 72.125847);
 	assert_ptr_equal(prev_dist0->next_dist, prev_dist0 + 1);
 
-	scc_Vid out_dist_array1[4];
-	scc_Vid ref_dist_array1[4] = { 18, 4, 10, 14 };
+	scc_Dpid out_dist_array1[4];
+	scc_Dpid ref_dist_array1[4] = { 18, 4, 10, 14 };
 	iscc_gr_DistanceEdge* prev_dist1 = iscc_gr_get_next_k_nn(&dist_store1[2], 4, out_dist_array1, vertex_markers, 1);
-	assert_memory_equal(out_dist_array1, ref_dist_array1, 4 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array1, ref_dist_array1, 4 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist1->head, 14);
 	assert_double_equal(prev_dist1->distance, 80.566800);
 	assert_ptr_equal(prev_dist1->next_dist, prev_dist1 + 1);
@@ -1174,45 +1174,45 @@ void scc_ut_get_next_k_nn(void** state)
 	vertex_markers[4] = 1;
 	vertex_markers[8] = 1;
 
-	scc_Vid out_dist_arrayY[4];
-	scc_Vid ref_dist_arrayY[4] = { 12, 16, 10, 14 };
+	scc_Dpid out_dist_arrayY[4];
+	scc_Dpid ref_dist_arrayY[4] = { 12, 16, 10, 14 };
 	iscc_gr_DistanceEdge* prev_distY = iscc_gr_get_next_k_nn(dist_store1, 4, out_dist_arrayY, vertex_markers, 1);
-	assert_memory_equal(out_dist_arrayY, ref_dist_arrayY, 4 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_arrayY, ref_dist_arrayY, 4 * sizeof(scc_Dpid));
 	assert_int_equal(prev_distY->head, 14);
 	assert_double_equal(prev_distY->distance, 80.566800);
 	assert_ptr_equal(prev_distY->next_dist, prev_distY + 1);
 
-	scc_Vid out_dist_arrayX[2];
-	scc_Vid ref_dist_arrayX[2] = { 12, 16 };
+	scc_Dpid out_dist_arrayX[2];
+	scc_Dpid ref_dist_arrayX[2] = { 12, 16 };
 	iscc_gr_DistanceEdge* prev_distX = iscc_gr_get_next_k_nn(dist_store1, 2, out_dist_arrayX, vertex_markers, 1);
-	assert_memory_equal(out_dist_arrayX, ref_dist_arrayX, 2 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_arrayX, ref_dist_arrayX, 2 * sizeof(scc_Dpid));
 	assert_int_equal(prev_distX->head, 16);
 	assert_double_equal(prev_distX->distance, 43.918798);
 	assert_ptr_equal(prev_distX->next_dist, prev_distX + 3);
 
-	scc_Vid out_dist_array2[4];
-	scc_Vid ref_dist_array2[4] = { 10, 14, 20, 2 };
+	scc_Dpid out_dist_array2[4];
+	scc_Dpid ref_dist_array2[4] = { 10, 14, 20, 2 };
 	iscc_gr_DistanceEdge* prev_dist2 = iscc_gr_get_next_k_nn(&dist_store1[2], 4, out_dist_array2, vertex_markers, 1);
-	assert_memory_equal(out_dist_array2, ref_dist_array2, 4 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array2, ref_dist_array2, 4 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist2->head, 2);
 	assert_double_equal(prev_dist2->distance, 103.030113);
 	assert_null(prev_dist2->next_dist);
 
 	vertex_markers[20] = 1;
 
-	scc_Vid out_dist_array3[4];
-	scc_Vid ref_dist_array3[4] = { 16, 10, 14, 2 };
+	scc_Dpid out_dist_array3[4];
+	scc_Dpid ref_dist_array3[4] = { 16, 10, 14, 2 };
 	iscc_gr_DistanceEdge* prev_dist3 = iscc_gr_get_next_k_nn(&dist_store1[1], 4, out_dist_array3, vertex_markers, 1);
-	assert_memory_equal(out_dist_array3, ref_dist_array3, 4 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array3, ref_dist_array3, 4 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist3->head, 2);
 	assert_double_equal(prev_dist3->distance, 103.030113);
 	assert_null(prev_dist3->next_dist);
 
 
-	scc_Vid out_dist_array4[1];
-	scc_Vid ref_dist_array4[1] = { 8 };
+	scc_Dpid out_dist_array4[1];
+	scc_Dpid ref_dist_array4[1] = { 8 };
 	iscc_gr_DistanceEdge* prev_dist4 = iscc_gr_get_next_k_nn(&dist_store2[4], 1, out_dist_array4, vertex_markers, 2);
-	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist4->head, 8);
 	assert_double_equal(prev_dist4->distance, 62.616031);
 	assert_ptr_equal(prev_dist4->next_dist, prev_dist4 + 1);
@@ -1221,10 +1221,10 @@ void scc_ut_get_next_k_nn(void** state)
 	vertex_markers[14] = 2;
 	vertex_markers[20] = 2;
 
-	scc_Vid out_dist_array5[3];
-	scc_Vid ref_dist_array5[3] = { 8, 10, 2 };
+	scc_Dpid out_dist_array5[3];
+	scc_Dpid ref_dist_array5[3] = { 8, 10, 2 };
 	iscc_gr_DistanceEdge* prev_dist5 = iscc_gr_get_next_k_nn(&dist_store2[2], 3, out_dist_array5, vertex_markers, 2);
-	assert_memory_equal(out_dist_array5, ref_dist_array5, 3 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array5, ref_dist_array5, 3 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist5->head, 2);
 	assert_double_equal(prev_dist5->distance, 83.120587);
 	assert_ptr_equal(prev_dist5->next_dist, prev_dist5 + 1);
@@ -1241,7 +1241,7 @@ void scc_ut_get_first_k_nn(void** state)
 
 	uint_fast16_t* vertex_markers = calloc(100, sizeof(uint_fast16_t));
 
-	scc_Vid members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_Dpid members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_gr_ClusterItem cl = {
 		.size = 10,
 		.marker = 0,
@@ -1253,10 +1253,10 @@ void scc_ut_get_first_k_nn(void** state)
 
 	assert_true(iscc_gr_populate_dist_lists(&scc_ut_test_data_large, &cl, 6, 16, dist_store1, dist_store2));
 
-	scc_Vid out_dist_array1[5];
-	scc_Vid ref_dist_array1[5] = { 12, 16, 18, 4, 10 };
+	scc_Dpid out_dist_array1[5];
+	scc_Dpid ref_dist_array1[5] = { 12, 16, 18, 4, 10 };
     iscc_gr_DistanceEdge* prev_dist1 = iscc_gr_get_next_k_nn(dist_store1, 5, out_dist_array1, vertex_markers, 1);
-	assert_memory_equal(out_dist_array1, ref_dist_array1, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array1, ref_dist_array1, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist1->head, 10);
 	assert_double_equal(prev_dist1->distance, 76.285875);
 	assert_ptr_equal(prev_dist1->next_dist, prev_dist1 + 1);
@@ -1265,37 +1265,37 @@ void scc_ut_get_first_k_nn(void** state)
 	vertex_markers[18] = 1;
 	vertex_markers[8] = 1;
 
-	scc_Vid out_dist_array2[5];
-	scc_Vid ref_dist_array2[5] = { 16, 4, 10, 14, 20 };
+	scc_Dpid out_dist_array2[5];
+	scc_Dpid ref_dist_array2[5] = { 16, 4, 10, 14, 20 };
 	iscc_gr_DistanceEdge* prev_dist2 = iscc_gr_get_next_k_nn(dist_store1, 5, out_dist_array2, vertex_markers, 1);
-	assert_memory_equal(out_dist_array2, ref_dist_array2, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array2, ref_dist_array2, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist2->head, 20);
 	assert_double_equal(prev_dist2->distance, 81.300565);
 	assert_ptr_equal(prev_dist2->next_dist, prev_dist2 + 1);
 
 	vertex_markers[20] = 1;
 
-	scc_Vid out_dist_array3[5];
-	scc_Vid ref_dist_array3[5] = { 16, 4, 10, 14, 2 };
+	scc_Dpid out_dist_array3[5];
+	scc_Dpid ref_dist_array3[5] = { 16, 4, 10, 14, 2 };
 	iscc_gr_DistanceEdge* prev_dist3 = iscc_gr_get_next_k_nn(dist_store1, 5, out_dist_array3, vertex_markers, 1);
-	assert_memory_equal(out_dist_array3, ref_dist_array3, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array3, ref_dist_array3, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist3->head, 2);
 	assert_double_equal(prev_dist3->distance, 103.030113);
 	assert_null(prev_dist3->next_dist);
 
-	scc_Vid out_dist_array3b[5];
-	scc_Vid ref_dist_array3b[5] = { 16, 4, 10, 14, 2 };
+	scc_Dpid out_dist_array3b[5];
+	scc_Dpid ref_dist_array3b[5] = { 16, 4, 10, 14, 2 };
 	iscc_gr_DistanceEdge* prev_dist3b = iscc_gr_get_next_k_nn(dist_store1, 5, out_dist_array3b, vertex_markers, 1);
-	assert_memory_equal(out_dist_array3b, ref_dist_array3b, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array3b, ref_dist_array3b, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist3b->head, 2);
 	assert_double_equal(prev_dist3b->distance, 103.030113);
 	assert_null(prev_dist3b->next_dist);
 
 
-	scc_Vid out_dist_array4[1];
-	scc_Vid ref_dist_array4[1] = { 12 };
+	scc_Dpid out_dist_array4[1];
+	scc_Dpid ref_dist_array4[1] = { 12 };
 	iscc_gr_DistanceEdge* prev_dist4 = iscc_gr_get_next_k_nn(dist_store2, 1, out_dist_array4, vertex_markers, 2);
-	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist4->head, 12);
 	assert_double_equal(prev_dist4->distance, 43.831474);
 	assert_ptr_equal(prev_dist4->next_dist, prev_dist4 + 1);
@@ -1304,18 +1304,18 @@ void scc_ut_get_first_k_nn(void** state)
 	vertex_markers[14] = 2;
 	vertex_markers[20] = 2;
 
-	scc_Vid out_dist_array5[5];
-	scc_Vid ref_dist_array5[5] = { 12, 8, 10, 4, 2 };
+	scc_Dpid out_dist_array5[5];
+	scc_Dpid ref_dist_array5[5] = { 12, 8, 10, 4, 2 };
 	iscc_gr_DistanceEdge* prev_dist5 = iscc_gr_get_next_k_nn(dist_store2, 5, out_dist_array5, vertex_markers, 2);
-	assert_memory_equal(out_dist_array5, ref_dist_array5, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array5, ref_dist_array5, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist5->head, 2);
 	assert_double_equal(prev_dist5->distance, 83.120587);
 	assert_ptr_equal(prev_dist5->next_dist, prev_dist5 + 1);
 
-	scc_Vid out_dist_array6[5];
-	scc_Vid ref_dist_array6[5] = { 12, 8, 10, 4, 2 };
+	scc_Dpid out_dist_array6[5];
+	scc_Dpid ref_dist_array6[5] = { 12, 8, 10, 4, 2 };
 	iscc_gr_DistanceEdge* prev_dist6 = iscc_gr_get_next_k_nn(dist_store2, 5, out_dist_array6, vertex_markers, 2);
-	assert_memory_equal(out_dist_array6, ref_dist_array6, 5 * sizeof(scc_Vid));
+	assert_memory_equal(out_dist_array6, ref_dist_array6, 5 * sizeof(scc_Dpid));
 	assert_int_equal(prev_dist6->head, 2);
 	assert_double_equal(prev_dist6->distance, 83.120587);
 	assert_ptr_equal(prev_dist6->next_dist, prev_dist6 + 1);

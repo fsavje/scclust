@@ -34,7 +34,7 @@ void scc_ut_free_Clustering(void** state)
 	(void) state;
 
 	scc_Clustering test_cl1 =  {
-		.vertices = 10,
+		.num_data_points = 10,
 		.num_clusters = 5,
 		.external_labels = false,
 		.cluster_label = malloc(sizeof(scc_Clabel[10])),
@@ -42,20 +42,20 @@ void scc_ut_free_Clustering(void** state)
 
 	scc_Clabel ext_cluster_label[20];
 	scc_Clustering test_cl2 =  {
-		.vertices = 20,
+		.num_data_points = 20,
 		.num_clusters = 10,
 		.external_labels = true,
 		.cluster_label = ext_cluster_label,
 	};
 
 	scc_free_clustering(&test_cl1);
-	assert_int_equal(test_cl1.vertices, 0);
+	assert_int_equal(test_cl1.num_data_points, 0);
 	assert_int_equal(test_cl1.num_clusters, 0);
 	assert_false(test_cl1.external_labels);
 	assert_null(test_cl1.cluster_label);
 
 	scc_free_clustering(&test_cl2);
-	assert_int_equal(test_cl2.vertices, 0);
+	assert_int_equal(test_cl2.num_data_points, 0);
 	assert_int_equal(test_cl2.num_clusters, 0);
 	assert_false(test_cl2.external_labels);
 	assert_null(test_cl2.cluster_label);
@@ -70,7 +70,7 @@ void scc_ut_get_clustering_stats(void** state)
 	                           3, 2, 1, 1, 0,
 	                           3, 3, 2, 1, 1 };
 	scc_Clustering cl = {
-		.vertices = 15,
+		.num_data_points = 15,
 		.num_clusters = 4,
 		.external_labels = true,
 		.cluster_label = clabels,
@@ -119,7 +119,7 @@ void scc_ut_get_clustering_stats(void** state)
 	                             M, M, M, M, M, M, M, M, M, M,
 	                             M, M, M, M, M, M, M, M, M, M };
 	scc_Clustering cl2 = {
-		.vertices = 100,
+		.num_data_points = 100,
 		.num_clusters = 6,
 		.external_labels = true,
 		.cluster_label = clabels2,

@@ -39,91 +39,91 @@
 #define assert_balanced_digraph(test_dg, vertices, arcs_per_vertex) _assert_balanced_digraph(test_dg, vertices, arcs_per_vertex, #test_dg, __FILE__, __LINE__)
 
 
-void _assert_initialized_digraph(const scc_Digraph* test_dg,
+void _assert_initialized_digraph(const iscc_Digraph* test_dg,
                                  const size_t vertices,
                                  const char* const name_dg,
                                  const char* const file,
                                  const int line)
 {
-	if (!scc_digraph_is_initialized(test_dg) || test_dg->vertices != vertices) {
+	if (!iscc_digraph_is_initialized(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not valid\n", name_dg);
 		_fail(file, line);
 	}
 }
 
 
-void _assert_free_digraph(scc_Digraph* test_dg,
+void _assert_free_digraph(iscc_Digraph* test_dg,
                           const char* const name_dg,
                           const char* const file,
                           const int line)
 {
-	if (!scc_digraph_is_initialized(test_dg)) {
+	if (!iscc_digraph_is_initialized(test_dg)) {
 		print_error("%s is already freed\n", name_dg);
 		_fail(file, line);
 	} else {
 		for (size_t i = 0; i <= test_dg->vertices; ++i) test_dg->tail_ptr[i] = 1;
 		for (size_t i = 0; i < test_dg->max_arcs; ++i) test_dg->head[i] = 1;
 	}
-	scc_free_digraph(test_dg);
+	iscc_free_digraph(test_dg);
 }
 
 
-void _assert_valid_digraph(const scc_Digraph* test_dg,
+void _assert_valid_digraph(const iscc_Digraph* test_dg,
                            const size_t vertices,
                            const char* const name_dg,
                            const char* const file,
                            const int line)
 {
-	if (!scc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
+	if (!iscc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not sound\n", name_dg);
 		_fail(file, line);
 	}
 }
 
 
-void _assert_empty_digraph(const scc_Digraph* test_dg,
+void _assert_empty_digraph(const iscc_Digraph* test_dg,
                            const size_t vertices,
                            const char* const name_dg,
                            const char* const file,
                            const int line)
 {
-	if (!scc_is_empty_digraph(test_dg) || test_dg->vertices != vertices) {
+	if (!iscc_is_empty_digraph(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not empty\n", name_dg);
 		_fail(file, line);
 	}
 }
 
 
-void _assert_balanced_digraph(const scc_Digraph* test_dg,
+void _assert_balanced_digraph(const iscc_Digraph* test_dg,
                               const size_t vertices,
                               const size_t arcs_per_vertex,
                               const char* const name_dg,
                               const char* const file,
                               const int line)
 {
-	if (!scc_is_balanced_digraph(test_dg, arcs_per_vertex) || test_dg->vertices != vertices) {
+	if (!iscc_is_balanced_digraph(test_dg, arcs_per_vertex) || test_dg->vertices != vertices) {
 		print_error("%s is not balanced\n", name_dg);
 		_fail(file, line);
 	}
 }
 
 
-void _assert_equal_digraph(const scc_Digraph* test_dg1,
-                           const scc_Digraph* test_dg2,
+void _assert_equal_digraph(const iscc_Digraph* test_dg1,
+                           const iscc_Digraph* test_dg2,
                            const char* const name_dg1,
                            const char* const name_dg2,
                            const char* const file,
                            const int line)
 {
-	if (!scc_digraphs_equal(test_dg1, test_dg2)) {
+	if (!iscc_digraphs_equal(test_dg1, test_dg2)) {
 		print_error("%s and %s are not equal\n", name_dg1, name_dg2);
 		_fail(file, line);
 	}
 }
 
 
-void _assert_identical_digraph(const scc_Digraph* test_dg1,
-                               const scc_Digraph* test_dg2,
+void _assert_identical_digraph(const iscc_Digraph* test_dg1,
+                               const iscc_Digraph* test_dg2,
                                const char* const name_dg1,
                                const char* const name_dg2,
                                const char* const file,
