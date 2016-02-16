@@ -97,10 +97,11 @@ bool iscc_digraphs_equal(const iscc_Digraph* dg_a,
  *
  *  \return the constructed scc_Digraph.
  */
-iscc_Digraph iscc_digraph_from_pieces(size_t vertices,
-                                      size_t max_arcs,
-                                      const scc_Arci tail_ptr[],
-                                      const scc_Dpid head[]);
+scc_ErrorCode iscc_digraph_from_pieces(size_t vertices,
+                                       size_t max_arcs,
+                                       const scc_Arci tail_ptr[static vertices + 1],
+                                       const scc_Dpid head[static max_arcs],
+                                       iscc_Digraph* out_dg);
 
 /** Constructs digraph from human readable strings.
  *
@@ -124,7 +125,8 @@ iscc_Digraph iscc_digraph_from_pieces(size_t vertices,
  *
  *  \return the digraph described by \p dg_str.
  */
-iscc_Digraph iscc_digraph_from_string(const char dg_str[]);
+scc_ErrorCode iscc_digraph_from_string(const char dg_str[],
+                                       iscc_Digraph* out_dg);
 
 /** Print a digraph in human readable format.
  *

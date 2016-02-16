@@ -26,39 +26,72 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/scclust.h"
+#include "error.h"
 
 
 // ==============================================================================
 // External function implementations
 // ============================================================================== 
 
-iscc_Digraph iscc_init_digraph(const size_t vertices,
-                               const size_t max_arcs)
+scc_ErrorCode iscc_init_digraph(const size_t vertices,
+                                const size_t max_arcs,
+                                iscc_Digraph* const out_dg)
 {
+	assert(out_dg != NULL);
 	assert(vertices < SCC_DPID_MAX);
-	if (max_arcs > SCC_ARCI_MAX) return ISCC_NULL_DIGRAPH;
+	if (max_arcs > SCC_ARCI_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
 
-	iscc_Digraph dg = {
+	*out_dg = (iscc_Digraph) {
 		.vertices = vertices,
 		.max_arcs = max_arcs,
 		.head = NULL,
 		.tail_ptr = malloc(sizeof(scc_Arci[vertices + 1])),
 	};
-
-	if (dg.tail_ptr == NULL) return ISCC_NULL_DIGRAPH;
+	if (out_dg->tail_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	if (max_arcs > 0) {
-		dg.head = malloc(sizeof(scc_Dpid[max_arcs]));
-		if (dg.head == NULL) {
-			iscc_free_digraph(&dg);
-			return ISCC_NULL_DIGRAPH;
+		out_dg->head = malloc(sizeof(scc_Dpid[max_arcs]));
+		if (out_dg->head == NULL) {
+			iscc_free_digraph(out_dg);
+			return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
 	}
 
-	assert(iscc_digraph_is_initialized(&dg));
+	assert(iscc_digraph_is_initialized(out_dg));
 
-	return dg;
+	return iscc_no_error();
+}
+
+
+scc_ErrorCode iscc_empty_digraph(const size_t vertices,
+                                 const size_t max_arcs,
+                                 iscc_Digraph* const out_dg)
+{
+	assert(out_dg != NULL);
+	assert(vertices < SCC_DPID_MAX);
+	if (max_arcs > SCC_ARCI_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
+
+	*out_dg = (iscc_Digraph) {
+		.vertices = vertices,
+		.max_arcs = max_arcs,
+		.head = NULL,
+		.tail_ptr = calloc(vertices + 1, sizeof(scc_Arci)),
+	};
+	if (out_dg->tail_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
+	if (max_arcs > 0) {
+		out_dg->head = malloc(sizeof(scc_Dpid[max_arcs]));
+		if (out_dg->head == NULL) {
+			iscc_free_digraph(out_dg);
+			return iscc_make_error(SCC_ER_NO_MEMORY);
+		}
+	}
+
+	assert(iscc_digraph_is_initialized(out_dg));
+
+	return iscc_no_error();
 }
 
 
@@ -82,13 +115,13 @@ void iscc_free_digraph(iscc_Digraph* const dg)
 }
 
 
-bool iscc_change_arc_storage(iscc_Digraph* const dg,
-                             const size_t new_max_arcs)
+scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
+                                      const size_t new_max_arcs)
 {
 	assert(iscc_digraph_is_initialized(dg));
-	if (dg->max_arcs == new_max_arcs) return true;
-	if (new_max_arcs > SCC_ARCI_MAX) return false;
-	if (dg->tail_ptr[dg->vertices] > new_max_arcs) return false;
+	assert(dg->tail_ptr[dg->vertices] > new_max_arcs);
+	if (new_max_arcs > SCC_ARCI_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
+	if (dg->max_arcs == new_max_arcs) return iscc_no_error();
 
 	if (new_max_arcs == 0) {
 		free(dg->head);
@@ -96,65 +129,37 @@ bool iscc_change_arc_storage(iscc_Digraph* const dg,
 		dg->max_arcs = 0;
 	} else {
 		scc_Dpid* const tmp_ptr = realloc(dg->head, sizeof(scc_Dpid[new_max_arcs]));
-		if (tmp_ptr == NULL) return false;
+		if (tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		dg->head = tmp_ptr;
 		dg->max_arcs = new_max_arcs;
 	}
 
-	return true;
+	return iscc_no_error();
 }
 
 
-iscc_Digraph iscc_empty_digraph(const size_t vertices,
-                                const size_t max_arcs)
+scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
+                                iscc_Digraph* const out_dg)
 {
-	assert(vertices < SCC_DPID_MAX);
-	if (max_arcs > SCC_ARCI_MAX) return ISCC_NULL_DIGRAPH;
+	scc_ErrorCode ec;
+	assert(iscc_digraph_is_initialized(in_dg));
+	assert(out_dg != NULL);
+	if (in_dg->vertices == 0) return iscc_empty_digraph(0, 0, out_dg);
 
-	iscc_Digraph dg = {
-		.vertices = vertices,
-		.max_arcs = max_arcs,
-		.head = NULL,
-		.tail_ptr = calloc(vertices + 1, sizeof(scc_Arci)),
-	};
+	const size_t num_vertices = in_dg->vertices;
+	const size_t num_arcs = in_dg->tail_ptr[in_dg->vertices];
 
-	if (dg.tail_ptr == NULL) return ISCC_NULL_DIGRAPH;
+	if ((ec = iscc_init_digraph(num_vertices, num_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	if (max_arcs > 0) {
-		dg.head = malloc(sizeof(scc_Dpid[max_arcs]));
-		if (dg.head == NULL) {
-			iscc_free_digraph(&dg);
-			return ISCC_NULL_DIGRAPH;
-		}
-	}
+	memcpy(out_dg->tail_ptr, in_dg->tail_ptr, (num_vertices + 1) * sizeof(scc_Arci));
+	memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(scc_Dpid));
 
-	assert(iscc_digraph_is_initialized(&dg));
-
-	return dg;
+	return iscc_no_error();
 }
 
 
-iscc_Digraph iscc_copy_digraph(const iscc_Digraph* const dg)
-{
-	assert(iscc_digraph_is_initialized(dg));
-	if (dg->vertices == 0) return iscc_empty_digraph(0, 0);
-
-	iscc_Digraph dg_out = iscc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if (!iscc_digraph_is_initialized(&dg_out)) return ISCC_NULL_DIGRAPH;
-
-	for (size_t v = 0; v <= dg->vertices; ++v) {
-		dg_out.tail_ptr[v] = dg->tail_ptr[v];
-	}
-	for (scc_Arci a = 0; a < dg->tail_ptr[dg->vertices]; ++a) {
-		dg_out.head[a] = dg->head[a];
-	}
-
-	return dg_out;
-}
-
-
-void iscc_delete_arcs_by_tails(iscc_Digraph* const dg,
-                               const bool to_delete[const static dg->vertices])
+scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
+                                                    const bool to_delete[static dg->vertices])
 {
 	assert(iscc_digraph_is_initialized(dg));
 	assert(to_delete != NULL);
@@ -178,10 +183,12 @@ void iscc_delete_arcs_by_tails(iscc_Digraph* const dg,
 		}
 	}
 	dg->tail_ptr[dg->vertices] = head_write;
+
+	return iscc_no_error();
 }
 
 
-void iscc_delete_loops(iscc_Digraph* const dg)
+scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg)
 {
 	assert(iscc_digraph_is_initialized(dg));
 
@@ -201,4 +208,6 @@ void iscc_delete_loops(iscc_Digraph* const dg)
 		}
 	}
 	dg->tail_ptr[dg->vertices] = head_write;
+
+	return iscc_no_error();
 }

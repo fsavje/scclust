@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include "../include/scclust.h"
 #include "digraph_core.h"
+#include "error.h"
 
 
 // ==============================================================================
@@ -60,51 +61,52 @@ static inline size_t iscc_do_adjacency_product(size_t vertices,
 // External function implementations
 // ==============================================================================
 
-iscc_Digraph iscc_digraph_union(const size_t num_dgs,
-                                const iscc_Digraph dgs[const static num_dgs],
-                                const bool ignore_loops)
+scc_ErrorCode iscc_digraph_union(const size_t num_in_dgs,
+                                 const iscc_Digraph in_dgs[const static num_in_dgs],
+                                 const bool ignore_loops,
+                                 iscc_Digraph* const out_dg)
 {
-	if (num_dgs == 0) return iscc_empty_digraph(0, 0);
-	assert(dgs != NULL);
-	assert(iscc_digraph_is_initialized(&dgs[0]));
+	assert(out_dg != NULL);
+	if (num_in_dgs == 0) return iscc_empty_digraph(0, 0, out_dg);
+	assert(in_dgs != NULL);
+	assert(iscc_digraph_is_initialized(&in_dgs[0]));
 
-	const size_t vertices = dgs[0].vertices;
+	const size_t vertices = in_dgs[0].vertices;
 
 	// Try greedy memory count first
 	size_t out_arcs_write = 0;
-	for (size_t i = 0; i < num_dgs; ++i) {
-		assert(iscc_digraph_is_initialized(&dgs[i]));
-		assert(dgs[0].vertices == vertices);
-		out_arcs_write += dgs[i].tail_ptr[vertices];
+	for (size_t i = 0; i < num_in_dgs; ++i) {
+		assert(iscc_digraph_is_initialized(&in_dgs[i]));
+		assert(in_dgs[0].vertices == vertices);
+		out_arcs_write += in_dgs[i].tail_ptr[vertices];
 	}
 
 	scc_Dpid* const row_markers = malloc(sizeof(scc_Dpid[vertices]));
-	if (row_markers == NULL) return ISCC_NULL_DIGRAPH;
+	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
-	iscc_Digraph dg_out = iscc_init_digraph(vertices, out_arcs_write);
-	if (!iscc_digraph_is_initialized(&dg_out)) {
+	scc_ErrorCode ec;
+	if (iscc_init_digraph(vertices, out_arcs_write, out_dg) != SCC_ER_OK) {
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
 		// union without writing.
-		out_arcs_write = iscc_do_union(vertices, num_dgs, dgs, row_markers,
+		out_arcs_write = iscc_do_union(vertices, num_in_dgs, in_dgs, row_markers,
 		                               ignore_loops, false, NULL, NULL);
 
 		// Try again. If fail, give up.
-		dg_out = iscc_init_digraph(vertices, out_arcs_write);
-		if (!iscc_digraph_is_initialized(&dg_out)) {
+		if ((ec = iscc_init_digraph(vertices, out_arcs_write, out_dg)) != SCC_ER_OK) {
 			free(row_markers);
-			return ISCC_NULL_DIGRAPH;
+			return ec;
 		}
 	}
 
-	out_arcs_write = iscc_do_union(vertices, num_dgs, dgs, row_markers,
-	                               ignore_loops, true, dg_out.tail_ptr, dg_out.head);
+	out_arcs_write = iscc_do_union(vertices, num_in_dgs, in_dgs, row_markers,
+	                               ignore_loops, true, out_dg->tail_ptr, out_dg->head);
 
 	free(row_markers);
 
-	iscc_change_arc_storage(&dg_out, out_arcs_write);
+	if ((ec = iscc_change_arc_storage(out_dg, out_arcs_write)) != SCC_ER_OK) return ec;
 
-	return dg_out;
+	return iscc_no_error();
 }
 
 
@@ -142,113 +144,118 @@ iscc_Digraph iscc_digraph_transpose(const scc_Digraph* const dg)
 
 	return dg_out;
 }*/
-iscc_Digraph iscc_digraph_transpose(const iscc_Digraph* const dg)
+scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
+                                     iscc_Digraph* const out_dg)
 {
-	assert(iscc_digraph_is_initialized(dg));
-	if (dg->vertices == 0) return iscc_empty_digraph(0, 0);
+	assert(iscc_digraph_is_initialized(in_dg));
+	assert(out_dg != NULL);
+	if (in_dg->vertices == 0) return iscc_empty_digraph(0, 0, out_dg);
 
-	scc_Arci* const row_count = calloc(dg->vertices + 1, sizeof(scc_Arci));
-	iscc_Digraph dg_out = iscc_init_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if ((row_count == NULL) || !iscc_digraph_is_initialized(&dg_out)) {
+	scc_Arci* const row_count = calloc(in_dg->vertices + 1, sizeof(scc_Arci));
+	if (row_count == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
+	scc_ErrorCode ec;
+	if ((ec = iscc_init_digraph(in_dg->vertices, in_dg->tail_ptr[in_dg->vertices], out_dg)) != SCC_ER_OK) {
 		free(row_count);
-		iscc_free_digraph(&dg_out);
-		return ISCC_NULL_DIGRAPH;
+		return ec;
 	}
 
-	const scc_Dpid* const arc_c_stop = dg->head + dg->tail_ptr[dg->vertices];
-	for (const scc_Dpid* arc_c = dg->head;
+	const scc_Dpid* const arc_c_stop = in_dg->head + in_dg->tail_ptr[in_dg->vertices];
+	for (const scc_Dpid* arc_c = in_dg->head;
 	        arc_c != arc_c_stop; ++arc_c) {
 		++row_count[*arc_c + 1];
 	}
 
-	dg_out.tail_ptr[0] = 0;
-	for (size_t v = 1; v <= dg->vertices; ++v) {
+	out_dg->tail_ptr[0] = 0;
+	for (size_t v = 1; v <= in_dg->vertices; ++v) {
 		row_count[v] += row_count[v - 1];
-		dg_out.tail_ptr[v] = row_count[v];
+		out_dg->tail_ptr[v] = row_count[v];
 	}
 
-	assert(dg->vertices < SCC_DPID_MAX);
-	const scc_Dpid vertices = (scc_Dpid) dg->vertices; // If `scc_Dpid` is signed 
+	assert(in_dg->vertices < SCC_DPID_MAX);
+	const scc_Dpid vertices = (scc_Dpid) in_dg->vertices; // If `scc_Dpid` is signed 
 	for (scc_Dpid v = 0; v < vertices; ++v) {
-		const scc_Dpid* const arc_stop = dg->head + dg->tail_ptr[v + 1];
-		for (const scc_Dpid* arc = dg->head + dg->tail_ptr[v];
+		const scc_Dpid* const arc_stop = in_dg->head + in_dg->tail_ptr[v + 1];
+		for (const scc_Dpid* arc = in_dg->head + in_dg->tail_ptr[v];
 		        arc != arc_stop; ++arc) {
-			dg_out.head[row_count[*arc]] = v;
+			out_dg->head[row_count[*arc]] = v;
 			++row_count[*arc];
 		}
 	}
 
 	free(row_count);
 
-	return dg_out;
+	return iscc_no_error();
 }
 
 
-iscc_Digraph iscc_adjacency_product(const iscc_Digraph* const dg_a,
-                                    const iscc_Digraph* const dg_b,
-                                    const bool force_loops,
-                                    const bool ignore_loops)
+scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
+                                     const iscc_Digraph* const in_dg_b,
+                                     const bool force_loops,
+                                     const bool ignore_loops,
+                                     iscc_Digraph* const out_dg)
 {
-	assert(iscc_digraph_is_initialized(dg_a));
-	assert(iscc_digraph_is_initialized(dg_b));
-	assert(dg_a->vertices == dg_b->vertices);
+	assert(iscc_digraph_is_initialized(in_dg_a));
+	assert(iscc_digraph_is_initialized(in_dg_b));
+	assert(in_dg_a->vertices == in_dg_b->vertices);
 	assert(!force_loops || !ignore_loops);
-	if (dg_a->vertices == 0) return iscc_empty_digraph(0, 0);
+	assert(out_dg != NULL);
+	if (in_dg_a->vertices == 0) return iscc_empty_digraph(0, 0, out_dg);
 
-	const size_t vertices = dg_a->vertices;
+	const size_t vertices = in_dg_a->vertices;
+	size_t out_arcs_write = 0;
 
 	scc_Dpid* const row_markers = malloc(sizeof(scc_Dpid[vertices]));
-	if (row_markers == NULL) return ISCC_NULL_DIGRAPH;
-
-	size_t out_arcs_write = 0;
+	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	// Try greedy memory count first
 	assert(vertices < SCC_DPID_MAX);
 	const scc_Dpid vertices_dpid = (scc_Dpid) vertices; // If `scc_Dpid` is signed 
 	for (scc_Dpid v = 0; v < vertices_dpid; ++v) {
 		if (force_loops) {
-			out_arcs_write += dg_b->tail_ptr[v + 1] - dg_b->tail_ptr[v];
+			out_arcs_write += in_dg_b->tail_ptr[v + 1] - in_dg_b->tail_ptr[v];
 		}
-		const scc_Dpid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
-		for (const scc_Dpid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		const scc_Dpid* const arc_a_stop = in_dg_a->head + in_dg_a->tail_ptr[v + 1];
+		for (const scc_Dpid* arc_a = in_dg_a->head + in_dg_a->tail_ptr[v];
 		        arc_a != arc_a_stop; ++arc_a) {
 			if ((*arc_a == v) && (force_loops || ignore_loops)) continue;
-			out_arcs_write += dg_b->tail_ptr[*arc_a + 1] - dg_b->tail_ptr[*arc_a];
+			out_arcs_write += in_dg_b->tail_ptr[*arc_a + 1] - in_dg_b->tail_ptr[*arc_a];
 		}
 	}
 
-	iscc_Digraph dg_out = iscc_init_digraph(vertices, out_arcs_write);
-	if (!iscc_digraph_is_initialized(&dg_out)) {
+
+	scc_ErrorCode ec;
+	if (iscc_init_digraph(vertices, out_arcs_write, out_dg) != SCC_ER_OK) {
 		// Could not allocate digraph with `out_arcs_write' arcs.
 		// Do correct (but slow) memory count by doing
 		// doing product without writing.
 		out_arcs_write = iscc_do_adjacency_product(vertices,
-		                                           dg_a->tail_ptr, dg_a->head,
-		                                           dg_b->tail_ptr, dg_b->head,
+		                                           in_dg_a->tail_ptr, in_dg_a->head,
+		                                           in_dg_b->tail_ptr, in_dg_b->head,
 		                                           row_markers,
 		                                           force_loops, ignore_loops,
 		                                           false, NULL, NULL);
 
 		// Try again. If fail, give up.
-		dg_out = iscc_init_digraph(vertices, out_arcs_write);
-		if (!iscc_digraph_is_initialized(&dg_out)) {
+		if ((ec = iscc_init_digraph(vertices, out_arcs_write, out_dg)) != SCC_ER_OK) {
 			free(row_markers);
-			return ISCC_NULL_DIGRAPH;
+			return ec;
 		}
 	}
 
+
 	out_arcs_write = iscc_do_adjacency_product(vertices,
-	                                           dg_a->tail_ptr, dg_a->head,
-	                                           dg_b->tail_ptr, dg_b->head,
+	                                           in_dg_a->tail_ptr, in_dg_a->head,
+	                                           in_dg_b->tail_ptr, in_dg_b->head,
 	                                           row_markers,
 	                                           force_loops, ignore_loops,
-	                                           true, dg_out.tail_ptr, dg_out.head);
+	                                           true, out_dg->tail_ptr, out_dg->head);
 
 	free(row_markers);
 
-	iscc_change_arc_storage(&dg_out, out_arcs_write);
+	if ((ec = iscc_change_arc_storage(out_dg, out_arcs_write)) != SCC_ER_OK) return ec;
 
-	return dg_out;
+	return iscc_no_error();
 }
 
 

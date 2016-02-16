@@ -28,8 +28,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/scclust.h"
 #include "digraph_core.h"
+#include "error.h"
 
 
 // ==============================================================================
@@ -116,31 +118,32 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 }
 
 
-iscc_Digraph iscc_digraph_from_pieces(const size_t vertices,
-                                      const size_t max_arcs,
-                                      const scc_Arci tail_ptr[const static vertices + 1],
-                                      const scc_Dpid head[const])
+scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
+                                       const size_t max_arcs,
+                                       const scc_Arci tail_ptr[const static vertices + 1],
+                                       const scc_Dpid head[const static max_arcs],
+                                       iscc_Digraph* const out_dg)
 {
 	assert(tail_ptr != NULL);
 	assert((max_arcs == 0) || (head != NULL));
-	iscc_Digraph dg = iscc_init_digraph(vertices, max_arcs);
-	if (!iscc_digraph_is_initialized(&dg)) return ISCC_NULL_DIGRAPH;
+	assert(out_dg != NULL);
 
-	for (size_t v = 0; v <= vertices; ++v) {
-		dg.tail_ptr[v] = tail_ptr[v];
-	}
-	for (size_t a = 0; a < max_arcs; ++a) {
-		dg.head[a] = head[a];
-	}
+	scc_ErrorCode ec;
+	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	return dg;
+	memcpy(out_dg->tail_ptr, tail_ptr, (vertices + 1) * sizeof(scc_Arci));
+	memcpy(out_dg->head, head, max_arcs * sizeof(scc_Dpid));
+
+	return iscc_no_error();
 }
 
 
-iscc_Digraph iscc_digraph_from_string(const char dg_str[const])
+scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
+                                       iscc_Digraph* const out_dg)
 {
 	assert(dg_str != NULL);
-	
+	assert(out_dg != NULL);
+
 	size_t vertices = 0;
 	size_t all_arcs = 0;
 	size_t max_arcs = 0;
@@ -149,37 +152,34 @@ iscc_Digraph iscc_digraph_from_string(const char dg_str[const])
 		if (dg_str[c] == '#' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '#') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) vertices = all_arcs;
-		if (dg_str[c] == '/' && (all_arcs % vertices) != 0) return ISCC_NULL_DIGRAPH;
+		if (dg_str[c] == '/' && (all_arcs % vertices) != 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	}
 
-	iscc_Digraph dg_out = iscc_init_digraph(vertices, max_arcs);
-	if (!iscc_digraph_is_initialized(&dg_out)) return ISCC_NULL_DIGRAPH;
+	scc_ErrorCode ec;
+	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
 	scc_Arci curr_array_pos = 0;
 	size_t curr_row = 0;
 	scc_Dpid curr_col = 0;
-	dg_out.tail_ptr[0] = 0;
+	out_dg->tail_ptr[0] = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
 		if (dg_str[c] == '#') {
-			dg_out.head[curr_array_pos] = curr_col;
+			out_dg->head[curr_array_pos] = curr_col;
 			++curr_array_pos;
 		}
 		if (dg_str[c] == '#' || dg_str[c] == '.') ++curr_col;
 		if (dg_str[c] == '/') {
 			++curr_row;
 			curr_col = 0;
-			dg_out.tail_ptr[curr_row] = curr_array_pos;
+			out_dg->tail_ptr[curr_row] = curr_array_pos;
 		}
 	}
-	dg_out.tail_ptr[vertices] = curr_array_pos;
+	out_dg->tail_ptr[vertices] = curr_array_pos;
 
-	if (!iscc_is_valid_digraph(&dg_out)) {
-		iscc_free_digraph(&dg_out);
-		return ISCC_NULL_DIGRAPH;
-	}
+	assert(iscc_is_valid_digraph(out_dg));
 
-	return dg_out;
+	return iscc_no_error();
 }
 
 

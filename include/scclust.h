@@ -44,9 +44,6 @@
 //#define SCC_STABLE_CLUSTERING
 
 
-//#define SCC_EXTENSIVE_INPUT_CHECK
-
-
 // ==============================================================================
 // Library specific types, user-serviceable
 // ==============================================================================
@@ -84,7 +81,7 @@ typedef uint32_t scc_Dpid;
 /// Maximum number that can be stored in #scc_Dpid.
 static const scc_Dpid SCC_DPID_MAX = UINT32_MAX;
 
-/// Value to indicate that an invalid vertex.
+/// Value to indicate invalid data_points.
 static const scc_Dpid SCC_DPID_NA = UINT32_MAX;
 
 /** Type used for arc indices. Must be unsigned.
@@ -133,6 +130,26 @@ struct scc_ClusteringStats {
 // Error handling
 // ==============================================================================
 
+enum scc_ErrorCode {
+	SCC_ER_OK,
+	SCC_ER_NULL_INPUT,
+	SCC_ER_INVALID_INPUT,
+	SCC_ER_INVALID_CLUSTERING,
+	SCC_ER_EMPTY_CLUSTERING,
+	SCC_ER_INVALID_DATA_OBJ,
+	SCC_ER_NO_MEMORY,
+	SCC_ER_TOO_LARGE_PROBLEM,
+	SCC_ER_TOO_LARGE_DIGRAPH,
+	SCC_ER_DIST_SEARCH_ERROR,
+};
+
+/// Typedef for the scc_ErrorCode enum
+typedef enum scc_ErrorCode scc_ErrorCode;
+
+void scc_get_error_message(scc_ErrorCode ec,
+                           char error_message_buffer[],
+                           size_t buffer_size);
+
 
 // ==============================================================================
 // Utility functions
@@ -147,44 +164,57 @@ struct scc_ClusteringStats {
  *
  *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_Clustering.
  */
-void scc_free_clustering(scc_Clustering* cl);
+void scc_free_clustering(scc_Clustering** clustering);
 
-scc_Clustering scc_init_empty_clustering(size_t num_data_points,
-                                         scc_Clabel external_cluster_labels[]);
 
-scc_Clustering scc_init_existing_clustering(size_t num_data_points,
-                                            size_t num_clusters,
-                                            scc_Clabel current_cluster_labels[],
-                                            bool deep_label_copy);
+scc_ErrorCode scc_init_empty_clustering(size_t num_data_points,
+                                        scc_Clabel external_cluster_labels[],
+                                        scc_Clustering** out_clustering);
+
+
+scc_ErrorCode scc_init_existing_clustering(size_t num_clusters,
+                                           size_t num_data_points,
+                                           scc_Clabel current_cluster_labels[],
+                                           bool deep_label_copy,
+                                           scc_Clustering** out_clustering);
+
+
+scc_ErrorCode scc_copy_clustering(const scc_Clustering* in_clustering,
+                                  scc_Clustering** out_clustering);
+
 
 bool scc_check_clustering(const scc_Clustering* cl,
                           bool extensive_check);
 
-size_t scc_count_data_points(const scc_Clustering* cl);
 
-size_t scc_count_clusters(const scc_Clustering* cl);
+scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
+                                      size_t* out_num_data_points,
+                                      size_t* out_num_clusters);
 
-scc_Clabel* scc_get_labels(const scc_Clustering* cl);
 
-void scc_make_labels_external(const scc_Clustering* cl);
+scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
+                                     size_t buffer_size,
+                                     scc_Clabel out_label_buffer[]);
 
-scc_ClusteringStats scc_get_clustering_stats(const scc_Clustering* cl,
-                                             scc_DataSetObject* data_set_object);
+
+scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
+                                       scc_DataSetObject* data_set_object,
+                                       scc_ClusteringStats* out_stats);
 
 
 // ==============================================================================
 // Greedy clustering function
 // ==============================================================================
 
-bool scc_top_down_greedy_clustering(scc_Clustering* cl,
-                                    scc_DataSetObject* data_set_object,
-                                    size_t size_constraint,
-                                    bool batch_assign);
+scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
+                                             scc_DataSetObject* data_set_object,
+                                             size_t size_constraint,
+                                             bool batch_assign);
 
-bool scc_bottom_up_greedy_clustering(scc_Clustering* cl,
-                                     scc_DataSetObject* data_set_object,
-                                     size_t size_constraint,
-                                     bool batch_assign);
+scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
+                                              scc_DataSetObject* data_set_object,
+                                              size_t size_constraint,
+                                              bool batch_assign);
 
 
 // ==============================================================================

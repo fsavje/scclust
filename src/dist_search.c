@@ -75,18 +75,19 @@ static inline double iscc_get_dist(const scc_DataSetObject* data_set_object,
 // External function implementations
 // ==============================================================================
 
-size_t iscc_get_data_point_count(scc_DataSetObject* const data_set_object)
-{
-	assert(data_set_object != NULL);
-	return data_set_object->rows;
-}
+//size_t iscc_get_data_point_count(scc_DataSetObject* const data_set_object)
+//{
+//	assert(data_set_object != NULL);
+//	return data_set_object->rows;
+//}
 
 
-bool iscc_is_valid_data_set_object(scc_DataSetObject* const data_set_object)
+bool iscc_check_data_set_object(scc_DataSetObject* const data_set_object,
+                                const size_t required_data_points)
 {
 	if ((data_set_object == NULL) || (data_set_object->elements == NULL)) return false;
 	if (data_set_object->cols == 0) return false;
-	if (data_set_object->rows == 0) return false;
+	if (data_set_object->rows < required_data_points) return false;
 	return true;
 }
 
@@ -96,7 +97,7 @@ bool iscc_get_dist_matrix(scc_DataSetObject* const data_set_object,
                           const scc_Dpid* const point_indices,
                           double* output_dists)
 {
-	assert(iscc_is_valid_data_set_object(data_set_object));
+	assert(iscc_check_data_set_object(data_set_object, 0));
 	assert(n_points > 1);
 	assert((n_points == data_set_object->rows) || (point_indices != NULL));
 	assert(output_dists != NULL);
@@ -123,27 +124,26 @@ bool iscc_get_dist_matrix(scc_DataSetObject* const data_set_object,
 }
 
 
-iscc_DistColObject* iscc_init_dist_column_object(scc_DataSetObject* const data_set_object,
-                                                 const size_t n_columns,
-                                                 const scc_Dpid* const column_indices,
-                                                 const size_t n_query_hint)
+bool iscc_init_dist_column_object(scc_DataSetObject* const data_set_object,
+                                  const size_t n_columns,
+                                  const scc_Dpid* const column_indices,
+                                  iscc_DistColObject** const out_dist_column_object)
 {
-	assert(iscc_is_valid_data_set_object(data_set_object));
+	assert(iscc_check_data_set_object(data_set_object, 0));
 	assert(n_columns > 0);
 	assert((n_columns == data_set_object->rows) || (column_indices != NULL));
+	assert(out_dist_column_object != NULL);
 
-	(void) n_query_hint;
+	*out_dist_column_object = malloc(sizeof(iscc_DistColObject));
+	if (out_dist_column_object == NULL) return false;
 
-	iscc_DistColObject* dco = malloc(sizeof(iscc_DistColObject));
-	if (dco == NULL) return NULL;
-
-	*dco = (iscc_DistColObject) {
+	**out_dist_column_object = (iscc_DistColObject) {
 		.data_set_object = data_set_object,
 		.n_columns = n_columns,
 		.column_indices = column_indices,
 	};
 
-	return dco;
+	return true;
 }
 
 
@@ -182,34 +182,36 @@ bool iscc_get_dist_row(iscc_DistColObject* const dist_column_object,
 }
 
 
-bool iscc_close_dist_column_object(iscc_DistColObject* const dist_column_object)
+bool iscc_close_dist_column_object(iscc_DistColObject** const dist_column_object)
 {
-	free(dist_column_object);
+	if (dist_column_object != NULL) {
+		free(*dist_column_object);
+		*dist_column_object = NULL;
+	}
 	return true;
 }
 
 
-iscc_MaxDistObject* iscc_init_max_dist_object(scc_DataSetObject* const data_set_object,
-                                              const size_t n_search_points,
-                                              const scc_Dpid* const search_indices,
-                                              const size_t n_query_hint)
+bool iscc_init_max_dist_object(scc_DataSetObject* const data_set_object,
+                               const size_t n_search_points,
+                               const scc_Dpid* const search_indices,
+                               iscc_MaxDistObject** const out_max_dist_object)
 {
-	assert(iscc_is_valid_data_set_object(data_set_object));
+	assert(iscc_check_data_set_object(data_set_object, 0));
 	assert(n_search_points > 0);
 	assert((n_search_points == data_set_object->rows) || (search_indices != NULL));
+	assert(out_max_dist_object != NULL);
 
-	(void) n_query_hint;
+	*out_max_dist_object = malloc(sizeof(iscc_MaxDistObject));
+	if (*out_max_dist_object == NULL) return false;
 
-	iscc_MaxDistObject* mdo = malloc(sizeof(iscc_MaxDistObject));
-	if (mdo == NULL) return NULL;
-
-	*mdo = (iscc_MaxDistObject) {
+	**out_max_dist_object = (iscc_MaxDistObject) {
 		.data_set_object = data_set_object,
 		.n_search_points = n_search_points,
 		.search_indices = search_indices,
 	};
 
-	return mdo;
+	return true;
 }
 
 
@@ -263,34 +265,36 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 }
 
 
-bool iscc_close_max_dist_object(iscc_MaxDistObject* const max_dist_object)
+bool iscc_close_max_dist_object(iscc_MaxDistObject** const max_dist_object)
 {
-	free(max_dist_object);
+	if (max_dist_object != NULL) {
+		free(*max_dist_object);
+		*max_dist_object = NULL;
+	}
 	return true;
 }
 
 
-iscc_NNSearchObject* iscc_init_nn_search_object(scc_DataSetObject* const data_set_object,
-                                                const size_t k,
-                                                const bool radius_search,
-                                                const double radius,
-                                                const size_t n_search_points,
-                                                const scc_Dpid* const search_indices,
-                                                const size_t n_query_hint)
+bool iscc_init_nn_search_object(scc_DataSetObject* const data_set_object,
+                                const size_t k,
+                                const bool radius_search,
+                                const double radius,
+                                const size_t n_search_points,
+                                const scc_Dpid* const search_indices,
+                                iscc_NNSearchObject** const out_nn_search_object)
 {
-	assert(iscc_is_valid_data_set_object(data_set_object));
+	assert(iscc_check_data_set_object(data_set_object, 0));
 	assert(k > 0);
 	assert(!radius_search || (radius > 0.0));
 	assert(n_search_points > 0);
 	assert(k <= n_search_points);
 	assert((n_search_points == data_set_object->rows) || (search_indices != NULL));
-	
-	(void) n_query_hint;
+	assert(out_nn_search_object != NULL);
 
-	iscc_NNSearchObject* so = malloc(sizeof(iscc_NNSearchObject));
-	if (so == NULL) return NULL;
+	*out_nn_search_object = malloc(sizeof(iscc_NNSearchObject));
+	if (*out_nn_search_object == NULL) return false;
 
-	*so = (iscc_NNSearchObject) {
+	**out_nn_search_object = (iscc_NNSearchObject) {
 		.data_set_object = data_set_object,
 		.k = k,
 		.radius_search = radius_search,
@@ -299,7 +303,7 @@ iscc_NNSearchObject* iscc_init_nn_search_object(scc_DataSetObject* const data_se
 		.search_indices = search_indices,
 	};
 
-	return so;
+	return true;
 }
 
 
@@ -385,9 +389,12 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 }
 
 
-bool iscc_close_nn_search_object(iscc_NNSearchObject* const nn_search_object)
+bool iscc_close_nn_search_object(iscc_NNSearchObject** const nn_search_object)
 {
-	free(nn_search_object);
+	if (nn_search_object != NULL) {
+		free(*nn_search_object);
+		*nn_search_object = NULL;
+	}
 	return true;
 }
 

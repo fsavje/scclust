@@ -40,6 +40,8 @@
  */
 struct scc_Clustering {
 
+	bool is_initialized;
+
 	/// Number of data points in the clustering problem.
 	size_t num_data_points;
 
@@ -62,11 +64,10 @@ struct scc_Clustering {
  *  The null clustering is an easily detectable invalid clustering. It is mainly used as return
  *  value when functions encounter errors.
  */
-static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, false, NULL };
+static const scc_Clustering ISCC_NULL_CLUSTERING = { false, 0, 0, false, NULL };
 
 
-
-#if defined(SCC_EXTENSIVE_INPUT_CHECK) || !defined(NDEBUG)
+#ifndef NDEBUG
 	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
 #else
 	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, false)

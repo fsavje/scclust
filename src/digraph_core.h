@@ -99,8 +99,24 @@ static const iscc_Digraph ISCC_NULL_DIGRAPH = { 0, 0, NULL, NULL };
  *
  *  \return a scc_Digraph with allocated memory.
  */
-iscc_Digraph iscc_init_digraph(size_t vertices,
-                               size_t max_arcs);
+scc_ErrorCode iscc_init_digraph(size_t vertices,
+                                size_t max_arcs,
+                                iscc_Digraph* out_dg);
+
+/** Construct an empty digraph.
+ *
+ *  This function returns a digraph where all elements of scc_Digraph::tail_ptr are set to `0`. 
+ *  The memory space pointed to by scc_Digraph::head is left uninitialized.
+ *
+ *  \param vertices number of vertices that can be represented in the digraph.
+ *                  This cannot be changed after initialization.
+ *  \param max_arcs memory space to be allocated for arcs.
+ *
+ *  \return a scc_Digraph representing an empty digraph.
+ */
+scc_ErrorCode iscc_empty_digraph(size_t vertices,
+                                 size_t max_arcs,
+                                 iscc_Digraph* out_dg);
 
 /** Checks whether provided digraph is initialized.
  *
@@ -134,22 +150,8 @@ void iscc_free_digraph(iscc_Digraph* dg);
  *
  *  \return `true` if reallocation was successful, otherwise `false`.
  */
-bool iscc_change_arc_storage(iscc_Digraph* dg,
-                             size_t new_max_arcs);
-
-/** Construct an empty digraph.
- *
- *  This function returns a digraph where all elements of scc_Digraph::tail_ptr are set to `0`. 
- *  The memory space pointed to by scc_Digraph::head is left uninitialized.
- *
- *  \param vertices number of vertices that can be represented in the digraph.
- *                  This cannot be changed after initialization.
- *  \param max_arcs memory space to be allocated for arcs.
- *
- *  \return a scc_Digraph representing an empty digraph.
- */
-iscc_Digraph iscc_empty_digraph(size_t vertices,
-                                size_t max_arcs);
+scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* dg,
+                                      size_t new_max_arcs);
 
 /** Deep copy of a digraph.
  *
@@ -162,7 +164,8 @@ iscc_Digraph iscc_empty_digraph(size_t vertices,
  *  \note This function allocates memory space to fit the arcs actually in \p dg. If \p dg
  *        contains excess space, scc_Digraph::max_arcs will differ between the original and copy.
  */
-iscc_Digraph iscc_copy_digraph(const iscc_Digraph* dg);
+scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* in_dg,
+                                iscc_Digraph* out_dg);
 
 /** Delete arcs by tails.
  *
@@ -195,8 +198,8 @@ iscc_Digraph iscc_copy_digraph(const iscc_Digraph* dg);
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-void iscc_delete_arcs_by_tails(iscc_Digraph* dg,
-                               const bool to_delete[static dg->vertices]);
+scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
+                                                    const bool to_delete[static dg->vertices]);
 
 /** Delete all self-loops.
  *
@@ -210,7 +213,7 @@ void iscc_delete_arcs_by_tails(iscc_Digraph* dg,
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-void iscc_delete_loops(iscc_Digraph* dg);
+scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg);
 
 
 #endif
