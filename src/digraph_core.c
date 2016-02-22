@@ -186,28 +186,3 @@ scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
 
 	return iscc_no_error();
 }
-
-
-scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg)
-{
-	assert(iscc_digraph_is_initialized(dg));
-
-	scc_Arci head_write = 0;
-	assert(dg->vertices < SCC_DPID_MAX);
-	const scc_Dpid vertices = (scc_Dpid) dg->vertices; // If `scc_Dpid` is signed 
-	for (scc_Dpid v = 0; v < vertices; ++v) {
-		const scc_Dpid* v_arc = dg->head + dg->tail_ptr[v];
-		const scc_Dpid* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];
-		dg->tail_ptr[v] = head_write;
-
-		for (; v_arc != v_arc_stop; ++v_arc) {
-			if (*v_arc != v) {
-				dg->head[head_write] = *v_arc;
-				++head_write;
-			}
-		}
-	}
-	dg->tail_ptr[dg->vertices] = head_write;
-
-	return iscc_no_error();
-}

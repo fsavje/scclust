@@ -201,19 +201,5 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* in_dg,
 scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
                                                     const bool to_delete[static dg->vertices]);
 
-/** Delete all self-loops.
- *
- *  This function deletes all arcs where the tail and the head is the same vertex.
- *
- *  \param[in,out] dg digraph to delete self-loops from.
- *
- *  \return \c true on successful deletion, \c false otherwise. On fail, \p dg is in a undefined state.
- *
- *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
- *
- *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
- */
-scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg);
-
 
 #endif

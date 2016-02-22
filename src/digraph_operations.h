@@ -34,6 +34,20 @@
 #include "digraph_core.h"
 
 
+/** Delete all self-loops.
+ *
+ *  This function deletes all arcs where the tail and the head is the same vertex.
+ *
+ *  \param[in,out] dg digraph to delete self-loops from.
+ *
+ *  \return \c true on successful deletion, \c false otherwise. On fail, \p dg is in a undefined state.
+ *
+ *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
+ *
+ *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
+ */
+scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg);
+
 /** Calculates the union of arbitrary number of digraphs.
  *
  *  This function produces the union of the inputted digraphs. If no digraphs are inputted
@@ -78,8 +92,17 @@
  */
 scc_ErrorCode iscc_digraph_union(size_t num_in_dgs,
                                  const iscc_Digraph in_dgs[static num_in_dgs],
-                                 bool ignore_loops,
                                  iscc_Digraph* out_dg);
+
+scc_ErrorCode iscc_digraph_union_and_delete(size_t num_in_dgs,
+                                            const iscc_Digraph in_dgs[static num_in_dgs],
+                                            const bool tails_to_keep[],
+                                            iscc_Digraph* out_dg);
+
+scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* minuend_dg,
+                                      const iscc_Digraph* subtrahend_dg,
+                                      size_t max_out_degree,
+                                      iscc_Digraph* out_dg);
 
 /** Derives the digraph transpose a digraph.
  *
