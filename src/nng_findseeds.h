@@ -23,27 +23,22 @@
 #ifndef SCC_FINDSEEDS_HG
 #define SCC_FINDSEEDS_HG
 
-#include <stdbool.h>
 #include <stddef.h>
+#include "../include/scclust.h"
 #include "digraph_core.h"
-#include "nng_core.h"
 
+typedef struct iscc_SeedResult iscc_SeedResult;
+struct iscc_SeedResult {
+	size_t capacity;
+	size_t count;
+	scc_Dpid* seeds;
+};
 
-iscc_SeedClustering iscc_findseeds_lexical(const iscc_Digraph* nng,
-                                           size_t seed_init_capacity);
+static const iscc_SeedResult ISCC_NULL_SEED_RESULT = { 0, 0, NULL };
 
-iscc_SeedClustering iscc_findseeds_inwards(const iscc_Digraph* nng,
-                                           size_t seed_init_capacity,
-                                           bool updating);
-
-iscc_SeedClustering iscc_findseeds_exclusion(const iscc_Digraph* nng,
-                                             size_t seed_init_capacity,
-                                             bool updating);
-
-
-
-//iscc_findseeds_simulated_annealing();
-//iscc_findseeds_approximation();
+scc_ErrorCode iscc_find_seeds(const iscc_Digraph* nng,
+                              scc_SeedMethod sm,
+                              iscc_SeedResult* out_seeds);
 
 
 #endif
