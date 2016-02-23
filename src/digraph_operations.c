@@ -58,10 +58,7 @@ static inline size_t iscc_do_difference(size_t vertices,
                                         const scc_Arci subtrahend_tail_ptr[static vertices + 1],
                                         const scc_Dpid* subtrahend_head,
                                         size_t max_out_degree,
-                                        scc_Dpid row_markers[restrict static vertices],
-                                        bool write,
-                                        scc_Arci out_tail_ptr[restrict],
-                                        scc_Dpid out_head[restrict]);
+                                        scc_Dpid row_markers[restrict static vertices]);
 
 static inline size_t iscc_do_adjacency_product(size_t vertices,
                                                const scc_Arci dg_a_tail_ptr[static vertices + 1],
@@ -219,94 +216,55 @@ scc_ErrorCode iscc_digraph_union_and_delete(const size_t num_in_dgs,
 
 scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* const minuend_dg,
                                       const iscc_Digraph* const subtrahend_dg,
-                                      const size_t max_out_degree,
-                                      iscc_Digraph* const out_dg)
+                                      const size_t max_out_degree)
 {
 	assert(iscc_digraph_is_initialized(minuend_dg));
 	assert(iscc_digraph_is_initialized(subtrahend_dg));
 	assert(minuend_dg->vertices > 0);
 	assert(minuend_dg->vertices == subtrahend_dg->vertices);
-	assert(out_dg != NULL);
+	assert(max_out_degree > 0);
 
-	const size_t vertices = in_dgs[0].vertices;
+	assert(minuend_dg->vertices < SCC_DPID_MAX);
+	const scc_Dpid vertices = (scc_Dpid) minuend_dg->vertices; // If `scc_Dpid` is signed
 
 	scc_Dpid* const row_markers = malloc(sizeof(scc_Dpid[vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
-
-	// Try greedy memory count first
-	size_t out_arcs_write = minuend_dg->tail_ptr[minuend_dg->vertices];
-
-	scc_ErrorCode ec;
-	if (iscc_init_digraph(vertices, out_arcs_write, out_dg) != SCC_ER_OK) {
-		// Could not allocate digraph with `out_arcs_write' arcs.
-		// Do correct (but slow) memory count by doing
-		// union without writing.
-		out_arcs_write = iscc_do_difference(vertices,
-                                            minuend_dg->tail_ptr, minuend_dg->head,
-                                            subtrahend_dg->tail_ptr, subtrahend_dg->head,
-                                            max_out_degree,
-                                            row_markers,
-                                            false, NULL, NULL);
-
-		// Try again. If fail, give up.
-		if ((ec = iscc_init_digraph(vertices, out_arcs_write, out_dg)) != SCC_ER_OK) {
-			free(row_markers);
-			return ec;
-		}
+	for (size_t v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_DPID_NA;
 	}
 
-	out_arcs_write = iscc_do_difference(vertices,
-                                        minuend_dg->tail_ptr, minuend_dg->head,
-                                        subtrahend_dg->tail_ptr, subtrahend_dg->head,
-                                        max_out_degree,
-                                        row_markers,
-                                        true, out_dg->tail_ptr, out_dg->head);
+	size_t row_counter;
+	scc_Arci out_arcs_write = 0;
+	for (scc_Dpid v = 0; v < vertices; ++v) {
+		row_markers[v] = v;
+		const scc_Dpid* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
+		for (const scc_Dpid* v_arc_s = subtrahend_dg->head + subtrahend_dg->tail_ptr[v];
+		        v_arc_s != v_arc_s_stop; ++v_arc_s) {
+			row_markers[*v_arc_s] = v;
+		}
+
+		row_counter = 0;
+		const scc_Dpid* const arc_m_stop = minuend_dg->head + minuend_dg->tail_ptr[v + 1];
+		const scc_Dpid* arc_m = minuend_dg->head + minuend_dg->tail_ptr[v];
+		minuend_dg->tail_ptr[v] = out_arcs_write;
+		for (; ((row_counter < max_out_degree) && (arc_m != arc_m_stop)); ++arc_m) {
+			if (row_markers[*arc_m] != v) {
+				minuend_dg->head[out_arcs_write] = *arc_m;
+				++row_counter;
+				++out_arcs_write;
+			}
+		}
+	}
+	minuend_dg->tail_ptr[vertices] = out_arcs_write;
 
 	free(row_markers);
 
-	if ((ec = iscc_change_arc_storage(out_dg, out_arcs_write)) != SCC_ER_OK) {
-		iscc_free_digraph(out_dg);
-		return ec;
-	}
+	if ((ec = iscc_change_arc_storage(minuend_dg, out_arcs_write)) != SCC_ER_OK) return ec;
 
 	return iscc_no_error();
 }
 
 
-/*
-// Alternative implementation, quicker and less memory. But changes the order of the arcs.
-// Most rewrite the tests for the exclusion updating find seed method if used.
-iscc_Digraph iscc_digraph_transpose(const scc_Digraph* const dg)
-{
-	if (!scc_digraph_is_initialized(dg)) return SCC_NULL_DIGRAPH;
-	if (dg->vertices == 0) return scc_empty_digraph(0, 0);
-
-	scc_Digraph dg_out = scc_empty_digraph(dg->vertices, dg->tail_ptr[dg->vertices]);
-	if (!scc_digraph_is_initialized(&dg_out)) return SCC_NULL_DIGRAPH;
-
-	const scc_Vid* const arc_c_stop = dg->head + dg->tail_ptr[dg->vertices];
-	for (const scc_Vid* arc_c = dg->head;
-	        arc_c != arc_c_stop; ++arc_c) {
-		++dg_out.tail_ptr[*arc_c];
-	}
-
-	for (size_t v = 0; v < dg->vertices; ++v) {
-		dg_out.tail_ptr[v + 1] += dg_out.tail_ptr[v];
-	}
-
-	assert(dg->vertices < SCC_VID_MAX);
-	const scc_Vid vertices = (scc_Vid) dg->vertices; // If `scc_Vid` is signed 
-	for (scc_Vid v = 0; v < vertices; ++v) {
-		const scc_Vid* const arc_stop = dg->head + dg->tail_ptr[v + 1];
-		for (const scc_Vid* arc = dg->head + dg->tail_ptr[v];
-		        arc != arc_stop; ++arc) {
-			--dg_out.tail_ptr[*arc];
-			dg_out.head[dg_out.tail_ptr[*arc]] = v;
-		}
-	}
-
-	return dg_out;
-}*/
 scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
                                      iscc_Digraph* const out_dg)
 {
@@ -543,85 +501,6 @@ static inline size_t iscc_do_union_and_delete(size_t vertices,
 							++counter;
 						}
 					}
-				}
-			}
-		}
-	}
-
-	return counter;
-}
-
-
-static inline size_t iscc_do_difference(const size_t vertices,
-                                        const scc_Arci minuend_tail_ptr[const static vertices + 1],
-                                        const scc_Dpid* const minuend_head,
-                                        const scc_Arci subtrahend_tail_ptr[const static vertices + 1],
-                                        const scc_Dpid* const subtrahend_head,
-                                        const size_t max_out_degree,
-                                        scc_Dpid row_markers[const restrict static vertices],
-                                        const bool write,
-                                        scc_Arci out_tail_ptr[const restrict],
-                                        scc_Dpid out_head[const restrict])
-{
-	assert(vertices > 0);
-	assert(minuend_tail_ptr != NULL);
-	assert(minuend_head != NULL);
-	assert(subtrahend_tail_ptr != NULL);
-	assert(subtrahend_head != NULL);
-	assert(max_out_degree > 0);
-	assert(row_markers != NULL);
-
-	size_t counter = 0;
-	size_t row_counter;
-	for (size_t v = 0; v < vertices; ++v) {
-		row_markers[v] = SCC_DPID_NA;
-	}
-
-	assert(vertices < SCC_DPID_MAX);
-	const scc_Dpid vertices_dpid = (scc_Dpid) vertices; // If `scc_Dpid` is signed
-
-	if (write) {
-		assert(out_tail_ptr != NULL);
-		assert(out_head != NULL);
-
-		out_tail_ptr[0] = 0;
-		for (scc_Dpid v = 0; v < vertices_dpid; ++v) {
-			row_markers[v] = v;
-			const scc_Dpid* const v_arc_s_stop = subtrahend_head + subtrahend_tail_ptr[v + 1];
-			for (const scc_Dpid* v_arc_s = subtrahend_head + subtrahend_tail_ptr[v];
-			        v_arc_s != v_arc_s_stop; ++v_arc_s) {
-				row_markers[*v_arc_s] = v;
-			}
-
-			row_counter = 0;
-			const scc_Dpid* const arc_m_stop = minuend_head + minuend_tail_ptr[v + 1];
-			for (const scc_Dpid* arc_m = minuend_head + minuend_tail_ptr[v];
-			        ((row_counter < max_out_degree) && (arc_m != arc_m_stop)); ++arc_m) {
-				if (row_markers[*arc_m] != v) {
-					out_head[counter] = *arc_m;
-					++row_counter;
-					++counter;
-				}
-			}
-			out_tail_ptr[v + 1] = (scc_Arci) counter;
-		}
-
-	} else {
-		for (scc_Dpid v = 0; v < vertices_dpid; ++v) {
-			row_markers[v] = v;
-			const scc_Dpid* const v_arc_s_stop = subtrahend_head + subtrahend_tail_ptr[v + 1];
-			for (const scc_Dpid* v_arc_s = subtrahend_head + subtrahend_tail_ptr[v];
-			        v_arc_s != v_arc_s_stop; ++v_arc_s) {
-				row_markers[*v_arc_s] = v;
-			}
-
-			row_counter = 0;
-			const scc_Dpid* const arc_m_stop = minuend_head + minuend_tail_ptr[v + 1];
-			for (const scc_Dpid* arc_m = minuend_head + minuend_tail_ptr[v];
-			        ((row_counter < max_out_degree) && (arc_m != arc_m_stop)); ++arc_m) {
-				if (row_markers[*arc_m] != v) {
-					++row_counter;
-					++counter;
 				}
 			}
 		}

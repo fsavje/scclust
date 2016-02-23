@@ -101,8 +101,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(size_t num_in_dgs,
 
 scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* minuend_dg,
                                       const iscc_Digraph* subtrahend_dg,
-                                      size_t max_out_degree,
-                                      iscc_Digraph* out_dg);
+                                      size_t max_out_degree);
 
 /** Derives the digraph transpose a digraph.
  *
