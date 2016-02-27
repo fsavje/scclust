@@ -198,8 +198,8 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* in_dg,
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
-                                                    const bool to_delete[static dg->vertices]);
+//scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
+//                                                    const bool to_delete[static dg->vertices]);
 
 
 #endif

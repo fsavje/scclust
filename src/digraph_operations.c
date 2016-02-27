@@ -52,14 +52,6 @@ static inline size_t iscc_do_union_and_delete(size_t vertices,
                                               scc_Arci out_tail_ptr[restrict],
                                               scc_Dpid out_head[restrict]);
 
-static inline size_t iscc_do_difference(size_t vertices,
-                                        const scc_Arci minuend_tail_ptr[static vertices + 1],
-                                        const scc_Dpid* minuend_head,
-                                        const scc_Arci subtrahend_tail_ptr[static vertices + 1],
-                                        const scc_Dpid* subtrahend_head,
-                                        size_t max_out_degree,
-                                        scc_Dpid row_markers[restrict static vertices]);
-
 static inline size_t iscc_do_adjacency_product(size_t vertices,
                                                const scc_Arci dg_a_tail_ptr[static vertices + 1],
                                                const scc_Dpid* dg_a_head,
@@ -214,7 +206,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const size_t num_in_dgs,
 }
 
 
-scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* const minuend_dg,
+scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
                                       const iscc_Digraph* const subtrahend_dg,
                                       const size_t max_out_degree)
 {
@@ -259,9 +251,7 @@ scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* const minuend_dg,
 
 	free(row_markers);
 
-	if ((ec = iscc_change_arc_storage(minuend_dg, out_arcs_write)) != SCC_ER_OK) return ec;
-
-	return iscc_no_error();
+	return iscc_change_arc_storage(minuend_dg, out_arcs_write);
 }
 
 

@@ -35,16 +35,6 @@
 
 
 // ==============================================================================
-// Compile options (user-serviceable)
-// ==============================================================================
-
-/* Uncomment to make clustering stable by sorting on vertex ID
- * This increases runtime considerably, generally only recommended for debugging.
- */
-//#define SCC_STABLE_CLUSTERING
-
-
-// ==============================================================================
 // Library specific types, user-serviceable
 // ==============================================================================
 
@@ -96,6 +86,9 @@ typedef uint32_t scc_Arci;
 static const scc_Arci SCC_ARCI_MAX = UINT32_MAX;
 
 
+typedef uint32_t scc_TypeLabel;
+
+
 // ==============================================================================
 // Library specific types, non-serviceable
 // ==============================================================================
@@ -141,6 +134,7 @@ enum scc_ErrorCode {
 	SCC_ER_TOO_LARGE_PROBLEM,
 	SCC_ER_TOO_LARGE_DIGRAPH,
 	SCC_ER_DIST_SEARCH_ERROR,
+	SCC_ER_NOT_IMPLEMENTED,
 };
 
 /// Typedef for the scc_ErrorCode enum
@@ -213,13 +207,106 @@ scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
 
 scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
                                               scc_DataSetObject* data_set_object,
-                                              size_t size_constraint,
-                                              bool batch_assign);
+                                              size_t size_constraint);
 
 
 // ==============================================================================
 // NNG-based clustering
 // ==============================================================================
+
+/** Enum to specify seed finding methods.
+ *
+ *  The NNG-based clustering algorithms find seeds to build the clustering on. This enum specifies which method is used to find the seeds.
+ *
+ *  In most settings, it is desired to find as many clusters (i.e., as many seeds) as possible. The choice between the methods is
+ *  largely one between performance in this aspect and resource requirements.
+ *
+ *  See #scc_get_seed_clustering for more details. See also the appendix of \cite Higgins2016.
+ */
+enum scc_SeedMethod {
+
+	/** Find seeds lexically by vertex ID. 
+	 *
+	 *  This method finds seed sequentially by checking whether adding the next seed satisfy the four conditions described in #scc_get_seed_clustering.
+	 */
+	SCC_SM_LEXICAL,
+
+	/** Find seeds ordered by inwards pointing arcs. 
+	 *
+	 *  This method counts vertices' inwards pointing arcs and finds seeds in ascending order by the arc count. Vertices pointing to a seed cannot
+	 *  themselves be seeds, thus a vertex with many inwards pointing arcs will exclude many vertices from being seeds. Heuristically, picking such
+	 *  a vertex as seed will lead to fewer clusters. 
+	 */
+	SCC_SM_INWARDS_ORDER,
+
+	/** Find seeds ordered by inwards pointing arcs from unassigned vertices. 
+	 *
+	 *  This method counts vertices' inwards pointing arcs from *unassigned* vertices and finds seeds by in ascending order by the arc count. Unlike
+	 *  the #SCC_INWARDS_ORDER, this method updates the arc count after finding a seed so that only arcs where the tails are unassigned are counted.
+	 *  Vertices already assigned to a cluster cannot be a seed, thus it is inconsequential if they are pointing to a seed.
+	 *
+	 *  If the desired size is two, this method ensures that the maximum distance between any two vertices in a common cluster in the
+	 *  final clustering is bounded by twice the maximum distance in the NNG.
+	 */
+	SCC_SM_INWARDS_UPDATING,
+
+	/** Find seeds ordered by edge count in the exclusion graph.
+	 *
+	 *  The exclusion graph is the undirected graph where an edge is drawn between two vertices if they cannot both be seeds.
+	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each vertex in this
+	 *  graph and find seeds in ascending order.
+	 */
+	SCC_SM_EXCLUSION_ORDER,
+
+	/** Find seeds ordered by edge count in the exclusion graph from non-excluded vertices.
+	 *
+	 *  The exclusion graph is the undirected graph where an edge is draw between two vertices if they cannot both be seeds.
+	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each that vertex is not already excluded
+	 *  and find seeds in ascending order by this count. Unlike the #SCC_EXCLUSION_ORDER, this method updates the edge count after finding a
+	 *  seed so that only edges where the tails that still can become seeds are counted.
+	 */
+	SCC_SM_EXCLUSION_UPDATING,
+};
+
+/// Typedef for the scc_NNGMethod enum
+typedef enum scc_SeedMethod scc_SeedMethod;
+
+enum scc_AssignMethod {
+	SCC_AM_IGNORE,
+	SCC_AM_CLOSEST_ASSIGNED,
+	SCC_AM_CLOSEST_SEED,
+};
+typedef enum scc_AssignMethod scc_AssignMethod;
+
+
+scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
+                                scc_DataSetObject* data_set_object,
+                                size_t num_data_points,
+                                size_t size_constraint,
+                                scc_SeedMethod seed_method,
+                                scc_AssignMethod assign_method,
+                                const bool main_data_points[],
+                                bool assign_secondary_points,
+                                bool main_radius_constraint,
+                                double main_radius,
+                                bool secondary_radius_constraint,
+                                double secondary_radius);
+
+scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
+                                           scc_DataSetObject* data_set_object,
+                                           size_t num_data_points,
+                                           size_t num_types,
+                                           const scc_TypeLabel type_labels[],
+                                           const size_t type_constraints[],
+                                           size_t size_constraint,
+                                           scc_SeedMethod seed_method,
+                                           scc_AssignMethod assign_method,
+                                           const bool main_data_points[],
+                                           bool assign_secondary_points,
+                                           bool main_radius_constraint,
+                                           double main_radius,
+                                           bool secondary_radius_constraint,
+                                           double secondary_radius);
 
 
 // ==============================================================================

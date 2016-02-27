@@ -157,7 +157,7 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
 	return iscc_no_error();
 }
 
-
+/*
 scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
                                                     const bool to_delete[static dg->vertices])
 {
@@ -185,4 +185,4 @@ scc_ErrorCode iscc_delete_arcs_by_tails_check_error(iscc_Digraph* dg,
 	dg->tail_ptr[dg->vertices] = head_write;
 
 	return iscc_no_error();
-}
+}*/

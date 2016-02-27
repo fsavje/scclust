@@ -110,7 +110,7 @@ static inline void iscc_fs_decrease_v_in_sort(scc_Dpid v_to_decrease,
 // ==============================================================================
 
 scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
-                              const scc_SeedMethod sm,
+                              const scc_SeedMethod seed_method,
                               iscc_SeedResult* const out_seeds)
 {
 	assert(iscc_digraph_is_initialized(nng));
@@ -121,7 +121,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 	if (out_seeds->capacity < 128) out_seeds->capacity = 128;
 
 	scc_ErrorCode ec;
-	switch(sm) {
+	switch(seed_method) {
 		case SCC_SM_LEXICAL:
 			ec = iscc_findseeds_lexical(nng, out_seeds);
 			break;

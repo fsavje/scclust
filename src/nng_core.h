@@ -33,138 +33,58 @@
 #include <stddef.h>
 #include "../include/scclust.h"
 #include "digraph_core.h"
+#include "nng_findseeds.h"
 
 
-/** Enum to specify seed finding methods.
- *
- *  The NNG-based clustering algorithms find seeds to build the clustering on. This enum specifies which method is used to find the seeds.
- *
- *  In most settings, it is desired to find as many clusters (i.e., as many seeds) as possible. The choice between the methods is
- *  largely one between performance in this aspect and resource requirements.
- *
- *  See #scc_get_seed_clustering for more details. See also the appendix of \cite Higgins2016.
- */
-enum scc_SeedMethod {
+scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* data_set_object,
+                                                size_t num_data_points,
+                                                size_t size_constraint,
+                                                const bool must_be_assigned[],
+                                                bool radius_constraint,
+                                                double radius,
+                                                iscc_Digraph* out_nng);
 
-	/** Find seeds lexically by vertex ID. 
-	 *
-	 *  This method finds seed sequentially by checking whether adding the next seed satisfy the four conditions described in #scc_get_seed_clustering.
-	 */
-	SCC_FINDSEEDS_LEXICAL,
+scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* data_set_object,
+                                                size_t num_data_points,
+                                                size_t num_types,
+                                                const scc_TypeLabel type_labels[],
+                                                const size_t type_constraints[],
+                                                size_t size_constraint,
+                                                const bool must_be_assigned[],
+                                                bool radius_constraint,
+                                                double radius,
+                                                iscc_Digraph* out_nng);
 
-	/** Find seeds ordered by inwards pointing arcs. 
-	 *
-	 *  This method counts vertices' inwards pointing arcs and finds seeds in ascending order by the arc count. Vertices pointing to a seed cannot
-	 *  themselves be seeds, thus a vertex with many inwards pointing arcs will exclude many vertices from being seeds. Heuristically, picking such
-	 *  a vertex as seed will lead to fewer clusters. 
-	 */
-	SCC_FINDSEEDS_INWARDS_ORDER,
+scc_ErrorCode iscc_assign_seed_neighbors(scc_Clustering* clustering,
+                                         const iscc_Digraph* nng,
+                                         const iscc_SeedResult* sr,
+                                         bool* out_unassigned);
 
-	/** Find seeds ordered by inwards pointing arcs from unassigned vertices. 
-	 *
-	 *  This method counts vertices' inwards pointing arcs from *unassigned* vertices and finds seeds by in ascending order by the arc count. Unlike
-	 *  the #SCC_INWARDS_ORDER, this method updates the arc count after finding a seed so that only arcs where the tails are unassigned are counted.
-	 *  Vertices already assigned to a cluster cannot be a seed, thus it is inconsequential if they are pointing to a seed.
-	 *
-	 *  If the desired size is two, this method ensures that the maximum distance between any two vertices in a common cluster in the
-	 *  final clustering is bounded by twice the maximum distance in the NNG.
-	 */
-	SCC_FINDSEEDS_INWARDS_UPDATING,
+scc_ErrorCode iscc_remaining_ignore(scc_Clustering* clustering,
+                                    const bool* unassigned);
 
-	/** Find seeds ordered by edge count in the exclusion graph.
-	 *
-	 *  The exclusion graph is the undirected graph where an edge is drawn between two vertices if they cannot both be seeds.
-	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each vertex in this
-	 *  graph and find seeds in ascending order.
-	 */
-	SCC_FINDSEEDS_EXCLUSION_ORDER,
+scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_DataSetObject* data_set_object,
+                                                 scc_Clustering* clustering,
+                                                 iscc_Digraph* nng,
+                                                 size_t num_assigned, // sr->count * size_constraint
+                                                 bool* unassigned,
+                                                 const bool main_data_points[],
+                                                 bool assign_secondary_points,
+                                                 bool secondary_radius_constraint,
+                                                 double secondary_radius);
 
-	/** Find seeds ordered by edge count in the exclusion graph from non-excluded vertices.
-	 *
-	 *  The exclusion graph is the undirected graph where an edge is draw between two vertices if they cannot both be seeds.
-	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each that vertex is not already excluded
-	 *  and find seeds in ascending order by this count. Unlike the #SCC_EXCLUSION_ORDER, this method updates the edge count after finding a
-	 *  seed so that only edges where the tails that still can become seeds are counted.
-	 */
-	SCC_FINDSEEDS_EXCLUSION_UPDATING,
-};
+scc_ErrorCode iscc_remaining_to_nearest_seed(scc_DataSetObject* data_set_object,
+                                             scc_Clustering* clustering,
+                                             const iscc_SeedResult* sr,
+                                             size_t num_assigned, // sr->count * size_constraint
+                                             bool* unassigned,
+                                             const bool main_data_points[],
+                                             bool assign_secondary_points,
+                                             bool main_radius_constraint,
+                                             double main_radius,
+                                             bool secondary_radius_constraint,
+                                             double secondary_radius);
 
-/// Typedef for the scc_SeedMethod enum
-typedef enum scc_SeedMethod scc_SeedMethod;
-
-/// Typedef for the scc_SeedClustering struct
-typedef struct iscc_SeedClustering iscc_SeedClustering;
-
-/** Clustering struct with seed information.
- *
- *  The NNG-based clustering functions declared in this header construct clusters by growing them from "seeds".
- *  After clusters have been grown, the size constraint is satisfied, but all vertices need not be assigned to a cluster.
- *  See, e.g., \cite Higgins2016 for more details.
- *
- *  This struct describes such partial clusterings. In particular, apart from the fields in #scc_Clustering, it contain
- *  a list of seeds and an array of indicators of whether each vertex is assigned to a cluster.
- */
-struct iscc_SeedClustering {
-
-	/// Number of data points in the clustering problem.
-	size_t num_data_points;
-
-	/// Number of clusters produced by the used NNG-based algorithm.
-	size_t num_clusters;
-
-	/// The length of the #seeds array.
-	size_t seed_capacity;
-
-	/** Indicator whether the #cluster_label array was assigned by the user (rather than the library). If #external_labels is \c true, 
-     *  #cluster_label will not be freed when the instance of #scc_SeedClustering is destroyed.
-     */
-	bool external_labels;
-
-	/** Array of length #vertices of indicators whether the vertices are assigned to clusters. 
-     *  If vertex \c i is assigned to a cluster, `assigned[i]` will be \c true.
-     */
-	bool* assigned;
-
-	/// Array of length #seed_capacity where the first #num_clusters elements contain the IDs of the seeds of each cluster.
-	scc_Dpid* seeds;
-
-	/** Array of length #vertices with cluster labels for the assigned vertices. 
-     *  
-     *  \note If `assigned[i]` is false, the correspoding `cluster_label[i]` has no meaning.
-     */
-	scc_Clabel* cluster_label;
-};
-
-/** The null seed clustering.
- *
- *  The null seed clustering is an easily detectable invalid clustering. It is mainly used as return
- *  value when functions encounter errors.
- */
-static const iscc_SeedClustering ISCC_NULL_SEED_CLUSTERING = { 0, 0, 0, false, NULL, NULL, NULL };
-
-/** Destructor for seed clusterings.
- *
- *  Frees the memory allocated by the input and writes the null seed clustering to it.
- *  Assumes the memory was allocated by the standard `malloc`, `calloc` or `realloc` functions.
- *
- *  \param[in,out] cl clustering to destroy. When #scc_free_SeedClustering returns, \p cl is set to #SCC_NULL_SEED_CLUSTERING.
- *
- *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_SeedClustering.
- */
-void iscc_free_seed_clustering(iscc_SeedClustering* cl);
-
-/** Deep copy of a seed clustering.
- *
- *  This function produces a deep copy of the inputted seed clustering.
- *
- *  \param[in] cl seed clustering to copy.
- *
- *  \return a copy of \p cl that does not share memory space with it.
- *
- *  \note This function takes a deep copy of `cl->cluster_label` even if
- *  `cl->external_labels` is \c true.
- */
-iscc_SeedClustering iscc_copy_seed_clustering(const iscc_SeedClustering* cl);
 
 /** Construct seed clustering using NNG-based algorithm.
  *
@@ -198,10 +118,7 @@ iscc_SeedClustering iscc_copy_seed_clustering(const iscc_SeedClustering* cl);
  *        some vertices have self-loops and other do not. To improve performance, calling #scc_copy_SeedClustering without loops is recommended unless clusters of size one
  *        are allowed.
  */
-iscc_SeedClustering iscc_get_seed_clustering(const iscc_Digraph* nng,
-                                             scc_SeedMethod sm,
-                                             size_t seed_init_capacity,
-                                             scc_Clabel external_cluster_label[]);
+
 
 /** Construct final clustering by ignoring unassigned vertices.
  *  
@@ -218,7 +135,7 @@ iscc_SeedClustering iscc_get_seed_clustering(const iscc_Digraph* nng,
  *  \note The `cl->external_labels` flag is set to true so that calling #scc_free_SeedClustering with \p cl does
  *        not free the cluster labels as they are used by the output struct as well.
  */
-scc_Clustering iscc_ignore_remaining(iscc_SeedClustering* cl);
+
 
 /** Construct final clustering by assigning unassigned vertices lexically.
  *  
@@ -244,8 +161,7 @@ scc_Clustering iscc_ignore_remaining(iscc_SeedClustering* cl);
  *  \note `cl->assigned` is not updated by this function and refer to whether vertices were assigned to a cluster in the
  *        original partial seed clustering.
  */
-scc_Clustering iscc_assign_remaining_lexical(iscc_SeedClustering* cl,
-                                             const iscc_Digraph* priority_graph);
+
 
 /** Construct final clustering by assigning unassigned vertices to cluster by size.
  *  
@@ -278,9 +194,6 @@ scc_Clustering iscc_assign_remaining_lexical(iscc_SeedClustering* cl,
  *        original partial seed clustering.
  *  \note If \p desired_size is set to `0`, vertices will be assigned to the largest possible cluster.
  */
-scc_Clustering iscc_assign_remaining_desired_size(iscc_SeedClustering* cl,
-                                                  const iscc_Digraph* priority_graph,
-                                                  size_t desired_size);
 
 
 #endif

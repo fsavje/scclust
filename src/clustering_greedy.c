@@ -670,20 +670,14 @@ static scc_ErrorCode iscc_gr_populate_dist_lists(scc_DataSetObject* const data_s
 	double* const output_dists = malloc(sizeof(double[2 * cl->size]));
 	if (output_dists == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
-	iscc_DistColObject* dist_column_object;
-	if (!iscc_init_dist_column_object(data_set_object, cl->size, cl->members, &dist_column_object)) {
-		free(output_dists);
-		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-	}
-
 	scc_Dpid query_indices[2] = { center1, center2 };
-	if (!iscc_get_dist_row(dist_column_object, 2, query_indices, output_dists)) {
-		free(output_dists);
-		iscc_close_dist_column_object(&dist_column_object);
-		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-	}
 
-	if (!iscc_close_dist_column_object(&dist_column_object)) {
+	if (!iscc_get_dist_row(data_set_object,
+	                       cl->size,
+	                       cl->members,
+	                       2,
+	                       query_indices,
+	                       output_dists)) {
 		free(output_dists);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}

@@ -99,7 +99,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(size_t num_in_dgs,
                                             const bool tails_to_keep[],
                                             iscc_Digraph* out_dg);
 
-scc_ErrorCode iscc_digraph_difference(const iscc_Digraph* minuend_dg,
+scc_ErrorCode iscc_digraph_difference(iscc_Digraph* minuend_dg,
                                       const iscc_Digraph* subtrahend_dg,
                                       size_t max_out_degree);
 

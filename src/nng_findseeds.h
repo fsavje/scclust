@@ -37,7 +37,7 @@ struct iscc_SeedResult {
 static const iscc_SeedResult ISCC_NULL_SEED_RESULT = { 0, 0, NULL };
 
 scc_ErrorCode iscc_find_seeds(const iscc_Digraph* nng,
-                              scc_SeedMethod sm,
+                              scc_SeedMethod seed_method,
                               iscc_SeedResult* out_seeds);
 
 
