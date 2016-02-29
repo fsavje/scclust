@@ -19,19 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-#ifndef SCC_ERROR_HG
-#define SCC_ERROR_HG
+/** @file
+ *
+ *  Config header with internal type definitions.
+ */
 
-#include "../include/scclust.h"
+#ifndef SCC_CONFIG_HG
+#define SCC_CONFIG_HG
+
+#include <stdint.h>
 
 
-#define iscc_make_error(ec) iscc_make_error_func(ec, __FILE__, __LINE__)
+/** Type used for data point IDs. May be unsigned or signed.
+ *
+ *  \note
+ *  Number of data points in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_Dpid. I.e., 
+ *  possible data point IDs must be in the sequence `[0, 1, ..., SCC_DPID_MAX - 1]`, 
+ *  and `SCC_DPID_NA` may not be in this sequence (but it may be `SCC_DPID_MAX`).
+ */
+typedef uint32_t scc_Dpid;
 
-#define iscc_no_error() (SCC_ER_OK)
+/// Maximum number that can be stored in #scc_Dpid. May not be greater than `SIZE_MAX`.
+static const scc_Dpid SCC_DPID_MAX = UINT32_MAX;
 
-scc_ErrorCode iscc_make_error_func(scc_ErrorCode ec,
-                                   const char* file,
-	                               int line);
+/// Value to indicate invalid data_points.
+static const scc_Dpid SCC_DPID_NA = UINT32_MAX;
+
+/** Type used for arc indices. Must be unsigned.
+ *  
+ *  \note
+ *  Number of arcs in any digraph must be less or equal to 
+ *  the maximum number that can be stored in #scc_Arci.
+ */
+typedef uint32_t scc_Arci;
+
+/// Maximum number that can be stored in #scc_Arci.
+static const scc_Arci SCC_ARCI_MAX = UINT32_MAX;
 
 
 #endif

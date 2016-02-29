@@ -19,12 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 /** @file
  *
  *  Public header for the scclust library.
  */
-
 
 #ifndef SCC_SCCLUST_HG
 #define SCC_SCCLUST_HG
@@ -41,56 +39,32 @@
 /** Type used for cluster labels. May be unsigned or signed.
  *  
  *  \note
- *  Possible cluster labels are the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`. 
- *  `SCC_CLABEL_NA` may not be in this sequence.
- *  \note
  *  Number of clusters in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Clabel (i.e., less
- *  than #SCC_CLABEL_MAX).
+ *  than the maximum number that can be stored in #scc_Clabel. I.e., 
+ *  possible cluster labels must be in the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`, 
+ *  and `SCC_CLABEL_NA` may not be in this sequence (but it may be `SCC_CLABEL_MAX`).
  */
 typedef uint32_t scc_Clabel;
 
-/// Maximum number that can be stored in #scc_Clabel.
+/// Maximum number that can be stored in #scc_Clabel. May not be greater than `SIZE_MAX`.
 static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;
 
 /// Label given to unassigned vertices.
 static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
 
-/** Type used for data point IDs. May be unsigned or signed.
- *
- *  \note
- *  Possible data point IDs are the sequence `[0, 1, ..., SCC_DPID_MAX - 1]`. 
- *  `SCC_DPID_NA` may not be in this sequence.
- *  \note
- *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Dpid (i.e., less
- *  than #SCC_DPID_MAX).
- */
-typedef uint32_t scc_Dpid;
-
-/// Maximum number that can be stored in #scc_Dpid.
-static const scc_Dpid SCC_DPID_MAX = UINT32_MAX;
-
-/// Value to indicate invalid data_points.
-static const scc_Dpid SCC_DPID_NA = UINT32_MAX;
-
-/** Type used for arc indices. Must be unsigned.
+/** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
  *  
  *  \note
- *  Number of arcs in any digraph must be less or equal to 
- *  the maximum number that can be stored in #scc_Arci.
+ *  Valid values are from 0 to maximum value of `scc_TypeLabel`.
  */
-typedef uint32_t scc_Arci;
-
-/// Maximum number that can be stored in #scc_Arci.
-static const scc_Arci SCC_ARCI_MAX = UINT32_MAX;
-
-
 typedef uint32_t scc_TypeLabel;
+
+/// Maximum number that can be stored in #scc_TypeLabel.
+static const scc_Clabel SCC_TYPELABEL_MAX = UINT32_MAX;
 
 
 // ==============================================================================
-// Library specific types, non-serviceable
+// Library specific types and structs, non-serviceable
 // ==============================================================================
 
 /// Type used for data set objects. This struct is defined in `src/dist_search.c` (or by user). 
@@ -104,10 +78,10 @@ typedef struct scc_ClusteringStats scc_ClusteringStats;
 
 /// Struct to store clustering statistics
 struct scc_ClusteringStats {
-	size_t num_populated_clusters;
-	size_t num_assigned;
-	size_t min_cluster_size;
-	size_t max_cluster_size;
+	uint64_t num_populated_clusters;
+	uint64_t num_assigned;
+	uint64_t min_cluster_size;
+	uint64_t max_cluster_size;
 	double avg_cluster_size;
 	double sum_dists;
 	double min_dist;
@@ -140,7 +114,7 @@ enum scc_ErrorCode {
 /// Typedef for the scc_ErrorCode enum
 typedef enum scc_ErrorCode scc_ErrorCode;
 
-void scc_get_error_message(scc_ErrorCode ec,
+bool scc_get_error_message(scc_ErrorCode ec,
                            char error_message_buffer[],
                            size_t buffer_size);
 
@@ -149,65 +123,35 @@ void scc_get_error_message(scc_ErrorCode ec,
 // Utility functions
 // ==============================================================================
 
-/** Destructor for clusterings.
- *
- *  Frees the memory allocated by the input and writes the null clustering to it.
- *  Assumes the memory was allocated by the standard `malloc`, `calloc` or `realloc` functions.
- *
- *  \param[in,out] cl clustering to destroy. When #scc_free_Clustering returns, \p cl is set to #SCC_NULL_CLUSTERING.
- *
- *  \note If `cl->external_labels` is true, `cl->cluster_label` will *not* be freed by #scc_free_Clustering.
- */
 void scc_free_clustering(scc_Clustering** clustering);
 
-
-scc_ErrorCode scc_init_empty_clustering(size_t num_data_points,
+scc_ErrorCode scc_init_empty_clustering(uintmax_t num_data_points,
                                         scc_Clabel external_cluster_labels[],
                                         scc_Clustering** out_clustering);
 
-
-scc_ErrorCode scc_init_existing_clustering(size_t num_clusters,
-                                           size_t num_data_points,
+scc_ErrorCode scc_init_existing_clustering(uintmax_t num_clusters,
+                                           uintmax_t num_data_points,
                                            scc_Clabel current_cluster_labels[],
                                            bool deep_label_copy,
                                            scc_Clustering** out_clustering);
 
-
 scc_ErrorCode scc_copy_clustering(const scc_Clustering* in_clustering,
                                   scc_Clustering** out_clustering);
-
 
 bool scc_check_clustering(const scc_Clustering* cl,
                           bool extensive_check);
 
-
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
-                                      size_t* out_num_data_points,
-                                      size_t* out_num_clusters);
-
+                                      uintmax_t* out_num_data_points,
+                                      uintmax_t* out_num_clusters);
 
 scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
                                      size_t buffer_size,
                                      scc_Clabel out_label_buffer[]);
 
-
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
                                        scc_DataSetObject* data_set_object,
                                        scc_ClusteringStats* out_stats);
-
-
-// ==============================================================================
-// Greedy clustering function
-// ==============================================================================
-
-scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
-                                             scc_DataSetObject* data_set_object,
-                                             size_t size_constraint,
-                                             bool batch_assign);
-
-scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
-                                              scc_DataSetObject* data_set_object,
-                                              size_t size_constraint);
 
 
 // ==============================================================================
@@ -242,8 +186,8 @@ enum scc_SeedMethod {
 	/** Find seeds ordered by inwards pointing arcs from unassigned vertices. 
 	 *
 	 *  This method counts vertices' inwards pointing arcs from *unassigned* vertices and finds seeds by in ascending order by the arc count. Unlike
-	 *  the #SCC_INWARDS_ORDER, this method updates the arc count after finding a seed so that only arcs where the tails are unassigned are counted.
-	 *  Vertices already assigned to a cluster cannot be a seed, thus it is inconsequential if they are pointing to a seed.
+	 *  the #SCC_SM_INWARDS_ORDER, this method updates the arc count after finding a seed so that only arcs where the tails are unassigned are counted.
+	 *  Vertices already assigned to a cluster cannot be a seed, thus it is inconsequential whether they are pointing to a seed.
 	 *
 	 *  If the desired size is two, this method ensures that the maximum distance between any two vertices in a common cluster in the
 	 *  final clustering is bounded by twice the maximum distance in the NNG.
@@ -262,7 +206,7 @@ enum scc_SeedMethod {
 	 *
 	 *  The exclusion graph is the undirected graph where an edge is draw between two vertices if they cannot both be seeds.
 	 *  Any maximal independent set in this graph is a valid set of seeds. This method counts the edges of each that vertex is not already excluded
-	 *  and find seeds in ascending order by this count. Unlike the #SCC_EXCLUSION_ORDER, this method updates the edge count after finding a
+	 *  and find seeds in ascending order by this count. Unlike the #SCC_SM_EXCLUSION_ORDER, this method updates the edge count after finding a
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
 	SCC_SM_EXCLUSION_UPDATING,
@@ -276,16 +220,16 @@ enum scc_AssignMethod {
 	SCC_AM_CLOSEST_ASSIGNED,
 	SCC_AM_CLOSEST_SEED,
 };
-typedef enum scc_AssignMethod scc_AssignMethod;
 
+typedef enum scc_AssignMethod scc_AssignMethod;
 
 scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
                                 scc_DataSetObject* data_set_object,
-                                size_t num_data_points,
-                                size_t size_constraint,
+                                uint32_t size_constraint,
                                 scc_SeedMethod seed_method,
                                 scc_AssignMethod assign_method,
                                 const bool main_data_points[],
+                                size_t main_data_points_length,
                                 bool assign_secondary_points,
                                 bool main_radius_constraint,
                                 double main_radius,
@@ -294,19 +238,33 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
 
 scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
                                            scc_DataSetObject* data_set_object,
-                                           size_t num_data_points,
-                                           size_t num_types,
+                                           uintmax_t num_types,
                                            const scc_TypeLabel type_labels[],
-                                           const size_t type_constraints[],
-                                           size_t size_constraint,
+                                           const uint32_t type_constraints[],
+                                           uint32_t size_constraint,
                                            scc_SeedMethod seed_method,
                                            scc_AssignMethod assign_method,
                                            const bool main_data_points[],
+                                           size_t main_data_points_length,
                                            bool assign_secondary_points,
                                            bool main_radius_constraint,
                                            double main_radius,
                                            bool secondary_radius_constraint,
                                            double secondary_radius);
+
+
+// ==============================================================================
+// Greedy clustering function
+// ==============================================================================
+
+scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
+                                             scc_DataSetObject* data_set_object,
+                                             uint32_t size_constraint,
+                                             bool batch_assign);
+
+scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
+                                              scc_DataSetObject* data_set_object,
+                                              uint32_t size_constraint);
 
 
 // ==============================================================================

@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 #include "error.h"
 
 #include <assert.h>
@@ -35,7 +34,7 @@ static const char* iscc_error_file = "unknown file";
 
 static int iscc_error_line = -1;
 
-static const scc_ErrorCode iscc_max_error_code = 10;
+static const scc_ErrorCode ISCC_MAX_ERROR_CODE = SCC_ER_NOT_IMPLEMENTED;
 
 
 // ==============================================================================
@@ -46,7 +45,7 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
                                    const char* const file,
 	                               const int line)
 {
-	assert((ec > SCC_ER_OK) && (ec < iscc_max_error_code));
+	assert((ec > SCC_ER_OK) && (ec <= ISCC_MAX_ERROR_CODE));
 
 	iscc_error_file = file;
 	iscc_error_line = line;
@@ -55,26 +54,55 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
 }
 
 
-void scc_get_error_message(const scc_ErrorCode ec,
+bool scc_get_error_message(const scc_ErrorCode ec,
                            char error_message_buffer[const],
                            const size_t buffer_size)
 {
-	if ((error_message_buffer == NULL) || (buffer_size == 0)) return;
+	if ((error_message_buffer == NULL) || (buffer_size == 0)) return false;
 
 	if (ec == SCC_ER_OK) {
 		snprintf(error_message_buffer, buffer_size, "%s", "No error.");
-		return;
+		return true;
 	}
 
-	const char* error_message = "";
+	const char* error_message;
 	switch (ec) {
+		case SCC_ER_NULL_INPUT:
+			error_message = "A required input pointer is NULL.";
+			break;
+		case SCC_ER_INVALID_INPUT:
+			error_message = "Inputted function parameters are invalid.";
+			break;
+		case SCC_ER_INVALID_CLUSTERING:
+			error_message = "Inputted clustering is invalid.";
+			break;
+		case SCC_ER_EMPTY_CLUSTERING:
+			error_message = "Empty clustering is inputted when non-empty is required.";
+			break;
+		case SCC_ER_INVALID_DATA_OBJ:
+			error_message = "Inputted data object is invalid.";
+			break;
 		case SCC_ER_NO_MEMORY:
 			error_message = "Cannot allocate required memory.";
+			break;
+		case SCC_ER_TOO_LARGE_PROBLEM:
+			error_message = "The clustering problem is too large under the current configuration (either too many clusters or data points).";
+			break;
+		case SCC_ER_TOO_LARGE_DIGRAPH:
+			error_message = "The clustering problem yields a digraph with too many arcs.";
+			break;
+		case SCC_ER_DIST_SEARCH_ERROR:
+			error_message = "Failed to calculate distances.";
+			break;
+		case SCC_ER_NOT_IMPLEMENTED:
+			error_message = "Requested functionality is not yet implemented.";
 			break;
 		default:
 			error_message = "Unknown error code.";
 			break;
 	}
 
-	snprintf(error_message_buffer, buffer_size, "%s (%s:%d)", error_message, iscc_error_file, iscc_error_line);
+	snprintf(error_message_buffer, buffer_size, "(%s:%d) %s", iscc_error_file, iscc_error_line, error_message);
+
+	return true;
 }

@@ -19,13 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
-/** @file
- *
- *  Generic size constrained clustering declarations.
- */
-
-
 #ifndef SCC_CLUSTERING_HG
 #define SCC_CLUSTERING_HG
 
@@ -39,34 +32,37 @@
  *  This struct describes clusterings by enumerating a cluster label for each vertex.
  */
 struct scc_Clustering {
-
-	bool is_initialized;
-
 	/// Number of data points in the clustering problem.
 	size_t num_data_points;
 
 	/// Number of clusters.
 	size_t num_clusters;
 
+	/** Array of length #num_data_points with cluster labels of the assigned data points. 
+	 *  Unassigned vertices have the value #SCC_CLABEL_NA.
+	 */
+	scc_Clabel* cluster_label;
+
 	/** Indicator whether the #cluster_label array was assigned by the user (rather than the library). If #external_labels is \c true, 
 	 *  #cluster_label will not be freed when the instance of #scc_Clustering is destroyed.
 	 */
 	bool external_labels;
 
-	/** Array of length #vertices with cluster labels of the assigned vertices. 
-	 *  Unassigned vertices have the value #SCC_CLABEL_NA.
-	 */
-	scc_Clabel* cluster_label;
+	/// Version of the struct.
+	int clustering_version;
 };
+
+/// Current version of the clustering struct.
+static const int ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
 
 /** The null clustering.
  *
  *  The null clustering is an easily detectable invalid clustering. It is mainly used as return
  *  value when functions encounter errors.
  */
-static const scc_Clustering ISCC_NULL_CLUSTERING = { false, 0, 0, false, NULL };
+static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, NULL, false, 0 };
 
-
+/// Macro for internal clustering checks.
 #ifndef NDEBUG
 	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
 #else
