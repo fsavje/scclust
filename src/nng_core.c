@@ -79,6 +79,10 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_se
                                                       uint64_t max_arcs,
                                                       iscc_Digraph* out_nng);
 
+static inline void iscc_ensure_self_match(iscc_Digraph* nng,
+                                          size_t len_search_indices,
+                                          const iscc_Dpid search_indices[]);
+
 static scc_ErrorCode iscc_type_count(size_t num_data_points,
                                      uint32_t size_constraint,
                                      uint_fast16_t num_types,
@@ -140,6 +144,8 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* const data_se
 	                        out_nng)) != SCC_ER_OK) {
 		return ec;
 	}
+
+	iscc_ensure_self_match(out_nng, num_data_points, NULL);
 
 	if ((ec = iscc_delete_loops(out_nng)) != SCC_ER_OK) {
 		iscc_free_digraph(out_nng);
@@ -229,6 +235,9 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* const data_se
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
+			iscc_ensure_self_match(&nng_by_type[num_non_zero_type_constraints],
+			                       tc.type_group_size[i],
+			                       tc.type_groups[i]);
 			++num_non_zero_type_constraints;
 		}
 	}
@@ -741,6 +750,42 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 	}
 
 	return iscc_no_error();
+}
+
+
+static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
+                                          const size_t len_search_indices,
+                                          const iscc_Dpid search_indices[const])
+{
+	assert(iscc_digraph_is_initialized(nng));
+	assert(len_search_indices > 0);
+
+	/* When there's identical data points, `iscc_nearest_neighbor_search` may not
+	 * return a self-loop when a query is a search point. The NNG clustering functions
+	 * requires this. However, if all data points are unique, or the query and search sets
+	 * are disjoint, it's safe to call `iscc_make_nng` without `iscc_ensure_self_match`. */
+
+	if (search_indices == NULL) {
+		assert(len_search_indices <= ISCC_DPID_MAX);
+		const iscc_Dpid len_search_indices_dpid = (iscc_Dpid) len_search_indices; // If `iscc_Dpid` is signed.
+		for (iscc_Dpid search_point = 0; search_point < len_search_indices_dpid; ++search_point) {
+			iscc_Dpid* v_arc = nng->head + nng->tail_ptr[search_point];
+			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
+			if ((*v_arc == search_point) || (v_arc == v_arc_stop)) continue;
+			for (++v_arc; (*v_arc != search_point) && (v_arc != v_arc_stop); ++v_arc);
+			if (v_arc == v_arc_stop) *(v_arc - 1) = search_point;
+		}
+
+	} else if (search_indices != NULL) {
+		for (size_t s = 0; s < len_search_indices; ++s) {
+			const iscc_Dpid search_point = search_indices[s];
+			iscc_Dpid* v_arc = nng->head + nng->tail_ptr[search_point];
+			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
+			if ((*v_arc == search_point) || (v_arc == v_arc_stop)) continue;
+			for (++v_arc; (*v_arc != search_point) && (v_arc != v_arc_stop); ++v_arc);
+			if (v_arc == v_arc_stop) *(v_arc - 1) = search_point;
+		}
+	}
 }
 
 
