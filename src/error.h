@@ -45,4 +45,4 @@ scc_ErrorCode iscc_make_error_func(scc_ErrorCode ec,
 void iscc_reset_error(void);
 
 
-#endif
+#endif // ifndef SCC_ERROR_HG

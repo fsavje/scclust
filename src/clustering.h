@@ -80,4 +80,4 @@ static const int32_t ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
 static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, NULL, false, 0 };
 
 
-#endif
+#endif // ifndef SCC_CLUSTERING_HG

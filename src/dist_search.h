@@ -108,4 +108,4 @@ bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 	}
 #endif
 
-#endif
+#endif // ifndef SCC_DIST_SEARCH_HG

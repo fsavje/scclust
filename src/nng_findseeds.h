@@ -48,4 +48,4 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* nng,
                               iscc_SeedResult* out_seeds);
 
 
-#endif
+#endif // ifndef SCC_NNG_FINDSEEDS_HG

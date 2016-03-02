@@ -91,4 +91,4 @@ scc_ErrorCode iscc_remaining_to_nearest_seed(scc_Clustering* clustering,
                                              double secondary_radius);
 
 
-#endif
+#endif // ifndef SCC_NNG_CORE_HG

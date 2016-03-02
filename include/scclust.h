@@ -279,4 +279,4 @@ scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
 	}
 #endif
 
-#endif
+#endif // ifndef SCC_SCCLUST_HG

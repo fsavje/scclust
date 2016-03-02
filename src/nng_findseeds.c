@@ -95,16 +95,16 @@ static inline void iscc_fs_decrease_v_in_sort(iscc_Dpid v_to_decrease,
 
 #ifdef SCC_STABLE_CLUSTERING
 
-	static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* bucket_start,
-	                                             iscc_Dpid* pos,
-	                                             const iscc_Dpid inwards_count[],
-	                                             iscc_Dpid* vertex_index[]);
+static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* bucket_start,
+                                             iscc_Dpid* pos,
+                                             const iscc_Dpid inwards_count[],
+                                             iscc_Dpid* vertex_index[]);
 
-	static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
-	                                            const iscc_Dpid* last_pos,
-	                                            const iscc_Dpid inwards_count[]);
+static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
+                                            const iscc_Dpid* last_pos,
+                                            const iscc_Dpid inwards_count[]);
 
-#endif
+#endif // ifdef SCC_STABLE_CLUSTERING
 
 
 // ==============================================================================
@@ -635,33 +635,33 @@ static inline void iscc_fs_decrease_v_in_sort(const iscc_Dpid v_to_decrease,
 
 #ifdef SCC_STABLE_CLUSTERING
 
-	static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* const bucket_start,
-	                                             iscc_Dpid* pos,
-	                                             const iscc_Dpid inwards_count[const],
-	                                             iscc_Dpid* vertex_index[const])
-	{
-		iscc_Dpid tmp_v = *pos;
-		for (; pos != bucket_start; --pos) {
-			assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
-			if (tmp_v >= *(pos - 1)) break;
-			*pos = *(pos - 1);
-			vertex_index[*pos] = pos;
-		}
-		*pos = tmp_v;
+static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* const bucket_start,
+                                             iscc_Dpid* pos,
+                                             const iscc_Dpid inwards_count[const],
+                                             iscc_Dpid* vertex_index[const])
+{
+	iscc_Dpid tmp_v = *pos;
+	for (; pos != bucket_start; --pos) {
+		assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
+		if (tmp_v >= *(pos - 1)) break;
+		*pos = *(pos - 1);
 		vertex_index[*pos] = pos;
 	}
+	*pos = tmp_v;
+	vertex_index[*pos] = pos;
+}
 
 
-	static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
-	                                            const iscc_Dpid* const last_pos,
-	                                            const iscc_Dpid inwards_count[const])
-	{
-		for (; current_pos != last_pos; ++current_pos) {
-			assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);
-			if (inwards_count[*(current_pos)] == inwards_count[*(current_pos + 1)]) {
-				assert(*(current_pos) < *(current_pos + 1));
-			}
+static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
+                                            const iscc_Dpid* const last_pos,
+                                            const iscc_Dpid inwards_count[const])
+{
+	for (; current_pos != last_pos; ++current_pos) {
+		assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);
+		if (inwards_count[*(current_pos)] == inwards_count[*(current_pos + 1)]) {
+			assert(*(current_pos) < *(current_pos + 1));
 		}
 	}
+}
 
-#endif
+#endif // ifdef SCC_STABLE_CLUSTERING

@@ -158,4 +158,4 @@ scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* dg,
                                       uint64_t new_max_arcs);
 
 
-#endif
+#endif // ifndef SCC_DIGRAPH_CORE_HG

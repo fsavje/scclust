@@ -179,4 +179,4 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* in_dg_a,
                                      iscc_Digraph* out_dg);
 
 
-#endif
+#endif // ifndef SCC_DIGRAPH_OPERATIONS_HG

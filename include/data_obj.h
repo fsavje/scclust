@@ -33,4 +33,4 @@ struct scc_DataSetObject {
 };
 
 
-#endif
+#endif // ifndef SCC_DATA_OBJ_HG

@@ -74,4 +74,4 @@ static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
 	}
 #endif
 
-#endif
+#endif // ifndef SCC_CONFIG_HG

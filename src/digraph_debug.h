@@ -173,4 +173,4 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* in_dg,
 void iscc_print_digraph(const iscc_Digraph* dg);
 
 
-#endif
+#endif // ifndef SCC_DIGRAPH_DEBUG_HG
