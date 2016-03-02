@@ -709,9 +709,9 @@ static scc_ErrorCode iscc_gr_find_centers(iscc_gr_ClusterItem* const cl,
 	assert(out_center1 != NULL);
 	assert(out_center2 != NULL);
 
-    iscc_Dpid* const to_check = work_area->dpid_array1;
-    iscc_Dpid* const max_indices = work_area->dpid_array2;
-    double* const max_dists = work_area->dist_array;
+	iscc_Dpid* const to_check = work_area->dpid_array1;
+	iscc_Dpid* const max_indices = work_area->dpid_array2;
+	double* const max_dists = work_area->dist_array;
 	uint_fast16_t* const vertex_markers = work_area->vertex_markers;
 
 	const uint_fast16_t curr_marker = iscc_gr_get_next_marker(cl, vertex_markers);
@@ -832,10 +832,10 @@ static inline void iscc_gr_sort_edge_list(const iscc_gr_ClusterItem* const cl,
 static int iscc_gr_compare_dist_edges(const void* const a,
                                       const void* const b)
 {
-    const double dist_a = ((const iscc_gr_DistanceEdge*)a)->distance;
-    const double dist_b = ((const iscc_gr_DistanceEdge*)b)->distance;
- 
-    if (dist_a < dist_b) return -1;
-    if (dist_a > dist_b) return 1;
-    return 0;
+	const double dist_a = ((const iscc_gr_DistanceEdge*)a)->distance;
+	const double dist_b = ((const iscc_gr_DistanceEdge*)b)->distance;
+
+	if (dist_a < dist_b) return -1;
+	if (dist_a > dist_b) return 1;
+	return 0;
 }

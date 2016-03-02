@@ -31,6 +31,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 
 // ==============================================================================
 // Library specific types, user-serviceable
@@ -270,5 +274,9 @@ scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
 // One-dimensional clustering
 // ==============================================================================
 
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

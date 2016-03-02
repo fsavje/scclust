@@ -218,15 +218,15 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 	scc_ErrorCode ec;
 	iscc_Digraph nng;
 	if ((ec = iscc_get_nng_with_type_constraint(data_set_object,
-                                                clustering->num_data_points,
-                                                size_constraint,
-                                                num_types_f16,
-                                                type_size_constraints,
-                                                type_labels,
-                                                main_data_points,
-                                                main_radius_constraint,
-                                                main_radius,
-                                                &nng)) != SCC_ER_OK) {
+	                                            clustering->num_data_points,
+	                                            size_constraint,
+	                                            num_types_f16,
+	                                            type_size_constraints,
+	                                            type_labels,
+	                                            main_data_points,
+	                                            main_radius_constraint,
+	                                            main_radius,
+	                                            &nng)) != SCC_ER_OK) {
 		return ec;
 	}
 

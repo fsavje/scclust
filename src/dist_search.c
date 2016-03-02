@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include "../include/data_obj.h"
 #include "../include/scclust.h"
+#include "config.h"
 
 
 // ==============================================================================
@@ -185,7 +186,7 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 {
 	assert(max_dist_object != NULL);
 	const scc_DataSetObject* const data_set_object = max_dist_object->data_set_object;
-    const size_t len_search_indices = max_dist_object->len_search_indices;
+	const size_t len_search_indices = max_dist_object->len_search_indices;
 	const iscc_Dpid* const search_indices = max_dist_object->search_indices;
 
 	assert(len_search_indices > 0);
@@ -298,7 +299,7 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 {
 	assert(nn_search_object != NULL);
 	const scc_DataSetObject* const data_set_object = nn_search_object->data_set_object;
-    const size_t len_search_indices = nn_search_object->len_search_indices;
+	const size_t len_search_indices = nn_search_object->len_search_indices;
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 
 	assert(len_search_indices > 0);

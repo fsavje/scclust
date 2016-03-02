@@ -29,11 +29,15 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 
 // ==============================================================================
 // Structs, types and variables
 // ==============================================================================
- 
+
 /** Type used for data point IDs. May be unsigned or signed.
  *
  *  \note
@@ -52,10 +56,22 @@ static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
  *  Number of arcs in any digraph must be less or equal to 
  *  the maximum number that can be stored in #iscc_Arci.
  */
-typedef uint32_t iscc_Arci;
+#ifdef SCC_ARC64
+	typedef uint64_t iscc_Arci;
+#else
+	typedef uint32_t iscc_Arci;
+#endif
 
 /// Maximum number that can be stored in #iscc_Arci.
-static const iscc_Arci ISCC_ARCI_MAX = UINT32_MAX;
+#ifdef SCC_ARC64
+	static const iscc_Arci ISCC_ARCI_MAX = UINT64_MAX;
+#else
+	static const iscc_Arci ISCC_ARCI_MAX = UINT32_MAX;
+#endif
 
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

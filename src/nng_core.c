@@ -29,6 +29,7 @@
 #include <string.h>
 #include "../include/scclust.h"
 #include "clustering.h"
+#include "config.h"
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "dist_search.h"
@@ -126,17 +127,17 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* const data_se
 
 	scc_ErrorCode ec;
 	if ((ec = iscc_make_nng(data_set_object,
-                            num_data_points,
-                            NULL,
-                            num_data_points,
-                            main_data_points,
-                            NULL,
-                            size_constraint,
-                            radius_constraint,
-                            radius,
-                            false,
-                            size_constraint * num_queries,
-                            out_nng)) != SCC_ER_OK) {
+	                        num_data_points,
+	                        NULL,
+	                        num_data_points,
+	                        main_data_points,
+	                        NULL,
+	                        size_constraint,
+	                        radius_constraint,
+	                        radius,
+	                        false,
+	                        (size_constraint * num_queries),
+	                        out_nng)) != SCC_ER_OK) {
 		return ec;
 	}
 
@@ -200,12 +201,12 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* const data_se
 	scc_ErrorCode ec;
 	iscc_TypeCount tc;
 	if ((ec = iscc_type_count(num_data_points,
-                              size_constraint,
-                              num_types,
-                              type_size_constraints,
-                              type_labels,
-                              main_data_points,
-                              &tc)) != SCC_ER_OK) {
+	                          size_constraint,
+	                          num_types,
+	                          type_size_constraints,
+	                          type_labels,
+	                          main_data_points,
+	                          &tc)) != SCC_ER_OK) {
 		free(seedable);
 		free(nng_by_type);
 		return ec;
@@ -215,17 +216,17 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* const data_se
 	for (uint_fast16_t i = 0; i < num_types; ++i) {
 		if (type_size_constraints[i] > 0) {
 			if ((ec = iscc_make_nng(data_set_object,
-                                    tc.type_group_size[i],
-                                    tc.type_groups[i],
-                                    num_data_points,
-                                    seedable_const,
-                                    seedable,
-                                    type_size_constraints[i],
-                                    radius_constraint,
-                                    radius,
-                                    false,
-                                    type_size_constraints[i] * tc.num_queries,
-                                    &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
+			                        tc.type_group_size[i],
+			                        tc.type_groups[i],
+			                        num_data_points,
+			                        seedable_const,
+			                        seedable,
+			                        type_size_constraints[i],
+			                        radius_constraint,
+			                        radius,
+			                        false,
+			                        (type_size_constraints[i] * tc.num_queries),
+			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
 			++num_non_zero_type_constraints;
@@ -258,17 +259,17 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* const data_se
 		*out_nng = ISCC_NULL_DIGRAPH;
 
 		if ((ec = iscc_make_nng(data_set_object,
-                                num_data_points,
-                                NULL,
-                                num_data_points,
-                                seedable_const,
-                                seedable,
-                                size_constraint,
-                                radius_constraint,
-                                radius,
-                                false,
-                                size_constraint * tc.num_queries,
-                                &nng_sum[1])) != SCC_ER_OK) {
+		                        num_data_points,
+		                        NULL,
+		                        num_data_points,
+		                        seedable_const,
+		                        seedable,
+		                        size_constraint,
+		                        radius_constraint,
+		                        radius,
+		                        false,
+		                        size_constraint * tc.num_queries,
+		                        &nng_sum[1])) != SCC_ER_OK) {
 			free(seedable);
 			iscc_free_digraph(&nng_sum[0]);
 			return ec;
@@ -667,15 +668,15 @@ static scc_ErrorCode iscc_make_nng(scc_DataSetObject* const data_set_object,
 	}
 
 	if (!iscc_nearest_neighbor_search(nn_search_object,
-                                      len_query_indicators,
-                                      query_indicators,
-                                      out_query_indicators,
-                                      k,
-                                      radius_search,
-                                      radius,
-                                      accept_partial,
-                                      out_nng->tail_ptr,
-                                      out_nng->head)) {
+	                                  len_query_indicators,
+	                                  query_indicators,
+	                                  out_query_indicators,
+	                                  k,
+	                                  radius_search,
+	                                  radius,
+	                                  accept_partial,
+	                                  out_nng->tail_ptr,
+	                                  out_nng->head)) {
 		iscc_free_digraph(out_nng);
 		iscc_close_nn_search_object(&nn_search_object);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
@@ -719,15 +720,15 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 	if ((ec = iscc_init_digraph(len_query_indicators, max_arcs, out_nng)) != SCC_ER_OK) return ec;
 
 	if (!iscc_nearest_neighbor_search(nn_search_object,
-                                      len_query_indicators,
-                                      query_indicators,
-                                      out_query_indicators,
-                                      k,
-                                      radius_search,
-                                      radius,
-                                      accept_partial,
-                                      out_nng->tail_ptr,
-                                      out_nng->head)) {
+	                                  len_query_indicators,
+	                                  query_indicators,
+	                                  out_query_indicators,
+	                                  k,
+	                                  radius_search,
+	                                  radius,
+	                                  accept_partial,
+	                                  out_nng->tail_ptr,
+	                                  out_nng->head)) {
 		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}

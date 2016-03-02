@@ -299,7 +299,7 @@ static inline uint64_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	assert(dgs[0].vertices > 0);
 	assert(row_markers != NULL);
 
-    uint64_t counter = 0;
+	uint64_t counter = 0;
 	assert(dgs->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed 
 
@@ -400,14 +400,14 @@ static inline uint64_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a,
 	assert(dg_a->vertices == dg_b->vertices);
 	assert(row_markers != NULL);
 
-    uint64_t counter = 0;
+	uint64_t counter = 0;
 	assert(dg_a->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) dg_a->vertices; // If `iscc_Dpid` is signed 
 
 	const iscc_Arci* const dg_a_tail_ptr = dg_a->tail_ptr;
-    const iscc_Dpid* const dg_a_head = dg_a->head;
-    const iscc_Arci* const dg_b_tail_ptr = dg_b->tail_ptr;
-    const iscc_Dpid* const dg_b_head = dg_b->head;
+	const iscc_Dpid* const dg_a_head = dg_a->head;
+	const iscc_Arci* const dg_b_tail_ptr = dg_b->tail_ptr;
+	const iscc_Dpid* const dg_b_head = dg_b->head;
 
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		row_markers[v] = ISCC_DPID_MAX;

@@ -40,7 +40,7 @@
 
 scc_ErrorCode iscc_make_error_func(scc_ErrorCode ec,
                                    const char* file,
-	                               int line);
+                                   int line);
 
 void iscc_reset_error(void);
 

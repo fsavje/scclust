@@ -41,7 +41,7 @@ static int iscc_error_line = -1;
 
 scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
                                    const char* const file,
-	                               const int line)
+                                   const int line)
 {
 	assert((ec > SCC_ER_OK) && (ec <= SCC_ER_NOT_IMPLEMENTED));
 

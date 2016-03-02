@@ -28,6 +28,10 @@
 #include "../include/scclust.h"
 #include "config.h"
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 
 // ==============================================================================
 // Miscellaneous functions
@@ -99,5 +103,9 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
 
 bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif
