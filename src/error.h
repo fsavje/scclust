@@ -25,13 +25,24 @@
 #include "../include/scclust.h"
 
 
+// ==============================================================================
+// Macros
+// ==============================================================================
+
 #define iscc_make_error(ec) iscc_make_error_func(ec, __FILE__, __LINE__)
 
 #define iscc_no_error() (SCC_ER_OK)
 
+
+// ==============================================================================
+// Function prototypes
+// ==============================================================================
+
 scc_ErrorCode iscc_make_error_func(scc_ErrorCode ec,
                                    const char* file,
 	                               int line);
+
+void iscc_reset_error(void);
 
 
 #endif

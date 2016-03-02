@@ -34,8 +34,6 @@ static const char* iscc_error_file = "unknown file";
 
 static int iscc_error_line = -1;
 
-static const scc_ErrorCode ISCC_MAX_ERROR_CODE = SCC_ER_NOT_IMPLEMENTED;
-
 
 // ==============================================================================
 // External function implementations
@@ -45,7 +43,7 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
                                    const char* const file,
 	                               const int line)
 {
-	assert((ec > SCC_ER_OK) && (ec <= ISCC_MAX_ERROR_CODE));
+	assert((ec > SCC_ER_OK) && (ec <= SCC_ER_NOT_IMPLEMENTED));
 
 	iscc_error_file = file;
 	iscc_error_line = line;
@@ -54,14 +52,21 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
 }
 
 
-bool scc_get_error_message(const scc_ErrorCode ec,
-                           char error_message_buffer[const],
-                           const size_t buffer_size)
+void iscc_reset_error(void)
 {
-	if ((error_message_buffer == NULL) || (buffer_size == 0)) return false;
+	iscc_error_file = "unknown file";
+	iscc_error_line = -1;
+}
+
+
+bool scc_get_error_message(const scc_ErrorCode ec,
+                           const size_t len_error_message_buffer,
+                           char error_message_buffer[const])
+{
+	if ((len_error_message_buffer == 0) || (error_message_buffer == NULL)) return false;
 
 	if (ec == SCC_ER_OK) {
-		snprintf(error_message_buffer, buffer_size, "%s", "No error.");
+		snprintf(error_message_buffer, len_error_message_buffer, "%s", "No error.");
 		return true;
 	}
 
@@ -102,7 +107,7 @@ bool scc_get_error_message(const scc_ErrorCode ec,
 			break;
 	}
 
-	snprintf(error_message_buffer, buffer_size, "(%s:%d) %s", iscc_error_file, iscc_error_line, error_message);
+	snprintf(error_message_buffer, len_error_message_buffer, "(%s:%d) %s", iscc_error_file, iscc_error_line, error_message);
 
 	return true;
 }

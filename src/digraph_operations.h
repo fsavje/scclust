@@ -19,20 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 /** @file
  *
  * Operations on digraphs.
  */
 
-
-#ifndef SCC_DIGRAPH_OP_HG
-#define SCC_DIGRAPH_OP_HG
+#ifndef SCC_DIGRAPH_OPERATIONS_HG
+#define SCC_DIGRAPH_OPERATIONS_HG
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include "digraph_core.h"
 
+
+// ==============================================================================
+// Function prototypes
+// ==============================================================================
 
 /** Delete all self-loops.
  *
@@ -40,18 +43,16 @@
  *
  *  \param[in,out] dg digraph to delete self-loops from.
  *
- *  \return \c true on successful deletion, \c false otherwise. On fail, \p dg is in a undefined state.
- *
- *  \note Arc memory space that is freed due to the deletion is *not* deallocated.
+ *  \note Arc memory space that is freed due to the deletion is deallocated.
  *
  *  \note The deletion is stable so that the internal ordering of remaining arcs in \p dg->head is unchanged.
  */
-scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg);
+scc_ErrorCode iscc_delete_loops(iscc_Digraph* dg);
 
 /** Calculates the union of arbitrary number of digraphs.
  *
- *  This function produces the union of the inputted digraphs. If no digraphs are inputted
- *  (i.e., `num_dgs == 0`), the function returns an empty digraph with no vertices.
+ *  This function produces the union of the inputted digraphs. Optionally, the function can also delete
+ *  arc as indicated by tails.
  *
  *  The union of the following first two digraphs is the third digraph:
  *  \dot
@@ -81,27 +82,24 @@ scc_ErrorCode iscc_delete_loops_check_error(iscc_Digraph* dg);
  *  }
  *  \enddot
  *
- *  \param num_dgs number of digraph to calculate union for.
+ *  \param num_dgs number of digraph to calculate union for. Must be non-zero.
  *  \param[in] dgs the digraphs. Must be of length \p num_dgs.
- *  \param     ignore_loops when \c true, ignores self-loops in all digraphs in \p dgs (i.e., all arcs where the tail and head is the same vertex
- *                          are ignored).
- *
- *  \return the union of \p dgs.
+ *  \param[in] tails_to_keep indicators of tails for which the arcs should be *kept*.
+ *                           If `NULL` no arcs (except self-loops) are deleted.
+ *                           If not `NULL`, it must be of the same length as the number of vertices in the digraphs.
+ *  \param[out] out_dg the union of \p dgs.
  *
  *  \note All digraphs in \p dgs must contain equally many vertices.
+ *  \note All self-loops in the digraphs will be ignored.
  */
-scc_ErrorCode iscc_digraph_union(size_t num_in_dgs,
-                                 const iscc_Digraph in_dgs[static num_in_dgs],
-                                 iscc_Digraph* out_dg);
-
-scc_ErrorCode iscc_digraph_union_and_delete(size_t num_in_dgs,
+scc_ErrorCode iscc_digraph_union_and_delete(uint_fast16_t num_in_dgs,
                                             const iscc_Digraph in_dgs[static num_in_dgs],
                                             const bool tails_to_keep[],
                                             iscc_Digraph* out_dg);
 
 scc_ErrorCode iscc_digraph_difference(iscc_Digraph* minuend_dg,
                                       const iscc_Digraph* subtrahend_dg,
-                                      size_t max_out_degree);
+                                      uint32_t max_out_degree);
 
 /** Derives the digraph transpose a digraph.
  *
@@ -126,8 +124,7 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* minuend_dg,
  *  \enddot
  *
  *  \param[in] dg digraph to transpose.
- *
- *  \return the transpose of \p dg.
+ *  \param[out] out_dg the transpose of \p dg.
  */
 scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* in_dg,
                                      iscc_Digraph* out_dg);
@@ -152,16 +149,16 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* in_dg,
  *  scc_Digraph my_dg = some_digraph(); 
  *
  *  // All paths of length 2 in `my_dg`
- *  scc_Digraph my_dg_path2 = scc_adjacency_product(&my_dg, &my_dg, false, false);
+ *  scc_Digraph my_dg_path2 = scc_adjacency_product(&my_dg, &my_dg, false);
  *  
  *  // All paths of length 3 in `my_dg`
- *  scc_Digraph my_dg_path3 = scc_adjacency_product(&my_dg, &my_dg_path2, false, false);
+ *  scc_Digraph my_dg_path3 = scc_adjacency_product(&my_dg, &my_dg_path2, false);
  *  
  *  // Second power of `my_dg`
- *  scc_Digraph my_dg_power2 = scc_adjacency_product(&my_dg, &my_dg, true, false);
+ *  scc_Digraph my_dg_power2 = scc_adjacency_product(&my_dg, &my_dg, true);
  *  
  *  // Fourth power of `my_dg`
- *  scc_Digraph my_dg_power4 = scc_adjacency_product(&my_dg_power2, &my_dg_power2, true, false);
+ *  scc_Digraph my_dg_power4 = scc_adjacency_product(&my_dg_power2, &my_dg_power2, true);
  *  
  *  // Free all digraphs
  *  scc_free_digraph(&my_dg); scc_free_digraph(&my_dg_path2); [...]
@@ -170,19 +167,15 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* in_dg,
  *  \param[in] dg_a the first digraph of the product.
  *  \param[in] dg_b the second digraph of the product.
  *  \param     force_loops when \c true, forces self-loops in \p dg_a (i.e., all vertices have an arc to themselves).
- *  \param     ignore_loops when \c true, ignores self-loops in \p dg_a (i.e., all arcs where the tail and head is the same vertex
- *                          are ignored).
- *
- *  \return The digraph described by the product of the adjacency matrices of \p dg_a and \p dg_b.
+ *  \param[out] out_dg the digraph described by the product of the adjacency matrices of \p dg_a and \p dg_b.
  *
  *  \note \p dg_a and \p dg_b must contain equally many vertices.
  *
- *  \note \p force_loops and \p ignore_loops cannot both be \c true. 
+ *  \note The output digraph will never have self-loops (independently of \p force_loops).
  */
 scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* in_dg_a,
                                      const iscc_Digraph* in_dg_b,
                                      bool force_loops,
-                                     bool ignore_loops,
                                      iscc_Digraph* out_dg);
 
 

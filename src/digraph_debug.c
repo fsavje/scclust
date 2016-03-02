@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 #include "digraph_debug.h"
 
 #include <assert.h>
@@ -29,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/scclust.h"
+#include "config.h"
 #include "digraph_core.h"
 #include "error.h"
 
@@ -46,8 +45,11 @@ bool iscc_is_valid_digraph(const iscc_Digraph* const dg)
 	for (size_t i = 0; i < dg->vertices; ++i) {
 		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
 	}
-	for (size_t i = 0; i < dg->tail_ptr[dg->vertices]; ++i) {
-		if (((size_t) dg->head[i]) >= dg->vertices) return false;
+	assert(dg->vertices <= ISCC_DPID_MAX);
+	iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
+	const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
+	for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
+		if (*arc >= vertices) return false;
 	}
 	return true;
 }
@@ -62,7 +64,7 @@ bool iscc_is_empty_digraph(const iscc_Digraph* const dg)
 
 
 bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
-                              const size_t arcs_per_vertex)
+                              const uint64_t arcs_per_vertex)
 {
 	if (!iscc_is_valid_digraph(dg)) return false;
 
@@ -81,22 +83,17 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 	if (dg_a->tail_ptr == NULL) return (dg_b->tail_ptr == NULL);
 	if (dg_a->vertices != dg_b->vertices) return false;
 
-	int_fast8_t* const single_row = malloc(sizeof(int_fast8_t[dg_a->vertices]));
+	int_fast8_t* const single_row = calloc(dg_a->vertices, sizeof(int_fast8_t));
 
 	for (size_t v = 0; v < dg_a->vertices; ++v) {
-
-		for (size_t i = 0; i < dg_a->vertices; ++i) {
-			single_row[i] = 0;
-		}
-
-		const scc_Dpid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
-		for (const scc_Dpid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		const iscc_Dpid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
+		for (const iscc_Dpid* arc_a = dg_a->head + dg_a->tail_ptr[v];
 		        arc_a != arc_a_stop; ++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
-		const scc_Dpid* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
-		for (const scc_Dpid* arc_b = dg_b->head + dg_b->tail_ptr[v];
+		const iscc_Dpid* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
+		for (const iscc_Dpid* arc_b = dg_b->head + dg_b->tail_ptr[v];
 		        arc_b != arc_b_stop; ++arc_b) {
 			if (single_row[*arc_b] == 0) {
 				free(single_row);
@@ -109,21 +106,26 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 			if (single_row[i] == 1) {
 				free(single_row);
 				return false;
-			} 
+			}
+			single_row[i] = 0;
 		}
 	}
 
 	free(single_row);
+
 	return true;
 }
 
 
 scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
-                                       const size_t max_arcs,
-                                       const scc_Arci tail_ptr[const static vertices + 1],
-                                       const scc_Dpid head[const static max_arcs],
+                                       const uint64_t max_arcs,
+                                       const iscc_Arci tail_ptr[const static vertices + 1],
+                                       const iscc_Dpid head[const static max_arcs],
                                        iscc_Digraph* const out_dg)
 {
+	assert(vertices <= ISCC_DPID_MAX);
+	assert(max_arcs <= ISCC_ARCI_MAX);
+	assert(max_arcs <= SIZE_MAX);
 	assert(tail_ptr != NULL);
 	assert((max_arcs == 0) || (head != NULL));
 	assert(out_dg != NULL);
@@ -131,8 +133,8 @@ scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
 	scc_ErrorCode ec;
 	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	memcpy(out_dg->tail_ptr, tail_ptr, (vertices + 1) * sizeof(scc_Arci));
-	memcpy(out_dg->head, head, max_arcs * sizeof(scc_Dpid));
+	memcpy(out_dg->tail_ptr, tail_ptr, (vertices + 1) * sizeof(iscc_Arci));
+	memcpy(out_dg->head, head, max_arcs * sizeof(iscc_Dpid));
 
 	return iscc_no_error();
 }
@@ -158,9 +160,9 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 	scc_ErrorCode ec;
 	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	scc_Arci curr_array_pos = 0;
+	iscc_Arci curr_array_pos = 0;
 	size_t curr_row = 0;
-	scc_Dpid curr_col = 0;
+	iscc_Dpid curr_col = 0;
 	out_dg->tail_ptr[0] = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
@@ -183,6 +185,26 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 }
 
 
+scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
+                                iscc_Digraph* const out_dg)
+{
+	scc_ErrorCode ec;
+	assert(iscc_digraph_is_initialized(in_dg));
+	assert(out_dg != NULL);
+	if (in_dg->vertices == 0) return iscc_empty_digraph(0, 0, out_dg);
+
+	const size_t num_vertices = in_dg->vertices;
+	const size_t num_arcs = in_dg->tail_ptr[in_dg->vertices];
+
+	if ((ec = iscc_init_digraph(num_vertices, num_arcs, out_dg)) != SCC_ER_OK) return ec;
+
+	memcpy(out_dg->tail_ptr, in_dg->tail_ptr, (num_vertices + 1) * sizeof(iscc_Arci));
+	memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(iscc_Dpid));
+
+	return iscc_no_error();
+}
+
+
 void iscc_print_digraph(const iscc_Digraph* const dg)
 {
 	assert(iscc_digraph_is_initialized(dg));
@@ -199,12 +221,8 @@ void iscc_print_digraph(const iscc_Digraph* const dg)
 	}
 
 	for (size_t v = 0; v < dg->vertices; ++v) {
-		for (size_t i = 0; i < dg->vertices; ++i) {
-			single_row[i] = false;
-		}
-
-		const scc_Dpid* const a_stop = dg->head + dg->tail_ptr[v + 1];
-		for (const scc_Dpid* a = dg->head + dg->tail_ptr[v];
+		const iscc_Dpid* const a_stop = dg->head + dg->tail_ptr[v + 1];
+		for (const iscc_Dpid* a = dg->head + dg->tail_ptr[v];
 		        a != a_stop; ++a) {
 			single_row[*a] = true;
 		}
@@ -215,6 +233,7 @@ void iscc_print_digraph(const iscc_Digraph* const dg)
 			} else {
 				putchar('.');
 			}
+			single_row[i] = false;
 		}
 
 		putchar('\n');

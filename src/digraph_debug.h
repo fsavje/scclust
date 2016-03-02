@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 /** @file
  *
  *  Functions for debugging digraphs.
@@ -28,14 +27,19 @@
  *  be useful when debugging.
  */
 
-
 #ifndef SCC_DIGRAPH_DEBUG_HG
 #define SCC_DIGRAPH_DEBUG_HG
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/scclust.h"
+#include <stdint.h>
+#include "config.h"
 #include "digraph_core.h"
+
+
+// ==============================================================================
+// Function prototypes
+// ==============================================================================
 
 /** Checks whether provided digraph is valid.
  *
@@ -69,7 +73,7 @@ bool iscc_is_empty_digraph(const iscc_Digraph* dg);
  *  \return \c true if \p dg is balanced, otherwise \c false.
  */
 bool iscc_is_balanced_digraph(const iscc_Digraph* dg,
-                             size_t arcs_per_vertex);
+                              uint64_t arcs_per_vertex);
 
 /** Checks whether two digraphs are logically identical.
  *
@@ -94,13 +98,12 @@ bool iscc_digraphs_equal(const iscc_Digraph* dg_a,
  *  \param max_arcs length of the memory space for arcs.
  *  \param[in] tail_ptr array of arc indices of length `vertices + 1` (see scc_Digraph::tail_ptr).
  *  \param[in] head array of arc heads of length `max_arcs` (see scc_Digraph::head).
- *
- *  \return the constructed scc_Digraph.
+ *  \param[out] out_dg the constructed scc_Digraph.
  */
 scc_ErrorCode iscc_digraph_from_pieces(size_t vertices,
-                                       size_t max_arcs,
-                                       const scc_Arci tail_ptr[static vertices + 1],
-                                       const scc_Dpid head[static max_arcs],
+                                       uint64_t max_arcs,
+                                       const iscc_Arci tail_ptr[static vertices + 1],
+                                       const iscc_Dpid head[static max_arcs],
                                        iscc_Digraph* out_dg);
 
 /** Constructs digraph from human readable strings.
@@ -122,11 +125,23 @@ scc_ErrorCode iscc_digraph_from_pieces(size_t vertices,
  *  \enddot
  *
  *  \param[in] dg_str a null terminated string describing an adjacency matrix.
- *
- *  \return the digraph described by \p dg_str.
+ *  \param[out] out_dg the digraph described by \p dg_str.
  */
 scc_ErrorCode iscc_digraph_from_string(const char dg_str[],
                                        iscc_Digraph* out_dg);
+
+/** Deep copy of a digraph.
+ *
+ *  This function produces a deep copy of the inputted digraph.
+ *
+ *  \param[in] dg digraph to copy.
+ *  \param[out] out_dg a copy of \p dg that does not share memory space with it.
+ *
+ *  \note This function allocates memory space to fit the arcs actually in \p dg. If \p dg
+ *        contains excess space, scc_Digraph::max_arcs will differ between the original and copy.
+ */
+scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* in_dg,
+                                iscc_Digraph* out_dg);
 
 /** Print a digraph in human readable format.
  *

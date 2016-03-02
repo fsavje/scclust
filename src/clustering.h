@@ -24,8 +24,25 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include "../include/scclust.h"
 
+
+// ==============================================================================
+// Macros
+// ==============================================================================
+
+/// Macro for internal clustering checks.
+#ifndef NDEBUG
+	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
+#else
+	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, false)
+#endif
+
+
+// ==============================================================================
+// Structs, types and variables
+// ==============================================================================
 
 /** Clustering struct.
  *
@@ -49,11 +66,11 @@ struct scc_Clustering {
 	bool external_labels;
 
 	/// Version of the struct.
-	int clustering_version;
+	int32_t clustering_version;
 };
 
 /// Current version of the clustering struct.
-static const int ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
+static const int32_t ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
 
 /** The null clustering.
  *
@@ -61,13 +78,6 @@ static const int ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
  *  value when functions encounter errors.
  */
 static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, NULL, false, 0 };
-
-/// Macro for internal clustering checks.
-#ifndef NDEBUG
-	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
-#else
-	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, false)
-#endif
 
 
 #endif

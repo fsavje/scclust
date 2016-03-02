@@ -21,7 +21,7 @@
 
 /** @file
  *
- *  Public header for the scclust library.
+ *  The scclust library...
  */
 
 #ifndef SCC_SCCLUST_HG
@@ -41,7 +41,7 @@
  *  \note
  *  Number of clusters in any clustering problem must be strictly less
  *  than the maximum number that can be stored in #scc_Clabel. I.e., 
- *  possible cluster labels must be in the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`, 
+ *  cluster labels must be in the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`, 
  *  and `SCC_CLABEL_NA` may not be in this sequence (but it may be `SCC_CLABEL_MAX`).
  */
 typedef uint32_t scc_Clabel;
@@ -55,12 +55,9 @@ static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
 /** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
  *  
  *  \note
- *  Valid values are from 0 to maximum value of `scc_TypeLabel`.
+ *  Type labels must be in the sequence `[0, 1, ..., 65535]`.
  */
-typedef uint32_t scc_TypeLabel;
-
-/// Maximum number that can be stored in #scc_TypeLabel.
-static const scc_Clabel SCC_TYPELABEL_MAX = UINT32_MAX;
+typedef uint_fast16_t scc_TypeLabel;
 
 
 // ==============================================================================
@@ -115,8 +112,8 @@ enum scc_ErrorCode {
 typedef enum scc_ErrorCode scc_ErrorCode;
 
 bool scc_get_error_message(scc_ErrorCode ec,
-                           char error_message_buffer[],
-                           size_t buffer_size);
+                           size_t len_error_message_buffer,
+                           char error_message_buffer[]);
 
 
 // ==============================================================================
@@ -125,12 +122,12 @@ bool scc_get_error_message(scc_ErrorCode ec,
 
 void scc_free_clustering(scc_Clustering** clustering);
 
-scc_ErrorCode scc_init_empty_clustering(uintmax_t num_data_points,
+scc_ErrorCode scc_init_empty_clustering(uint64_t num_data_points,
                                         scc_Clabel external_cluster_labels[],
                                         scc_Clustering** out_clustering);
 
-scc_ErrorCode scc_init_existing_clustering(uintmax_t num_clusters,
-                                           uintmax_t num_data_points,
+scc_ErrorCode scc_init_existing_clustering(uint64_t num_clusters,
+                                           uint64_t num_data_points,
                                            scc_Clabel current_cluster_labels[],
                                            bool deep_label_copy,
                                            scc_Clustering** out_clustering);
@@ -142,11 +139,11 @@ bool scc_check_clustering(const scc_Clustering* cl,
                           bool extensive_check);
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
-                                      uintmax_t* out_num_data_points,
-                                      uintmax_t* out_num_clusters);
+                                      uint64_t* out_num_data_points,
+                                      uint64_t* out_num_clusters);
 
 scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
-                                     size_t buffer_size,
+                                     size_t len_out_label_buffer,
                                      scc_Clabel out_label_buffer[]);
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
@@ -217,6 +214,7 @@ typedef enum scc_SeedMethod scc_SeedMethod;
 
 enum scc_AssignMethod {
 	SCC_AM_IGNORE,
+	SCC_AM_BY_NNG,
 	SCC_AM_CLOSEST_ASSIGNED,
 	SCC_AM_CLOSEST_SEED,
 };
@@ -226,10 +224,10 @@ typedef enum scc_AssignMethod scc_AssignMethod;
 scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
                                 scc_DataSetObject* data_set_object,
                                 uint32_t size_constraint,
+                                size_t len_main_data_points,
+                                const bool main_data_points[],
                                 scc_SeedMethod seed_method,
                                 scc_AssignMethod assign_method,
-                                const bool main_data_points[],
-                                size_t main_data_points_length,
                                 bool assign_secondary_points,
                                 bool main_radius_constraint,
                                 double main_radius,
@@ -238,14 +236,15 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
 
 scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
                                            scc_DataSetObject* data_set_object,
-                                           uintmax_t num_types,
-                                           const scc_TypeLabel type_labels[],
-                                           const uint32_t type_constraints[],
                                            uint32_t size_constraint,
+                                           uint64_t num_types,
+                                           const uint32_t type_size_constraints[],
+                                           size_t len_type_labels,
+                                           const scc_TypeLabel type_labels[],
+                                           size_t len_main_data_points,
+                                           const bool main_data_points[],
                                            scc_SeedMethod seed_method,
                                            scc_AssignMethod assign_method,
-                                           const bool main_data_points[],
-                                           size_t main_data_points_length,
                                            bool assign_secondary_points,
                                            bool main_radius_constraint,
                                            double main_radius,

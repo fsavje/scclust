@@ -30,32 +30,32 @@
 #include <stdint.h>
 
 
+// ==============================================================================
+// Structs, types and variables
+// ==============================================================================
+ 
 /** Type used for data point IDs. May be unsigned or signed.
  *
  *  \note
  *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Dpid. I.e., 
- *  possible data point IDs must be in the sequence `[0, 1, ..., SCC_DPID_MAX - 1]`, 
- *  and `SCC_DPID_NA` may not be in this sequence (but it may be `SCC_DPID_MAX`).
+ *  than the maximum number that can be stored in #iscc_Dpid. I.e., 
+ *  possible data point IDs must be in the sequence `[0, 1, ..., ISCC_DPID_MAX - 1]`.
  */
-typedef uint32_t scc_Dpid;
+typedef uint32_t iscc_Dpid;
 
-/// Maximum number that can be stored in #scc_Dpid. May not be greater than `SIZE_MAX`.
-static const scc_Dpid SCC_DPID_MAX = UINT32_MAX;
-
-/// Value to indicate invalid data_points.
-static const scc_Dpid SCC_DPID_NA = UINT32_MAX;
+/// Maximum number that can be stored in #iscc_Dpid. May not be greater than `SIZE_MAX - 1`.
+static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
 
 /** Type used for arc indices. Must be unsigned.
  *  
  *  \note
  *  Number of arcs in any digraph must be less or equal to 
- *  the maximum number that can be stored in #scc_Arci.
+ *  the maximum number that can be stored in #iscc_Arci.
  */
-typedef uint32_t scc_Arci;
+typedef uint32_t iscc_Arci;
 
-/// Maximum number that can be stored in #scc_Arci.
-static const scc_Arci SCC_ARCI_MAX = UINT32_MAX;
+/// Maximum number that can be stored in #iscc_Arci.
+static const iscc_Arci ISCC_ARCI_MAX = UINT32_MAX;
 
 
 #endif

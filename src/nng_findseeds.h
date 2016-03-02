@@ -19,22 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
-#ifndef SCC_FINDSEEDS_HG
-#define SCC_FINDSEEDS_HG
+#ifndef SCC_NNG_FINDSEEDS_HG
+#define SCC_NNG_FINDSEEDS_HG
 
 #include <stddef.h>
 #include "../include/scclust.h"
 #include "digraph_core.h"
 
+
+// ==============================================================================
+// Structs, types and variables
+// ==============================================================================
+
 typedef struct iscc_SeedResult iscc_SeedResult;
 struct iscc_SeedResult {
 	size_t capacity;
 	size_t count;
-	scc_Dpid* seeds;
+	iscc_Dpid* seeds;
 };
 
-static const iscc_SeedResult ISCC_NULL_SEED_RESULT = { 0, 0, NULL };
+
+// ==============================================================================
+// Function prototypes
+// ==============================================================================
 
 scc_ErrorCode iscc_find_seeds(const iscc_Digraph* nng,
                               scc_SeedMethod seed_method,

@@ -59,7 +59,7 @@ void scc_free_clustering(scc_Clustering** const clustering)
 }
 
 
-scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
+scc_ErrorCode scc_init_empty_clustering(const uint64_t num_data_points,
                                         scc_Clabel external_cluster_labels[const],
                                         scc_Clustering** const out_clustering)
 {
@@ -69,7 +69,8 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
 	*out_clustering = NULL;
 
 	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > SCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 
 	scc_Clustering* tmp_cl = malloc(sizeof(scc_Clustering));
 	if (tmp_cl == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -90,8 +91,8 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
 }
 
 
-scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_clusters,
-                                           const uintmax_t num_data_points,
+scc_ErrorCode scc_init_existing_clustering(const uint64_t num_clusters,
+                                           const uint64_t num_data_points,
                                            scc_Clabel current_cluster_labels[const],
                                            const bool deep_label_copy,
                                            scc_Clustering** const out_clustering)
@@ -103,8 +104,10 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_clusters,
 
 	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_clusters > SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_clusters > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > SCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (current_cluster_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 
 	const size_t num_data_points_st = (size_t) num_data_points;
@@ -131,11 +134,7 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_clusters,
 		tmp_cl->cluster_label = current_cluster_labels;
 	}
 
-	// Checks if elements of `cluster_label` is well-behaved
-	if (!scc_check_clustering(tmp_cl, true)) {
-		scc_free_clustering(&tmp_cl);
-		return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	}
+	assert(iscc_check_input_clustering(tmp_cl));
 
 	*out_clustering = tmp_cl;
 
@@ -184,7 +183,8 @@ bool scc_check_clustering(const scc_Clustering* const cl,
 {
 	if (cl == NULL) return false;
 	if (cl->num_data_points < 2) return false;
-	if (cl->num_data_points > SCC_DPID_MAX) return false;
+	if (cl->num_data_points > ISCC_DPID_MAX) return false;
+	if (cl->num_data_points > SIZE_MAX - 1) return false;
 	if (cl->num_clusters > SCC_CLABEL_MAX) return false;
 	if (cl->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
 	
@@ -192,8 +192,10 @@ bool scc_check_clustering(const scc_Clustering* const cl,
 		if (cl->cluster_label == NULL) return false;
 
 		if (extensive_check) {
+			assert(cl->num_clusters <= SCC_CLABEL_MAX);
+			const scc_Clabel max_cluster = (scc_Clabel) cl->num_clusters;
 			for (size_t i = 0; i < cl->num_data_points; ++i) {
-				if ((cl->cluster_label[i] > 0) && (cl->cluster_label[i] < cl->num_clusters)) continue;
+				if ((cl->cluster_label[i] > 0) && (cl->cluster_label[i] < max_cluster)) continue;
 				if (cl->cluster_label[i] == 0) continue; // Since `scc_Clabel` can be unsigned
 				if (cl->cluster_label[i] == SCC_CLABEL_NA) continue;
 				return false;
@@ -206,8 +208,8 @@ bool scc_check_clustering(const scc_Clustering* const cl,
 
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
-                                      uintmax_t* const out_num_data_points,
-                                      uintmax_t* const out_num_clusters)
+                                      uint64_t* const out_num_data_points,
+                                      uint64_t* const out_num_clusters)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (out_num_data_points == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
@@ -221,19 +223,19 @@ scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* const clustering,
-                                     const size_t buffer_size,
+                                     const size_t len_out_label_buffer,
                                      scc_Clabel out_label_buffer[const])
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
-	if (buffer_size == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (len_out_label_buffer == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (out_label_buffer == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 
 	size_t write = 0;
-	for (; (write < buffer_size) && (write < clustering->num_data_points); ++write) {
+	for (; (write < len_out_label_buffer) && (write < clustering->num_data_points); ++write) {
 		out_label_buffer[write] = clustering->cluster_label[write];
 	}
-	for (; write < buffer_size; ++write) {
+	for (; write < len_out_label_buffer; ++write) {
 		out_label_buffer[write] = SCC_CLABEL_NA;
 	}
 
@@ -243,10 +245,10 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* const clustering,
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
                                        scc_DataSetObject* const data_set_object,
-                                       scc_ClusteringStats* const out_stats2)
+                                       scc_ClusteringStats* const out_stats)
 {
-	if (out_stats2 == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-	*out_stats2 = ISCC_NULL_CLUSTERING_STATS;
+	if (out_stats == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	*out_stats = ISCC_NULL_CLUSTERING_STATS;
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
@@ -293,8 +295,8 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 	}
 
 	const size_t largest_dist_matrix = (tmp_stats.max_cluster_size * (tmp_stats.max_cluster_size - 1)) / 2;
-	scc_Dpid* const id_store = malloc(sizeof(scc_Dpid[tmp_stats.num_assigned]));
-	scc_Dpid** const cl_members = malloc(sizeof(scc_Dpid*[clustering->num_clusters]));
+	iscc_Dpid* const id_store = malloc(sizeof(iscc_Dpid[tmp_stats.num_assigned]));
+	iscc_Dpid** const cl_members = malloc(sizeof(iscc_Dpid*[clustering->num_clusters]));
 	double* const dist_scratch = malloc(sizeof(double[largest_dist_matrix]));
 	if ((id_store == NULL) || (cl_members == NULL) || (dist_scratch == NULL)) {
 		free(cluster_size);
@@ -309,9 +311,9 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 		cl_members[c] = cl_members[c - 1] + cluster_size[c];
 	}
 
-	assert(clustering->num_data_points < SCC_DPID_MAX);
-	const scc_Dpid num_data_points = (scc_Dpid) clustering->num_data_points; // If `scc_Dpid` is signed
-	for (scc_Dpid i = 0; i < num_data_points; ++i) {
+	assert(clustering->num_data_points <= ISCC_DPID_MAX);
+	const iscc_Dpid num_data_points = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed
+	for (iscc_Dpid i = 0; i < num_data_points; ++i) {
 		if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
 			--cl_members[clustering->cluster_label[i]];
 			*(cl_members[clustering->cluster_label[i]]) = i;
@@ -373,7 +375,7 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 	free(cl_members);
 	free(dist_scratch);
 
-	*out_stats2 = tmp_stats;
+	*out_stats = tmp_stats;
 
 	return iscc_no_error();
 }

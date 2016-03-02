@@ -1,13 +1,11 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-EXLIBS=
 
-OBJECTS=clustering_greedy.o digraph_core.o digraph_operations.o dist_search.o nng_core.o nng_findseeds.o scclust.o
+OBJECTS=digraph_core.o digraph_operations.o dist_search.o error.o greedy_clustering.o nng_clustering.o nng_core.o nng_findseeds.o scclust.o
 BUILDDIR=build
 DEBUGDIR=dbg
 
 BUILDOBJS=$(addprefix $(BUILDDIR)/,$(OBJECTS))
 DEBUGOBJS=$(addprefix $(DEBUGDIR)/,$(OBJECTS) digraph_debug.o)
-
 
 .PHONY: all clean doc library debug clean-debug
 
@@ -29,7 +27,7 @@ $(DEBUGDIR):
 
 library: $(BUILDOBJS)
 	mkdir -p lib
-	$(AR) rcs lib/libscc.a $^ $(EXLIBS)
+	$(AR) rcs lib/libscc.a $^
 
 debug: $(DEBUGOBJS)
 

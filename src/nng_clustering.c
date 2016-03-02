@@ -19,13 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 #include "../include/scclust.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include "../include/scclust.h"
 #include "clustering.h"
 #include "digraph_core.h"
 #include "dist_search.h"
@@ -33,8 +34,9 @@
 #include "nng_core.h"
 #include "nng_findseeds.h"
 
+
 // ==============================================================================
-// Internal structs and variables
+// Internal variables
 // ==============================================================================
 
 static const scc_SeedMethod SCC_SM_MAX = SCC_SM_EXCLUSION_UPDATING;
@@ -47,11 +49,11 @@ static const scc_AssignMethod SCC_AM_MAX = SCC_AM_CLOSEST_SEED;
 
 scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
                                 scc_DataSetObject* const data_set_object,
-                                const size_t num_data_points,
-                                const size_t size_constraint,
+                                const uint32_t size_constraint,
+                                const size_t len_main_data_points,
+                                const bool main_data_points[const],
                                 const scc_SeedMethod seed_method,
                                 const scc_AssignMethod assign_method,
-                                const bool main_data_points[const],
                                 const bool assign_secondary_points,
                                 const bool main_radius_constraint,
                                 const double main_radius,
@@ -59,12 +61,14 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
                                 const double secondary_radius)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_data_points != num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (!iscc_check_data_set_object(data_set_object, num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
-	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (clustering->num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((main_data_points != NULL) && (len_main_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (seed_method > SCC_SM_MAX) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (assign_method > SCC_AM_MAX) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((assign_method == SCC_AM_IGNORE) && assign_secondary_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((assign_method == SCC_AM_BY_NNG) && assign_secondary_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_radius_constraint && main_radius <= 0.0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && secondary_radius <= 0.0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 
@@ -73,17 +77,17 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 	scc_ErrorCode ec;
 	iscc_Digraph nng;
 	if ((ec = iscc_get_nng_with_size_constraint(data_set_object,
-                                                num_data_points,
-                                                size_constraint,
-                                                main_data_points,
-                                                main_radius_constraint,
-                                                main_radius,
-                                                &nng)) != SCC_ER_OK) {
+	                                            clustering->num_data_points,
+	                                            size_constraint,
+	                                            main_data_points,
+	                                            main_radius_constraint,
+	                                            main_radius,
+	                                            &nng)) != SCC_ER_OK) {
 		return ec;
 	}
 
 	iscc_SeedResult sr = {
-		.capacity = 1 + (num_data_points / size_constraint),
+		.capacity = 1 + (clustering->num_data_points / size_constraint),
 		.count = 0,
 		.seeds = NULL,
 	};
@@ -92,7 +96,7 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 		return ec;
 	}
 
-	bool* const unassigned = malloc(sizeof(bool[num_data_points]));
+	bool* const unassigned = malloc(sizeof(bool[clustering->num_data_points]));
 	if (unassigned == NULL) {
 		iscc_free_digraph(&nng);
 		free(sr.seeds);
@@ -106,31 +110,47 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 		return ec;
 	}
 
+	const size_t num_assigned = sr.count * size_constraint;
+	assert(num_assigned <= clustering->num_data_points);
+	if (num_assigned == clustering->num_data_points) {
+		iscc_free_digraph(&nng);
+		free(sr.seeds);
+		free(unassigned);
+		return iscc_no_error();
+	}
+
 	switch (assign_method) {
 		case SCC_AM_IGNORE:
 			iscc_free_digraph(&nng);
 			free(sr.seeds);
 			ec = iscc_remaining_ignore(clustering, unassigned);
 			break;
+		case SCC_AM_BY_NNG:
+			free(sr.seeds);
+			ec = iscc_remaining_by_nng(clustering, &nng, unassigned);
+			iscc_free_digraph(&nng);
+			break;
 		case SCC_AM_CLOSEST_ASSIGNED:
 			free(sr.seeds);
-			ec = iscc_remaining_to_nearest_assigned(data_set_object,
-			                                        clustering,
+			ec = iscc_remaining_to_nearest_assigned(clustering,
+			                                        data_set_object,
 			                                        &nng,
-			                                        sr.count * size_constraint,
+			                                        num_assigned,
 			                                        unassigned,
 			                                        main_data_points,
 			                                        assign_secondary_points,
+			                                        main_radius_constraint,
+			                                        main_radius,
 			                                        secondary_radius_constraint,
 			                                        secondary_radius);
-			iscc_free_digraph(&nng);
+			// `nng` is freed by `iscc_remaining_to_nearest_assigned`
 			break;
 		case SCC_AM_CLOSEST_SEED:
 			iscc_free_digraph(&nng);
-			ec = iscc_remaining_to_nearest_seed(data_set_object,
-			                                    clustering,
+			ec = iscc_remaining_to_nearest_seed(clustering,
+			                                    data_set_object,
 			                                    &sr,
-			                                    sr.count * size_constraint,
+			                                    num_assigned,
 			                                    unassigned,
 			                                    main_data_points,
 			                                    assign_secondary_points,
@@ -141,12 +161,13 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 			free(sr.seeds);
 			break;
 		default:
-			assert(false);
 			iscc_free_digraph(&nng);
 			free(sr.seeds);
+			assert(false);
 			ec = iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
 			break;
 	}
+
 	free(unassigned);
 
 	if (ec != SCC_ER_OK) return ec;
@@ -157,14 +178,15 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 
 scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
                                            scc_DataSetObject* const data_set_object,
-                                           const size_t num_data_points,
-                                           const size_t num_types,
+                                           const uint32_t size_constraint,
+                                           const uint64_t num_types,
+                                           const uint32_t type_size_constraints[const],
+                                           const size_t len_type_labels,
                                            const scc_TypeLabel type_labels[const],
-                                           const size_t type_constraints[const],
-                                           const size_t size_constraint,
+                                           const size_t len_main_data_points,
+                                           const bool main_data_points[const],
                                            const scc_SeedMethod seed_method,
                                            const scc_AssignMethod assign_method,
-                                           const bool main_data_points[const],
                                            const bool assign_secondary_points,
                                            const bool main_radius_constraint,
                                            const double main_radius,
@@ -172,28 +194,35 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
                                            const double secondary_radius)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_data_points != num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (!iscc_check_data_set_object(data_set_object, num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
-	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (clustering->num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
+	if (size_constraint == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (num_types > 65536) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-	if (type_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-	if (size_constraint < 1) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((main_data_points != NULL) && (len_main_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (seed_method > SCC_SM_MAX) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (assign_method > SCC_AM_MAX) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((assign_method == SCC_AM_IGNORE) && assign_secondary_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((assign_method == SCC_AM_BY_NNG) && assign_secondary_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_radius_constraint && main_radius <= 0.0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && secondary_radius <= 0.0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 
 	if (clustering->num_clusters != 0) return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
 
+	assert(num_types <= UINT_FAST16_MAX);
+	const uint_fast16_t num_types_f16 = (uint_fast16_t) num_types;
+
 	scc_ErrorCode ec;
 	iscc_Digraph nng;
 	if ((ec = iscc_get_nng_with_type_constraint(data_set_object,
-                                                num_data_points,
-                                                num_types,
-                                                type_labels,
-                                                type_constraints,
+                                                clustering->num_data_points,
                                                 size_constraint,
+                                                num_types_f16,
+                                                type_size_constraints,
+                                                type_labels,
                                                 main_data_points,
                                                 main_radius_constraint,
                                                 main_radius,
@@ -202,7 +231,7 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 	}
 
 	iscc_SeedResult sr = {
-		.capacity = 1 + (num_data_points / size_constraint),
+		.capacity = 1 + (clustering->num_data_points / size_constraint),
 		.count = 0,
 		.seeds = NULL,
 	};
@@ -211,7 +240,7 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 		return ec;
 	}
 
-	bool* const unassigned = malloc(sizeof(bool[num_data_points]));
+	bool* const unassigned = malloc(sizeof(bool[clustering->num_data_points]));
 	if (unassigned == NULL) {
 		iscc_free_digraph(&nng);
 		free(sr.seeds);
@@ -225,31 +254,47 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 		return ec;
 	}
 
+	const size_t num_assigned = sr.count * size_constraint;
+	assert(num_assigned <= clustering->num_data_points);
+	if (num_assigned == clustering->num_data_points) {
+		iscc_free_digraph(&nng);
+		free(sr.seeds);
+		free(unassigned);
+		return iscc_no_error();
+	}
+
 	switch (assign_method) {
 		case SCC_AM_IGNORE:
 			iscc_free_digraph(&nng);
 			free(sr.seeds);
 			ec = iscc_remaining_ignore(clustering, unassigned);
 			break;
+		case SCC_AM_BY_NNG:
+			free(sr.seeds);
+			ec = iscc_remaining_by_nng(clustering, &nng, unassigned);
+			iscc_free_digraph(&nng);
+			break;
 		case SCC_AM_CLOSEST_ASSIGNED:
 			free(sr.seeds);
-			ec = iscc_remaining_to_nearest_assigned(data_set_object,
-			                                        clustering,
-			                                        &nng,
-			                                        sr.count * size_constraint,
+			iscc_free_digraph(&nng);
+			ec = iscc_remaining_to_nearest_assigned(clustering,
+			                                        data_set_object,
+			                                        NULL,
+			                                        num_assigned,
 			                                        unassigned,
 			                                        main_data_points,
 			                                        assign_secondary_points,
+			                                        main_radius_constraint,
+			                                        main_radius,
 			                                        secondary_radius_constraint,
 			                                        secondary_radius);
-			iscc_free_digraph(&nng);
 			break;
 		case SCC_AM_CLOSEST_SEED:
 			iscc_free_digraph(&nng);
-			ec = iscc_remaining_to_nearest_seed(data_set_object,
-			                                    clustering,
+			ec = iscc_remaining_to_nearest_seed(clustering,
+			                                    data_set_object,
 			                                    &sr,
-			                                    sr.count * size_constraint,
+			                                    num_assigned,
 			                                    unassigned,
 			                                    main_data_points,
 			                                    assign_secondary_points,
@@ -260,17 +305,16 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 			free(sr.seeds);
 			break;
 		default:
-			assert(false);
 			iscc_free_digraph(&nng);
 			free(sr.seeds);
+			assert(false);
 			ec = iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
 			break;
 	}
+
 	free(unassigned);
 
 	if (ec != SCC_ER_OK) return ec;
 
 	return iscc_no_error();
 }
-
-
