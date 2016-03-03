@@ -29,7 +29,7 @@
 #include "config.h"
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 
@@ -105,7 +105,7 @@ bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
 #endif // ifndef SCC_DIST_SEARCH_HG

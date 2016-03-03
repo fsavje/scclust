@@ -25,12 +25,20 @@
 #include <stddef.h>
 #include "scclust.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 struct scc_DataSetObject {
-	size_t cols;
-	size_t rows;
-	double* elements;
+	size_t num_data_points;
+	size_t num_dimensions;
+	double* data_matrix;
 };
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ifndef SCC_DATA_OBJ_HG

@@ -32,7 +32,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 
@@ -68,7 +68,7 @@ typedef uint_fast16_t scc_TypeLabel;
 // Library specific types and structs, non-serviceable
 // ==============================================================================
 
-/// Type used for data set objects. This struct is defined in `src/dist_search.c` (or by user). 
+/// Type used for data set objects. This struct is defined elsewhere (see `data_obj.h`). 
 typedef struct scc_DataSetObject scc_DataSetObject;
 
 /// Type used for clusterings
@@ -92,6 +92,20 @@ struct scc_ClusteringStats {
 	double cl_avg_dist_weighted;
 	double cl_avg_dist_unweighted;
 };
+
+
+// ==============================================================================
+// Version information
+// ==============================================================================
+
+#define SCC_SCCLUST_MAJOR_VERSION 0
+#define SCC_SCCLUST_MINOR_VERSION 0
+#define SCC_SCCLUST_REVISION 1
+#define SCC_CHECK_VERSION(major, minor) ((major == SCC_SCCLUST_MAJOR_VERSION) && (minor <= SCC_SCCLUST_MINOR_VERSION))
+
+void scc_get_compiled_version(uint32_t* out_major,
+                              uint32_t* out_minor,
+                              uint32_t* out_revision);
 
 
 // ==============================================================================
@@ -276,7 +290,7 @@ scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
 #endif // ifndef SCC_SCCLUST_HG

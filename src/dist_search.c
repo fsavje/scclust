@@ -28,25 +28,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/data_obj.h"
-#include "../include/scclust.h"
 #include "config.h"
 
-
-// ==============================================================================
-// Internal struct definitions
-// ==============================================================================
-
-struct iscc_MaxDistObject {
-	const scc_DataSetObject* data_set_object;
-	size_t len_search_indices;
-	const iscc_Dpid* search_indices;
-};
-
-struct iscc_NNSearchObject {
-	const scc_DataSetObject* data_set_object;
-	size_t len_search_indices;
-	const iscc_Dpid* search_indices;
-};
+typedef struct scc_DataSetObject scc_DataSetObject;
 
 
 // ==============================================================================
@@ -69,15 +53,16 @@ static inline void iscc_add_dist_to_list(double add_dist,
 
 
 // ==============================================================================
-// External function implementations
+// Miscellaneous functions
 // ==============================================================================
 
 bool iscc_check_data_set_object(scc_DataSetObject* const data_set_object,
                                 const uint64_t required_data_points)
 {
-	if ((data_set_object == NULL) || (data_set_object->elements == NULL)) return false;
-	if (data_set_object->cols == 0) return false;
-	if (data_set_object->rows < required_data_points) return false;
+	if (data_set_object == NULL) return false;
+	if (data_set_object->num_data_points < required_data_points) return false;
+	if (data_set_object->num_dimensions == 0) return false;
+	if (data_set_object->data_matrix == NULL) return false;
 	return true;
 }
 
@@ -87,7 +72,7 @@ bool iscc_get_dist_matrix(scc_DataSetObject* const data_set_object,
                           const iscc_Dpid point_indices[const],
                           double output_dists[])
 {
-	assert(iscc_check_data_set_object(data_set_object, 0));
+	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_point_indices > 1);
 	assert(output_dists != NULL);
 
@@ -118,7 +103,7 @@ bool iscc_get_dist_rows(scc_DataSetObject* const data_set_object,
                         const iscc_Dpid column_indices[const],
                         double output_dists[])
 {
-	assert(iscc_check_data_set_object(data_set_object, 0));
+	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_query_indices > 0);
 	assert(len_column_indices > 0);
 	assert(output_dists != NULL);
@@ -160,12 +145,23 @@ bool iscc_get_dist_rows(scc_DataSetObject* const data_set_object,
 }
 
 
+// ==============================================================================
+// Max dist functions
+// ==============================================================================
+
+struct iscc_MaxDistObject {
+	scc_DataSetObject* data_set_object;
+	size_t len_search_indices;
+	const iscc_Dpid* search_indices;
+};
+
+
 bool iscc_init_max_dist_object(scc_DataSetObject* const data_set_object,
                                const size_t len_search_indices,
                                const iscc_Dpid search_indices[const],
                                iscc_MaxDistObject** const out_max_dist_object)
 {
-	assert(iscc_check_data_set_object(data_set_object, 0));
+	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_search_indices > 0);
 	assert(out_max_dist_object != NULL);
 
@@ -189,10 +185,11 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
                        double max_dists[const])
 {
 	assert(max_dist_object != NULL);
-	const scc_DataSetObject* const data_set_object = max_dist_object->data_set_object;
+	scc_DataSetObject* const data_set_object = max_dist_object->data_set_object;
 	const size_t len_search_indices = max_dist_object->len_search_indices;
 	const iscc_Dpid* const search_indices = max_dist_object->search_indices;
 
+	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_search_indices > 0);
 	assert(len_query_indices > 0);
 	assert(max_indices != NULL);
@@ -268,14 +265,25 @@ bool iscc_close_max_dist_object(iscc_MaxDistObject** const max_dist_object)
 }
 
 
+// ==============================================================================
+// Nearest neighbor search functions
+// ==============================================================================
+
 #ifndef SCC_NOT_NN_SEARCH
+
+struct iscc_NNSearchObject {
+	scc_DataSetObject* data_set_object;
+	size_t len_search_indices;
+	const iscc_Dpid* search_indices;
+};
+
 
 bool iscc_init_nn_search_object(scc_DataSetObject* const data_set_object,
                                 const size_t len_search_indices,
                                 const iscc_Dpid search_indices[const],
                                 iscc_NNSearchObject** const out_nn_search_object)
 {
-	assert(iscc_check_data_set_object(data_set_object, 0));
+	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
 
@@ -304,10 +312,11 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
                                   iscc_Dpid out_nn_indices[const])
 {
 	assert(nn_search_object != NULL);
-	const scc_DataSetObject* const data_set_object = nn_search_object->data_set_object;
+	scc_DataSetObject* const data_set_object = nn_search_object->data_set_object;
 	const size_t len_search_indices = nn_search_object->len_search_indices;
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 
+	assert(iscc_check_data_set_object(data_set_object, len_query_indicators));
 	assert(len_search_indices > 0);
 	assert(len_query_indicators > 0);
 	assert(k > 0);
@@ -403,36 +412,6 @@ bool iscc_close_nn_search_object(iscc_NNSearchObject** const nn_search_object)
 	return true;
 }
 
-#endif // ifndef SCC_NOT_NN_SEARCH
-
-
-// ==============================================================================
-// Internal function implementations 
-// ==============================================================================
-
-static inline double iscc_get_sq_dist(const scc_DataSetObject* const data_set_object,
-                                      size_t index1,
-                                      size_t index2)
-{
-	assert(index1 < data_set_object->rows);
-	assert(index2 < data_set_object->rows);
-
-	const double* data1 = &data_set_object->elements[index1 * data_set_object->cols];
-	const double* const data1_stop = data1 + data_set_object->cols;
-	const double* data2 = &data_set_object->elements[index2 * data_set_object->cols];
-
-	double tmp_dist = 0.0;
-	while (data1 != data1_stop) {
-		const double value_diff = (*data1 - *data2);
-		++data1;
-		++data2;
-		tmp_dist += value_diff * value_diff;
-	}
-	return tmp_dist;
-}
-
-
-#ifndef SCC_NOT_NN_SEARCH
 
 static inline void iscc_add_dist_to_list(const double add_dist,
                                          const iscc_Dpid add_index,
@@ -453,3 +432,29 @@ static inline void iscc_add_dist_to_list(const double add_dist,
 }
 
 #endif // ifndef SCC_NOT_NN_SEARCH
+
+
+// ==============================================================================
+// Internal function implementations 
+// ==============================================================================
+
+static inline double iscc_get_sq_dist(const scc_DataSetObject* const data_set_object,
+                                      size_t index1,
+                                      size_t index2)
+{
+	assert(index1 < data_set_object->num_data_points);
+	assert(index2 < data_set_object->num_data_points);
+
+	const double* data1 = &data_set_object->data_matrix[index1 * data_set_object->num_dimensions];
+	const double* const data1_stop = data1 + data_set_object->num_dimensions;
+	const double* data2 = &data_set_object->data_matrix[index2 * data_set_object->num_dimensions];
+
+	double tmp_dist = 0.0;
+	while (data1 != data1_stop) {
+		const double value_diff = (*data1 - *data2);
+		++data1;
+		++data2;
+		tmp_dist += value_diff * value_diff;
+	}
+	return tmp_dist;
+}

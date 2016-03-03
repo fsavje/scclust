@@ -39,6 +39,16 @@ static int iscc_error_line = -1;
 // External function implementations
 // ==============================================================================
 
+void scc_get_compiled_version(uint32_t* const out_major,
+                              uint32_t* const out_minor,
+                              uint32_t* const out_revision)
+{
+	if (out_major != NULL) *out_major = SCC_SCCLUST_MAJOR_VERSION;
+	if (out_minor != NULL) *out_minor = SCC_SCCLUST_MINOR_VERSION;
+	if (out_revision != NULL) *out_revision = SCC_SCCLUST_REVISION;
+}
+
+
 scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
                                    const char* const file,
                                    const int line)
