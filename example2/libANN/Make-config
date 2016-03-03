@@ -1,0 +1,5 @@
+ANNLIB = libANN.a
+C++ = $(CXX)
+CFLAGS = -O2
+MAKELIB = $(AR) rcs
+RANLIB = true
