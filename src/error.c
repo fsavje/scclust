@@ -30,8 +30,8 @@
 // Internal variables
 // ==============================================================================
 
+static scc_ErrorCode iscc_error_code = SCC_ER_OK;
 static const char* iscc_error_file = "unknown file";
-
 static int iscc_error_line = -1;
 
 
@@ -55,6 +55,7 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
 {
 	assert((ec > SCC_ER_OK) && (ec <= SCC_ER_NOT_IMPLEMENTED));
 
+	iscc_error_code = ec;
 	iscc_error_file = file;
 	iscc_error_line = line;
 
@@ -64,24 +65,24 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
 
 void iscc_reset_error(void)
 {
+	iscc_error_code = SCC_ER_OK;
 	iscc_error_file = "unknown file";
 	iscc_error_line = -1;
 }
 
 
-bool scc_get_error_message(const scc_ErrorCode ec,
-                           const size_t len_error_message_buffer,
-                           char error_message_buffer[const])
+bool scc_get_latest_error(const size_t len_error_message_buffer,
+                          char error_message_buffer[const])
 {
 	if ((len_error_message_buffer == 0) || (error_message_buffer == NULL)) return false;
 
-	if (ec == SCC_ER_OK) {
+	if (iscc_error_code == SCC_ER_OK) {
 		snprintf(error_message_buffer, len_error_message_buffer, "%s", "No error.");
 		return true;
 	}
 
 	const char* error_message;
-	switch (ec) {
+	switch (iscc_error_code) {
 		case SCC_ER_NULL_INPUT:
 			error_message = "A required input pointer is NULL.";
 			break;

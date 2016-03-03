@@ -126,9 +126,8 @@ enum scc_ErrorCode {
 /// Typedef for the scc_ErrorCode enum
 typedef enum scc_ErrorCode scc_ErrorCode;
 
-bool scc_get_error_message(scc_ErrorCode ec,
-                           size_t len_error_message_buffer,
-                           char error_message_buffer[]);
+bool scc_get_latest_error(size_t len_error_message_buffer,
+                          char error_message_buffer[]);
 
 
 // ==============================================================================
