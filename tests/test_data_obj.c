@@ -30,6 +30,8 @@
 #include "../src/config.h"
 #include "../src/data_obj_int.h"
 
+// ISCC_DPID_MAX should be UINT32_MAX
+// SIZE_MAX is redefined to (UINT32_MAX - 10) by test_suite.h
 
 void scc_ut_free_data_set_object(void** state)
 {
@@ -97,12 +99,12 @@ void scc_ut_get_data_set_object(void** state)
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
 	scc_DataSetObject* dso3;
-	scc_ErrorCode ec3 = scc_get_data_set_object(((uint64_t) ISCC_DPID_MAX) + 2, 2, 10, coord, false, &dso3);
+	scc_ErrorCode ec3 = scc_get_data_set_object(((uint64_t) UINT32_MAX) + 1, 2, 10, coord, false, &dso3);
 	assert_null(dso3);
 	assert_int_equal(ec3, SCC_ER_TOO_LARGE_PROBLEM);
 
 	scc_DataSetObject* dso4;
-	scc_ErrorCode ec4 = scc_get_data_set_object(SIZE_MAX, 2, 10, coord, false, &dso4);
+	scc_ErrorCode ec4 = scc_get_data_set_object(((uint64_t) UINT32_MAX) - 5, 2, 10, coord, false, &dso4);
 	assert_null(dso4);
 	assert_int_equal(ec4, SCC_ER_TOO_LARGE_PROBLEM);
 
@@ -112,7 +114,7 @@ void scc_ut_get_data_set_object(void** state)
 	assert_int_equal(ec5, SCC_ER_INVALID_INPUT);
 
 	scc_DataSetObject* dso6;
-	scc_ErrorCode ec6 = scc_get_data_set_object(5, UINT16_MAX + 2, 10, coord, false, &dso6);
+	scc_ErrorCode ec6 = scc_get_data_set_object(5, ((uint64_t) UINT16_MAX) + 1, 10, coord, false, &dso6);
 	assert_null(dso6);
 	assert_int_equal(ec6, SCC_ER_TOO_LARGE_PROBLEM);
 

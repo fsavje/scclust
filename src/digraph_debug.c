@@ -79,8 +79,8 @@ bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
 bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
                          const iscc_Digraph* const dg_b)
 {
-	if (dg_a == NULL) return (dg_b == NULL);
-	if (dg_a->tail_ptr == NULL) return (dg_b->tail_ptr == NULL);
+	assert(iscc_digraph_is_initialized(dg_a));
+	assert(iscc_digraph_is_initialized(dg_b));
 	if (dg_a->vertices != dg_b->vertices) return false;
 
 	int_fast8_t* const single_row = calloc(dg_a->vertices, sizeof(int_fast8_t));
@@ -123,11 +123,13 @@ scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
                                        const iscc_Dpid head[const static max_arcs],
                                        iscc_Digraph* const out_dg)
 {
+	assert(vertices > 0);
 	assert(vertices <= ISCC_DPID_MAX);
+	assert(max_arcs > 0);
 	assert(max_arcs <= ISCC_ARCI_MAX);
 	assert(max_arcs <= SIZE_MAX);
 	assert(tail_ptr != NULL);
-	assert((max_arcs == 0) || (head != NULL));
+	assert(head != NULL);
 	assert(out_dg != NULL);
 
 	scc_ErrorCode ec;

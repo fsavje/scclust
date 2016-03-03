@@ -19,28 +19,70 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 #include "test_suite.h"
-#include "assert_digraph.h"
+#include "../src/digraph_core.h"
 
 #include <stddef.h>
-#include "../src/digraph_core.h"
-#include "../src/digraph_debug.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include "../include/scclust.h"
+#include "../src/config.h"
+
+// ISCC_DPID_MAX should be UINT32_MAX
+// ISCC_ARCI_MAX should be UINT32_MAX
+// SIZE_MAX is redefined to (UINT32_MAX - 10) by test_suite.h
 
 
-void scc_ut_init_digraph(void** state)
+void scc_ut_free_digraph(void** state)
 {
 	(void) state;
 
-	iscc_Digraph my_graph1 = iscc_init_digraph(0, 0);
-	assert_initialized_digraph(&my_graph1, 0);
-	assert_int_equal(my_graph1.max_arcs, 0);
-	assert_free_digraph(&my_graph1);
+	iscc_Digraph dg1 = {
+		.vertices = 123,
+		.max_arcs = 1234,
+		.head = malloc(sizeof(iscc_Dpid[1234])),
+		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+	};
 
-	iscc_Digraph my_graph2 = iscc_init_digraph(10, 100);
-	assert_initialized_digraph(&my_graph2, 10);
-	assert_int_equal(my_graph2.max_arcs, 100);
-	assert_free_digraph(&my_graph2);
+	iscc_Digraph dg2 = {
+		.vertices = 123,
+		.max_arcs = 0,
+		.head = NULL,
+		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+	};
+
+	iscc_Digraph dg3 = {
+		.vertices = 123,
+		.max_arcs = 1234,
+		.head = NULL,
+		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+	};
+
+	iscc_Digraph dg4 = {
+		.vertices = 123,
+		.max_arcs = 1234,
+		.head = malloc(sizeof(iscc_Dpid[1234])),
+		.tail_ptr = NULL,
+	};
+
+	iscc_Digraph dg5 = ISCC_NULL_DIGRAPH;
+
+	iscc_free_digraph(NULL);
+
+	iscc_free_digraph(&dg1);
+	assert_memory_equal(&dg1, &ISCC_NULL_DIGRAPH, sizeof(iscc_Digraph));
+
+	iscc_free_digraph(&dg2);
+	assert_memory_equal(&dg2, &ISCC_NULL_DIGRAPH, sizeof(iscc_Digraph));
+
+	iscc_free_digraph(&dg3);
+	assert_memory_equal(&dg3, &ISCC_NULL_DIGRAPH, sizeof(iscc_Digraph));
+
+	iscc_free_digraph(&dg4);
+	assert_memory_equal(&dg4, &ISCC_NULL_DIGRAPH, sizeof(iscc_Digraph));
+
+	iscc_free_digraph(&dg5);
+	assert_memory_equal(&dg5, &ISCC_NULL_DIGRAPH, sizeof(iscc_Digraph));
 }
 
 
@@ -48,84 +90,86 @@ void scc_ut_digraph_is_initialized(void** state)
 {
 	(void) state;
 
-	iscc_Digraph dg1 = iscc_init_digraph(4, 10);
-	iscc_Digraph dg2 = ISCC_NULL_DIGRAPH;
-	iscc_Digraph dg3 = iscc_init_digraph(4, 0);
+	iscc_Dpid heads[100];
+	iscc_Arci tails[11];
+
+	iscc_Digraph dg = {
+		.vertices = 10,
+		.max_arcs = 100,
+		.head = heads,
+		.tail_ptr = tails,
+	};
 
 	assert_false(iscc_digraph_is_initialized(NULL));
-	assert_true(iscc_digraph_is_initialized(&dg1));
-	assert_false(iscc_digraph_is_initialized(&dg2));
+	
+	assert_false(iscc_digraph_is_initialized(&ISCC_NULL_DIGRAPH));
+
+	assert_true(iscc_digraph_is_initialized(&dg));
+
+	dg.max_arcs = 0;
+	dg.head = NULL;
+	assert_true(iscc_digraph_is_initialized(&dg));
+	dg.max_arcs = 100;
+	dg.head = heads;
+
+	dg.tail_ptr = NULL;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.tail_ptr = tails;
+
+	dg.vertices = ((size_t) UINT32_MAX) + 1;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.vertices = 10;
+	
+	dg.max_arcs = ((size_t) UINT32_MAX) + 1;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.max_arcs = 100;
+
+	dg.max_arcs = 0;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.max_arcs = 100;
+	
+	dg.max_arcs = 0;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.max_arcs = 100;
+
+	dg.head = NULL;
+	assert_false(iscc_digraph_is_initialized(&dg));
+	dg.head = heads;
+}
+
+
+void scc_ut_init_digraph(void** state)
+{
+	(void) state;
+
+	iscc_Digraph dg1;
+	scc_ErrorCode ec1 = iscc_init_digraph(100, ((uint64_t) UINT32_MAX) + 1, &dg1);
+	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+	
+	iscc_Digraph dg2;
+	scc_ErrorCode ec2 = iscc_init_digraph(100, ((uint64_t) UINT32_MAX) - 5, &dg2);
+	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
+
+	iscc_Digraph dg3;
+	scc_ErrorCode ec3 = iscc_init_digraph(100, 1000, &dg3);
 	assert_true(iscc_digraph_is_initialized(&dg3));
+	assert_int_equal(dg3.vertices, 100);
+	assert_int_equal(dg3.max_arcs, 1000);
+	assert_non_null(dg3.head);
+	assert_non_null(dg3.tail_ptr);
+	assert_int_equal(ec3, SCC_ER_OK);
+	
+	iscc_Digraph dg4;
+	scc_ErrorCode ec4 = iscc_init_digraph(100, 0, &dg4);
+	assert_true(iscc_digraph_is_initialized(&dg4));
+	assert_int_equal(dg4.vertices, 100);
+	assert_int_equal(dg4.max_arcs, 0);
+	assert_null(dg4.head);
+	assert_non_null(dg4.tail_ptr);
+	assert_int_equal(ec4, SCC_ER_OK);
 
-	dg3.head = dg1.head;
-	dg1.head = NULL;
-
-	assert_false(iscc_digraph_is_initialized(&dg1));
-	assert_false(iscc_digraph_is_initialized(&dg3));
-
-	iscc_free_digraph(&dg1);
-	iscc_free_digraph(&dg2);
 	iscc_free_digraph(&dg3);
-}
-
-
-void scc_ut_free_digraph(void** state)
-{
-	(void) state;
-
-	iscc_Digraph null_graph = ISCC_NULL_DIGRAPH;
-
-	iscc_Digraph my_graph1 = iscc_empty_digraph(10, 10);
-	iscc_free_digraph(&my_graph1);
-	assert_memory_equal(&my_graph1, &null_graph, sizeof(iscc_Digraph));
-
-	iscc_Digraph my_graph2 = iscc_empty_digraph(10, 10);
-	free(my_graph2.head);
-	my_graph2.head = NULL;
-	iscc_free_digraph(&my_graph2);
-	assert_memory_equal(&my_graph2, &null_graph, sizeof(iscc_Digraph));
-
-	iscc_Digraph my_graph3 = ISCC_NULL_DIGRAPH;
-	iscc_free_digraph(&my_graph3);
-	assert_memory_equal(&my_graph3, &null_graph, sizeof(iscc_Digraph));
-
-	iscc_free_digraph(NULL);
-}
-
-
-void scc_ut_change_arc_storage(void** state)
-{
-	(void) state;
-
-	iscc_Digraph my_graph1 = iscc_empty_digraph(10, 100);
-	assert_true(iscc_change_arc_storage(&my_graph1, 100));
-	assert_empty_digraph(&my_graph1, 10);
-	assert_int_equal(my_graph1.max_arcs, 100);
-	assert_free_digraph(&my_graph1);
-
-	iscc_Digraph my_graph2 = iscc_digraph_from_string("#.../.#../..#./...#/");
-	assert_false(iscc_change_arc_storage(&my_graph2, 2));
-	assert_valid_digraph(&my_graph2, 4);
-	assert_int_equal(my_graph2.max_arcs, 4);
-	assert_free_digraph(&my_graph2);
-
-	iscc_Digraph my_graph3 = iscc_empty_digraph(10, 100);
-	assert_true(iscc_change_arc_storage(&my_graph3, 50));
-	assert_empty_digraph(&my_graph3, 10);
-	assert_int_equal(my_graph3.max_arcs, 50);
-	assert_free_digraph(&my_graph3);
-
-	iscc_Digraph my_graph4 = iscc_empty_digraph(10, 100);
-	assert_true(iscc_change_arc_storage(&my_graph4, 200));
-	assert_empty_digraph(&my_graph4, 10);
-	assert_int_equal(my_graph4.max_arcs, 200);
-	assert_free_digraph(&my_graph4);
-
-	iscc_Digraph my_graph5 = iscc_empty_digraph(0, 100);
-	assert_true(iscc_change_arc_storage(&my_graph5, 0));
-	assert_empty_digraph(&my_graph5, 0);
-	assert_int_equal(my_graph5.max_arcs, 0);
-	assert_free_digraph(&my_graph5);
+	iscc_free_digraph(&dg4);
 }
 
 
@@ -133,162 +177,114 @@ void scc_ut_empty_digraph(void** state)
 {
 	(void) state;
 
-	iscc_Digraph my_graph1 = iscc_empty_digraph(0, 0);
-	assert_empty_digraph(&my_graph1, 0);
-	assert_int_equal(my_graph1.max_arcs, 0);
-	assert_free_digraph(&my_graph1);
+	iscc_Digraph dg1;
+	scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uint64_t) UINT32_MAX) + 1, &dg1);
+	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+	
+	iscc_Digraph dg2;
+	scc_ErrorCode ec2 = iscc_empty_digraph(100, ((uint64_t) UINT32_MAX) - 5, &dg2);
+	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
 
-	iscc_Digraph my_graph2 = iscc_empty_digraph(10, 100);
-	assert_empty_digraph(&my_graph2, 10);
-	assert_int_equal(my_graph2.max_arcs, 100);
-	assert_free_digraph(&my_graph2);
+	iscc_Digraph dg3;
+	scc_ErrorCode ec3 = iscc_empty_digraph(100, 1000, &dg3);
+	assert_true(iscc_digraph_is_initialized(&dg3));
+	assert_int_equal(dg3.vertices, 100);
+	assert_int_equal(dg3.max_arcs, 1000);
+	assert_non_null(dg3.head);
+	assert_non_null(dg3.tail_ptr);
+	for (size_t i = 0; i < 101; ++i) {
+		assert_int_equal(dg3.tail_ptr[i], 0);
+	}
+	assert_int_equal(ec3, SCC_ER_OK);
+	
+	iscc_Digraph dg4;
+	scc_ErrorCode ec4 = iscc_empty_digraph(100, 0, &dg4);
+	assert_true(iscc_digraph_is_initialized(&dg4));
+	assert_int_equal(dg4.vertices, 100);
+	assert_int_equal(dg4.max_arcs, 0);
+	assert_null(dg4.head);
+	assert_non_null(dg4.tail_ptr);
+	for (size_t i = 0; i < 101; ++i) {
+		assert_int_equal(dg4.tail_ptr[i], 0);
+	}
+	assert_int_equal(ec4, SCC_ER_OK);
+
+	iscc_free_digraph(&dg3);
+	iscc_free_digraph(&dg4);
 }
 
 
-void scc_ut_copy_digraph(void** state)
+void scc_ut_change_arc_storage(void** state)
 {
 	(void) state;
 
-	iscc_Digraph dg1 = iscc_digraph_from_string("####/..#./####/#.../");
-	iscc_Digraph dg2 = iscc_empty_digraph(0, 0);
+	iscc_Arci tails[6] = { 0, 1, 2, 3, 4, 5 };
+	iscc_Arci tails_ref[6] = { 0, 1, 2, 3, 4, 5 };
+	iscc_Arci tails_zero[6] = { 0, 0, 0, 0, 0, 0 };
 
-	iscc_Digraph res1 = iscc_copy_digraph(&dg1);
-	iscc_Digraph res2 = iscc_copy_digraph(&dg2);
+	iscc_Digraph dg = {
+		.vertices = 5,
+		.max_arcs = 10,
+		.head = malloc(sizeof(iscc_Dpid[10])),
+		.tail_ptr = tails,
+	};
 
-	assert_valid_digraph(&res1, 4);
-	assert_valid_digraph(&res2, 0);
+	assert_true(iscc_digraph_is_initialized(&dg));
+	scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uint64_t) UINT32_MAX) + 1);
+	assert_int_equal(dg.vertices, 5);
+	assert_int_equal(dg.max_arcs, 10);
+	assert_non_null(dg.head);
+	assert_non_null(dg.tail_ptr);
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
 
-	assert_equal_digraph(&res1, &dg1);
-	assert_equal_digraph(&res2, &dg2);
+	assert_true(iscc_digraph_is_initialized(&dg));
+	scc_ErrorCode ec2 = iscc_change_arc_storage(&dg, ((uint64_t) UINT32_MAX) - 5);
+	assert_int_equal(dg.vertices, 5);
+	assert_int_equal(dg.max_arcs, 10);
+	assert_non_null(dg.head);
+	assert_non_null(dg.tail_ptr);
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
 
-	assert_free_digraph(&dg1);
-	assert_free_digraph(&dg2);
-	assert_free_digraph(&res1);
-	assert_free_digraph(&res2);
-}
+	assert_true(iscc_digraph_is_initialized(&dg));
+	scc_ErrorCode ec3 = iscc_change_arc_storage(&dg, 10);
+	assert_int_equal(dg.vertices, 5);
+	assert_int_equal(dg.max_arcs, 10);
+	assert_non_null(dg.head);
+	assert_non_null(dg.tail_ptr);
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec3, SCC_ER_OK);
 
+	assert_true(iscc_digraph_is_initialized(&dg));
+	scc_ErrorCode ec4 = iscc_change_arc_storage(&dg, 100);
+	assert_int_equal(dg.vertices, 5);
+	assert_int_equal(dg.max_arcs, 100);
+	assert_non_null(dg.head);
+	assert_non_null(dg.tail_ptr);
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec4, SCC_ER_OK);
 
-void scc_ut_delete_arcs_by_tails(void** state)
-{
-	(void) state;
-
-	iscc_Digraph dg1 = iscc_digraph_from_string("####/..../####/..../");
-
-	bool to_delete1[4] = { false, false, false, false };
-	bool to_delete2[4] = { true, true, true, true };
-	bool to_delete3[4] = { true, false, true, false };
-	bool to_delete4[4] = { false, false, true, true };
-
-	iscc_Digraph temp_dg;
-	iscc_Digraph ref;
-
-	temp_dg = iscc_copy_digraph(&dg1);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete1);
-	assert_equal_digraph(&temp_dg, &dg1);
-	assert_free_digraph(&temp_dg);
-
-	ref = iscc_empty_digraph(4, 0);
-	temp_dg = iscc_copy_digraph(&dg1);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete2);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-	
-	ref = iscc_empty_digraph(4, 0);
-	temp_dg = iscc_copy_digraph(&dg1);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete3);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-	
-	ref = iscc_digraph_from_string("####/..../..../..../");
-	temp_dg = iscc_copy_digraph(&dg1);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete4);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-
-
-	iscc_Digraph dg2 = iscc_digraph_from_string("##../.#.#/..##/#.#./");
-
-	temp_dg = iscc_copy_digraph(&dg2);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete1);
-	assert_equal_digraph(&temp_dg, &dg2);
-	assert_free_digraph(&temp_dg);
-
-	ref = iscc_empty_digraph(4, 0);
-	temp_dg = iscc_copy_digraph(&dg2);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete2);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-	
-	ref = iscc_digraph_from_string("..../.#.#/..../#.#./");
-	temp_dg = iscc_copy_digraph(&dg2);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete3);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-	
-	ref = iscc_digraph_from_string("##../.#.#/..../..../");
-	temp_dg = iscc_copy_digraph(&dg2);
-	iscc_delete_arcs_by_tails(&temp_dg, to_delete4);
-	assert_equal_digraph(&temp_dg, &ref);
-	assert_free_digraph(&temp_dg);
-	assert_free_digraph(&ref);
-
-	assert_free_digraph(&dg1);
-	assert_free_digraph(&dg2);
-}
-
-
-void scc_ut_delete_loops(void** state)
-{
-	(void) state;
-
-	iscc_Digraph dg1 = iscc_digraph_from_string("#####/#####/#####/#####/#####/");
-	iscc_Digraph dg2 = iscc_digraph_from_string("...../...../...../...../...../");
-	iscc_Digraph dg3 = iscc_digraph_from_string(".####/#.###/##.##/###.#/####./");
-	iscc_Digraph dg4 = iscc_digraph_from_string("#..../.#.../..#../...#./....#/");
-	iscc_Digraph dg5 = iscc_digraph_from_string("#.#../#..../#.#../##.../##..#/");
-
-	iscc_delete_loops(&dg1);
-	iscc_delete_loops(&dg2);
-	iscc_delete_loops(&dg3);
-	iscc_delete_loops(&dg4);
-	iscc_delete_loops(&dg5);
-
-	iscc_Digraph ref1 = iscc_digraph_from_string(".####/#.###/##.##/###.#/####./");
-	iscc_Digraph ref2 = iscc_digraph_from_string("...../...../...../...../...../");
-	iscc_Digraph ref3 = iscc_digraph_from_string(".####/#.###/##.##/###.#/####./");
-	iscc_Digraph ref4 = iscc_digraph_from_string("...../...../...../...../...../");
-	iscc_Digraph ref5 = iscc_digraph_from_string("..#../#..../#..../##.../##.../");
-
-	assert_free_digraph(&dg1);
-	assert_free_digraph(&dg2);
-	assert_free_digraph(&dg3);
-	assert_free_digraph(&dg4);
-	assert_free_digraph(&dg5);
-	assert_free_digraph(&ref1);
-	assert_free_digraph(&ref2);
-	assert_free_digraph(&ref3);
-	assert_free_digraph(&ref4);
-	assert_free_digraph(&ref5);
+	dg.tail_ptr = tails_zero;
+	assert_true(iscc_digraph_is_initialized(&dg));
+	scc_ErrorCode ec5 = iscc_change_arc_storage(&dg, 0);
+	assert_int_equal(dg.vertices, 5);
+	assert_int_equal(dg.max_arcs, 0);
+	assert_null(dg.head);
+	assert_non_null(dg.tail_ptr);
+	assert_int_equal(ec5, SCC_ER_OK);
 }
 
 
 int main(void)
 {
-	const struct CMUnitTest test_core[] = {
-		cmocka_unit_test(scc_ut_init_digraph),
-		cmocka_unit_test(scc_ut_digraph_is_initialized),
+	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_free_digraph),
-		cmocka_unit_test(scc_ut_change_arc_storage),
+		cmocka_unit_test(scc_ut_digraph_is_initialized),
+		cmocka_unit_test(scc_ut_init_digraph),
 		cmocka_unit_test(scc_ut_empty_digraph),
-		cmocka_unit_test(scc_ut_copy_digraph),
-		cmocka_unit_test(scc_ut_delete_arcs_by_tails),
-		cmocka_unit_test(scc_ut_delete_loops),
+		cmocka_unit_test(scc_ut_change_arc_storage),
 	};
 	
-	return cmocka_run_group_tests_name("core module", test_core, NULL, NULL);
+	return cmocka_run_group_tests_name("digraph_core.c", test_cases, NULL, NULL);
 }

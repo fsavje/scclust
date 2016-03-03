@@ -39,6 +39,7 @@ scc_ErrorCode iscc_init_digraph(const size_t vertices,
                                 const uint64_t max_arcs,
                                 iscc_Digraph* const out_dg)
 {
+	assert(vertices > 0);
 	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
@@ -70,6 +71,7 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
                                  const uint64_t max_arcs,
                                  iscc_Digraph* const out_dg)
 {
+	assert(vertices > 0);
 	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
