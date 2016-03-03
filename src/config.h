@@ -27,6 +27,7 @@
 #ifndef SCC_CONFIG_HG
 #define SCC_CONFIG_HG
 
+#include <limits.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -45,10 +46,18 @@
  *  than the maximum number that can be stored in #iscc_Dpid. I.e., 
  *  possible data point IDs must be in the sequence `[0, 1, ..., ISCC_DPID_MAX - 1]`.
  */
-typedef uint32_t iscc_Dpid;
+#ifndef SCC_DPID_INT
+	typedef uint32_t iscc_Dpid;
+#else
+	typedef int iscc_Dpid;
+#endif
 
 /// Maximum number that can be stored in #iscc_Dpid. May not be greater than `SIZE_MAX - 1`.
-static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
+#ifndef SCC_DPID_INT
+	static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
+#else
+	static const iscc_Dpid ISCC_DPID_MAX = INT_MAX;
+#endif
 
 /** Type used for arc indices. Must be unsigned.
  *  
@@ -56,17 +65,17 @@ static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
  *  Number of arcs in any digraph must be less or equal to 
  *  the maximum number that can be stored in #iscc_Arci.
  */
-#ifdef SCC_ARC64
-	typedef uint64_t iscc_Arci;
-#else
+#ifndef SCC_ARC64
 	typedef uint32_t iscc_Arci;
+#else
+	typedef uint64_t iscc_Arci;
 #endif
 
 /// Maximum number that can be stored in #iscc_Arci.
-#ifdef SCC_ARC64
-	static const iscc_Arci ISCC_ARCI_MAX = UINT64_MAX;
-#else
+#ifndef SCC_ARC64
 	static const iscc_Arci ISCC_ARCI_MAX = UINT32_MAX;
+#else
+	static const iscc_Arci ISCC_ARCI_MAX = UINT64_MAX;
 #endif
 
 

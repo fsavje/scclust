@@ -49,7 +49,7 @@ void scc_free_data_set_object(scc_DataSetObject** const out_data_set_object)
 scc_ErrorCode scc_get_data_set_object(const uint64_t num_data_points,
                                       const uint64_t num_dimensions,
                                       const size_t len_data_matrix,
-                                      const double data_matrix[const],
+                                      double data_matrix[const],
                                       const bool deep_matrix_copy,
                                       scc_DataSetObject** const out_data_set_object)
 {
@@ -78,13 +78,12 @@ scc_ErrorCode scc_get_data_set_object(const uint64_t num_data_points,
 	};
 
 	if (deep_matrix_copy) {
-		double* const data_matrix_tmp = malloc(sizeof(double[tmp_dso->num_data_points * tmp_dso->num_dimensions]));
-		if (data_matrix_tmp == NULL) {
+		tmp_dso->data_matrix = malloc(sizeof(double[tmp_dso->num_data_points * tmp_dso->num_dimensions]));
+		if (tmp_dso->data_matrix == NULL) {
 			free(tmp_dso);
 			return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
-		memcpy(data_matrix_tmp, data_matrix, tmp_dso->num_data_points * tmp_dso->num_dimensions * sizeof(double));
-		tmp_dso->data_matrix = data_matrix_tmp;
+		memcpy(tmp_dso->data_matrix, data_matrix, tmp_dso->num_data_points * tmp_dso->num_dimensions * sizeof(double));
 	} else {
 		tmp_dso->data_matrix = data_matrix;
 	}

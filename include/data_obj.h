@@ -47,7 +47,7 @@ void scc_free_data_set_object(scc_DataSetObject** out_data_set_object);
 scc_ErrorCode scc_get_data_set_object(uint64_t num_data_points,
                                       uint64_t num_dimensions,
                                       size_t len_data_matrix,
-                                      const double data_matrix[],
+                                      double data_matrix[],
                                       bool deep_matrix_copy,
                                       scc_DataSetObject** out_data_set_object);
 
