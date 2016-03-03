@@ -68,9 +68,6 @@ typedef uint_fast16_t scc_TypeLabel;
 // Library specific types and structs, non-serviceable
 // ==============================================================================
 
-/// Type used for data set objects. This struct is defined elsewhere (see `data_obj.h`). 
-typedef struct scc_DataSetObject scc_DataSetObject;
-
 /// Type used for clusterings
 typedef struct scc_Clustering scc_Clustering;
 
@@ -165,7 +162,7 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
                                      scc_Clabel out_label_buffer[]);
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
-                                       scc_DataSetObject* data_set_object,
+                                       void* data_set_object,
                                        scc_ClusteringStats* out_stats);
 
 
@@ -240,7 +237,7 @@ enum scc_AssignMethod {
 typedef enum scc_AssignMethod scc_AssignMethod;
 
 scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
-                                scc_DataSetObject* data_set_object,
+                                void* data_set_object,
                                 uint32_t size_constraint,
                                 size_t len_main_data_points,
                                 const bool main_data_points[],
@@ -253,7 +250,7 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
                                 double secondary_radius);
 
 scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
-                                           scc_DataSetObject* data_set_object,
+                                           void* data_set_object,
                                            uint32_t size_constraint,
                                            uint64_t num_types,
                                            const uint32_t type_size_constraints[],
@@ -275,12 +272,12 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
 // ==============================================================================
 
 scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
-                                             scc_DataSetObject* data_set_object,
+                                             void* data_set_object,
                                              uint32_t size_constraint,
                                              bool batch_assign);
 
 scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
-                                              scc_DataSetObject* data_set_object,
+                                              void* data_set_object,
                                               uint32_t size_constraint);
 
 

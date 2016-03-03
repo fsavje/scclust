@@ -27,11 +27,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/data_obj.h"
 #include "config.h"
+#include "data_obj_int.h"
 
 typedef struct scc_DataSetObject scc_DataSetObject;
-
 
 // ==============================================================================
 // Internal function prototypes
@@ -56,18 +55,20 @@ static inline void iscc_add_dist_to_list(double add_dist,
 // Miscellaneous functions
 // ==============================================================================
 
-bool iscc_check_data_set_object(scc_DataSetObject* const data_set_object,
+bool iscc_check_data_set_object(void* const data_set_object,
                                 const uint64_t required_data_points)
 {
 	if (data_set_object == NULL) return false;
-	if (data_set_object->num_data_points < required_data_points) return false;
-	if (data_set_object->num_dimensions == 0) return false;
-	if (data_set_object->data_matrix == NULL) return false;
+	const scc_DataSetObject* const data_set_object_cast = (const scc_DataSetObject*) data_set_object;
+	if (data_set_object_cast->data_set_object_version != ISCC_CURRENT_DATASETOBJ_VERSION) return false;
+	if (data_set_object_cast->num_data_points < required_data_points) return false;
+	if (data_set_object_cast->num_dimensions == 0) return false;
+	if (data_set_object_cast->data_matrix == NULL) return false;
 	return true;
 }
 
 
-bool iscc_get_dist_matrix(scc_DataSetObject* const data_set_object,
+bool iscc_get_dist_matrix(void* const data_set_object,
                           const size_t len_point_indices,
                           const iscc_Dpid point_indices[const],
                           double output_dists[])
@@ -96,7 +97,7 @@ bool iscc_get_dist_matrix(scc_DataSetObject* const data_set_object,
 }
 
 
-bool iscc_get_dist_rows(scc_DataSetObject* const data_set_object,
+bool iscc_get_dist_rows(void* const data_set_object,
                         const size_t len_query_indices,
                         const iscc_Dpid query_indices[const],
                         const size_t len_column_indices,
@@ -156,7 +157,7 @@ struct iscc_MaxDistObject {
 };
 
 
-bool iscc_init_max_dist_object(scc_DataSetObject* const data_set_object,
+bool iscc_init_max_dist_object(void* const data_set_object,
                                const size_t len_search_indices,
                                const iscc_Dpid search_indices[const],
                                iscc_MaxDistObject** const out_max_dist_object)
@@ -278,7 +279,7 @@ struct iscc_NNSearchObject {
 };
 
 
-bool iscc_init_nn_search_object(scc_DataSetObject* const data_set_object,
+bool iscc_init_nn_search_object(void* const data_set_object,
                                 const size_t len_search_indices,
                                 const iscc_Dpid search_indices[const],
                                 iscc_NNSearchObject** const out_nn_search_object)

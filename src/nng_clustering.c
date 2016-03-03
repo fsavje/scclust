@@ -27,12 +27,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "clustering.h"
 #include "digraph_core.h"
 #include "dist_search.h"
 #include "error.h"
 #include "nng_core.h"
 #include "nng_findseeds.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================
@@ -48,7 +48,7 @@ static const scc_AssignMethod SCC_AM_MAX = SCC_AM_CLOSEST_SEED;
 // ==============================================================================
 
 scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
-                                scc_DataSetObject* const data_set_object,
+                                void* const data_set_object,
                                 const uint32_t size_constraint,
                                 const size_t len_main_data_points,
                                 const bool main_data_points[const],
@@ -177,7 +177,7 @@ scc_ErrorCode scc_nng_clusterng(scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
-                                           scc_DataSetObject* const data_set_object,
+                                           void* const data_set_object,
                                            const uint32_t size_constraint,
                                            const uint64_t num_types,
                                            const uint32_t type_size_constraints[const],
@@ -198,7 +198,7 @@ scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* const clustering,
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_types > 65536) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_types > UINT16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 	if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);

@@ -27,10 +27,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "clustering.h"
 #include "config.h"
 #include "dist_search.h"
 #include "error.h"
+#include "scclust_int.h"
 
 // Maximum number of data points to check when finding centers.
 static const uint_fast16_t ISCC_GR_NUM_TO_CHECK = 1000;
@@ -86,7 +86,7 @@ static scc_ErrorCode iscc_gr_init_cl_stack(const scc_Clustering* in_cl,
 
 static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* cl_stack,
                                                    scc_Clustering* cl,
-                                                   scc_DataSetObject* data_set_object,
+                                                   void* data_set_object,
                                                    iscc_gr_WorkArea* work_area,
                                                    uint32_t size_constraint,
                                                    bool batch_assign);
@@ -95,7 +95,7 @@ static scc_ErrorCode iscc_gr_push_to_stack(iscc_gr_ClusterStack* cl_stack,
                                            iscc_gr_ClusterItem** cl);
 
 static scc_ErrorCode iscc_gr_break_cluster_into_two(iscc_gr_ClusterItem* cluster_to_break,
-                                                    scc_DataSetObject* data_set_object,
+                                                    void* data_set_object,
                                                     iscc_gr_WorkArea* work_area,
                                                     uint32_t size_constraint,
                                                     bool batch_assign,
@@ -137,15 +137,15 @@ static inline void iscc_gr_move_array_to_cluster2(uint32_t len_ids,
                                                   uint_fast16_t curr_marker);
 
 static scc_ErrorCode iscc_gr_find_centers(iscc_gr_ClusterItem* cl,
-                                          scc_DataSetObject* data_set_object,
+                                          void* data_set_object,
                                           iscc_gr_WorkArea* work_area,
                                           iscc_Dpid* out_center1,
                                           iscc_Dpid* out_center2);
 
 static scc_ErrorCode iscc_gr_populate_edge_lists(const iscc_gr_ClusterItem* cl,
+                                                 void* data_set_object,
                                                  iscc_Dpid center1,
                                                  iscc_Dpid center2,
-                                                 scc_DataSetObject* data_set_object,
                                                  iscc_gr_WorkArea* work_area);
 
 static inline void iscc_gr_sort_edge_list(const iscc_gr_ClusterItem* cl,
@@ -162,7 +162,7 @@ static int iscc_gr_compare_dist_edges(const void* a,
 // ==============================================================================
 
 scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* const clustering,
-                                             scc_DataSetObject* const data_set_object,
+                                             void* const data_set_object,
                                              const uint32_t size_constraint,
                                              const bool batch_assign)
 {
@@ -235,7 +235,7 @@ scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* const clustering,
-                                              scc_DataSetObject* const data_set_object,
+                                              void* const data_set_object,
                                               const uint32_t size_constraint)
 {
 	(void) clustering;
@@ -339,7 +339,7 @@ static scc_ErrorCode iscc_gr_init_cl_stack(const scc_Clustering* const in_cl,
 
 static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* const cl_stack,
                                                    scc_Clustering* const cl,
-                                                   scc_DataSetObject* const data_set_object,
+                                                   void* const data_set_object,
                                                    iscc_gr_WorkArea* const work_area,
                                                    const uint32_t size_constraint,
                                                    const bool batch_assign)
@@ -423,7 +423,7 @@ static scc_ErrorCode iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
 
 
 static scc_ErrorCode iscc_gr_break_cluster_into_two(iscc_gr_ClusterItem* const cluster_to_break,
-                                                    scc_DataSetObject* const data_set_object,
+                                                    void* const data_set_object,
                                                     iscc_gr_WorkArea* const work_area,
                                                     const uint32_t size_constraint,
                                                     const bool batch_assign,
@@ -454,9 +454,9 @@ static scc_ErrorCode iscc_gr_break_cluster_into_two(iscc_gr_ClusterItem* const c
 	}
 
 	if ((ec = iscc_gr_populate_edge_lists(cluster_to_break,
+	                                      data_set_object,
 	                                      center1,
 	                                      center2,
-	                                      data_set_object,
 	                                      work_area)) != SCC_ER_OK) {
 		return ec;
 	}
@@ -692,7 +692,7 @@ static inline void iscc_gr_move_array_to_cluster2(const uint32_t len_ids,
 
 
 static scc_ErrorCode iscc_gr_find_centers(iscc_gr_ClusterItem* const cl,
-                                          scc_DataSetObject* const data_set_object,
+                                          void* const data_set_object,
                                           iscc_gr_WorkArea* const work_area,
                                           iscc_Dpid* const out_center1,
                                           iscc_Dpid* const out_center2)
@@ -765,9 +765,9 @@ static scc_ErrorCode iscc_gr_find_centers(iscc_gr_ClusterItem* const cl,
 
 
 static scc_ErrorCode iscc_gr_populate_edge_lists(const iscc_gr_ClusterItem* const cl,
+                                                 void* const data_set_object,
                                                  const iscc_Dpid center1,
                                                  const iscc_Dpid center2,
-                                                 scc_DataSetObject* const data_set_object,
                                                  iscc_gr_WorkArea* const work_area)
 {
 	assert(cl != NULL);

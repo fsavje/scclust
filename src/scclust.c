@@ -28,10 +28,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include "clustering.h"
 #include "config.h"
 #include "dist_search.h"
 #include "error.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================
@@ -244,7 +244,7 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
-                                       scc_DataSetObject* const data_set_object,
+                                       void* const data_set_object,
                                        scc_ClusteringStats* const out_stats)
 {
 	if (out_stats == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);

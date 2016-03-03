@@ -26,16 +26,16 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../include/scclust.h"
-#include "clustering.h"
 #include "digraph_core.h"
 #include "nng_findseeds.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================
 // Function prototypes
 // ==============================================================================
 
-scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* data_set_object,
+scc_ErrorCode iscc_get_nng_with_size_constraint(void* data_set_object,
                                                 size_t num_data_points,
                                                 uint32_t size_constraint,
                                                 const bool main_data_points[],
@@ -43,7 +43,7 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* data_set_obje
                                                 double radius,
                                                 iscc_Digraph* out_nng);
 
-scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* data_set_object,
+scc_ErrorCode iscc_get_nng_with_type_constraint(void* data_set_object,
                                                 size_t num_data_points,
                                                 uint32_t size_constraint,
                                                 uint_fast16_t num_types,
@@ -67,7 +67,7 @@ scc_ErrorCode iscc_remaining_by_nng(scc_Clustering* clustering,
                                     const bool unassigned[restrict static clustering->num_data_points]);
 
 scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_Clustering* clustering,
-                                                 scc_DataSetObject* data_set_object,
+                                                 void* data_set_object,
                                                  iscc_Digraph* nng,
                                                  size_t num_assigned,
                                                  bool unassigned[restrict static clustering->num_data_points],
@@ -79,7 +79,7 @@ scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_Clustering* clustering,
                                                  double secondary_radius);
 
 scc_ErrorCode iscc_remaining_to_nearest_seed(scc_Clustering* clustering,
-                                             scc_DataSetObject* data_set_object,
+                                             void* data_set_object,
                                              const iscc_SeedResult* sr,
                                              size_t num_assigned,
                                              bool unassigned[restrict static clustering->num_data_points],

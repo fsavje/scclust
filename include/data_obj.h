@@ -23,6 +23,7 @@
 #define SCC_DATA_OBJ_HG
 
 #include <stddef.h>
+#include <stdint.h>
 #include "scclust.h"
 
 #ifdef __cplusplus
@@ -30,11 +31,25 @@ extern "C" {
 #endif
 
 
-struct scc_DataSetObject {
-	size_t num_data_points;
-	size_t num_dimensions;
-	double* data_matrix;
-};
+// ==============================================================================
+// Data set type
+// ==============================================================================
+
+typedef struct scc_DataSetObject scc_DataSetObject;
+
+
+// ==============================================================================
+// Data set utility functions
+// ==============================================================================
+
+void scc_free_data_set_object(scc_DataSetObject** out_data_set_object);
+
+scc_ErrorCode scc_get_data_set_object(uint64_t num_data_points,
+                                      uint64_t num_dimensions,
+                                      size_t len_data_matrix,
+                                      const double data_matrix[],
+                                      bool deep_matrix_copy,
+                                      scc_DataSetObject** out_data_set_object);
 
 
 #ifdef __cplusplus

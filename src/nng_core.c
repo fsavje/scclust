@@ -28,13 +28,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/scclust.h"
-#include "clustering.h"
 #include "config.h"
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "dist_search.h"
 #include "error.h"
 #include "nng_findseeds.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================
@@ -55,7 +55,7 @@ struct iscc_TypeCount {
 // Internal function prototypes
 // ==============================================================================
 
-static scc_ErrorCode iscc_make_nng(scc_DataSetObject* data_set_object,
+static scc_ErrorCode iscc_make_nng(void* data_set_object,
                                    size_t len_search_indices,
                                    const iscc_Dpid search_indices[],
                                    size_t len_query_indicators,
@@ -104,7 +104,7 @@ static void iscc_assign_to_first(scc_Clustering* clustering,
 // External function implementations
 // ==============================================================================
 
-scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* const data_set_object,
+scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set_object,
                                                 const size_t num_data_points,
                                                 const uint32_t size_constraint,
                                                 const bool main_data_points[const],
@@ -156,7 +156,7 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(scc_DataSetObject* const data_se
 }
 
 
-scc_ErrorCode iscc_get_nng_with_type_constraint(scc_DataSetObject* const data_set_object,
+scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
                                                 const size_t num_data_points,
                                                 const uint32_t size_constraint,
                                                 const uint_fast16_t num_types,
@@ -382,7 +382,7 @@ scc_ErrorCode iscc_remaining_by_nng(scc_Clustering* const clustering,
 
 
 scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_Clustering* const clustering,
-                                                 scc_DataSetObject* const data_set_object,
+                                                 void* const data_set_object,
                                                  iscc_Digraph* const nng,
                                                  const size_t num_assigned,
                                                  bool unassigned[restrict const static clustering->num_data_points],
@@ -528,7 +528,7 @@ scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_Clustering* const clusterin
 
 
 scc_ErrorCode iscc_remaining_to_nearest_seed(scc_Clustering* const clustering,
-                                             scc_DataSetObject* const data_set_object,
+                                             void* const data_set_object,
                                              const iscc_SeedResult* const sr,
                                              const size_t num_assigned,
                                              bool unassigned[restrict const static clustering->num_data_points],
@@ -643,7 +643,7 @@ scc_ErrorCode iscc_remaining_to_nearest_seed(scc_Clustering* const clustering,
 // Internal function implementations 
 // ==============================================================================
 
-static scc_ErrorCode iscc_make_nng(scc_DataSetObject* const data_set_object,
+static scc_ErrorCode iscc_make_nng(void* const data_set_object,
                                    const size_t len_search_indices,
                                    const iscc_Dpid search_indices[const],
                                    const size_t len_query_indicators,

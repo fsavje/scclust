@@ -66,11 +66,11 @@ struct scc_Clustering {
 	bool external_labels;
 
 	/// Version of the struct.
-	int32_t clustering_version;
+	int64_t clustering_version;
 };
 
 /// Current version of the clustering struct.
-static const int32_t ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
+static const int64_t ISCC_CURRENT_CLUSTSTRUCT_VERSION = 1;
 
 /** The null clustering.
  *
