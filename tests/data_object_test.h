@@ -19,17 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ============================================================================== */
 
-
 #ifndef SCC_UT_DATA_OBJ_HG
 #define SCC_UT_DATA_OBJ_HG
 
-#include "../include/scclust.h"
+#include "../include/data_obj.h"
+#include "../src/data_obj_int.h"
 
-struct scc_DataSetObject {
-	size_t cols;
-	size_t rows;
-	double* elements;
-};
 
 double coord1[300] = { 58.339591, 14.339080, 54.090796,
                        32.886948, 92.021040, 88.571806,
@@ -138,17 +133,25 @@ double coord2[15] = { -1.40865056, -0.83518405,  0.28314478,
                        0.65701681, -0.02082501,  2.17450609,
                       -0.08082159, -0.35893786, -0.13682160 };
 
-scc_DataSetObject scc_ut_test_data_large = {
-	.cols = 3, 
-	.rows = 100, 
-	.elements = coord1,
+scc_DataSetObject scc_ut_test_data_large_struct = {
+	.num_data_points = 100,
+	.num_dimensions = 3,
+	.data_matrix = coord1,
+	.external_matrix = true,
+	.data_set_object_version = ISCC_CURRENT_DATASETOBJ_VERSION,
 };
 
-scc_DataSetObject scc_ut_test_data_small = {
-	.cols = 1, 
-	.rows = 15, 
-	.elements = coord2,
+scc_DataSetObject scc_ut_test_data_small_struct = {
+	.num_data_points = 15,
+	.num_dimensions = 1,
+	.data_matrix = coord2,
+	.external_matrix = true,
+	.data_set_object_version = ISCC_CURRENT_DATASETOBJ_VERSION,
 };
+
+scc_DataSetObject* const scc_ut_test_data_large = &scc_ut_test_data_large_struct;
+
+scc_DataSetObject* const scc_ut_test_data_small = &scc_ut_test_data_small_struct;
 
 
 #endif
