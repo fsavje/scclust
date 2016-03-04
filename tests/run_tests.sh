@@ -14,6 +14,7 @@ make all
 run_test test_data_obj
 run_test test_digraph_core
 run_test test_digraph_debug
+run_test test_digraph_operations_internal
 run_test test_digraph_operations
 run_test test_dist_search
 run_test test_error

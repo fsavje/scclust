@@ -147,18 +147,17 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 	assert(minuend_dg->vertices == subtrahend_dg->vertices);
 	assert(max_out_degree > 0);
 
-	assert(minuend_dg->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) minuend_dg->vertices; // If `iscc_Dpid` is signed
-
-	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[vertices]));
+	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[minuend_dg->vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 	
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
+	for (size_t v = 0; v < minuend_dg->vertices; ++v) {
 		row_markers[v] = ISCC_DPID_MAX;
 	}
 
 	uint32_t row_counter;
 	iscc_Arci out_arcs_write = 0;
+	assert(minuend_dg->vertices <= ISCC_DPID_MAX);
+	const iscc_Dpid vertices = (iscc_Dpid) minuend_dg->vertices; // If `iscc_Dpid` is signed
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		row_markers[v] = v;
 		const iscc_Dpid* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
