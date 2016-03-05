@@ -70,8 +70,8 @@ bool iscc_init_max_dist_object(void* data_set_object,
 bool iscc_get_max_dist(iscc_MaxDistObject* max_dist_object,
                        size_t len_query_indices,
                        const iscc_Dpid query_indices[],
-                       iscc_Dpid max_indices[],
-                       double max_dists[]);
+                       iscc_Dpid out_max_indices[],
+                       double out_max_dists[]);
 
 bool iscc_close_max_dist_object(iscc_MaxDistObject** max_dist_object);
 

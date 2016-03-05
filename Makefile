@@ -1,6 +1,7 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 
-OBJECTS=data_obj.o digraph_core.o digraph_operations.o dist_search.o error.o greedy_clustering.o nng_clustering.o nng_core.o nng_findseeds.o scclust.o
+OBJECTS=data_obj.o digraph_core.o digraph_operations.o dist_search.o error.o greedy_clustering.o \
+        nng_clustering.o nng_core.o nng_findseeds.o scclust.o
 BUILDDIR=build
 DEBUGDIR=dbg
 

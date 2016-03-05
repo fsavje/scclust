@@ -182,8 +182,8 @@ bool iscc_init_max_dist_object(void* const data_set_object,
 bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
                        const size_t len_query_indices,
                        const iscc_Dpid query_indices[const],
-                       iscc_Dpid max_indices[const],
-                       double max_dists[const])
+                       iscc_Dpid out_max_indices[const],
+                       double out_max_dists[const])
 {
 	assert(max_dist_object != NULL);
 	scc_DataSetObject* const data_set_object = max_dist_object->data_set_object;
@@ -193,8 +193,8 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 	assert(iscc_check_data_set_object(data_set_object, 1));
 	assert(len_search_indices > 0);
 	assert(len_query_indices > 0);
-	assert(max_indices != NULL);
-	assert(max_dists != NULL);
+	assert(out_max_indices != NULL);
+	assert(out_max_dists != NULL);
 
 	double tmp_dist;
 	double max_dist;
@@ -206,10 +206,10 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 				tmp_dist = iscc_get_sq_dist(data_set_object, (size_t) query_indices[q], (size_t) search_indices[s]);
 				if (max_dist < tmp_dist) {
 					max_dist = tmp_dist;
-					max_indices[q] = search_indices[s];
+					out_max_indices[q] = search_indices[s];
 				}
 			}
-			max_dists[q] = sqrt(max_dist);
+			out_max_dists[q] = sqrt(max_dist);
 		}
 
 	} else if ((query_indices == NULL) && (search_indices != NULL)) {
@@ -219,10 +219,10 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 				tmp_dist = iscc_get_sq_dist(data_set_object, q, (size_t) search_indices[s]);
 				if (max_dist < tmp_dist) {
 					max_dist = tmp_dist;
-					max_indices[q] = search_indices[s];
+					out_max_indices[q] = search_indices[s];
 				}
 			}
-			max_dists[q] = sqrt(max_dist);
+			out_max_dists[q] = sqrt(max_dist);
 		}
 
 	} else if ((query_indices != NULL) && (search_indices == NULL)) {
@@ -232,10 +232,10 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 				tmp_dist = iscc_get_sq_dist(data_set_object, (size_t) query_indices[q], s);
 				if (max_dist < tmp_dist) {
 					max_dist = tmp_dist;
-					max_indices[q] = (iscc_Dpid) s;
+					out_max_indices[q] = (iscc_Dpid) s;
 				}
 			}
-			max_dists[q] = sqrt(max_dist);
+			out_max_dists[q] = sqrt(max_dist);
 		}
 
 	} else if ((query_indices == NULL) && (search_indices == NULL)) {
@@ -245,10 +245,10 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 				tmp_dist = iscc_get_sq_dist(data_set_object, q, s);
 				if (max_dist < tmp_dist) {
 					max_dist = tmp_dist;
-					max_indices[q] = (iscc_Dpid) s;
+					out_max_indices[q] = (iscc_Dpid) s;
 				}
 			}
-			max_dists[q] = sqrt(max_dist);
+			out_max_dists[q] = sqrt(max_dist);
 		}
 	}
 
@@ -307,7 +307,7 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
                                   bool out_query_indicators[const],
                                   const uint32_t k,
                                   const bool radius_search,
-                                  const double radius,
+                                  double radius,
                                   const bool accept_partial,
                                   iscc_Arci out_nn_ref[const],
                                   iscc_Dpid out_nn_indices[const])
@@ -332,19 +332,30 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 	if (sort_scratch == NULL) return false;
 	double* const sort_scratch_end = sort_scratch + k - 1;
 
+	if (radius_search) radius = pow(radius, 2.0);
+
 	out_nn_ref[0] = 0;
 	if (search_indices == NULL) {
 		for (size_t q = 0; q < len_query_indicators; ++q) {
 			if ((query_indicators == NULL) || query_indicators[q]) {
 				size_t s = 0;
-				uint32_t found = 0;
+				uint32_t found;
 				iscc_Dpid* const index_write_end = index_write + k - 1;
 
-				for (; (s < len_search_indices) && (found < k); ++s) {
-					tmp_dist = iscc_get_sq_dist(data_set_object, q, s);
-					if (radius_search && (tmp_dist > radius)) continue;
-					iscc_add_dist_to_list(tmp_dist, (iscc_Dpid) s, sort_scratch + found, index_write + found, sort_scratch);
-					++found;
+				if (radius_search) {
+					found = 0;
+					for (; (s < len_search_indices) && (found < k); ++s) {
+						tmp_dist = iscc_get_sq_dist(data_set_object, q, s);
+						if (tmp_dist > radius) continue;
+						iscc_add_dist_to_list(tmp_dist, (iscc_Dpid) s, sort_scratch + found, index_write + found, sort_scratch);
+						++found;
+					}
+				} else {
+					found = k;
+					for (; s < k; ++s) {
+						tmp_dist = iscc_get_sq_dist(data_set_object, q, s);
+						iscc_add_dist_to_list(tmp_dist, (iscc_Dpid) s, sort_scratch + s, index_write + s, sort_scratch);
+					}
 				}
 
 				for (; s < len_search_indices; ++s) {
@@ -369,14 +380,23 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 		for (size_t q = 0; q < len_query_indicators; ++q) {
 			if ((query_indicators == NULL) || query_indicators[q]) {
 				size_t s = 0;
-				uint32_t found = 0;
+				uint32_t found;
 				iscc_Dpid* const index_write_end = index_write + k - 1;
 
-				for (; (s < len_search_indices) && (found < k); ++s) {
-					tmp_dist = iscc_get_sq_dist(data_set_object, q, (size_t) search_indices[s]);
-					if (radius_search && (tmp_dist > radius)) continue;
-					iscc_add_dist_to_list(tmp_dist, search_indices[s], sort_scratch + found, index_write + found, sort_scratch);
-					++found;
+				if (radius_search) {
+					found = 0;
+					for (; (s < len_search_indices) && (found < k); ++s) {
+						tmp_dist = iscc_get_sq_dist(data_set_object, q, (size_t) search_indices[s]);
+						if (tmp_dist > radius) continue;
+						iscc_add_dist_to_list(tmp_dist, search_indices[s], sort_scratch + found, index_write + found, sort_scratch);
+						++found;
+					}
+				} else {
+					found = k;
+					for (; s < k; ++s) {
+						tmp_dist = iscc_get_sq_dist(data_set_object, q, (size_t) search_indices[s]);
+						iscc_add_dist_to_list(tmp_dist, search_indices[s], sort_scratch + s, index_write + s, sort_scratch);
+					}
 				}
 
 				for (; s < len_search_indices; ++s) {

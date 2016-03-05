@@ -20,21 +20,34 @@
  * ============================================================================== */
 
 #define SCC_DOUBLE_ASSERT
-
 #include "test_suite.h"
+#include "../src/dist_search.h"
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../src/dist_search.h"
 #include "data_object_test.h"
+#include "../src/config.h"
 
 
-void scc_ut_get_data_point_count(void** state)
+void scc_ut_check_data_set_object(void** state)
 {
 	(void) state;
 
-	assert_int_equal(iscc_get_data_point_count(&scc_ut_test_data_small), 15);
-	assert_int_equal(iscc_get_data_point_count(&scc_ut_test_data_large), 100);
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_large, 100));
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_large, 50));
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_large, 0));
+
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_small, 15));
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_small, 10));
+	assert_true(iscc_check_data_set_object(scc_ut_test_data_small, 0));
+
+	assert_false(iscc_check_data_set_object(NULL, 0));
+	assert_false(iscc_check_data_set_object(scc_ut_test_data_large, 200));
+	assert_false(iscc_check_data_set_object(scc_ut_test_data_small, 20));
+
+	for (size_t i = 0; i < scc_ut_num_invalid_data; ++i) {
+		assert_false(iscc_check_data_set_object(scc_ut_test_data_invalid[i], 0));
+	}
 }
 
 
@@ -42,23 +55,24 @@ void scc_ut_get_dist_matrix(void** state)
 {
 	(void) state;
 
-	scc_Dpid mat1[2] = { 76, 33 };
-	double output1[1];
-    double ref_mat1[1] = { 68.691324 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_large, 2, mat1, output1));
-	for (size_t i = 0; i < 1; ++i) {
-		assert_double_equal(output1[i], ref_mat1[i]);
-	}
 
-	scc_Dpid mat2[5] = { 54, 11, 44, 38, 2 };
+	iscc_Dpid mat1[2] = { 76, 33 };
+	double output1[1];
+    const double ref_mat1[1] = { 68.691324 };
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_large, 2, mat1, output1));
+	assert_double_equal(output1[0], ref_mat1[0]);
+
+
+	iscc_Dpid mat2[5] = { 54, 11, 44, 38, 2 };
 	double output2[10];
-    double ref_mat2[10] = { 4.148036, 80.860085, 4.148036, 92.694933, 81.821457, 0.000000, 96.308263, 81.821457, 71.445761, 96.308263 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_large, 5, mat2, output2));
+    const double ref_mat2[10] = { 4.148036, 80.860085, 4.148036, 92.694933, 81.821457, 0.000000, 96.308263, 81.821457, 71.445761, 96.308263 };
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_large, 5, mat2, output2));
 	for (size_t i = 0; i < 10; ++i) {
 		assert_double_equal(output2[i], ref_mat2[i]);
 	}
 
-	scc_Dpid mat3[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+
+	iscc_Dpid mat3[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 	double output3[45];
     double ref_mat3[45] = { 91.684744, 58.356349, 77.155022, 38.696197, 12.578183, 70.499958, 47.339958, 72.284286,
                             62.749693, 63.103580, 103.030113, 104.702555, 102.986773, 74.637958, 48.931105, 83.120587,
@@ -66,30 +80,31 @@ void scc_ut_get_dist_matrix(void** state)
                             82.249050, 76.285875, 30.550623, 80.566800, 43.918798, 58.452034, 35.180283, 83.442765,
                             56.243067, 62.616031, 75.469357, 74.667871, 57.641926, 73.970019, 54.646819, 61.219489,
                             43.831474, 73.953108, 57.093204, 97.699151, 84.582562 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_large, 10, mat3, output3));
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_large, 10, mat3, output3));
 	for (size_t i = 0; i < 45; ++i) {
 		assert_double_equal(output3[i], ref_mat3[i]);
 	}
 
-	scc_Dpid mat4[2] = { 0, 6 };
-	double output4[1];
-    double ref_mat4[1] = { 1.308683 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_small, 2, mat4, output4));
-	for (size_t i = 0; i < 1; ++i) {
-		assert_double_equal(output4[i], ref_mat4[i]);
-	}
 
-	scc_Dpid mat5[5] = { 5, 2, 7, 3, 8 };
+	iscc_Dpid mat4[2] = { 0, 6 };
+	double output4[1];
+    const double ref_mat4[1] = { 1.308683 };
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_small, 2, mat4, output4));
+	assert_double_equal(output4[0], ref_mat4[0]);
+
+
+	iscc_Dpid mat5[5] = { 5, 2, 7, 3, 8 };
 	double output5[10];
-    double ref_mat5[10] = { 1.018566, 2.332226, 0.302972, 2.800108, 1.313659, 0.715594, 1.781541, 2.029254, 0.467882, 2.497136 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_small, 5, mat5, output5));
+    const double ref_mat5[10] = { 1.018566, 2.332226, 0.302972, 2.800108, 1.313659, 0.715594, 1.781541, 2.029254, 0.467882, 2.497136 };
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_small, 5, mat5, output5));
 	for (size_t i = 0; i < 10; ++i) {
 		assert_double_equal(output5[i], ref_mat5[i]);
 	}
 
-	scc_Dpid* mat6 = NULL;
+
+	iscc_Dpid* mat6 = NULL;
 	double output6[105];
-    double ref_mat6[105] = { 0.573467, 1.691795, 2.407390, 0.974924, 2.710362, 1.308683, 0.378136, 0.089747, 2.065667, 1.387826,
+    const double ref_mat6[105] = { 0.573467, 1.691795, 2.407390, 0.974924, 2.710362, 1.308683, 0.378136, 0.089747, 2.065667, 1.387826,
                              3.583157, 1.327829, 1.049713, 1.271829, 1.118329, 1.833923, 0.401458, 2.136896, 0.735216, 0.195331,
                              0.663213, 1.492201, 0.814359, 3.009690, 0.754362, 0.476246, 0.698362, 0.715595, 0.716871, 1.018567,
                              0.383112, 1.313660, 1.781542, 0.373872, 0.303970, 1.891361, 0.363966, 0.642083, 0.419966, 1.432466,
@@ -100,277 +115,79 @@ void scc_ut_get_dist_matrix(void** state)
                              3.205021, 0.949693, 0.671577, 0.893693, 2.155414, 1.477572, 3.672903, 1.417576, 1.139459, 1.361576,
                              0.677842, 1.517489, 0.737838, 1.015955, 0.793838, 2.195331, 0.059997, 0.338113, 0.115997, 2.255328,
                              2.533444, 2.311328, 0.278116, 0.056000, 0.222116 };
-	assert_true(iscc_get_dist_matrix(&scc_ut_test_data_small, 15, mat6, output6));
+	assert_true(iscc_get_dist_matrix(scc_ut_test_data_small, 15, mat6, output6));
 	for (size_t i = 0; i < 105; ++i) {
 		assert_double_equal(output6[i], ref_mat6[i]);
 	}
 }
 
 
-void scc_ut_init_close_max_dist_object(void** state)
+void scc_ut_get_dist_rows(void** state)
 {
 	(void) state;
 
-	scc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid cols2[5] = { 5, 2, 7, 3, 8 };
-
-	iscc_MaxDistObject* tmp_mdo1 = iscc_init_max_dist_object(&scc_ut_test_data_large, 10, cols1, 1);
-	assert_non_null(tmp_mdo1);
-	assert_true(iscc_close_max_dist_object(tmp_mdo1));
-
-	iscc_MaxDistObject* tmp_mdo2 = iscc_init_max_dist_object(&scc_ut_test_data_small, 5, cols2, 10);
-	assert_non_null(tmp_mdo2);
-	assert_true(iscc_close_max_dist_object(tmp_mdo2));
-
-	iscc_MaxDistObject* tmp_mdo3 = iscc_init_max_dist_object(&scc_ut_test_data_large, 100, NULL, 50);
-	assert_non_null(tmp_mdo3);
-	assert_true(iscc_close_max_dist_object(tmp_mdo3));
-
-	iscc_MaxDistObject* tmp_mdo4 = iscc_init_max_dist_object(&scc_ut_test_data_small, 15, NULL, 100);
-	assert_non_null(tmp_mdo4);
-	assert_true(iscc_close_max_dist_object(tmp_mdo4));
-}
-
-
-void scc_ut_get_max_dist(void** state)
-{
-	(void) state;
-
-	scc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid rows1[5] = { 0, 1, 2, 3, 4 };
-	scc_Dpid out1_max_indices1[5];
-	scc_Dpid out2_max_indices1[5];
-    double out2_max_dists1[5];
-	scc_Dpid ref_max_indices1[5] = { 2, 8, 18, 8, 8 };
-    double ref_max_dists1[5] = { 91.684744, 114.066081, 134.211258, 88.515573, 89.098152 };
-
-	iscc_MaxDistObject* tmp_mdo1 = iscc_init_max_dist_object(&scc_ut_test_data_large, 10, cols1, 5);
-	assert_non_null(tmp_mdo1);
-
-	assert_true(iscc_get_max_dist(tmp_mdo1, 5, rows1, out1_max_indices1, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo1, 5, rows1, out2_max_indices1, out2_max_dists1));
-
-	for (size_t i = 0; i < 5; ++i) {
-		assert_int_equal(out1_max_indices1[i], ref_max_indices1[i]);
-		assert_int_equal(out2_max_indices1[i], ref_max_indices1[i]);
-		assert_double_equal(out2_max_dists1[i], ref_max_dists1[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo1));
-
-
-	scc_Dpid mat[5] = { 54, 11, 44, 38, 2 };
-	scc_Dpid out1_max_indices2[5];
-	scc_Dpid out2_max_indices2[5];
-    double out2_max_dists2[5];
-	scc_Dpid ref_max_indices2[5] = { 2, 2, 0, 2, 0 };
-    double ref_max_dists2[5] = { 92.694933, 96.308263, 81.821457, 96.308263, 96.308263 };
-
-	iscc_MaxDistObject* tmp_mdo2 = iscc_init_max_dist_object(&scc_ut_test_data_large, 5, mat, 5);
-	assert_non_null(tmp_mdo2);
-
-	assert_true(iscc_get_max_dist(tmp_mdo2, 5, mat, out1_max_indices2, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo2, 5, mat, out2_max_indices2, out2_max_dists2));
-
-	assert_true((out1_max_indices2[2] == 11) || (out1_max_indices2[2] == 38));
-	assert_true((out2_max_indices2[2] == 11) || (out2_max_indices2[2] == 38));
-	assert_true((out1_max_indices2[4] == 11) || (out1_max_indices2[4] == 38));
-	assert_true((out2_max_indices2[4] == 11) || (out2_max_indices2[4] == 38));
-	out1_max_indices2[2] = out2_max_indices2[2] = 0;
-	out1_max_indices2[4] = out2_max_indices2[4] = 0;
-
-	for (size_t i = 0; i < 5; ++i) {
-		assert_int_equal(out1_max_indices2[i], ref_max_indices2[i]);
-		assert_int_equal(out2_max_indices2[i], ref_max_indices2[i]);
-		assert_double_equal(out2_max_dists2[i], ref_max_dists2[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo2));
-
-
-	scc_Dpid col3[1] = { 88 };
-	scc_Dpid row3[1] = { 21 };
-	scc_Dpid out1_max_indices3[1];
-	scc_Dpid out2_max_indices3[1];
-    double out2_max_dists3[1];
-	scc_Dpid ref_max_indices3[1] = { 88 };
-    double ref_max_dists3[1] = { 79.929447 };
-
-	iscc_MaxDistObject* tmp_mdo3 = iscc_init_max_dist_object(&scc_ut_test_data_large, 1, col3, 1);
-	assert_non_null(tmp_mdo3);
-
-	assert_true(iscc_get_max_dist(tmp_mdo3, 1, row3, out1_max_indices3, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo3, 1, row3, out2_max_indices3, out2_max_dists3));
-
-	for (size_t i = 0; i < 1; ++i) {
-		assert_int_equal(out1_max_indices3[i], ref_max_indices3[i]);
-		assert_int_equal(out2_max_indices3[i], ref_max_indices3[i]);
-		assert_double_equal(out2_max_dists3[i], ref_max_dists3[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo3));
-
-
-	scc_Dpid col4[2] = { 76, 33 };
-	scc_Dpid* row4 = NULL;
-	scc_Dpid out1_max_indices4[100];
-	scc_Dpid out2_max_indices4[100];
-    double out2_max_dists4[100];
-	scc_Dpid ref_max_indices4[100] = { 33, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76,
-                                      33, 33, 33, 33, 76, 33, 33, 76, 76, 33, 76, 76, 33, 33, 33, 33, 33, 33, 33, 76, 76, 76,
-                                      33, 76, 33, 76, 76, 33, 76, 33, 76, 33, 33, 33, 76, 76, 76, 33, 76, 76, 33, 33, 33, 33,
-                                      33, 33, 76, 33, 76, 33, 76, 76, 76, 33, 33, 76, 76, 76, 33, 76, 76, 33, 76, 76, 33, 76,
-                                      76, 76, 33, 76, 76, 76, 76, 33, 76, 33, 76, 76 };
-    double ref_max_dists4[100] = { 77.277446, 80.093052, 94.889324, 68.565901, 70.575027, 83.160778, 60.359399, 61.768171, 105.937618, 71.940570,
-                                   81.743054, 44.965012, 45.548182, 69.150261, 83.558136, 87.005917, 87.007858, 84.961070, 72.346768, 89.215457,
-                                   78.212126, 63.110044, 46.166265, 86.281009, 50.620783, 85.941822, 85.899872, 90.108997, 92.771960, 60.167192,
-                                   69.423729, 94.466461, 91.507430, 68.691324, 94.385270, 84.989001, 81.831985, 106.136260, 44.965012, 63.227943,
-                                   60.761928, 92.404133, 66.322661, 93.348942, 75.365006, 71.439972, 63.181031, 55.125767, 43.001889, 95.004940,
-                                   77.901815, 108.013525, 102.788825, 77.368718, 44.435285, 79.436473, 90.732436, 57.169604, 96.591368, 54.140311,
-                                   49.471576, 53.563407, 71.275751, 101.262746, 59.499149, 119.615002, 115.579628, 68.848632, 64.493028, 83.034023,
-                                   62.032676, 107.134058, 95.246184, 84.656849, 107.839511, 71.405803, 68.691324, 97.112011, 82.120114, 56.091020,
-                                   90.499883, 85.099361, 43.922154, 84.511215, 87.042733, 61.973523, 76.025298, 80.325792, 88.565482, 104.014478,
-                                   97.445144, 70.505331, 69.541621, 85.009612, 87.606463, 40.806661, 83.718828, 101.994229, 70.753405, 57.533607 };
-
-	iscc_MaxDistObject* tmp_mdo4 = iscc_init_max_dist_object(&scc_ut_test_data_large, 2, col4, 100);
-	assert_non_null(tmp_mdo4);
-
-	assert_true(iscc_get_max_dist(tmp_mdo4, 100, row4, out1_max_indices4, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo4, 100, row4, out2_max_indices4, out2_max_dists4));
-
-	for (size_t i = 0; i < 100; ++i) {
-		assert_int_equal(out1_max_indices4[i], ref_max_indices4[i]);
-		assert_int_equal(out2_max_indices4[i], ref_max_indices4[i]);
-		assert_double_equal(out2_max_dists4[i], ref_max_dists4[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo4));
-
-
-	scc_Dpid* col5 = NULL;
-	scc_Dpid row5[1] = { 15 };
-	scc_Dpid out1_max_indices5[1];
-	scc_Dpid out2_max_indices5[1];
-    double out2_max_dists5[1];
-	scc_Dpid ref_max_indices5[1] = { 65 };
-    double ref_max_dists5[1] = { 122.813377 };
-
-	iscc_MaxDistObject* tmp_mdo5 = iscc_init_max_dist_object(&scc_ut_test_data_large, 100, col5, 1);
-	assert_non_null(tmp_mdo5);
-
-	assert_true(iscc_get_max_dist(tmp_mdo5, 1, row5, out1_max_indices5, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo5, 1, row5, out2_max_indices5, out2_max_dists5));
-
-	for (size_t i = 0; i < 1; ++i) {
-		assert_int_equal(out1_max_indices5[i], ref_max_indices5[i]);
-		assert_int_equal(out2_max_indices5[i], ref_max_indices5[i]);
-		assert_double_equal(out2_max_dists5[i], ref_max_dists5[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo5));
-
-
-	scc_Dpid* col6 = NULL;
-	scc_Dpid* row6 = NULL;
-	scc_Dpid out1_max_indices6[15];
-	scc_Dpid out2_max_indices6[15];
-    double out2_max_dists6[15];
-	scc_Dpid ref_max_indices6[15] = { 11, 11, 11, 8, 11, 8, 11, 11,
-                                     11, 8, 11, 8, 11, 11, 11 };
-    double ref_max_dists6[15] = { 3.583157, 3.009690, 1.891361, 2.497137, 2.608232,
-                                  2.800109, 2.274474, 3.205021, 3.672903, 2.155414,
-                                  2.195331, 3.672903, 2.255328, 2.533444, 2.311328 };
-
-	iscc_MaxDistObject* tmp_mdo6 = iscc_init_max_dist_object(&scc_ut_test_data_small, 15, col6, 15);
-	assert_non_null(tmp_mdo6);
-
-	assert_true(iscc_get_max_dist(tmp_mdo6, 15, row6, out1_max_indices6, NULL));
-	assert_true(iscc_get_max_dist(tmp_mdo6, 15, row6, out2_max_indices6, out2_max_dists6));
-
-	for (size_t i = 0; i < 15; ++i) {
-		assert_int_equal(out1_max_indices6[i], ref_max_indices6[i]);
-		assert_int_equal(out2_max_indices6[i], ref_max_indices6[i]);
-		assert_double_equal(out2_max_dists6[i], ref_max_dists6[i]);
-	}
-	assert_true(iscc_close_max_dist_object(tmp_mdo6));
-}
-
-
-void scc_ut_init_close_dist_column_object(void** state)
-{
-	(void) state;
-
-	scc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid cols2[5] = { 5, 2, 7, 3, 8 };
-
-	iscc_DistColObject* tmp_dco1 = iscc_init_dist_column_object(&scc_ut_test_data_large, 10, cols1, 1);
-	assert_non_null(tmp_dco1);
-	assert_true(iscc_close_dist_column_object(tmp_dco1));
-
-	iscc_DistColObject* tmp_dco2 = iscc_init_dist_column_object(&scc_ut_test_data_small, 5, cols2, 10);
-	assert_non_null(tmp_dco2);
-	assert_true(iscc_close_dist_column_object(tmp_dco2));
-
-	iscc_DistColObject* tmp_dco3 = iscc_init_dist_column_object(&scc_ut_test_data_large, 100, NULL, 50);
-	assert_non_null(tmp_dco3);
-	assert_true(iscc_close_dist_column_object(tmp_dco3));
-
-	iscc_DistColObject* tmp_dco4 = iscc_init_dist_column_object(&scc_ut_test_data_small, 15, NULL, 100);
-	assert_non_null(tmp_dco4);
-	assert_true(iscc_close_dist_column_object(tmp_dco4));
-}
-
-
-void scc_ut_get_dist_row(void** state)
-{
-	(void) state;
-
-	scc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid rows1[5] = { 0, 1, 2, 3, 4 };
+	iscc_Dpid rows1[5] = { 0, 1, 2, 3, 4 };
+	iscc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 	double output1[50];
-	double ref_distances1[50] = { 0.000000,  91.684744,  58.356349,  77.155022,  38.696197,  12.578183,  70.499958,  47.339958,  72.284286,  62.749693,
+	const double ref_distances1[50] = { 0.000000,  91.684744,  58.356349,  77.155022,  38.696197,  12.578183,  70.499958,  47.339958,  72.284286,  62.749693,
                                   88.720144,  59.278811,  33.024108,  76.867253, 114.066081,  97.455347,  48.434361,  71.928731,  85.971796, 105.476363,
                                   91.684744,   0.000000,  63.103580, 103.030113, 104.702555, 102.986773,  74.637958,  48.931105,  83.120587, 134.211258,
                                   56.785001,  70.375854,   7.608964,  69.018337,  88.515573,  65.042314,  46.933896,  57.984990,  79.917719,  77.909625,
                                   58.356349,  63.103580,   0.000000,  72.125847,  89.098152,  67.606177,  47.737270,  53.822010,  79.327414,  84.164591  };
-
-	iscc_DistColObject* tmp_dco1 = iscc_init_dist_column_object(&scc_ut_test_data_large, 10, cols1, 5);
-	assert_non_null(tmp_dco1);
-	assert_true(iscc_get_dist_row(tmp_dco1, 5, rows1, output1));
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 5, rows1, 10, cols1, output1));
 	for (size_t i = 0; i < 50; ++i) {
 		assert_double_equal(output1[i], ref_distances1[i]);
 	}
-	assert_true(iscc_close_dist_column_object(tmp_dco1));
 
 
-	scc_Dpid mat[5] = { 54, 11, 44, 38, 2 };
+	iscc_Dpid mat[5] = { 54, 11, 44, 38, 2 };
 	double output2[25];
-	double ref_distances2[25] = { 0.000000,  4.148036, 80.860085,  4.148036, 92.694933,
+	const double ref_distances2[25] = { 0.000000,  4.148036, 80.860085,  4.148036, 92.694933,
                                   4.148036,  0.000000, 81.821457,  0.000000, 96.308263,
                                   80.860085, 81.821457,  0.000000, 81.821457, 71.445761,
                                   4.148036,  0.000000, 81.821457,  0.000000, 96.308263,
                                   92.694933, 96.308263, 71.445761, 96.308263,  0.000000  };
-	iscc_DistColObject* tmp_dco2 = iscc_init_dist_column_object(&scc_ut_test_data_large, 5, mat, 5);
-	assert_non_null(tmp_dco2);
-	assert_true(iscc_get_dist_row(tmp_dco2, 5, mat, output2));
-	assert_true(iscc_close_dist_column_object(tmp_dco2));
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 5, mat, 5, mat, output2));
 	for (size_t i = 0; i < 25; ++i) {
 		assert_double_equal(output2[i], ref_distances2[i]);
 	}
 
 
-	scc_Dpid col3[1] = { 88 };
-	scc_Dpid row3[1] = { 21 };
+	iscc_Dpid row3[1] = { 21 };
+	iscc_Dpid col3[1] = { 88 };
 	double output3[1];
-	double ref_distances3[1] = { 79.929447 };
-	iscc_DistColObject* tmp_dco3 = iscc_init_dist_column_object(&scc_ut_test_data_large, 1, col3, 1);
-	assert_non_null(tmp_dco3);
-	assert_true(iscc_get_dist_row(tmp_dco3, 1, row3, output3));
+	const double ref_distances3[1] = { 79.929447 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 1, row3, 1, col3, output3));
 	for (size_t i = 0; i < 1; ++i) {
 		assert_double_equal(output3[i], ref_distances3[i]);
 	}
-	assert_true(iscc_close_dist_column_object(tmp_dco3));
 
 
-	scc_Dpid col4[2] = { 76, 33 };
-	scc_Dpid* row4 = NULL;
-	double output4[200];
-	double ref_distances4[200] = { 64.954479, 77.277446, 80.093052, 41.084849, 94.889324, 92.523312, 68.565901, 30.870862, 70.575027, 36.443663, 83.160778,
+	iscc_Dpid col4a[1] = { 76 };
+	double output4a[100];
+	const double ref_distances4a[100] = { 64.9544791051644, 80.0930516158615, 94.8893243758052, 68.5659007490113, 70.5750269964879, 83.160777522138, 19.6877154384521,
+	                                      10.2017207337204, 64.4909216255888, 71.9405700182964, 64.2590320368453, 33.6421908839873, 32.6861363300814, 40.2613311194435,
+	                                      66.2490554850071, 87.0059171484867, 27.7587518583496, 84.3853294434404, 59.7003586423728, 62.6800874692287, 70.3891415479062,
+	                                      63.1100439389066, 43.1652327678781, 34.2573474165156, 29.2264470617218, 29.6460708062981, 85.8998724974663, 37.5057553811457,
+	                                      85.2056673222495, 60.1671916372682, 69.4237291252949, 44.7504327915531, 91.5074297813, 68.6913235698893, 42.3896613427532,
+	                                      36.1704354344588, 58.6828162044545, 54.6202113178628, 33.6421908839873, 37.474746401591, 50.4056368624625, 92.4041325836564,
+	                                      66.3226608419616, 93.3489419233617, 69.3556410270255, 71.4399722186021, 6.3960423736893, 55.1257670661323, 43.0018892035719,
+	                                      81.0436263108613, 77.9018149486519, 55.5151133192513, 102.788825448072, 53.5251450230862, 34.2964896111557, 54.8149559010406,
+	                                      90.7324360429077, 57.1696040962046, 96.5913678842299, 19.8938574448987, 49.4715764254484, 53.5634068121486, 50.6524724636101,
+	                                      60.9065296524078, 45.8002625974439, 81.1911166517363, 60.1009401787162, 50.7303042011002, 64.4930275618271, 81.997900960262,
+	                                      62.0326759192139, 60.8000118748004, 95.2461842089738, 84.6568493060895, 107.83951097726, 3.04943534229486, 0, 97.1120113978726,
+	                                      82.1201136756733, 56.0910201003615, 75.6929210956897, 85.0993607911686, 43.9221536500751, 35.9049322852337, 87.042732996262,
+	                                      61.9735234341632, 13.6444075684181, 80.3257916246034, 88.5654819721503, 104.014478170404, 51.0577336761235, 70.5053309917733,
+	                                      69.5416205540842, 85.0096115614713, 87.6064633674381, 30.320632592006, 83.7188283835717, 68.1390037052728, 70.7534045907538, 57.5336073602082 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 100, NULL, 1, col4a, output4a));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_double_equal(output4a[i], ref_distances4a[i]);
+	}
+
+
+	iscc_Dpid col4b[2] = { 76, 33 };
+	double output4b[200];
+	const double ref_distances4b[200] = { 64.954479, 77.277446, 80.093052, 41.084849, 94.889324, 92.523312, 68.565901, 30.870862, 70.575027, 36.443663, 83.160778,
 	                               78.644710, 19.687715, 60.359399, 10.201721, 61.768171, 64.490922, 105.937618, 71.940570, 63.785980, 64.259032, 81.743054,
 	                               33.642191, 44.965012, 32.686136, 45.548182, 40.261331, 69.150261, 66.249055, 83.558136, 87.005917, 37.712186, 27.758752,
 	                               87.007858, 84.385329, 84.961070, 59.700359, 72.346768, 62.680087, 89.215457, 70.389142, 78.212126, 63.110044, 7.471416,
@@ -389,19 +206,37 @@ void scc_ut_get_dist_row(void** state)
 	                               88.565482, 81.381260, 104.014478, 90.090994, 51.057734, 97.445144, 70.505331, 67.358707, 69.541621, 32.631722, 85.009612,
 	                               59.621327, 87.606463, 64.709366, 30.320633, 40.806661, 83.718828, 38.604955, 68.139004, 101.994229, 70.753405, 45.395039,
 	                               57.533607, 54.059885 };
-	iscc_DistColObject* tmp_dco4 = iscc_init_dist_column_object(&scc_ut_test_data_large, 2, col4, 100);
-	assert_non_null(tmp_dco4);
-	assert_true(iscc_get_dist_row(tmp_dco4, 100, row4, output4));
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 100, NULL, 2, col4b, output4b));
 	for (size_t i = 0; i < 200; ++i) {
-		assert_double_equal(output4[i], ref_distances4[i]);
+		assert_double_equal(output4b[i], ref_distances4b[i]);
 	}
-	assert_true(iscc_close_dist_column_object(tmp_dco4));
 
 
-	scc_Dpid* col5 = NULL;
-	scc_Dpid row5[1] = { 15 };
-	double output5[100];
-	double ref_distances5[100] = { 81.747845, 20.086538, 65.856761, 26.411570, 23.561895, 54.285899, 84.771271, 80.884683, 112.319962,
+	iscc_Dpid col4c[2] = { 76, 33 };
+	double output4c[100];
+	const double ref_distances4c[100] = { 64.9544791051644, 77.2774456842202, 80.0930516158615, 41.0848489144938, 94.8893243758052, 92.5233118315883, 68.5659007490113,
+	                                      30.8708618809907, 70.5750269964879, 36.4436633782373, 83.160777522138, 78.6447099529215, 19.6877154384521, 60.3593986535452,
+	                                      10.2017207337204, 61.7681713378605, 64.4909216255888, 105.937617713061, 71.9405700182964, 63.7859800139311, 64.2590320368453,
+	                                      81.7430540831898, 33.6421908839873, 44.9650121226702, 32.6861363300814, 45.5481817804792, 40.2613311194435, 69.1502612181662,
+	                                      66.2490554850071, 83.5581364053949, 87.0059171484867, 37.7121858277047, 27.7587518583496, 87.0078577679492, 84.3853294434404,
+	                                      84.9610695392341, 59.7003586423728, 72.3467676564113, 62.6800874692287, 89.2154573018569, 70.3891415479062, 78.2121255952271,
+	                                      63.1100439389066, 7.47141632395579, 43.1652327678781, 46.1662654353744, 34.2573474165156, 86.2810090014776, 29.2264470617218,
+	                                      50.6207827278759, 29.6460708062981, 85.9418217601039, 85.8998724974663, 83.7266893272899, 37.5057553811457, 90.1089965343193,
+	                                      85.2056673222495, 92.7719604881078, 60.1671916372682, 45.9904998670383, 69.4237291252949, 36.6356033254314, 44.7504327915531,
+	                                      94.466460651881, 91.5074297813, 75.8732486714048, 68.6913235698893, 0, 42.3896613427532, 94.3852698622746, 36.1704354344588,
+	                                      84.9890005159453, 58.6828162044545, 81.8319851390179, 54.6202113178628, 106.136260122573, 33.6421908839873, 44.9650121226702,
+	                                      37.474746401591, 63.2279425085851, 50.4056368624625, 60.7619276211456, 92.4041325836564, 69.5329054400016, 66.3226608419616,
+	                                      33.3002462488982, 93.3489419233617, 84.8073651750283, 69.3556410270255, 75.3650060229711, 71.4399722186021, 45.0910750759573,
+	                                      6.3960423736893, 63.1810306723375, 55.1257670661323, 38.5393524009219, 43.0018892035719, 32.7696118870745, 81.0436263108613, 95.0049395241898 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 50, NULL, 2, col4c, output4c));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_double_equal(output4c[i], ref_distances4c[i]);
+	}
+
+
+	iscc_Dpid row5a[1] = { 15 };
+	double output5a[100];
+	const double ref_distances5a[100] = { 81.747845, 20.086538, 65.856761, 26.411570, 23.561895, 54.285899, 84.771271, 80.884683, 112.319962,
 	                                     43.699940, 90.887926, 70.104053, 58.424566, 96.645475, 72.387324, 0.000000, 95.396451, 78.914345,
 	                                     101.664933, 79.050218, 61.036678, 36.559903, 50.163704, 104.245732, 75.157336, 95.288270, 68.362965,
 	                                     99.192765, 79.924004, 72.943678, 23.643384, 97.938708, 45.933384, 37.712186, 97.062955, 95.061226,
@@ -412,19 +247,72 @@ void scc_ut_get_dist_row(void** state)
 	                                     76.563669, 21.019934, 88.189064, 89.994046, 87.005917, 77.185367, 33.180906, 44.158321, 73.258443,
 	                                     87.232747, 50.703717, 107.274405, 72.424998, 39.823449, 90.332805, 74.807777, 70.254873, 82.210163,
 	                                     107.072656, 58.021162, 32.290715, 45.388989, 82.227376, 58.082855, 17.999359, 103.093322, 25.827839, 77.023313 };
-	iscc_DistColObject* tmp_dco5 = iscc_init_dist_column_object(&scc_ut_test_data_large, 100, col5, 1);
-	assert_non_null(tmp_dco5);
-	assert_true(iscc_get_dist_row(tmp_dco5, 1, row5, output5));
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 1, row5a, 100, NULL, output5a));
 	for (size_t i = 0; i < 100; ++i) {
-		assert_double_equal(output5[i], ref_distances5[i]);
+		assert_double_equal(output5a[i], ref_distances5a[i]);
 	}
-	assert_true(iscc_close_dist_column_object(tmp_dco5));
 
 
-	scc_Dpid* col6 = NULL;
-	scc_Dpid* row6 = NULL;
-	double output6[225];
-	double ref_distances6[225] = { 0.00000000, 0.57346651, 1.69179534, 2.40739000, 0.97492432, 2.71036210, 1.30868297, 0.37813567, 0.08974655, 2.06566737,
+	iscc_Dpid row5b[2] = { 15, 65 };
+	double output5b[200];
+	const double ref_distances5b[200] = { 81.7478448290745, 20.086537512671, 65.856760620199, 26.4115702314799, 23.5618946729995, 54.2858990694909, 84.7712707326409,
+	                                      80.8846829683117, 112.319962391295, 43.6999400430849, 90.8879262694137, 70.1040533305718, 58.4245658594349, 96.6454748186158,
+	                                      72.3873243704407, 0, 95.3964506640622, 78.9143446670418, 101.664932708489, 79.0502180867891, 61.0366784048548, 36.5599028107368,
+	                                      50.1637037376276, 104.245732448399, 75.1573355514819, 95.288270264995, 68.3629652287537, 99.1927653362838, 79.9240040627625,
+	                                      72.9436776737185, 23.6433838957086, 97.9387082790973, 45.9333842851964, 37.7121858277047, 97.062954694815, 95.0612259111864,
+	                                      73.0425506544023, 106.301904205466, 70.1040533305718, 88.0854507180554, 59.405346001237, 73.5919619703951, 21.7775055944167,
+	                                      80.070838900344, 69.9392084282047, 69.6391934381467, 81.4588344071188, 36.5081597868179, 53.3972403558521, 85.390350880782,
+	                                      10.2198017478893, 112.776686863486, 69.457341575424, 74.9849835513174, 67.6813427794171, 108.74484889577, 50.5008603154793,
+	                                      41.2910092646068, 54.1237603732647, 76.7846348266277, 53.528563667339, 41.8267707830363, 76.5522963738111, 107.521222043675,
+	                                      65.0776303777014, 122.813376509683, 116.353633701251, 62.1776379885549, 41.8598769362402, 60.2693012532608, 41.4750907170344,
+	                                      103.719672630737, 76.5636688681463, 21.0199342022989, 88.1890644518966, 89.9940458755718, 87.0059171484867, 77.1853673442416,
+	                                      33.1809064612408, 44.1583206087839, 73.2584428367008, 87.2327474515709, 50.7037167344574, 107.274404575035, 72.4249984558458,
+	                                      39.8234486500565, 90.3328052946959, 74.8077768535473, 70.2548725547585, 82.2101633798519, 107.072655605809, 58.0211615757369,
+	                                      32.2907150506247, 45.3889887792943, 82.227376195524, 58.0828554506585, 17.9993585573787, 103.093322014365, 25.8278388657107,
+	                                      77.0233134233583, 46.8588810481291, 125.728509166853, 110.606636763732, 99.6339522388275, 99.6394042239774, 94.8704724525992,
+	                                      99.1384853987218, 77.7918094488333, 17.0428685060872, 106.158418803109, 44.4161084916838, 109.029998916103, 98.6388654420818,
+	                                      120.303162689084, 62.4428031350329, 122.813376509683, 76.8761202873819, 56.3991331030119, 89.5048763048585, 69.9734750419002,
+	                                      83.3459659457493, 116.206453154634, 78.4267720233627, 55.8225363178445, 81.9202889966868, 54.9475348591187, 68.0330804665257,
+	                                      44.8782506416015, 57.0714643435708, 92.1534036998121, 99.4060425420511, 47.1038366341422, 110.493395578579, 119.615002367034,
+	                                      59.9471123862552, 103.246880716052, 65.0850031021627, 58.3027356663229, 109.029998916103, 118.32583312526, 64.6191672883671,
+	                                      85.8051168452241, 109.23267224407, 67.3264639624079, 55.18993072392, 97.994765071698, 79.9386654168731, 88.9970922506004,
+	                                      110.074620571963, 47.8791084951174, 118.334276096124, 35.8612049134958, 95.2329250832507, 50.6973967378033, 109.204272507729,
+	                                      87.8891425709743, 89.4174645752825, 111.515921885417, 107.334564869761, 97.7139468117849, 116.335003484798, 104.39341059745,
+	                                      48.5422690058897, 20.6891747575556, 60.7890143943418, 0, 77.8633334494417, 90.6106415502704, 86.4620501401394, 101.400458433073,
+	                                      116.544236623297, 82.7094539111776, 84.2165019619535, 123.73546921316, 71.9956854385995, 81.6022240163095, 81.1911166517363,
+	                                      69.6472666713659, 138.537037001061, 105.58589850119, 94.2038854936947, 95.6060107945246, 83.8334093331262, 68.3026923636263,
+	                                      76.8365535125452, 117.974604041719, 84.5020232264989, 86.1862366433302, 67.7571088170594, 76.6446032923888, 31.0239755436307,
+	                                      67.3879700251222, 125.861459291326, 88.0685752361227, 95.0167404933097, 94.7863448214603, 129.974127985105, 20.4170786012563,
+	                                      98.8904753800123, 80.8901179503722 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 2, row5b, 100, NULL, output5b));
+	for (size_t i = 0; i < 200; ++i) {
+		assert_double_equal(output5b[i], ref_distances5b[i]);
+	}
+
+
+	iscc_Dpid row5c[2] = { 15, 65 };
+	double output5c[100];
+	const double ref_distances5c[100] = { 81.7478448290745, 20.086537512671, 65.856760620199, 26.4115702314799, 23.5618946729995, 54.2858990694909, 84.7712707326409, 80.8846829683117,
+	                                     112.319962391295, 43.6999400430849, 90.8879262694137, 70.1040533305718, 58.4245658594349, 96.6454748186158, 72.3873243704407, 0, 95.3964506640622,
+	                                     78.9143446670418, 101.664932708489, 79.0502180867891, 61.0366784048548, 36.5599028107368, 50.1637037376276, 104.245732448399, 75.1573355514819,
+	                                     95.288270264995, 68.3629652287537, 99.1927653362838, 79.9240040627625, 72.9436776737185, 23.6433838957086, 97.9387082790973, 45.9333842851964,
+	                                     37.7121858277047, 97.062954694815, 95.0612259111864, 73.0425506544023, 106.301904205466, 70.1040533305718, 88.0854507180554, 59.405346001237,
+	                                     73.5919619703951, 21.7775055944167, 80.070838900344, 69.9392084282047, 69.6391934381467, 81.4588344071188, 36.5081597868179, 53.3972403558521,
+	                                     85.390350880782, 46.8588810481291, 125.728509166853, 110.606636763732, 99.6339522388275, 99.6394042239774, 94.8704724525992, 99.1384853987218,
+	                                     77.7918094488333, 17.0428685060872, 106.158418803109, 44.4161084916838, 109.029998916103, 98.6388654420818, 120.303162689084, 62.4428031350329,
+	                                     122.813376509683, 76.8761202873819, 56.3991331030119, 89.5048763048585, 69.9734750419002, 83.3459659457493, 116.206453154634, 78.4267720233627,
+	                                     55.8225363178445, 81.9202889966868, 54.9475348591187, 68.0330804665257, 44.8782506416015, 57.0714643435708, 92.1534036998121, 99.4060425420511,
+	                                     47.1038366341422, 110.493395578579, 119.615002367034, 59.9471123862552, 103.246880716052, 65.0850031021627, 58.3027356663229, 109.029998916103,
+	                                     118.32583312526, 64.6191672883671, 85.8051168452241, 109.23267224407, 67.3264639624079, 55.18993072392, 97.994765071698, 79.9386654168731, 88.9970922506004,
+	                                     110.074620571963, 47.8791084951174 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_large, 2, row5c, 50, NULL, output5c));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_double_equal(output5c[i], ref_distances5c[i]);
+	}
+
+
+	double output6a[225];
+	const double ref_distances6a[225] = { 0.00000000, 0.57346651, 1.69179534, 2.40739000, 0.97492432, 2.71036210, 1.30868297, 0.37813567, 0.08974655, 2.06566737,
 	                                     1.38782555, 3.58315665, 1.32782897, 1.04971270, 1.27182896, 0.57346651, 0.00000000, 1.11832883, 1.83392349, 0.40145781,
 	                                     2.13689559, 0.73521646, 0.19533084, 0.66321306, 1.49220086, 0.81435904, 3.00969014, 0.75436246, 0.47624619, 0.69836245,
 	                                     1.69179534, 1.11832883, 0.00000000, 0.71559466, 0.71687102, 1.01856676, 0.38311237, 1.31365967, 1.78154189, 0.37387203,
@@ -447,62 +335,396 @@ void scc_ut_get_dist_row(void** state)
 	                                     1.66064940, 0.25897027, 0.67157703, 1.13945925, 1.01595467, 0.33811285, 2.53344395, 0.27811627, 0.00000000, 0.22211626,
 	                                     1.27182896, 0.69836245, 0.41996638, 1.13556104, 0.29690464, 1.43853314, 0.03685401, 0.89369329, 1.36157551, 0.79383841,
 	                                     0.11599659, 2.31132769, 0.05600001, 0.22211626, 0.00000000 };
-	iscc_DistColObject* tmp_dco6 = iscc_init_dist_column_object(&scc_ut_test_data_small, 15, col6, 15);
-	assert_non_null(tmp_dco6);
-	assert_true(iscc_get_dist_row(tmp_dco6, 15, row6, output6));
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_small, 15, NULL, 15, NULL, output6a));
 	for (size_t i = 0; i < 225; ++i) {
-		assert_double_equal(output6[i], ref_distances6[i]);
+		assert_double_equal(output6a[i], ref_distances6a[i]);
 	}
-	assert_true(iscc_close_dist_column_object(tmp_dco6));
+
+
+	double output6b[150];
+	const double ref_distances6b[150] = { 0, 0.57346651, 1.69179534, 2.40739, 0.97492432, 2.7103621, 1.30868297, 0.37813567, 0.0897465499999999, 2.06566737, 1.38782555, 3.58315665,
+	                                      1.32782897, 1.0497127, 1.27182896, 0.57346651, 0, 1.11832883, 1.83392349, 0.40145781, 2.13689559, 0.73521646, 0.19533084, 0.66321306, 1.49220086,
+	                                      0.81435904, 3.00969014, 0.75436246, 0.47624619, 0.69836245, 1.69179534, 1.11832883, 0, 0.71559466, 0.71687102, 1.01856676, 0.38311237, 1.31365967,
+	                                      1.78154189, 0.37387203, 0.30396979, 1.89136131, 0.36396637, 0.64208264, 0.41996638, 2.40739, 1.83392349, 0.71559466, 0, 1.43246568, 0.3029721,
+	                                      1.09870703, 2.02925433, 2.49713655, 0.34172263, 1.01956445, 1.17576665, 1.07956103, 1.3576773, 1.13556104, 0.97492432, 0.40145781, 0.71687102,
+	                                      1.43246568, 0, 1.73543778, 0.33375865, 0.59678865, 1.06467087, 1.09074305, 0.41290123, 2.60823233, 0.35290465, 0.07478838, 0.29690464, 2.7103621,
+	                                      2.13689559, 1.01856676, 0.3029721, 1.73543778, 0, 1.40167913, 2.33222643, 2.80010865, 0.64469473, 1.32253655, 0.87279455, 1.38253313, 1.6606494,
+	                                      1.43853314, 1.30868297, 0.73521646, 0.38311237, 1.09870703, 0.33375865, 1.40167913, 0, 0.9305473, 1.39842952, 0.7569844, 0.07914258, 2.27447368,
+	                                      0.019146, 0.25897027, 0.03685401, 0.37813567, 0.19533084, 1.31365967, 2.02925433, 0.59678865, 2.33222643, 0.9305473, 0, 0.46788222, 1.6875317,
+	                                      1.00968988, 3.20502098, 0.9496933, 0.67157703, 0.89369329, 0.0897465499999999, 0.66321306, 1.78154189, 2.49713655, 1.06467087, 2.80010865, 1.39842952,
+	                                      0.46788222, 0, 2.15541392, 1.4775721, 3.6729032, 1.41757552, 1.13945925, 1.36157551, 2.06566737, 1.49220086, 0.37387203, 0.34172263, 1.09074305,
+	                                      0.64469473, 0.7569844, 1.6875317, 2.15541392, 0, 0.67784182, 1.51748928, 0.7378384, 1.01595467, 0.79383841 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_small, 10, NULL, 15, NULL, output6b));
+	for (size_t i = 0; i < 150; ++i) {
+		assert_double_equal(output6b[i], ref_distances6b[i]);
+	}
+
+
+	double output6c[150];
+	const double ref_distances6c[150] = { 0, 0.57346651, 1.69179534, 2.40739, 0.97492432, 2.7103621, 1.30868297, 0.37813567, 0.0897465499999999, 2.06566737, 0.57346651, 0, 1.11832883, 1.83392349,
+	                                      0.40145781, 2.13689559, 0.73521646, 0.19533084, 0.66321306, 1.49220086, 1.69179534, 1.11832883, 0, 0.71559466, 0.71687102, 1.01856676, 0.38311237, 1.31365967,
+	                                      1.78154189, 0.37387203, 2.40739, 1.83392349, 0.71559466, 0, 1.43246568, 0.3029721, 1.09870703, 2.02925433, 2.49713655, 0.34172263, 0.97492432, 0.40145781,
+	                                      0.71687102, 1.43246568, 0, 1.73543778, 0.33375865, 0.59678865, 1.06467087, 1.09074305, 2.7103621, 2.13689559, 1.01856676, 0.3029721, 1.73543778, 0, 1.40167913,
+	                                      2.33222643, 2.80010865, 0.64469473, 1.30868297, 0.73521646, 0.38311237, 1.09870703, 0.33375865, 1.40167913, 0, 0.9305473, 1.39842952, 0.7569844, 0.37813567,
+	                                      0.19533084, 1.31365967, 2.02925433, 0.59678865, 2.33222643, 0.9305473, 0, 0.46788222, 1.6875317, 0.0897465499999999, 0.66321306, 1.78154189, 2.49713655, 1.06467087,
+	                                      2.80010865, 1.39842952, 0.46788222, 0, 2.15541392, 2.06566737, 1.49220086, 0.37387203, 0.34172263, 1.09074305, 0.64469473, 0.7569844, 1.6875317, 2.15541392, 0,
+	                                      1.38782555, 0.81435904, 0.30396979, 1.01956445, 0.41290123, 1.32253655, 0.07914258, 1.00968988, 1.4775721, 0.67784182, 3.58315665, 3.00969014, 1.89136131,
+	                                      1.17576665, 2.60823233, 0.87279455, 2.27447368, 3.20502098, 3.6729032, 1.51748928, 1.32782897, 0.75436246, 0.36396637, 1.07956103, 0.35290465, 1.38253313,
+	                                      0.019146, 0.9496933, 1.41757552, 0.7378384, 1.0497127, 0.47624619, 0.64208264, 1.3576773, 0.07478838, 1.6606494, 0.25897027, 0.67157703, 1.13945925,
+	                                      1.01595467, 1.27182896, 0.69836245, 0.41996638, 1.13556104, 0.29690464, 1.43853314, 0.03685401, 0.89369329, 1.36157551, 0.79383841 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_small, 15, NULL, 10, NULL, output6c));
+	for (size_t i = 0; i < 150; ++i) {
+		assert_double_equal(output6c[i], ref_distances6c[i]);
+	}
+
+
+	double output6d[100];
+	const double ref_distances6d[100] = { 0, 0.57346651, 1.69179534, 2.40739, 0.97492432, 2.7103621, 1.30868297, 0.37813567, 0.0897465499999999, 2.06566737, 0.57346651, 0, 1.11832883, 1.83392349,
+	                                      0.40145781, 2.13689559, 0.73521646, 0.19533084, 0.66321306, 1.49220086, 1.69179534, 1.11832883, 0, 0.71559466, 0.71687102, 1.01856676, 0.38311237, 1.31365967,
+	                                      1.78154189, 0.37387203, 2.40739, 1.83392349, 0.71559466, 0, 1.43246568, 0.3029721, 1.09870703, 2.02925433, 2.49713655, 0.34172263, 0.97492432, 0.40145781,
+	                                      0.71687102, 1.43246568, 0, 1.73543778, 0.33375865, 0.59678865, 1.06467087, 1.09074305, 2.7103621, 2.13689559, 1.01856676, 0.3029721, 1.73543778, 0, 1.40167913,
+	                                      2.33222643, 2.80010865, 0.64469473, 1.30868297, 0.73521646, 0.38311237, 1.09870703, 0.33375865, 1.40167913, 0, 0.9305473, 1.39842952, 0.7569844, 0.37813567,
+	                                      0.19533084, 1.31365967, 2.02925433, 0.59678865, 2.33222643, 0.9305473, 0, 0.46788222, 1.6875317, 0.0897465499999999, 0.66321306, 1.78154189, 2.49713655, 1.06467087,
+	                                      2.80010865, 1.39842952, 0.46788222, 0, 2.15541392, 2.06566737, 1.49220086, 0.37387203, 0.34172263, 1.09074305, 0.64469473, 0.7569844, 1.6875317, 2.15541392, 0 };
+	assert_true(iscc_get_dist_rows(scc_ut_test_data_small, 10, NULL, 10, NULL, output6d));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_double_equal(output6d[i], ref_distances6d[i]);
+	}
 }
 
 
-void scc_ut_init_close_search_object(void** state)
+void scc_ut_init_close_max_dist_object(void** state)
 {
 	(void) state;
 
-	scc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid search2[5] = { 5, 2, 7, 3, 8 };
+	iscc_Dpid cols1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	iscc_Dpid cols2[5] = { 5, 2, 7, 3, 8 };
 
-	iscc_NNSearchObject* tmp_so1 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 10, search1, 1);
-	assert_non_null(tmp_so1);
-	assert_true(iscc_close_nn_search_object(tmp_so1));
+	iscc_MaxDistObject* tmp_mdo1;
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 10, cols1, &tmp_mdo1));
+	assert_non_null(tmp_mdo1);
+	assert_true(iscc_close_max_dist_object(&tmp_mdo1));
 
-	iscc_NNSearchObject* tmp_so2 = iscc_init_nn_search_object(&scc_ut_test_data_small, 2, false, 0.0, 5, search2, 1);
-	assert_non_null(tmp_so2);
-	assert_true(iscc_close_nn_search_object(tmp_so2));
+	iscc_MaxDistObject* tmp_mdo2;
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 5, cols2, &tmp_mdo2));
+	assert_non_null(tmp_mdo2);
+	assert_true(iscc_close_max_dist_object(&tmp_mdo2));
 
-	iscc_NNSearchObject* tmp_so3 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 100, NULL, 10);
-	assert_non_null(tmp_so3);
-	assert_true(iscc_close_nn_search_object(tmp_so3));
+	iscc_MaxDistObject* tmp_mdo3;
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 100, NULL, &tmp_mdo3));
+	assert_non_null(tmp_mdo3);
+	assert_true(iscc_close_max_dist_object(&tmp_mdo3));
 
-	iscc_NNSearchObject* tmp_so4 = iscc_init_nn_search_object(&scc_ut_test_data_small, 2, false, 0.0, 15, NULL, 10);
-	assert_non_null(tmp_so4);
-	assert_true(iscc_close_nn_search_object(tmp_so4));
+	iscc_MaxDistObject* tmp_mdo4;
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 15, NULL, &tmp_mdo4));
+	assert_non_null(tmp_mdo4);
+	assert_true(iscc_close_max_dist_object(&tmp_mdo4));
+}
 
-	iscc_NNSearchObject* tmp_so5 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 10, search1, 50);
-	assert_non_null(tmp_so5);
-	assert_true(iscc_close_nn_search_object(tmp_so5));
 
-	iscc_NNSearchObject* tmp_so6 = iscc_init_nn_search_object(&scc_ut_test_data_large, 1, false, 0.0, 10, search1, 50);
-	assert_non_null(tmp_so6);
-	assert_true(iscc_close_nn_search_object(tmp_so6));
+void scc_ut_get_max_dist(void** state)
+{
+	(void) state;
 
-	iscc_NNSearchObject* tmp_so7 = iscc_init_nn_search_object(&scc_ut_test_data_large, 10, false, 0.0, 10, search1, 100);
-	assert_non_null(tmp_so7);
-	assert_true(iscc_close_nn_search_object(tmp_so7));
+	/*
+	R code:
+	search <- c(0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
+	query <- c(0, 1, 2, 3, 4)
+	dist_mat <- as.matrix(dist(matrix(c(...), nrow = 100, byrow = TRUE)))
 
-	iscc_NNSearchObject* tmp_so8 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, true, 1.0, 10, search1, 100);
-	assert_non_null(tmp_so8);
-	assert_true(iscc_close_nn_search_object(tmp_so8));
+	paste0(search[apply(dist_mat[query + 1, search + 1], 1, order)[length(search), ]], collapse = ", ")
+	paste0(apply(dist_mat[query + 1, search + 1], 1, sort)[length(search), ], collapse = ", ")
+	*/
 
-	iscc_NNSearchObject* tmp_so9 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, true, 1.0, 10, search1, 10);
-	assert_non_null(tmp_so9);
-	assert_true(iscc_close_nn_search_object(tmp_so9));
+	iscc_MaxDistObject* max_dist_object1;
+	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 10, search1, &max_dist_object1));
 
-	iscc_NNSearchObject* tmp_so10 = iscc_init_nn_search_object(&scc_ut_test_data_large, 100, false, 0.0, 100, NULL, 100);
-	assert_non_null(tmp_so10);
-	assert_true(iscc_close_nn_search_object(tmp_so10));
+	iscc_Dpid query1a[5] = { 0, 1, 2, 3, 4 };
+	iscc_Dpid out_ids1a[5];
+	double out_dist1a[5];
+	const iscc_Dpid ref_ids1a[5] = { 2, 8, 18, 8, 8 };
+	const double ref_dist1a[5] = { 91.6847440822232, 114.066080913592, 134.211257779602, 88.5155733560544, 89.0981520167977 };
+	assert_true(iscc_get_max_dist(max_dist_object1, 5, query1a, out_ids1a, out_dist1a));
+	for (size_t i = 0; i < 5; ++i) {
+		assert_int_equal(out_ids1a[i], ref_ids1a[i]);
+		assert_double_equal(out_dist1a[i], ref_dist1a[i]);
+	}
+
+	iscc_Dpid query1b[10] = { 19, 20, 6, 3, 9, 15, 88, 23, 90, 33 };
+	iscc_Dpid out_ids1b[10];
+	double out_dist1b[10];
+	const iscc_Dpid ref_ids1b[10] = { 18, 18, 2, 8, 18, 8, 6, 2, 2, 8 };
+	const double ref_dist1b[10] = { 104.711936990853, 107.348747109315, 103.030113211531, 88.5155733560544, 109.855909481972, 112.319962391295, 99.1929186473983, 110.973348201933, 102.888740019999, 105.937617713061 };
+	assert_true(iscc_get_max_dist(max_dist_object1, 10, query1b, out_ids1b, out_dist1b));
+	for (size_t i = 0; i < 10; ++i) {
+		assert_int_equal(out_ids1b[i], ref_ids1b[i]);
+		assert_double_equal(out_dist1b[i], ref_dist1b[i]);
+	}
+
+	iscc_Dpid query1c[2] = { 99, 43 };
+	iscc_Dpid out_ids1c[2];
+	double out_dist1c[2];
+	const iscc_Dpid ref_ids1c[2] = { 2, 6 };
+	const double ref_dist1c[2] = { 111.298252778194, 103.103243517457 };
+	assert_true(iscc_get_max_dist(max_dist_object1, 2, query1c, out_ids1c, out_dist1c));
+	for (size_t i = 0; i < 2; ++i) {
+		assert_int_equal(out_ids1c[i], ref_ids1c[i]);
+		assert_double_equal(out_dist1c[i], ref_dist1c[i]);
+	}
+
+	iscc_Dpid query1d[5] = { 51, 52, 51, 55, 54 };
+	iscc_Dpid out_ids1d[5];
+	double out_dist1d[5];
+	const iscc_Dpid ref_ids1d[5] = { 2, 18, 2, 2, 8 };
+	const double ref_dist1d[5] = { 94.9376054228144, 129.299653842619, 94.9376054228144, 136.662934653369, 92.9856686886153 };
+	assert_true(iscc_get_max_dist(max_dist_object1, 5, query1d, out_ids1d, out_dist1d));
+	for (size_t i = 0; i < 5; ++i) {
+		assert_int_equal(out_ids1d[i], ref_ids1d[i]);
+		assert_double_equal(out_dist1d[i], ref_dist1d[i]);
+	}
+
+	assert_true(iscc_close_max_dist_object(&max_dist_object1));
+
+
+	iscc_MaxDistObject* max_dist_object2;
+	iscc_Dpid mat2[5] = { 54, 11, 44, 38, 2 };
+	iscc_Dpid out_ids2[5];
+	double out_dist2[5];
+	const double ref_dist2[5] = { 92.6949329193194, 96.3082633651233, 81.8214565347695, 96.3082633651233, 96.3082633651233 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 5, mat2, &max_dist_object2));
+	assert_true(iscc_get_max_dist(max_dist_object2, 5, mat2, out_ids2, out_dist2));
+	assert_true(iscc_close_max_dist_object(&max_dist_object2));
+	// 11 and 38 are identical, returning any is fine.
+	assert_int_equal(out_ids2[0], 2);
+	assert_int_equal(out_ids2[1], 2);
+	assert_true((out_ids2[2] == 11) || (out_ids2[2] == 38));
+	assert_int_equal(out_ids2[3], 2);
+	assert_true((out_ids2[4] == 11) || (out_ids2[4] == 38));
+	for (size_t i = 0; i < 5; ++i) {
+		assert_double_equal(out_dist2[i], ref_dist2[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object3;
+	iscc_Dpid query3[1] = { 21 };
+	iscc_Dpid search3[1] = { 88 };
+	iscc_Dpid out_ids3[1];
+	double out_dist3[1];
+	const iscc_Dpid ref_ids3[1] = { 88 };
+	const double ref_dist3[1] = { 79.9294467929955 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 1, search3, &max_dist_object3));
+	assert_true(iscc_get_max_dist(max_dist_object3, 1, query3, out_ids3, out_dist3));
+	assert_true(iscc_close_max_dist_object(&max_dist_object3));
+	for (size_t i = 0; i < 1; ++i) {
+		assert_int_equal(out_ids3[i], ref_ids3[i]);
+		assert_double_equal(out_dist3[i], ref_dist3[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object4a;
+	iscc_Dpid search4a[1] = { 76 };
+	iscc_Dpid out_ids4a[100];
+	double out_dist4a[100];
+	const iscc_Dpid ref_ids4a[100] = { 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+	                                   76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+	                                   76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+	                                   76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+	                                   76, 76, 76, 76 };
+	const double ref_dist4a[100] = { 64.9544791051644, 80.0930516158615, 94.8893243758052, 68.5659007490113, 70.5750269964879, 83.160777522138, 19.6877154384521, 10.2017207337204, 64.4909216255888,
+	                                 71.9405700182964, 64.2590320368453, 33.6421908839873, 32.6861363300814, 40.2613311194435, 66.2490554850071, 87.0059171484867, 27.7587518583496, 84.3853294434404,
+	                                 59.7003586423728, 62.6800874692287, 70.3891415479062, 63.1100439389066, 43.1652327678781, 34.2573474165156, 29.2264470617218, 29.6460708062981, 85.8998724974663,
+	                                 37.5057553811457, 85.2056673222495, 60.1671916372682, 69.4237291252949, 44.7504327915531, 91.5074297813, 68.6913235698893, 42.3896613427532, 36.1704354344588,
+	                                 58.6828162044545, 54.6202113178628, 33.6421908839873, 37.474746401591, 50.4056368624625, 92.4041325836564, 66.3226608419616, 93.3489419233617, 69.3556410270255,
+	                                 71.4399722186021, 6.3960423736893, 55.1257670661323, 43.0018892035719, 81.0436263108613, 77.9018149486519, 55.5151133192513, 102.788825448072, 53.5251450230862,
+	                                 34.2964896111557, 54.8149559010406, 90.7324360429077, 57.1696040962046, 96.5913678842299, 19.8938574448987, 49.4715764254484, 53.5634068121486, 50.6524724636101,
+	                                 60.9065296524078, 45.8002625974439, 81.1911166517363, 60.1009401787162, 50.7303042011002, 64.4930275618271, 81.997900960262, 62.0326759192139, 60.8000118748004,
+	                                 95.2461842089738, 84.6568493060895, 107.83951097726, 3.04943534229486, 0, 97.1120113978726, 82.1201136756733, 56.0910201003615, 75.6929210956897, 85.0993607911686,
+	                                 43.9221536500751, 35.9049322852337, 87.042732996262, 61.9735234341632, 13.6444075684181, 80.3257916246034, 88.5654819721503, 104.014478170404, 51.0577336761235,
+	                                 70.5053309917733, 69.5416205540842, 85.0096115614713, 87.6064633674381, 30.320632592006, 83.7188283835717, 68.1390037052728, 70.7534045907538, 57.5336073602082 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 1, search4a, &max_dist_object4a));
+	assert_true(iscc_get_max_dist(max_dist_object4a, 100, NULL, out_ids4a, out_dist4a));
+	assert_true(iscc_close_max_dist_object(&max_dist_object4a));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_int_equal(out_ids4a[i], ref_ids4a[i]);
+		assert_double_equal(out_dist4a[i], ref_dist4a[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object4b;
+	iscc_Dpid search4b[2] = { 76, 33 };
+	iscc_Dpid out_ids4b[100];
+	double out_dist4b[100];
+	const iscc_Dpid ref_ids4b[100] = { 33, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 33, 76, 76, 33, 76, 76, 33, 33, 33, 33, 33, 33, 33, 76,
+	                                   76, 76, 33, 76, 33, 76, 76, 33, 76, 33, 76, 33, 33, 33, 76, 76, 76, 33, 76, 76, 33, 33, 33, 33, 33, 33, 76, 33, 76, 33, 76, 76, 76, 33, 33, 76, 76, 76, 33, 76, 76, 33,
+	                                   76, 76, 33, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 33, 76, 76 };
+	const double ref_dist4b[100] = { 77.2774456842202, 80.0930516158615, 94.8893243758052, 68.5659007490113, 70.5750269964879, 83.160777522138, 60.3593986535452, 61.7681713378605, 105.937617713061, 71.9405700182964, 81.7430540831898,
+	                                 44.9650121226702, 45.5481817804792, 69.1502612181662, 83.5581364053949, 87.0059171484867, 87.0078577679492, 84.9610695392341, 72.3467676564113, 89.2154573018569, 78.2121255952271, 63.1100439389066,
+	                                 46.1662654353744, 86.2810090014776, 50.6207827278759, 85.9418217601039, 85.8998724974663, 90.1089965343193, 92.7719604881078, 60.1671916372682, 69.4237291252949, 94.466460651881, 91.5074297813,
+	                                 68.6913235698893, 94.3852698622746, 84.9890005159453, 81.8319851390179, 106.136260122573, 44.9650121226702, 63.2279425085851, 60.7619276211456, 92.4041325836564, 66.3226608419616, 93.3489419233617,
+	                                 75.3650060229711, 71.4399722186021, 63.1810306723375, 55.1257670661323, 43.0018892035719, 95.0049395241898, 77.9018149486519, 108.013525320645, 102.788825448072, 77.3687183785392, 44.4352849754541,
+	                                 79.4364730942369, 90.7324360429077, 57.1696040962046, 96.5913678842299, 54.1403105863946, 49.4715764254484, 53.5634068121486, 71.2757506459316, 101.262745903146, 59.4991489798591, 119.615002367034,
+	                                 115.57962816112, 68.848631589856, 64.4930275618271, 83.0340226563593, 62.0326759192139, 107.134058442053, 95.2461842089738, 84.6568493060895, 107.83951097726, 71.4058032295308, 68.6913235698893,
+	                                 97.1120113978726, 82.1201136756733, 56.0910201003615, 90.4998832914564, 85.0993607911686, 43.9221536500751, 84.5112149945226, 87.042732996262, 61.9735234341632, 76.0252983449938, 80.3257916246034,
+	                                 88.5654819721503, 104.014478170404, 97.4451436923349, 70.5053309917733, 69.5416205540842, 85.0096115614713, 87.6064633674381, 40.8066614881894, 83.7188283835717, 101.994228745573, 70.7534045907538,
+	                                 57.5336073602082 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 2, search4b, &max_dist_object4b));
+	assert_true(iscc_get_max_dist(max_dist_object4b, 100, NULL, out_ids4b, out_dist4b));
+	assert_true(iscc_close_max_dist_object(&max_dist_object4b));
+	for (size_t i = 0; i < 100; ++i) {
+		assert_int_equal(out_ids4b[i], ref_ids4b[i]);
+		assert_double_equal(out_dist4b[i], ref_dist4b[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object4c;
+	iscc_Dpid search4c[2] = { 76, 33 };
+	iscc_Dpid out_ids4c[50];
+	double out_dist4c[50];
+	const iscc_Dpid ref_ids4c[50] = { 33, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76, 33, 33, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 33,
+	                                  76, 76, 33, 76, 76, 33, 33, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 33, 76, 76, 33 };
+	const double ref_dist4c[50] = { 77.2774456842202, 80.0930516158615, 94.8893243758052, 68.5659007490113, 70.5750269964879, 83.160777522138, 60.3593986535452, 61.7681713378605, 105.937617713061, 71.9405700182964, 81.7430540831898,
+	                                44.9650121226702, 45.5481817804792, 69.1502612181662, 83.5581364053949, 87.0059171484867, 87.0078577679492, 84.9610695392341, 72.3467676564113, 89.2154573018569, 78.2121255952271, 63.1100439389066,
+	                                46.1662654353744, 86.2810090014776, 50.6207827278759, 85.9418217601039, 85.8998724974663, 90.1089965343193, 92.7719604881078, 60.1671916372682, 69.4237291252949, 94.466460651881, 91.5074297813,
+	                                68.6913235698893, 94.3852698622746, 84.9890005159453, 81.8319851390179, 106.136260122573, 44.9650121226702, 63.2279425085851, 60.7619276211456, 92.4041325836564, 66.3226608419616, 93.3489419233617,
+	                                75.3650060229711, 71.4399722186021, 63.1810306723375, 55.1257670661323, 43.0018892035719, 95.0049395241898 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 2, search4c, &max_dist_object4c));
+	assert_true(iscc_get_max_dist(max_dist_object4c, 50, NULL, out_ids4c, out_dist4c));
+	assert_true(iscc_close_max_dist_object(&max_dist_object4c));
+	for (size_t i = 0; i < 50; ++i) {
+		assert_int_equal(out_ids4c[i], ref_ids4c[i]);
+		assert_double_equal(out_dist4c[i], ref_dist4c[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object5a;
+	iscc_Dpid query5a[1] = { 15 };
+	iscc_Dpid out_ids5a[1];
+	double out_dist5a[1];
+	const iscc_Dpid ref_ids5a[1] = { 65 };
+	const double ref_dist5a[1] = { 122.813376509683 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 100, NULL, &max_dist_object5a));
+	assert_true(iscc_get_max_dist(max_dist_object5a, 1, query5a, out_ids5a, out_dist5a));
+	assert_true(iscc_close_max_dist_object(&max_dist_object5a));
+	for (size_t i = 0; i < 1; ++i) {
+		assert_int_equal(out_ids5a[i], ref_ids5a[i]);
+		assert_double_equal(out_dist5a[i], ref_dist5a[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object5b;
+	iscc_Dpid query5b[2] = { 15, 65 };
+	iscc_Dpid out_ids5b[2];
+	double out_dist5b[2];
+	const iscc_Dpid ref_ids5b[2] = { 65, 78 };
+	const double ref_dist5b[2] = { 122.813376509683, 138.537037001061 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 100, NULL, &max_dist_object5b));
+	assert_true(iscc_get_max_dist(max_dist_object5b, 2, query5b, out_ids5b, out_dist5b));
+	assert_true(iscc_close_max_dist_object(&max_dist_object5b));
+	for (size_t i = 0; i < 2; ++i) {
+		assert_int_equal(out_ids5b[i], ref_ids5b[i]);
+		assert_double_equal(out_dist5b[i], ref_dist5b[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object5c;
+	iscc_Dpid query5c[2] = { 15, 65 };
+	iscc_Dpid out_ids5c[2];
+	double out_dist5c[2];
+	const iscc_Dpid ref_ids5c[2] = { 8, 1 };
+	const double ref_dist5c[2] = { 112.319962391295, 125.728509166853 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_large, 50, NULL, &max_dist_object5c));
+	assert_true(iscc_get_max_dist(max_dist_object5c, 2, query5c, out_ids5c, out_dist5c));
+	assert_true(iscc_close_max_dist_object(&max_dist_object5c));
+	for (size_t i = 0; i < 2; ++i) {
+		assert_int_equal(out_ids5c[i], ref_ids5c[i]);
+		assert_double_equal(out_dist5c[i], ref_dist5c[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object6a;
+	iscc_Dpid out_ids6a[15];
+	double out_dist6a[15];
+	const iscc_Dpid ref_ids6a[15] = { 11, 11, 11, 8, 11, 8, 11, 11, 11, 8, 11, 8, 11, 11, 11 };
+	const double ref_dist6a[15] = { 3.58315665, 3.00969014, 1.89136131, 2.49713655, 2.60823233, 2.80010865, 2.27447368, 3.20502098, 3.6729032, 2.15541392, 2.1953311, 3.6729032, 2.25532768, 2.53344395, 2.31132769 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 15, NULL, &max_dist_object6a));
+	assert_true(iscc_get_max_dist(max_dist_object6a, 15, NULL, out_ids6a, out_dist6a));
+	assert_true(iscc_close_max_dist_object(&max_dist_object6a));
+	for (size_t i = 0; i < 15; ++i) {
+		assert_int_equal(out_ids6a[i], ref_ids6a[i]);
+		assert_double_equal(out_dist6a[i], ref_dist6a[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object6b;
+	iscc_Dpid out_ids6b[10];
+	double out_dist6b[10];
+	const iscc_Dpid ref_ids6b[10] = { 11, 11, 11, 8, 11, 8, 11, 11, 11, 8 };
+	const double ref_dist6b[10] = { 3.58315665, 3.00969014, 1.89136131, 2.49713655, 2.60823233, 2.80010865, 2.27447368, 3.20502098, 3.6729032, 2.15541392 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 15, NULL, &max_dist_object6b));
+	assert_true(iscc_get_max_dist(max_dist_object6b, 10, NULL, out_ids6b, out_dist6b));
+	assert_true(iscc_close_max_dist_object(&max_dist_object6b));
+	for (size_t i = 0; i < 10; ++i) {
+		assert_int_equal(out_ids6b[i], ref_ids6b[i]);
+		assert_double_equal(out_dist6b[i], ref_dist6b[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object6c;
+	iscc_Dpid out_ids6c[15];
+	double out_dist6c[15];
+	const iscc_Dpid ref_ids6c[15] = { 5, 5, 8, 8, 5, 8, 5, 5, 5, 8, 8, 8, 8, 5, 5 };
+	const double ref_dist6c[15] = { 2.7103621, 2.13689559, 1.78154189, 2.49713655, 1.73543778, 2.80010865, 1.40167913, 2.33222643, 2.80010865, 2.15541392, 1.4775721, 3.6729032, 1.41757552, 1.6606494, 1.43853314 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 10, NULL, &max_dist_object6c));
+	assert_true(iscc_get_max_dist(max_dist_object6c, 15, NULL, out_ids6c, out_dist6c));
+	assert_true(iscc_close_max_dist_object(&max_dist_object6c));
+	for (size_t i = 0; i < 15; ++i) {
+		assert_int_equal(out_ids6c[i], ref_ids6c[i]);
+		assert_double_equal(out_dist6c[i], ref_dist6c[i]);
+	}
+
+
+	iscc_MaxDistObject* max_dist_object6d;
+	iscc_Dpid out_ids6d[10];
+	double out_dist6d[10];
+	const iscc_Dpid ref_ids6d[10] = { 5, 5, 8, 8, 5, 8, 5, 5, 5, 8 };
+	const double ref_dist6d[10] = { 2.7103621, 2.13689559, 1.78154189, 2.49713655, 1.73543778, 2.80010865, 1.40167913, 2.33222643, 2.80010865, 2.15541392 };
+	assert_true(iscc_init_max_dist_object(scc_ut_test_data_small, 10, NULL, &max_dist_object6d));
+	assert_true(iscc_get_max_dist(max_dist_object6d, 10, NULL, out_ids6d, out_dist6d));
+	assert_true(iscc_close_max_dist_object(&max_dist_object6d));
+	for (size_t i = 0; i < 10; ++i) {
+		assert_int_equal(out_ids6d[i], ref_ids6d[i]);
+		assert_double_equal(out_dist6d[i], ref_dist6d[i]);
+	}
+}
+
+
+void scc_ut_init_close_nn_search_object(void** state)
+{
+	(void) state;
+
+	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	iscc_Dpid search2[5] = { 5, 2, 7, 3, 8 };
+
+	iscc_NNSearchObject* tmp_nnso1;
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 10, search1, &tmp_nnso1));
+	assert_non_null(tmp_nnso1);
+	assert_true(iscc_close_nn_search_object(&tmp_nnso1));
+
+	iscc_NNSearchObject* tmp_nnso2;
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 5, search2, &tmp_nnso2));
+	assert_non_null(tmp_nnso2);
+	assert_true(iscc_close_nn_search_object(&tmp_nnso2));
+
+	iscc_NNSearchObject* tmp_nnso3;
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &tmp_nnso3));
+	assert_non_null(tmp_nnso3);
+	assert_true(iscc_close_nn_search_object(&tmp_nnso3));
+
+	iscc_NNSearchObject* tmp_nnso4;
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &tmp_nnso4));
+	assert_non_null(tmp_nnso4);
+	assert_true(iscc_close_nn_search_object(&tmp_nnso4));
 }
 
 
@@ -510,426 +732,640 @@ void scc_ut_nearest_neighbor_search(void** state)
 {
 	(void) state;
 
-	const scc_Dpid M = SCC_DPID_NA;
+	/*
+	R code:
+	true <- TRUE
+	false <- FALSE
+	k <- 2
+	dist_mat <- aaa
+	search <- c(0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
+	query <- c(true, true, true, true, true, false, false, false, false, false)
 
-	scc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
-	scc_Dpid search2[5] = { 5, 2, 7, 3, 8 };
-	scc_Dpid queryA[1] = { 77 };
-	scc_Dpid queryB[6] = { 5, 8, 11, 23, 38, 88 };
-	scc_Dpid* queryC = NULL;
-	scc_Dpid queryD[2] = { 0, 6 };
+	paste0(cumsum(c(0, k * query)), collapse = ", ")
+	paste0(search[as.vector(apply(dist_mat[which(query), search + 1], 1, order)[1:k, ])], collapse = ", ")
+	*/
 
-
-	iscc_NNSearchObject* tmp_so1 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 10, search1, 107);
-	assert_non_null(tmp_so1);
-
-	scc_Dpid out_indices1[2];
-	scc_Dpid ref_indices1[2] = { 0, 10 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so1, 1, queryA, out_indices1, NULL));
-	assert_memory_equal(out_indices1, ref_indices1, 2 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices2[12];
-	scc_Dpid ref_indices2[12] = { 2, 14, 8, 10, 6, 12, 8, 10, 6, 12, 0, 14 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so1, 6, queryB, out_indices2, NULL));
-	assert_memory_equal(out_indices2, ref_indices2, 12 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices3[200];
-	scc_Dpid ref_indices3[200] = { 0, 10, 4, 12, 2, 14, 4, 12, 4, 12, 2, 14, 6, 12, 6,
-	                              12, 8, 10, 2, 4, 10, 0, 6, 12, 12, 6, 6, 12, 14, 0,
-	                              4, 12, 16, 12, 0, 10, 18, 10, 14, 2, 14, 2, 4, 12,
-	                              4, 12, 8, 10, 6, 18, 16, 8, 14, 0, 8, 16, 14, 0, 18,
-	                              10, 4, 12, 16, 8, 2, 4, 4, 12, 16, 14, 16, 12, 14,
-	                              16, 16, 14, 6, 12, 6, 12, 14, 0, 0, 10, 4, 12, 0, 10,
-	                              0, 14, 18, 10, 6, 12, 4, 12, 12, 6, 14, 0, 4, 12, 8,
-	                              16, 2, 14, 14, 0, 12, 6, 18, 6, 4, 14, 12, 4, 2, 14,
-	                              6, 12, 12, 6, 4, 12, 0, 10, 8, 10, 0, 10, 8, 10, 16,
-	                              14, 12, 14, 4, 0, 2, 14, 4, 12, 16, 14, 0, 10, 4, 2,
-	                              14, 0, 6, 16, 6, 16, 0, 10, 4, 12, 4, 12, 2, 14, 18,
-	                              10, 4, 12, 18, 6, 0, 10, 12, 4, 16, 6, 10, 0, 0, 14,
-	                              0, 10, 8, 10, 14, 0, 12, 4, 4, 0, 18, 10, 12, 6, 4,
-	                              12, 8, 0, 4, 14, 18, 10 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so1, 100, queryC, out_indices3, NULL));
-	assert_memory_equal(out_indices3, ref_indices3, 200 * sizeof(scc_Dpid));
-	
-	assert_true(iscc_close_nn_search_object(tmp_so1));
+	iscc_NNSearchObject* nn_search_object1;
+	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 10, search1, &nn_search_object1));
 
 
-	iscc_NNSearchObject* tmp_so2 = iscc_init_nn_search_object(&scc_ut_test_data_small, 2, false, 0.0, 5, search2, 17);
-	assert_non_null(tmp_so2);
-
-	scc_Dpid out_indices4[4];
-	scc_Dpid ref_indices4[4] = { 8, 7, 2, 7 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so2, 2, queryD, out_indices4, NULL));
-	assert_memory_equal(out_indices4, ref_indices4, 2 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices5[30];
-	scc_Dpid ref_indices5[30] = { 8, 7, 7, 8, 2, 3, 3, 5, 7, 2, 5, 3, 2, 7, 7, 8, 8, 7, 3, 2, 2, 7, 5, 3, 2, 7, 2, 7, 2, 7 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so2, 15, queryC, out_indices5, NULL));
-	assert_memory_equal(out_indices5, ref_indices5, 30 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so2));
+	// 0, 1, 2, 3, 4
+	const bool query1a[10] = { true, true, true, true, true, false, false, false, false, false };
+	iscc_Arci out_nn_ref1a[11];
+	iscc_Dpid out_nn_indices1a[10];
+	const iscc_Arci ref_nn_ref1a[11] = { 0, 2, 4, 6, 8, 10, 10, 10, 10, 10, 10 };
+	const iscc_Dpid ref_nn_indices1a[10] = { 0, 10, 4, 12, 2, 14, 4, 12, 4, 12 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 10, query1a, NULL,
+                                             2, false, 0.0, true, out_nn_ref1a, out_nn_indices1a));
+	assert_memory_equal(out_nn_ref1a, ref_nn_ref1a, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1a, ref_nn_indices1a, 10 * sizeof(iscc_Dpid));
 
 
-	iscc_NNSearchObject* tmp_so3 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 100, NULL, 107);
-	assert_non_null(tmp_so3);
-
-	scc_Dpid out_indices6[2];
-	scc_Dpid ref_indices6[2] = { 77, 88 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so3, 1, queryA, out_indices6, NULL));
-	assert_memory_equal(out_indices6, ref_indices6, 2 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices7[12];
-	scc_Dpid ref_indices7[12] = { 5, 58, 8, 63, 0, 0, 23, 83, 0, 0, 88, 77 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so3, 6, queryB, out_indices7, NULL));
-	assert_true((out_indices7[4] == 11 && out_indices7[5] == 38) || (out_indices7[4] == 38 && out_indices7[5] == 11));
-	assert_true((out_indices7[8] == 11 && out_indices7[9] == 38) || (out_indices7[8] == 38 && out_indices7[9] == 11));
-	out_indices7[4] = out_indices7[5] = out_indices7[8] = out_indices7[9] = 0;
-	assert_memory_equal(out_indices7, ref_indices7, 12 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices8[200];
-	scc_Dpid ref_indices8[200] = { 0, 10, 1, 96, 2, 69, 3, 4, 4, 30, 5, 58, 6, 59, 7, 46, 8, 63, 9, 69,
-	                              10, 0, 0, 0, 12, 95, 13, 39, 14, 36, 15, 50, 16, 86, 17, 88, 18, 55,
-	                              19, 36, 20, 5, 21, 85, 22, 47, 23, 83, 24, 7, 25, 27, 26, 28, 27, 25,
-	                              28, 49, 29, 99, 30, 4, 31, 34, 32, 58, 33, 70, 34, 37, 35, 86, 36, 19,
-	                              37, 34, 0, 0, 39, 13, 40, 64, 41, 72, 42, 50, 43, 89, 44, 91, 45, 29,
-	                              46, 7, 47, 22, 48, 60, 49, 28, 50, 15, 51, 31, 52, 58, 53, 40, 54, 11,
-	                              55, 18, 56, 26, 57, 70, 58, 32, 59, 6, 60, 48, 61, 79, 62, 64, 63, 8,
-	                              64, 40, 65, 8, 66, 71, 67, 9, 68, 3, 69, 2, 70, 85, 71, 66, 72, 41, 73,
-	                              1, 74, 77, 75, 76, 76, 75, 77, 88, 78, 92, 79, 61, 80, 69, 81, 94, 82,
-	                              22, 83, 23, 84, 72, 85, 21, 86, 75, 87, 94, 88, 77, 89, 43, 90, 63, 91,
-	                              44, 92, 78, 93, 91, 94, 81, 95, 12, 96, 1, 97, 63, 98, 30, 99, 29 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so3, 100, queryC, out_indices8, NULL));
-	assert_true((out_indices8[22] == 11 && out_indices8[23] == 38) || (out_indices8[22] == 38 && out_indices8[23] == 11));
-	assert_true((out_indices8[76] == 11 && out_indices8[77] == 38) || (out_indices8[76] == 38 && out_indices8[77] == 11));
-	out_indices8[22] = out_indices8[23] = out_indices8[76] = out_indices8[77] = 0;
-	assert_memory_equal(out_indices8, ref_indices8, 200 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so3));
+	// 3, 6, 9, 15, 19, 20, 23, 33, 88, 90
+	const bool query1b[100] = { false, false, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false,
+	                            false, false, true, true, false, false, true, false, false, false, false, false, false, false, false, false, true,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
+	iscc_Arci out_nn_ref1b[101];
+	iscc_Dpid out_nn_indices1b[30];
+	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 15, 18, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 27, 27, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 };
+	const iscc_Dpid ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 100, query1b, NULL,
+                                             3, false, 0.0, false, out_nn_ref1b, out_nn_indices1b));
+	assert_memory_equal(out_nn_ref1b, ref_nn_ref1b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1b, ref_nn_indices1b, 30 * sizeof(iscc_Dpid));
 
 
-	iscc_NNSearchObject* tmp_so4 = iscc_init_nn_search_object(&scc_ut_test_data_small, 2, false, 0.0, 15, NULL, 17);
-	assert_non_null(tmp_so4);
+	// 43, 99
+	const bool query1c[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true };
+	iscc_Arci out_nn_ref1c[101];
+	iscc_Dpid out_nn_indices1c[4];
+	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
+	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 100, query1c, NULL,
+                                             2, false, 0.0, true, out_nn_ref1c, out_nn_indices1c));
+	assert_memory_equal(out_nn_ref1c, ref_nn_ref1c, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1c, ref_nn_indices1c, 4 * sizeof(iscc_Dpid));
 
-	scc_Dpid out_indices9[4];
-	scc_Dpid ref_indices9[4] = { 0, 8, 6, 12 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so4, 2, queryD, out_indices9, NULL));
-	assert_memory_equal(out_indices9, ref_indices9, 2 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices10[30];
-	scc_Dpid ref_indices10[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so4, 15, queryC, out_indices10, NULL));
-	assert_memory_equal(out_indices10, ref_indices10, 30 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so4));
-
-
-	iscc_NNSearchObject* tmp_so5 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, false, 0.0, 10, search1, 107);
-	assert_non_null(tmp_so5);
-
-	scc_Dpid out_indices11[2];
-	double out_dist11[2];
-	scc_Dpid ref_indices11[2] = { 0, 10 };
-	double ref_dist11[2] = { 39.903422, 50.631589 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so5, 1, queryA, out_indices11, out_dist11));
-	assert_memory_equal(out_indices11, ref_indices11, 2 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 2; ++i) {
-		assert_double_equal(out_dist11[i], ref_dist11[i]);
-	}
-
-	scc_Dpid out_indices12[12];
-	double out_dist12[12];
-	scc_Dpid ref_indices12[12] = { 2, 14, 8, 10, 6, 12, 8, 10, 6, 12, 0, 14 };
-	double ref_dist12[12] = { 21.423179, 32.943949, 0.000000, 35.180283, 18.684657, 22.039685, 39.168896, 43.364387, 18.684657, 22.039685, 34.566185, 43.806750 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so5, 6, queryB, out_indices12, out_dist12));
-	assert_memory_equal(out_indices12, ref_indices12, 12 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 12; ++i) {
-		assert_double_equal(out_dist12[i], ref_dist12[i]);
-	}
-
-	scc_Dpid out_indices13[200];
-	double out_dist13[200];
-	scc_Dpid ref_indices13[200] = { 0, 10, 4, 12, 2, 14, 4, 12, 4, 12, 2, 14, 6, 12, 6,
-	                              12, 8, 10, 2, 4, 10, 0, 6, 12, 12, 6, 6, 12, 14, 0,
-	                              4, 12, 16, 12, 0, 10, 18, 10, 14, 2, 14, 2, 4, 12,
-	                              4, 12, 8, 10, 6, 18, 16, 8, 14, 0, 8, 16, 14, 0, 18,
-	                              10, 4, 12, 16, 8, 2, 4, 4, 12, 16, 14, 16, 12, 14,
-	                              16, 16, 14, 6, 12, 6, 12, 14, 0, 0, 10, 4, 12, 0, 10,
-	                              0, 14, 18, 10, 6, 12, 4, 12, 12, 6, 14, 0, 4, 12, 8,
-	                              16, 2, 14, 14, 0, 12, 6, 18, 6, 4, 14, 12, 4, 2, 14,
-	                              6, 12, 12, 6, 4, 12, 0, 10, 8, 10, 0, 10, 8, 10, 16,
-	                              14, 12, 14, 4, 0, 2, 14, 4, 12, 16, 14, 0, 10, 4, 2,
-	                              14, 0, 6, 16, 6, 16, 0, 10, 4, 12, 4, 12, 2, 14, 18,
-	                              10, 4, 12, 18, 6, 0, 10, 12, 4, 16, 6, 10, 0, 0, 14,
-	                              0, 10, 8, 10, 14, 0, 12, 4, 4, 0, 18, 10, 12, 6, 4,
-	                              12, 8, 0, 4, 14, 18, 10 };
-	double ref_dist13[200] = { 0.000000, 12.578183, 33.024108, 48.434361, 0.000000, 48.931105, 7.608964, 46.933896, 0.000000, 47.737270,
-	                                 21.423179, 32.943949, 0.000000, 30.550623, 21.866414, 31.130135, 0.000000, 35.180283, 30.522603, 40.308101,
-	                                 0.000000, 12.578183, 18.684657, 22.039685, 0.000000, 30.550623, 22.219396, 45.405270, 0.000000, 47.339958,
-	                                 23.561895, 58.424566, 0.000000, 43.831474, 24.527035, 35.335267, 0.000000, 54.646819, 18.431271, 45.262949,
-	                                 21.190204, 29.611634, 33.920078, 38.415255, 29.582780, 29.997095, 39.168896, 43.364387, 29.955307, 36.830203,
-	                                 23.791490, 39.585361, 30.771203, 41.581880, 29.158231, 34.089378, 27.771364, 39.946261, 30.758911, 49.830922,
-	                                 2.010769, 46.210332, 31.306292, 35.081781, 21.286702, 45.135236, 36.443663, 45.548182, 21.726567, 42.429327,
-	                                 26.653233, 40.142190, 10.686953, 47.391949, 31.987010, 45.222646, 18.684657, 22.039685, 19.948286, 36.312019,
-	                                 26.925880, 32.328136, 42.347823, 46.057002, 18.944803, 37.237242, 31.822439, 39.934435, 21.942641, 29.912522,
-	                                 40.720149, 54.063776, 20.063779, 29.114271, 15.993187, 34.856189, 16.438015, 33.716656, 27.567111, 35.706998,
-	                                 19.939323, 49.391571, 26.025619, 43.627458, 34.780913, 41.185593, 19.390641, 31.630367, 18.807052, 20.956306,
-	                                 12.937975, 54.368097, 37.959402, 39.745129, 34.391264, 35.170604, 19.831688, 46.474031, 8.341254, 22.374291,
-	                                 25.836258, 37.609953, 31.481404, 32.856776, 16.011269, 22.165950, 4.869337, 32.251695, 25.057460, 31.886019,
-	                                 17.042869, 44.416108, 32.778322, 61.931759, 34.107953, 38.719082, 20.106185, 41.865955, 12.975601, 39.336023,
-	                                 37.962997, 39.284424, 34.142516, 52.350483, 42.144499, 46.094768, 33.075406, 49.906460, 49.653574, 55.508707,
-	                                 20.224226, 27.361649, 19.687715, 27.758752, 39.903422, 50.631589, 46.774989, 50.437222, 34.068817, 37.582733,
-	                                 24.953439, 36.085626, 42.069238, 52.137810, 31.108697, 32.618912, 37.560930, 44.985378, 33.292160, 38.608404,
-	                                 37.311000, 37.723173, 17.022913, 27.046145, 42.215552, 42.441327, 34.566185, 43.806750, 43.347855, 51.266321,
-	                                 14.124146, 35.278830, 29.496145, 31.665100, 37.315241, 39.194038, 28.445524, 46.498317, 49.644646, 51.288208,
-	                                 9.703853, 27.688373, 34.613876, 52.081618, 16.446061, 32.841853, 12.494481, 46.667781, 28.780340, 38.552895 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so5, 100, queryC, out_indices13, out_dist13));
-	assert_memory_equal(out_indices13, ref_indices13, 200 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 200; ++i) {
-		assert_double_equal(out_dist13[i], ref_dist13[i]);
-	}
-
-	assert_true(iscc_close_nn_search_object(tmp_so5));
+	assert_true(iscc_close_nn_search_object(&nn_search_object1));
 
 
-	iscc_NNSearchObject* tmp_so6 = iscc_init_nn_search_object(&scc_ut_test_data_large, 1, false, 0.0, 10, search1, 107);
-	assert_non_null(tmp_so6);
+	// 2, 11, 38, 44, 54
+	iscc_NNSearchObject* nn_search_object2;
+	iscc_Dpid search2[5] = { 54, 11, 44, 38, 2 };
+	const bool query2[100] = { false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false,
+	                           false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 5, search2, &nn_search_object2));
 
-	scc_Dpid out_indices14[1];
-	scc_Dpid ref_indices14[1] = { 0 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so6, 1, queryA, out_indices14, NULL));
-	assert_memory_equal(out_indices14, ref_indices14, 1 * sizeof(scc_Dpid));
+	iscc_Arci out_nn_ref2a[101];
+	iscc_Dpid out_nn_indices2a[15];
+	const iscc_Arci ref_nn_ref2a[101] = { 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 12,
+	                                     12, 12, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	                                     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
+	const iscc_Dpid ref_nn_indices2a[15] = { 2, 44, 54, ISCC_DPID_MAX, ISCC_DPID_MAX, 54, ISCC_DPID_MAX, ISCC_DPID_MAX, 54, 44, 2, 54, 54, ISCC_DPID_MAX, ISCC_DPID_MAX };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 100, query2, NULL,
+                                             3, false, 0.0, false, out_nn_ref2a, out_nn_indices2a));
+	// 11 and 38 are identical, returning any is fine.
+	assert_true((out_nn_indices2a[3] == 11) || (out_nn_indices2a[3] == 38));
+	assert_true((out_nn_indices2a[4] == 11) || (out_nn_indices2a[4] == 38));
+	assert_true((out_nn_indices2a[6] == 11) || (out_nn_indices2a[6] == 38));
+	assert_true((out_nn_indices2a[7] == 11) || (out_nn_indices2a[7] == 38));
+	assert_true((out_nn_indices2a[13] == 11) || (out_nn_indices2a[13] == 38));
+	assert_true((out_nn_indices2a[14] == 11) || (out_nn_indices2a[14] == 38));
+	out_nn_indices2a[3] = out_nn_indices2a[4] = out_nn_indices2a[6] = ISCC_DPID_MAX;
+	out_nn_indices2a[7] = out_nn_indices2a[13] = out_nn_indices2a[14] = ISCC_DPID_MAX;
+	assert_memory_equal(out_nn_ref2a, ref_nn_ref2a, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices2a, ref_nn_indices2a, 15 * sizeof(iscc_Dpid));
 
-	scc_Dpid out_indices15[6];
-	scc_Dpid ref_indices15[6] = { 2, 8, 6, 8, 6, 0 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so6, 6, queryB, out_indices15, NULL));
-	assert_memory_equal(out_indices15, ref_indices15, 6 * sizeof(scc_Dpid));
+	iscc_Arci out_nn_ref2b[101];
+	iscc_Dpid out_nn_indices2b[10];
+	const iscc_Arci ref_nn_ref2b[101] = { 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+	                                      8, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+	                                      10, 10, 10, 10, 10, 10 };
+	const iscc_Dpid ref_nn_indices2b[10] = { 2, 44, ISCC_DPID_MAX, ISCC_DPID_MAX, ISCC_DPID_MAX, ISCC_DPID_MAX, 44, 2, 54, ISCC_DPID_MAX };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 100, query2, NULL,
+                                             2, false, 0.0, false, out_nn_ref2b, out_nn_indices2b));
+	// 11 and 38 are identical, returning any is fine.
+	assert_true((out_nn_indices2b[2] == 11) || (out_nn_indices2b[2] == 38));
+	assert_true((out_nn_indices2b[3] == 11) || (out_nn_indices2b[3] == 38));
+	assert_true((out_nn_indices2b[4] == 11) || (out_nn_indices2b[4] == 38));
+	assert_true((out_nn_indices2b[5] == 11) || (out_nn_indices2b[5] == 38));
+	assert_true((out_nn_indices2b[9] == 11) || (out_nn_indices2b[9] == 38));
+	out_nn_indices2b[2] = out_nn_indices2b[3] = out_nn_indices2b[4] = ISCC_DPID_MAX;
+	out_nn_indices2b[5] = out_nn_indices2b[9] = ISCC_DPID_MAX;
+	assert_memory_equal(out_nn_ref2b, ref_nn_ref2b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 10 * sizeof(iscc_Dpid));
 
-	scc_Dpid out_indices16[100];
-	scc_Dpid ref_indices16[100] = { 0, 4, 2, 4, 4, 2, 6, 6, 8, 2, 10, 6, 12, 6, 14, 4, 16, 0, 18, 14, 14, 4,
-	                              4, 8, 6, 16, 14, 8, 14, 18, 4, 16, 2, 4, 16, 16, 14, 16, 6, 6, 14, 0, 4,
-	                              0, 0, 18, 6, 4, 12, 14, 4, 8, 2, 14, 12, 18, 4, 12, 2, 6, 12, 4, 0, 8, 0,
-	                              8, 16, 12, 4, 2, 4, 16, 0, 4, 14, 6, 6, 0, 4, 4, 2, 18, 4, 18, 0, 12, 16,
-	                              10, 0, 0, 8, 14, 12, 4, 18, 12, 4, 8, 4, 18 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so6, 100, queryC, out_indices16, NULL));
-	assert_memory_equal(out_indices16, ref_indices16, 100 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so6));
-
-
-	iscc_NNSearchObject* tmp_so7 = iscc_init_nn_search_object(&scc_ut_test_data_large, 10, false, 0.0, 10, search1, 107);
-	assert_non_null(tmp_so7);
-
-	scc_Dpid out_indices17[10];
-	scc_Dpid ref_indices17[10] = { 0, 10, 14, 4, 8, 2, 12, 18, 16, 6 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so7, 1, queryA, out_indices17, NULL));
-	assert_memory_equal(out_indices17, ref_indices17, 10 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices18[60];
-	scc_Dpid ref_indices18[60] = { 2, 14, 4, 12, 0, 16, 10, 8, 6, 18, 8, 10, 0, 14, 16, 18, 6, 12,
-	                              4, 2, 6, 12, 16, 4, 18, 0, 14, 10, 8, 2, 8, 10, 16, 18, 6, 0,
-	                              12, 14, 4, 2, 6, 12, 16, 4, 18, 0, 14, 10, 8, 2, 0, 14, 10, 4,
-	                              8, 2, 12, 16, 18, 6 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so7, 6, queryB, out_indices18, NULL));
-	assert_memory_equal(out_indices18, ref_indices18, 60 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices19[1000];
-	scc_Dpid ref_indices19[1000] = { 0, 10, 8, 14, 4, 18, 12, 16, 6, 2, 4, 12, 2, 14, 6, 16, 0, 10, 18,
-	                              8, 2, 14, 4, 12, 16, 0, 10, 6, 8, 18, 4, 12, 0, 14, 10, 6, 2, 18,
-	                              16, 8, 4, 12, 14, 0, 2, 10, 6, 16, 18, 8, 2, 14, 4, 12, 0, 16, 10,
-	                              8, 6, 18, 6, 12, 16, 18, 4, 10, 0, 14, 8, 2, 6, 12, 16, 18, 10, 0,
-	                              8, 14, 4, 2, 8, 10, 0, 14, 16, 18, 6, 12, 4, 2, 2, 4, 14, 12, 16,
-	                              6, 0, 10, 8, 18, 10, 0, 8, 18, 14, 4, 16, 12, 6, 2, 6, 12, 16, 4,
-	                              18, 0, 14, 10, 8, 2, 12, 6, 16, 4, 14, 0, 18, 2, 10, 8, 6, 12, 16,
-	                              18, 4, 10, 0, 14, 8, 2, 14, 0, 2, 4, 8, 16, 10, 12, 6, 18, 4, 12,
-	                              2, 14, 0, 6, 10, 16, 18, 8, 16, 12, 6, 14, 8, 0, 10, 4, 2, 18, 0,
-	                              10, 14, 8, 4, 12, 2, 18, 16, 6, 18, 10, 6, 0, 12, 8, 4, 16, 14, 2,
-	                              14, 2, 16, 12, 0, 8, 4, 10, 6, 18, 14, 2, 4, 12, 16, 0, 10, 8, 6,
-	                              18, 4, 12, 6, 18, 0, 14, 10, 16, 2, 8, 4, 12, 14, 0, 6, 10, 16, 8,
-	                              2, 18, 8, 10, 16, 18, 6, 0, 12, 14, 4, 2, 6, 18, 12, 10, 0, 16, 4,
-	                              8, 14, 2, 16, 8, 14, 6, 12, 0, 10, 18, 4, 2, 14, 0, 4, 10, 2, 8, 12,
-	                              16, 6, 18, 8, 16, 10, 0, 14, 6, 12, 18, 4, 2, 14, 0, 10, 8, 4, 2, 16,
-	                              12, 6, 18, 18, 10, 0, 4, 6, 12, 8, 14, 16, 2, 4, 12, 14, 0, 2, 10, 6,
-	                              16, 18, 8, 16, 8, 14, 0, 10, 12, 6, 4, 2, 18, 2, 4, 14, 12, 0, 16, 10,
-	                              6, 8, 18, 4, 12, 6, 18, 0, 10, 14, 16, 2, 8, 16, 14, 8, 12, 6, 0, 10,
-	                              2, 4, 18, 16, 12, 6, 14, 4, 2, 8, 0, 10, 18, 14, 16, 2, 0, 12, 4, 8,
-	                              10, 6, 18, 16, 14, 8, 12, 0, 10, 6, 2, 4, 18, 6, 12, 16, 4, 18, 0, 14,
-	                              10, 8, 2, 6, 12, 16, 18, 4, 14, 10, 0, 8, 2, 14, 0, 4, 10, 12, 16, 8,
-	                              6, 2, 18, 0, 10, 4, 18, 14, 8, 12, 6, 16, 2, 4, 12, 14, 2, 6, 0, 16,
-	                              10, 18, 8, 0, 10, 14, 4, 8, 18, 12, 2, 16, 6, 0, 14, 10, 4, 8, 12, 16,
-	                              2, 18, 6, 18, 10, 0, 4, 12, 6, 8, 14, 16, 2, 6, 12, 16, 18, 10, 0, 14,
-	                              8, 4, 2, 4, 12, 14, 0, 6, 10, 2, 16, 18, 8, 12, 6, 4, 16, 18, 14, 0,
-	                              10, 2, 8, 14, 0, 10, 8, 4, 2, 16, 12, 6, 18, 4, 12, 2, 14, 6, 0, 10,
-	                              16, 18, 8, 8, 16, 14, 10, 0, 6, 12, 18, 4, 2, 2, 14, 4, 0, 12, 10, 8,
-	                              16, 6, 18, 14, 0, 10, 8, 16, 4, 12, 2, 6, 18, 12, 6, 16, 4, 18, 14, 0,
-	                              10, 2, 8, 18, 6, 10, 0, 8, 12, 16, 4, 14, 2, 4, 14, 2, 0, 10, 12, 8,
-	                              16, 6, 18, 12, 4, 6, 18, 0, 16, 10, 14, 2, 8, 2, 14, 4, 12, 0, 16, 10,
-	                              8, 6, 18, 6, 12, 16, 18, 4, 0, 10, 14, 8, 2, 12, 6, 4, 16, 18, 0, 14,
-	                              10, 2, 8, 4, 12, 6, 18, 0, 10, 14, 16, 2, 8, 0, 10, 8, 14, 4, 16, 12,
-	                              18, 6, 2, 8, 10, 0, 14, 16, 18, 6, 12, 4, 2, 0, 10, 14, 4, 12, 8, 16,
-	                              6, 18, 2, 8, 10, 0, 14, 16, 18, 12, 6, 4, 2, 16, 14, 8, 12, 6, 2, 0,
-	                              10, 4, 18, 12, 14, 16, 2, 4, 6, 0, 10, 8, 18, 4, 0, 10, 12, 14, 18,
-	                              6, 8, 2, 16, 2, 14, 4, 12, 16, 0, 6, 10, 8, 18, 4, 12, 6, 18, 0, 10,
-	                              16, 14, 2, 8, 16, 14, 12, 2, 8, 6, 0, 4, 10, 18, 0, 10, 4, 18, 14, 8,
-	                              12, 6, 2, 16, 4, 2, 12, 14, 6, 16, 0, 10, 18, 8, 14, 0, 10, 4, 8, 2,
-	                              12, 16, 18, 6, 6, 16, 12, 18, 8, 10, 0, 14, 4, 2, 6, 16, 12, 18, 10,
-	                              8, 0, 14, 4, 2, 0, 10, 14, 4, 8, 2, 12, 18, 16, 6, 4, 12, 6, 2, 14,
-	                              16, 0, 18, 10, 8, 4, 12, 6, 18, 0, 10, 14, 16, 2, 8, 2, 14, 16, 12,
-	                              4, 0, 6, 8, 10, 18, 18, 10, 0, 4, 6, 8, 12, 14, 16, 2, 4, 12, 0, 6,
-	                              10, 14, 18, 16, 8, 2, 18, 6, 10, 8, 16, 0, 12, 14, 4, 2, 0, 10, 4,
-	                              14, 18, 8, 12, 6, 16, 2, 12, 4, 6, 18, 0, 16, 14, 10, 2, 8, 16, 6,
-	                              12, 14, 8, 0, 10, 18, 4, 2, 10, 0, 18, 4, 8, 12, 14, 6, 16, 2, 0,
-	                              14, 10, 4, 8, 2, 12, 16, 18, 6, 0, 10, 4, 14, 8, 18, 2, 12, 16, 6,
-	                              8, 10, 0, 16, 14, 18, 6, 12, 4, 2, 14, 0, 4, 10, 8, 12, 2, 16, 6,
-	                              18, 12, 4, 6, 2, 14, 16, 0, 18, 10, 8, 4, 0, 14, 10, 2, 12, 8, 18,
-	                              6, 16, 18, 10, 0, 4, 8, 12, 6, 14, 16, 2, 12, 6, 4, 16, 14, 0, 18,
-	                              10, 8, 2, 4, 12, 2, 14, 6, 16, 0, 10, 18, 8, 8, 0, 10, 14, 16, 4,
-	                              12, 18, 6, 2, 4, 14, 12, 2, 0, 10, 6, 16, 8, 18, 18, 10, 0, 4, 6,
-	                              12, 8, 14, 16, 2 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so7, 100, queryC, out_indices19, NULL));
-	assert_memory_equal(out_indices19, ref_indices19, 1000 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so7));
+	assert_true(iscc_close_nn_search_object(&nn_search_object2));
 
 
-	iscc_NNSearchObject* tmp_so8 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, true, 30.0, 10, search1, 107);
-	assert_non_null(tmp_so8);
-
-	scc_Dpid out_indices20[2];
-	scc_Dpid ref_indices20[2] = { M, M };
-	assert_true(iscc_nearest_neighbor_search(tmp_so8, 1, queryA, out_indices20, NULL));
-	assert_memory_equal(out_indices20, ref_indices20, 2 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices21[12];
-	scc_Dpid ref_indices21[12] = { 2, M, 8, M, 6, 12, M, M, 6, 12, M, M };
-	assert_true(iscc_nearest_neighbor_search(tmp_so8, 6, queryB, out_indices21, NULL));
-	assert_memory_equal(out_indices21, ref_indices21, 12 * sizeof(scc_Dpid));
-
-	scc_Dpid out_indices22[200];
-	scc_Dpid ref_indices22[200] = { 0, 10, M, M, 2, M, 4, M, 4, M, 2, M, 6, M, 6, M, 8, M, M, M, 10, 0,
-	                              6, 12, 12, M, 6, M, 14, M, 4, M, 16, M, 0, M, 18, M, 14, M, 14, 2,
-	                              M, M, 4, 12, M, M, 6, M, 16, M, M, M, 8, M, 14, M, M, M, 4, M, M, M,
-	                              2, M, M, M, 16, M, 16, M, 14, M, M, M, 6, 12, 6, M, 14, M, M, M, 4,
-	                              M, M, M, 0, 14, M, M, 6, 12, 4, M, 12, M, 14, M, 4, M, 8, M, M, M,
-	                              14, M, 12, 6, 18, M, M, M, M, M, 2, M, 6, 12, 12, M, M, M, 0, 10,
-	                              8, M, 0, M, 8, M, M, M, M, M, 4, M, 2, M, M, M, M, M, M, M, M, M,
-	                              M, M, 6, 16, 6, 16, M, M, M, M, M, M, 2, M, M, M, M, M, M, M, M, M,
-	                              M, M, 16, 6, M, M, M, M, M, M, 8, M, 14, M, M, M, 4, M, M, M, 12,
-	                              6, M, M, 8, M, 4, M, 18, M };
-	assert_true(iscc_nearest_neighbor_search(tmp_so8, 100, queryC, out_indices22, NULL));
-	assert_memory_equal(out_indices22, ref_indices22, 200 * sizeof(scc_Dpid));
-
-	assert_true(iscc_close_nn_search_object(tmp_so8));
+	iscc_NNSearchObject* nn_search_object4b;
+	iscc_Dpid search4b[2] = { 76, 33 };
+	iscc_Arci out_nn_ref4b[101];
+	iscc_Dpid out_nn_indices4b[100];
+	const iscc_Arci ref_nn_ref4b[101] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+	                                      34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65,
+	                                      66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 };
+	const iscc_Dpid ref_nn_indices4b[100] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76,
+	                                          76, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 76, 33, 33, 76, 33, 76, 33, 76, 76, 76, 33, 33, 33, 76, 33, 33, 76, 76, 76, 76, 76, 76, 33, 76,
+	                                          33, 76, 33, 33, 33, 76, 76, 33, 33, 33, 76, 33, 33, 76, 33, 33, 76, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 76, 33, 33 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object4b, 100, NULL, NULL,
+                                             1, false, 0.0, true, out_nn_ref4b, out_nn_indices4b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object4b));
+	assert_memory_equal(out_nn_ref4b, ref_nn_ref4b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices4b, ref_nn_indices4b, 100 * sizeof(iscc_Dpid));
 
 
-	iscc_NNSearchObject* tmp_so9 = iscc_init_nn_search_object(&scc_ut_test_data_large, 2, true, 40.0, 10, search1, 107);
-	assert_non_null(tmp_so9);
-
-	scc_Dpid out_indices23[2];
-	double out_dist23[2];
-	scc_Dpid ref_indices23[2] = { 0, M };
-	double ref_dist23[2] = { 39.903422, -1.0 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so9, 1, queryA, out_indices23, out_dist23));
-	assert_memory_equal(out_indices23, ref_indices23, 2 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 2; ++i) {
-		assert_double_equal(out_dist23[i], ref_dist23[i]);
-	}
-
-	scc_Dpid out_indices24[12];
-	double out_dist24[12];
-	scc_Dpid ref_indices24[12] = { 2, 14, 8, 10, 6, 12, 8, M, 6, 12, 0, M };
-	double ref_dist24[12] = { 21.423179, 32.943949, 0.000000, 35.180283, 18.684657, 22.039685, 39.168896, -1.000000, 18.684657, 22.039685, 34.566185, -1.000000 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so9, 6, queryB, out_indices24, out_dist24));
-	assert_memory_equal(out_indices24, ref_indices24, 12 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 12; ++i) {
-		assert_double_equal(out_dist24[i], ref_dist24[i]);
-	}
-
-	scc_Dpid out_indices25[200];
-	double out_dist25[200];
-	scc_Dpid ref_indices25[200] = { 0, 10, 4, M, 2, M, 4, M, 4, M, 2, 14, 6, 12, 6, 12, 8, 10, 2,
-	                               M, 10, 0, 6, 12, 12, 6, 6, M, 14, M, 4, M, 16, M, 0, 10, 18,
-	                               M, 14, M, 14, 2, 4, 12, 4, 12, 8, M, 6, 18, 16, 8, 14, M, 8,
-	                               16, 14, 0, 18, M, 4, M, 16, 8, 2, M, 4, M, 16, M, 16, M, 14,
-	                               M, 16, M, 6, 12, 6, 12, 14, 0, M, M, 4, 12, 0, 10, 0, 14, M,
-	                               M, 6, 12, 4, 12, 12, 6, 14, 0, 4, M, 8, M, 2, M, 14, 0, 12,
-	                               6, 18, M, 4, 14, 12, 4, 2, M, 6, 12, 12, 6, 4, 12, 0, 10, 8,
-	                               10, 0, 10, 8, M, 16, M, 12, 14, 4, M, 2, 14, 4, 12, 16, M, M,
-	                               M, 4, M, M, M, 6, 16, 6, 16, 0, M, M, M, 4, 12, 2, 14, M, M,
-	                               4, 12, 18, M, 0, 10, 12, 4, 16, 6, M, M, 0, M, M, M, 8, 10,
-	                               14, 0, 12, 4, 4, M, M, M, 12, 6, 4, M, 8, 0, 4, M, 18, 10 };
-	double ref_dist25[200] = { 0.000000, 12.578183, 33.024108, -1.000000, 0.000000, -1.000000, 7.608964, -1.000000, 0.000000, -1.000000,
-	                                 21.423179, 32.943949, 0.000000, 30.550623, 21.866414, 31.130135, 0.000000, 35.180283, 30.522603, -1.000000,
-	                                 0.000000, 12.578183, 18.684657, 22.039685, 0.000000, 30.550623, 22.219396, -1.000000, 0.000000, -1.000000,
-	                                 23.561895, -1.000000, 0.000000, -1.000000, 24.527035, 35.335267, 0.000000, -1.000000, 18.431271, -1.000000,
-	                                 21.190204, 29.611634, 33.920078, 38.415255, 29.582780, 29.997095, 39.168896, -1.000000, 29.955307, 36.830203,
-	                                 23.791490, 39.585361, 30.771203, -1.000000, 29.158231, 34.089378, 27.771364, 39.946261, 30.758911, -1.000000,
-	                                 2.010769, -1.000000, 31.306292, 35.081781, 21.286702, -1.000000, 36.443663, -1.000000, 21.726567, -1.000000,
-	                                 26.653233, -1.000000, 10.686953, -1.000000, 31.987010, -1.000000, 18.684657, 22.039685, 19.948286, 36.312019,
-	                                 26.925880, 32.328136, -1.000000, -1.000000, 18.944803, 37.237242, 31.822439, 39.934435, 21.942641, 29.912522,
-	                                 -1.000000, -1.000000, 20.063779, 29.114271, 15.993187, 34.856189, 16.438015, 33.716656, 27.567111, 35.706998,
-	                                 19.939323, -1.000000, 26.025619, -1.000000, 34.780913, -1.000000, 19.390641, 31.630367, 18.807052, 20.956306,
-	                                 12.937975, -1.000000, 37.959402, 39.745129, 34.391264, 35.170604, 19.831688, -1.000000, 8.341254, 22.374291,
-	                                 25.836258, 37.609953, 31.481404, 32.856776, 16.011269, 22.165950, 4.869337, 32.251695, 25.057460, 31.886019,
-	                                 17.042869, -1.000000, 32.778322, -1.000000, 34.107953, 38.719082, 20.106185, -1.000000, 12.975601, 39.336023,
-	                                 37.962997, 39.284424, 34.142516, -1.000000, -1.000000, -1.000000, 33.075406, -1.000000, -1.000000, -1.000000,
-	                                 20.224226, 27.361649, 19.687715, 27.758752, 39.903422, -1.000000, -1.000000, -1.000000, 34.068817, 37.582733,
-	                                 24.953439, 36.085626, -1.000000, -1.000000, 31.108697, 32.618912, 37.560930, -1.000000, 33.292160, 38.608404,
-	                                 37.311000, 37.723173, 17.022913, 27.046145, -1.000000, -1.000000, 34.566185, -1.000000, -1.000000, -1.000000,
-	                                 14.124146, 35.278830, 29.496145, 31.665100, 37.315241, 39.194038, 28.445524, -1.000000, -1.000000, -1.000000,
-	                                 9.703853, 27.688373, 34.613876, -1.000000, 16.446061, 32.841853, 12.494481, -1.000000, 28.780340, 38.552895 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so9, 100, queryC, out_indices25, out_dist25));
-	assert_memory_equal(out_indices25, ref_indices25, 200 * sizeof(scc_Dpid));
-	for (size_t i = 0; i < 200; ++i) {
-		assert_double_equal(out_dist25[i], ref_dist25[i]);
-	}
-
-	assert_true(iscc_close_nn_search_object(tmp_so9));
+	iscc_NNSearchObject* nn_search_object4c;
+	iscc_Dpid search4c[2] = { 76, 33 };
+	iscc_Arci out_nn_ref4c[51];
+	iscc_Dpid out_nn_indices4c[50];
+	const iscc_Arci ref_nn_ref4c[51] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+	                                     38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 };
+	const iscc_Dpid ref_nn_indices4c[50] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76, 76, 76, 76,
+	                                         76, 76, 76, 33, 33, 33, 76, 33, 76, 33, 33, 76 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4c, &nn_search_object4c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object4c, 50, NULL, NULL,
+                                             1, false, 0.0, false, out_nn_ref4c, out_nn_indices4c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object4c));
+	assert_memory_equal(out_nn_ref4c, ref_nn_ref4c, 51 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices4c, ref_nn_indices4c, 50 * sizeof(iscc_Dpid));
 
 
-	iscc_NNSearchObject* tmp_so10 = iscc_init_nn_search_object(&scc_ut_test_data_small, 15, false, 0.0, 15, NULL, 17);
-	assert_non_null(tmp_so10);
+	// 15
+	iscc_NNSearchObject* nn_search_object5a;
+	const bool query5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	iscc_Arci out_nn_ref5a[101];
+	iscc_Dpid out_nn_indices5a[5];
+	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+	                                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+	const iscc_Dpid ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5a, 100, query5a, NULL,
+                                             5, false, 0.0, true, out_nn_ref5a, out_nn_indices5a));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5a));
+	assert_memory_equal(out_nn_ref5a, ref_nn_ref5a, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5a, ref_nn_indices5a, 5 * sizeof(iscc_Dpid));
 
-	scc_Dpid out_indices26[30];
-	scc_Dpid ref_indices26[30] = { 0, 8, 7, 1, 4, 13, 14, 6, 12, 10,
-	                              2, 9, 3, 5, 11, 6, 12, 14, 10, 13,
-	                              4, 2, 1, 9, 7, 3, 0, 8, 5, 11 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so10, 2, queryD, out_indices26, NULL));
-	assert_memory_equal(out_indices26, ref_indices26, 30 * sizeof(scc_Dpid));
 
-	scc_Dpid out_indices27[225];
-	scc_Dpid ref_indices27[225] = { 0, 8, 7, 1, 4, 13, 14, 6, 12, 10, 2, 9, 3, 5, 11, 1, 7,
-	                               4, 13, 0, 8, 14, 6, 12, 10, 2, 9, 3, 5, 11, 2, 10, 12,
-	                               9, 6, 14, 13, 3, 4, 5, 1, 7, 0, 8, 11, 3, 5, 9, 2, 10,
-	                               12, 6, 14, 11, 13, 4, 1, 7, 0, 8, 4, 13, 14, 6, 12, 1,
-	                               10, 7, 2, 0, 8, 9, 3, 5, 11, 5, 3, 9, 11, 2, 10, 12, 6,
-	                               14, 13, 4, 1, 7, 0, 8, 6, 12, 14, 10, 13, 4, 2, 1, 9, 7,
-	                               3, 0, 8, 5, 11, 7, 1, 0, 8, 4, 13, 14, 6, 12, 10, 2, 9,
-	                               3, 5, 11, 8, 0, 7, 1, 4, 13, 14, 6, 12, 10, 2, 9, 3, 5,
-	                               11, 9, 3, 2, 5, 10, 12, 6, 14, 13, 4, 1, 11, 7, 0, 8,
-	                               10, 12, 6, 14, 2, 13, 4, 9, 1, 7, 3, 5, 0, 8, 11, 11,
-	                               5, 3, 9, 2, 10, 12, 6, 14, 13, 4, 1, 7, 0, 8, 12, 6,
-	                               14, 10, 13, 4, 2, 9, 1, 7, 3, 0, 5, 8, 11, 13, 4, 14,
-	                               6, 12, 10, 1, 2, 7, 9, 0, 8, 3, 5, 11, 14, 6, 12, 10,
-	                               13, 4, 2, 1, 9, 7, 3, 0, 8, 5, 11 };
-	assert_true(iscc_nearest_neighbor_search(tmp_so10, 15, queryC, out_indices27, NULL));
-	assert_memory_equal(out_indices27, ref_indices27, 225 * sizeof(scc_Dpid));
+	// 15, 65
+	iscc_NNSearchObject* nn_search_object5b;
+	const bool query5b[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false };
+	iscc_Arci out_nn_ref5b[101];
+	iscc_Dpid out_nn_indices5b[8];
+	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
+	const iscc_Dpid ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5b, 100, query5b, NULL,
+                                             4, false, 0.0, false, out_nn_ref5b, out_nn_indices5b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5b));
+	assert_memory_equal(out_nn_ref5b, ref_nn_ref5b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5b, ref_nn_indices5b, 8 * sizeof(iscc_Dpid));
 
-	assert_true(iscc_close_nn_search_object(tmp_so10));
+
+	// 15, 65
+	iscc_NNSearchObject* nn_search_object5c;
+	const bool query5c[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false };
+	iscc_Arci out_nn_ref5c[101];
+	iscc_Dpid out_nn_indices5c[6];
+	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+	const iscc_Dpid ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5c, 100, query5c, NULL,
+                                             3, false, 0.0, true, out_nn_ref5c, out_nn_indices5c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5c));
+	assert_memory_equal(out_nn_ref5c, ref_nn_ref5c, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 6 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6a;
+	iscc_Arci out_nn_ref6a[16];
+	iscc_Dpid out_nn_indices6a[30];
+	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const iscc_Dpid ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6a, 15, NULL, NULL,
+                                             2, false, 0.0, false, out_nn_ref6a, out_nn_indices6a));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6a));
+	assert_memory_equal(out_nn_ref6a, ref_nn_ref6a, 16 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6a, ref_nn_indices6a, 30 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6b;
+	iscc_Arci out_nn_ref6b[11];
+	iscc_Dpid out_nn_indices6b[20];
+	const iscc_Arci ref_nn_ref6b[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const iscc_Dpid ref_nn_indices6b[20] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6b, 10, NULL, NULL,
+                                             2, false, 0.0, true, out_nn_ref6b, out_nn_indices6b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6b));
+	assert_memory_equal(out_nn_ref6b, ref_nn_ref6b, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6b, ref_nn_indices6b, 20 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6c;
+	iscc_Arci out_nn_ref6c[16];
+	iscc_Dpid out_nn_indices6c[30];
+	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const iscc_Dpid ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6c, 15, NULL, NULL,
+                                             2, false, 0.0, false, out_nn_ref6c, out_nn_indices6c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6c));
+	assert_memory_equal(out_nn_ref6c, ref_nn_ref6c, 16 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6c, ref_nn_indices6c, 30 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6d;
+	iscc_Arci out_nn_ref6d[11];
+	iscc_Dpid out_nn_indices6d[20];
+	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const iscc_Dpid ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6d, 10, NULL, NULL,
+                                             2, false, 0.0, true, out_nn_ref6d, out_nn_indices6d));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6d));
+	assert_memory_equal(out_nn_ref6d, ref_nn_ref6d, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6d, ref_nn_indices6d, 20 * sizeof(iscc_Dpid));
+}
+
+
+
+void scc_ut_nearest_neighbor_search_radius(void** state)
+{
+	(void) state;
+
+	/*
+	R code:
+	true <- TRUE
+	false <- FALSE
+	k <- 2
+	radius <- 35
+	accept_partial <- TRUE
+	dist_mat <- aaa
+	search <- c(0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
+	query <- c(true, true, true, true, true, false, false, false, false, false)
+
+	res <- apply(dist_mat[which(query), search + 1], 1, order)[1:k, ]
+	res_ok <- (apply(dist_mat[which(query), search + 1], 1, sort)[1:k, ] < radius)
+	if (!accept_partial) res_ok[, !res_ok[k, ]] <- FALSE
+	res <- res[res_ok]
+	ids <- rep(0, length(query))
+	ids[query] <- colSums(res_ok)
+	indica <- rep("true", length(query))
+	if (!accept_partial) indica[query][!res_ok[1, ]] <- "false"
+
+	length(res)
+	paste0(indica, collapse = ", ")
+	paste0(cumsum(c(0, ids)), collapse = ", ")
+	paste0(search[res], collapse = ", ")
+	*/
+
+	iscc_NNSearchObject* nn_search_object1;
+	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 10, search1, &nn_search_object1));
+
+	// 0, 1, 2, 3, 4
+	const bool query1a[10] = { true, true, true, true, true, false, false, false, false, false };
+	bool out_indicators1a[10] = { true, true, true, true, true, true, true, true, true, true };
+	iscc_Arci out_nn_ref1a[11];
+	iscc_Dpid out_nn_indices1a[10];
+	const bool ref_indicators1a[10] = { true, true, true, true, true, true, true, true, true, true };
+	const iscc_Arci ref_nn_ref1a[11] = { 0, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6 };
+	const iscc_Dpid ref_nn_indices1a[6] = { 0, 10, 4, 2, 4, 4 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 10, query1a, out_indicators1a,
+                                             2, true, 35.0, true, out_nn_ref1a, out_nn_indices1a));
+	assert_memory_equal(out_indicators1a, ref_indicators1a, 10 * sizeof(bool));
+	assert_memory_equal(out_nn_ref1a, ref_nn_ref1a, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1a, ref_nn_indices1a, 6 * sizeof(iscc_Dpid));
+
+
+	// 3, 6, 9, 15, 19, 20, 23, 33, 88, 90
+	const bool query1b[100] = { false, false, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false,
+	                            false, false, true, true, false, false, true, false, false, false, false, false, false, false, false, false, true,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
+	iscc_Arci out_nn_ref1b[101];
+	iscc_Dpid out_nn_indices1b[30];
+	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	                                      15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	                                      15, 15, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 };
+	const iscc_Dpid ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 100, query1b, NULL,
+                                             3, true, 50.0, false, out_nn_ref1b, out_nn_indices1b));
+	assert_memory_equal(out_nn_ref1b, ref_nn_ref1b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1b, ref_nn_indices1b, 21 * sizeof(iscc_Dpid));
+
+
+	// 43, 99
+	const bool query1c[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true };
+	bool out_indicators1c[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true };
+	iscc_Arci out_nn_ref1c[101];
+	iscc_Dpid out_nn_indices1c[8];
+	const bool ref_indicators1c[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
+	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object1, 100, query1c, out_indicators1c,
+                                             2, true, 40.0, true, out_nn_ref1c, out_nn_indices1c));
+	assert_memory_equal(out_indicators1c, ref_indicators1c, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref1c, ref_nn_ref1c, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices1c, ref_nn_indices1c, 4 * sizeof(iscc_Dpid));
+
+	assert_true(iscc_close_nn_search_object(&nn_search_object1));
+
+
+	// 2, 11, 38, 44, 54
+	iscc_NNSearchObject* nn_search_object2;
+	iscc_Dpid search2[5] = { 54, 11, 44, 38, 2 };
+	const bool query2[100] = { false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false,
+	                           false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                           false, false, false, false, false, false, false, false };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 5, search2, &nn_search_object2));
+
+	bool out_indicators2a[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true };
+	iscc_Arci out_nn_ref2a[101];
+	iscc_Dpid out_nn_indices2a[15];
+	const bool ref_indicators2a[100] = { true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+	const iscc_Arci ref_nn_ref2a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+	                                      6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+	const iscc_Dpid ref_nn_indices2a[9] = { ISCC_DPID_MAX, ISCC_DPID_MAX, 54, ISCC_DPID_MAX, ISCC_DPID_MAX, 54, 54, ISCC_DPID_MAX, ISCC_DPID_MAX };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 100, query2, out_indicators2a,
+                                             3, true, 30.0, false, out_nn_ref2a, out_nn_indices2a));
+	// 11 and 38 are identical, returning any is fine.
+	assert_true((out_nn_indices2a[0] == 11) || (out_nn_indices2a[0] == 38));
+	assert_true((out_nn_indices2a[1] == 11) || (out_nn_indices2a[1] == 38));
+	assert_true((out_nn_indices2a[3] == 11) || (out_nn_indices2a[3] == 38));
+	assert_true((out_nn_indices2a[4] == 11) || (out_nn_indices2a[4] == 38));
+	assert_true((out_nn_indices2a[7] == 11) || (out_nn_indices2a[7] == 38));
+	assert_true((out_nn_indices2a[8] == 11) || (out_nn_indices2a[8] == 38));
+	out_nn_indices2a[0] = out_nn_indices2a[1] = out_nn_indices2a[3] = ISCC_DPID_MAX;
+	out_nn_indices2a[4] = out_nn_indices2a[7] = out_nn_indices2a[8] = ISCC_DPID_MAX;
+	assert_memory_equal(out_indicators2a, ref_indicators2a, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref2a, ref_nn_ref2a, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices2a, ref_nn_indices2a, 9 * sizeof(iscc_Dpid));
+
+
+	bool out_indicators2b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true };
+	iscc_Arci out_nn_ref2b[101];
+	iscc_Dpid out_nn_indices2b[10];
+	const bool ref_indicators2b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                         true, true, true, true };
+	const iscc_Arci ref_nn_ref2b[101] = { 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+	                                      8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
+	const iscc_Dpid ref_nn_indices2b[8] = { 2, ISCC_DPID_MAX, ISCC_DPID_MAX, ISCC_DPID_MAX, ISCC_DPID_MAX, 44, 54, ISCC_DPID_MAX };
+	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 100, query2, out_indicators2b,
+                                             2, true, 35.0, true, out_nn_ref2b, out_nn_indices2b));
+	// 11 and 38 are identical, returning any is fine.
+	assert_true((out_nn_indices2b[1] == 11) || (out_nn_indices2b[1] == 38));
+	assert_true((out_nn_indices2b[2] == 11) || (out_nn_indices2b[2] == 38));
+	assert_true((out_nn_indices2b[3] == 11) || (out_nn_indices2b[3] == 38));
+	assert_true((out_nn_indices2b[4] == 11) || (out_nn_indices2b[4] == 38));
+	assert_true((out_nn_indices2b[7] == 11) || (out_nn_indices2b[7] == 38));
+	out_nn_indices2b[1] = out_nn_indices2b[2] = out_nn_indices2b[3] = ISCC_DPID_MAX;
+	out_nn_indices2b[4] = out_nn_indices2b[7] = ISCC_DPID_MAX;
+	assert_memory_equal(out_indicators2b, ref_indicators2b, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref2b, ref_nn_ref2b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 8 * sizeof(iscc_Dpid));
+
+	assert_true(iscc_close_nn_search_object(&nn_search_object2));
+
+
+	iscc_NNSearchObject* nn_search_object4b;
+	iscc_Dpid search4b[2] = { 76, 33 };
+	bool out_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                               true, true, true, true, true };
+	iscc_Arci out_nn_ref4b[101];
+	iscc_Dpid out_nn_indices4b[100];
+	const bool ref_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                                     true, true, true, true };
+	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
+	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
+	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object4b, 100, NULL, out_indicators4b,
+                                             1, true, 20.0, true, out_nn_ref4b, out_nn_indices4b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object4b));
+	assert_memory_equal(out_indicators4b, ref_indicators4b, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref4b, ref_nn_ref4b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices4b, ref_nn_indices4b, 14 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object4c;
+	iscc_Dpid search4c[2] = { 76, 33 };
+	bool out_indicators4c[50] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                              true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                              true, true, true, true };
+	iscc_Arci out_nn_ref4c[51];
+	iscc_Dpid out_nn_indices4c[100];
+	const bool ref_indicators4c[50] = { false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false,
+	                                    false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                    true, false, false, false, false, false, false, false, false, false, true, false };
+	const iscc_Arci ref_nn_ref4c[51] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 10, 10 };
+	const iscc_Dpid ref_nn_indices4c[10] = { 76, 33, 76, 33, 76, 33, 76, 33, 33, 76 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4c, &nn_search_object4c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object4c, 50, NULL, out_indicators4c,
+                                             2, true, 50.0, false, out_nn_ref4c, out_nn_indices4c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object4c));
+	assert_memory_equal(out_indicators4c, ref_indicators4c, 50 * sizeof(bool));
+	assert_memory_equal(out_nn_ref4c, ref_nn_ref4c, 51 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices4c, ref_nn_indices4c, 10 * sizeof(iscc_Dpid));
+
+
+	// 15
+	iscc_NNSearchObject* nn_search_object5a;
+	bool query5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	iscc_Arci out_nn_ref5a[101];
+	iscc_Dpid out_nn_indices5a[5];
+	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+	const iscc_Dpid ref_nn_indices5a[3] = { 15, 50, 96 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5a, 100, query5a, query5a,
+                                             5, true, 20.0, true, out_nn_ref5a, out_nn_indices5a));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5a));
+	assert_memory_equal(query5a, ref_indicators5a, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref5a, ref_nn_ref5a, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5a, ref_nn_indices5a, 3 * sizeof(iscc_Dpid));
+
+
+	// 15, 65
+	iscc_NNSearchObject* nn_search_object5b;
+	bool query5b[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false,
+	                      false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                      false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
+	                      false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                      false, false, false, false };
+	iscc_Arci out_nn_ref5b[101];
+	iscc_Dpid out_nn_indices5b[8];
+	const bool ref_indicators5b[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false };
+	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
+	const iscc_Dpid ref_nn_indices5b[4] = { 15, 50, 96, 1 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5b, 100, query5b, query5b,
+                                             4, true, 20.5, false, out_nn_ref5b, out_nn_indices5b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5b));
+	assert_memory_equal(query5b, ref_indicators5b, 100 * sizeof(bool));
+	assert_memory_equal(out_nn_ref5b, ref_nn_ref5b, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5b, ref_nn_indices5b, 4 * sizeof(iscc_Dpid));
+
+
+	// 15, 65
+	iscc_NNSearchObject* nn_search_object5c;
+	const bool query5c[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
+	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                            false, false, false, false };
+	iscc_Arci out_nn_ref5c[101];
+	iscc_Dpid out_nn_indices5c[6];
+	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
+	const iscc_Dpid ref_nn_indices5c[4] = { 15, 1, 42, 8 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5c, 100, query5c, NULL,
+                                             3, true, 30.0, true, out_nn_ref5c, out_nn_indices5c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5c));
+	assert_memory_equal(out_nn_ref5c, ref_nn_ref5c, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 4 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6a;
+	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+	iscc_Arci out_nn_ref6a[16];
+	iscc_Dpid out_nn_indices6a[30];
+	const bool ref_indicators6a[15] = { true, true, false, false, true, false, true, true, true, false, true, false, true, true, true };
+	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
+	const iscc_Dpid ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6a, 15, NULL, out_indicators6a,
+                                             2, true, 0.2, false, out_nn_ref6a, out_nn_indices6a));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6a));
+	assert_memory_equal(out_indicators6a, ref_indicators6a, 15 * sizeof(bool));
+	assert_memory_equal(out_nn_ref6a, ref_nn_ref6a, 16 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6a, ref_nn_indices6a, 20 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6b;
+	iscc_Arci out_nn_ref6b[11];
+	iscc_Dpid out_nn_indices6b[20];
+	const iscc_Arci ref_nn_ref6b[11] = { 0, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14 };
+	const iscc_Dpid ref_nn_indices6b[14] = { 0, 8, 1, 2, 3, 4, 13, 5, 6, 12, 7, 8, 0, 9 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6b));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6b, 10, NULL, NULL,
+                                             2, true, 0.1, true, out_nn_ref6b, out_nn_indices6b));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6b));
+	assert_memory_equal(out_nn_ref6b, ref_nn_ref6b, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6b, ref_nn_indices6b, 14 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6c;
+	bool out_indicators6c[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+	iscc_Arci out_nn_ref6c[16];
+	iscc_Dpid out_nn_indices6c[30];
+	const bool ref_indicators6c[15] = { true, true, false, false, false, false, false, true, true, false, false, false, false, true, true };
+	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8, 8, 8, 8, 10, 12 };
+	const iscc_Dpid ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6c, 15, NULL, out_indicators6c,
+                                             2, true, 0.3, false, out_nn_ref6c, out_nn_indices6c));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6c));
+	assert_memory_equal(out_indicators6c, ref_indicators6c, 15 * sizeof(bool));
+	assert_memory_equal(out_nn_ref6c, ref_nn_ref6c, 16 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6c, ref_nn_indices6c, 12 * sizeof(iscc_Dpid));
+
+
+	iscc_NNSearchObject* nn_search_object6d;
+	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
+	iscc_Arci out_nn_ref6d[11];
+	iscc_Dpid out_nn_indices6d[20];
+	const bool ref_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
+	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14 };
+	const iscc_Dpid ref_nn_indices6d[14] = { 0, 8, 1, 7, 2, 3, 4, 5, 6, 7, 1, 8, 0, 9 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object6d, 10, NULL, out_indicators6d,
+                                             2, true, 0.2, true, out_nn_ref6d, out_nn_indices6d));
+	assert_true(iscc_close_nn_search_object(&nn_search_object6d));
+	assert_memory_equal(out_indicators6d, ref_indicators6d, 10 * sizeof(bool));
+	assert_memory_equal(out_nn_ref6d, ref_nn_ref6d, 11 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nn_indices6d, ref_nn_indices6d, 14 * sizeof(iscc_Dpid));
 }
 
 
 int main(void)
 {
-	const struct CMUnitTest test_nn_search[] = {
-		cmocka_unit_test(scc_ut_get_data_point_count),
+	const struct CMUnitTest test_cases[] = {
+		cmocka_unit_test(scc_ut_check_data_set_object),
 		cmocka_unit_test(scc_ut_get_dist_matrix),
-		cmocka_unit_test(scc_ut_init_close_dist_column_object),
-		cmocka_unit_test(scc_ut_get_dist_row),
+		cmocka_unit_test(scc_ut_get_dist_rows),
 		cmocka_unit_test(scc_ut_init_close_max_dist_object),
 		cmocka_unit_test(scc_ut_get_max_dist),
-		cmocka_unit_test(scc_ut_init_close_search_object),
+		cmocka_unit_test(scc_ut_init_close_nn_search_object),
 		cmocka_unit_test(scc_ut_nearest_neighbor_search),
+		cmocka_unit_test(scc_ut_nearest_neighbor_search_radius),
 	};
-
-	return cmocka_run_group_tests_name("nearest neighbor search module", test_nn_search, NULL, NULL);
+	
+	return cmocka_run_group_tests_name("dist_search.c", test_cases, NULL, NULL);
 }
