@@ -91,8 +91,8 @@ scc_ErrorCode scc_init_empty_clustering(const uint64_t num_data_points,
 }
 
 
-scc_ErrorCode scc_init_existing_clustering(const uint64_t num_clusters,
-                                           const uint64_t num_data_points,
+scc_ErrorCode scc_init_existing_clustering(const uint64_t num_data_points,
+                                           const uint64_t num_clusters,
                                            scc_Clabel current_cluster_labels[const],
                                            const bool deep_label_copy,
                                            scc_Clustering** const out_clustering)
@@ -102,12 +102,12 @@ scc_ErrorCode scc_init_existing_clustering(const uint64_t num_clusters,
 	// if user doesn't check for errors.
 	*out_clustering = NULL;
 
-	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_clusters > SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_clusters > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (num_clusters > SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_clusters > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (current_cluster_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 
 	const size_t num_data_points_st = (size_t) num_data_points;
@@ -184,7 +184,6 @@ bool scc_check_clustering(const scc_Clustering* const cl,
 	if (cl == NULL) return false;
 	if (cl->num_data_points < 2) return false;
 	if (cl->num_data_points > ISCC_DPID_MAX) return false;
-	if (cl->num_data_points > SIZE_MAX - 1) return false;
 	if (cl->num_clusters > SCC_CLABEL_MAX) return false;
 	if (cl->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
 	

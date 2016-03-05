@@ -140,8 +140,8 @@ scc_ErrorCode scc_init_empty_clustering(uint64_t num_data_points,
                                         scc_Clabel external_cluster_labels[],
                                         scc_Clustering** out_clustering);
 
-scc_ErrorCode scc_init_existing_clustering(uint64_t num_clusters,
-                                           uint64_t num_data_points,
+scc_ErrorCode scc_init_existing_clustering(uint64_t num_data_points,
+                                           uint64_t num_clusters,
                                            scc_Clabel current_cluster_labels[],
                                            bool deep_label_copy,
                                            scc_Clustering** out_clustering);

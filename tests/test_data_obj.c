@@ -51,7 +51,7 @@ void scc_ut_free_data_set_object(void** state)
 	};
 
 	scc_DataSetObject* dso2 = malloc(sizeof(scc_DataSetObject));
-	*dso1 = (scc_DataSetObject) {
+	*dso2 = (scc_DataSetObject) {
 		.num_data_points = 123,
 		.num_dimensions = 3,
 		.data_matrix = coord1,
@@ -60,7 +60,7 @@ void scc_ut_free_data_set_object(void** state)
 	};
 
 	scc_DataSetObject* dso3 = malloc(sizeof(scc_DataSetObject));
-	*dso1 = (scc_DataSetObject) {
+	*dso3 = (scc_DataSetObject) {
 		.num_data_points = 123,
 		.num_dimensions = 3,
 		.data_matrix = coord2,
@@ -76,10 +76,8 @@ void scc_ut_free_data_set_object(void** state)
 
 	assert_null(null);
 	assert_null(dso1);
-	assert_null(dso1);
+	assert_null(dso2);
 	assert_null(dso3);
-
-	free(coord1);
 }
 
 
@@ -180,11 +178,6 @@ void scc_ut_get_data_set_object(void** state)
 	scc_free_data_set_object(&dso10);
 	scc_free_data_set_object(&dso11);
 	scc_free_data_set_object(&dso12);
-	
-	assert_null(dso9);
-	assert_null(dso10);
-	assert_null(dso11);
-	assert_null(dso12);
 }
 
 
