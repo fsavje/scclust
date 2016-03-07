@@ -226,45 +226,48 @@ enum scc_SeedMethod {
 /// Typedef for the scc_NNGMethod enum
 typedef enum scc_SeedMethod scc_SeedMethod;
 
-enum scc_AssignMethod {
-	SCC_AM_IGNORE,
-	SCC_AM_BY_NNG,
-	SCC_AM_CLOSEST_ASSIGNED,
-	SCC_AM_CLOSEST_SEED,
+enum scc_UnassignedMethod {
+	SCC_UM_IGNORE,
+	SCC_UM_ASSIGN_BY_NNG,
+	SCC_UM_CLOSEST_ASSIGNED,
+	SCC_UM_CLOSEST_SEED,
+	SCC_UM_CLOSEST_SEED_EST_RADIUS,
 };
 
-typedef enum scc_AssignMethod scc_AssignMethod;
+typedef enum scc_UnassignedMethod scc_UnassignedMethod;
 
-scc_ErrorCode scc_nng_clusterng(scc_Clustering* clustering,
-                                void* data_set_object,
-                                uint32_t size_constraint,
-                                size_t len_main_data_points,
-                                const bool main_data_points[],
-                                scc_SeedMethod seed_method,
-                                scc_AssignMethod assign_method,
-                                bool assign_secondary_points,
-                                bool main_radius_constraint,
-                                double main_radius,
-                                bool secondary_radius_constraint,
-                                double secondary_radius);
+scc_ErrorCode scc_nng_clustering(scc_Clustering* clustering,
+                                 void* data_set_object,
+                                 uint32_t size_constraint,
+                                 scc_SeedMethod seed_method,
+                                 scc_UnassignedMethod main_unassigned_method,
+                                 bool main_radius_constraint,
+                                 double main_radius,
+                                 size_t len_main_data_points,
+                                 const bool main_data_points[],
+                                 scc_UnassignedMethod secondary_unassigned_method,
+                                 bool secondary_radius_constraint,
+                                 double secondary_radius);
 
-scc_ErrorCode scc_nng_clusterng_with_types(scc_Clustering* clustering,
-                                           void* data_set_object,
-                                           uint32_t size_constraint,
-                                           uint64_t num_types,
-                                           const uint32_t type_size_constraints[],
-                                           size_t len_type_labels,
-                                           const scc_TypeLabel type_labels[],
-                                           size_t len_main_data_points,
-                                           const bool main_data_points[],
-                                           scc_SeedMethod seed_method,
-                                           scc_AssignMethod assign_method,
-                                           bool assign_secondary_points,
-                                           bool main_radius_constraint,
-                                           double main_radius,
-                                           bool secondary_radius_constraint,
-                                           double secondary_radius);
+scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* clustering,
+                                            void* data_set_object,
+                                            uint32_t size_constraint,
+                                            uint64_t num_types,
+                                            const uint32_t type_size_constraints[],
+                                            size_t len_type_labels,
+                                            const scc_TypeLabel type_labels[],
+                                            scc_SeedMethod seed_method,
+                                            scc_UnassignedMethod main_unassigned_method,
+                                            bool main_radius_constraint,
+                                            double main_radius,
+                                            size_t len_main_data_points,
+                                            const bool main_data_points[],
+                                            scc_UnassignedMethod secondary_unassigned_method,
+                                            bool secondary_radius_constraint,
+                                            double secondary_radius);
 
+scc_ErrorCode scc_nng_clustering_paired(scc_Clustering* clustering,
+                                        void* data_set_object);
 
 // ==============================================================================
 // Greedy clustering function

@@ -54,41 +54,19 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* data_set_object,
                                                 double radius,
                                                 iscc_Digraph* out_nng);
 
-scc_ErrorCode iscc_assign_seed_neighbors(scc_Clustering* clustering,
-                                         const iscc_Digraph* nng,
-                                         const iscc_SeedResult* sr,
-                                         bool out_unassigned[restrict static clustering->num_data_points]);
-
-scc_ErrorCode iscc_remaining_ignore(scc_Clustering* clustering,
-                                    const bool unassigned[restrict static clustering->num_data_points]);
-
-scc_ErrorCode iscc_remaining_by_nng(scc_Clustering* clustering,
-                                    iscc_Digraph* nng,
-                                    const bool unassigned[restrict static clustering->num_data_points]);
-
-scc_ErrorCode iscc_remaining_to_nearest_assigned(scc_Clustering* clustering,
-                                                 void* data_set_object,
-                                                 iscc_Digraph* nng,
-                                                 size_t num_assigned,
-                                                 bool unassigned[restrict static clustering->num_data_points],
-                                                 const bool main_data_points[restrict],
-                                                 bool assign_secondary_points,
-                                                 bool main_radius_constraint,
-                                                 double main_radius,
-                                                 bool secondary_radius_constraint,
-                                                 double secondary_radius);
-
-scc_ErrorCode iscc_remaining_to_nearest_seed(scc_Clustering* clustering,
-                                             void* data_set_object,
-                                             const iscc_SeedResult* sr,
-                                             size_t num_assigned,
-                                             bool unassigned[restrict static clustering->num_data_points],
-                                             const bool main_data_points[restrict],
-                                             bool assign_secondary_points,
-                                             bool main_radius_constraint,
-                                             double main_radius,
-                                             bool secondary_radius_constraint,
-                                             double secondary_radius);
+scc_ErrorCode iscc_make_nng_clusters(scc_Clustering* clustering,
+                                     void* data_set_object,
+                                     const iscc_SeedResult* seed_result,
+                                     iscc_Digraph* nng,
+                                     bool nng_is_ordered,
+                                     uint32_t size_constraint,
+                                     scc_UnassignedMethod main_unassigned_method,
+                                     bool main_radius_constraint,
+                                     double main_radius,
+                                     const bool main_data_points[],
+                                     scc_UnassignedMethod secondary_unassigned_method,
+                                     bool secondary_radius_constraint,
+                                     double secondary_radius);
 
 
 #endif // ifndef SCC_NNG_CORE_HG
