@@ -39,7 +39,7 @@ static inline double iscc_get_sq_dist(const scc_DataSetObject* data_set_object,
                                       size_t index1,
                                       size_t index2);
 
-#ifndef SCC_NOT_NN_SEARCH
+#ifndef SCC_EXTERNAL_NN_SEARCH
 
 static inline void iscc_add_dist_to_list(double add_dist,
                                          iscc_Dpid add_index,
@@ -47,7 +47,7 @@ static inline void iscc_add_dist_to_list(double add_dist,
                                          iscc_Dpid* index_list,
                                          const double* dist_list_start);
 
-#endif // ifndef SCC_NOT_NN_SEARCH
+#endif // ifndef SCC_EXTERNAL_NN_SEARCH
 
 
 // ==============================================================================
@@ -269,7 +269,7 @@ bool iscc_close_max_dist_object(iscc_MaxDistObject** const max_dist_object)
 // Nearest neighbor search functions
 // ==============================================================================
 
-#ifndef SCC_NOT_NN_SEARCH
+#ifndef SCC_EXTERNAL_NN_SEARCH
 
 struct iscc_NNSearchObject {
 	scc_DataSetObject* data_set_object;
@@ -451,7 +451,7 @@ static inline void iscc_add_dist_to_list(const double add_dist,
 	index_list[0] = add_index;
 }
 
-#endif // ifndef SCC_NOT_NN_SEARCH
+#endif // ifndef SCC_EXTERNAL_NN_SEARCH
 
 
 // ==============================================================================

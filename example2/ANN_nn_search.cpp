@@ -134,15 +134,15 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 {
 	assert(nn_search_object != NULL);
 	scc_DataSetObject* const data_set_object = nn_search_object->data_set_object;
-	const size_t len_search_indices = nn_search_object->len_search_indices;
+	#ifndef NDEBUG
+		const size_t len_search_indices = nn_search_object->len_search_indices;
+	#endif
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
-	ANNpoint* const search_points = nn_search_object->search_points;
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_open_search_object);
 	assert(iscc_check_data_set_object(data_set_object, len_query_indicators));
 	assert(len_search_indices > 0);
-	assert(search_points != NULL);
 	assert(search_tree != NULL);
 	assert(len_query_indicators > 0);
 	assert(k > 0);
