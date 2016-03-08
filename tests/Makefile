@@ -1,8 +1,8 @@
 CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 EXLIBS=-lcmocka
 
-OBJECTS=data_obj.o digraph_core.o digraph_debug.o digraph_operations.o dist_search.o error.o \
-        greedy_clustering.o nng_clustering.o nng_core.o nng_findseeds.o scclust.o
+OBJECTS=digraph_core.o digraph_debug.o digraph_operations.o dist_search.o error.o greedy_clustering.o \
+        nng_clustering.o nng_core.o nng_findseeds.o scclust.o scc_data_obj.o 
 DEBUGDIR=../dbg
 BUILDDIR=build
 

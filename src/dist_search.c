@@ -27,9 +27,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "config.h"
-#include "data_obj_int.h"
+#include "../include/scc_data_obj.h"
+#include "scc_data_obj_int.h"
 
-typedef struct scc_DataSetObject scc_DataSetObject;
 
 // ==============================================================================
 // Internal function prototypes
