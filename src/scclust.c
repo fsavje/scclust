@@ -15,8 +15,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
 #include "../include/scclust.h"
@@ -211,11 +210,9 @@ scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
                                       uint64_t* const out_num_clusters)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (out_num_data_points == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-	if (out_num_clusters == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-
-	*out_num_data_points = clustering->num_data_points;
-	*out_num_clusters = clustering->num_clusters;
+	
+	if (out_num_data_points != NULL) *out_num_data_points = clustering->num_data_points;
+	if (out_num_clusters != NULL) *out_num_clusters = clustering->num_clusters;
 
 	return iscc_no_error();
 }

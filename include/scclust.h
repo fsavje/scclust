@@ -15,8 +15,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
 /** @file
@@ -96,13 +95,13 @@ struct scc_ClusteringStats {
 // ==============================================================================
 
 #define SCC_SCCLUST_MAJOR_VERSION 0
-#define SCC_SCCLUST_MINOR_VERSION 0
-#define SCC_SCCLUST_REVISION 1
+#define SCC_SCCLUST_MINOR_VERSION 1
+#define SCC_SCCLUST_PATCH_VERSION 1
 #define SCC_CHECK_VERSION(major, minor) ((major == SCC_SCCLUST_MAJOR_VERSION) && (minor <= SCC_SCCLUST_MINOR_VERSION))
 
 void scc_get_compiled_version(uint32_t* out_major,
                               uint32_t* out_minor,
-                              uint32_t* out_revision);
+                              uint32_t* out_patch);
 
 
 // ==============================================================================

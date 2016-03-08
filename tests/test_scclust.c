@@ -15,8 +15,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
 #define SCC_DOUBLE_ASSERT
@@ -366,17 +365,21 @@ void scc_ut_get_clustering_info(void** state)
 	uint64_t out_num_data_points, out_num_clusters;
 
 	scc_ErrorCode ec1 = scc_get_clustering_info(&in_cl, NULL, NULL);
-	assert_int_equal(ec1, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec1, SCC_ER_OK);
 
+	out_num_data_points = out_num_clusters = 0;
 	scc_ErrorCode ec2 = scc_get_clustering_info(&in_cl, &out_num_data_points, NULL);
-	assert_int_equal(ec2, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec2, SCC_ER_OK);
+	assert_int_equal(out_num_data_points, 10);
 
+	out_num_data_points = out_num_clusters = 0;
 	scc_ErrorCode ec3 = scc_get_clustering_info(&in_cl, NULL, &out_num_clusters);
-	assert_int_equal(ec3, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec3, SCC_ER_OK);
+	assert_int_equal(out_num_clusters, 5);
 
+	out_num_data_points = out_num_clusters = 0;
 	scc_ErrorCode ec4 = scc_get_clustering_info(&in_cl, &out_num_data_points, &out_num_clusters);
 	assert_int_equal(ec4, SCC_ER_OK);
-
 	assert_int_equal(out_num_data_points, 10);
 	assert_int_equal(out_num_clusters, 5);
 }

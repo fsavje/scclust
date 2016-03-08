@@ -15,8 +15,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
 #include "error.h"
@@ -41,11 +40,11 @@ static int iscc_error_line = -1;
 
 void scc_get_compiled_version(uint32_t* const out_major,
                               uint32_t* const out_minor,
-                              uint32_t* const out_revision)
+                              uint32_t* const out_patch)
 {
 	if (out_major != NULL) *out_major = SCC_SCCLUST_MAJOR_VERSION;
 	if (out_minor != NULL) *out_minor = SCC_SCCLUST_MINOR_VERSION;
-	if (out_revision != NULL) *out_revision = SCC_SCCLUST_REVISION;
+	if (out_patch != NULL) *out_patch = SCC_SCCLUST_PATCH_VERSION;
 }
 
 
