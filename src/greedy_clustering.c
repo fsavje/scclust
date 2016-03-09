@@ -348,10 +348,7 @@ static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* const c
 	assert(cl_stack->items <= cl_stack->capacity);
 	assert(cl_stack->clusters != NULL);
 	assert(cl_stack->dpid_store != NULL);
-	assert(cl != NULL);
-	assert(cl->num_data_points >= 2);
-	assert(cl->num_data_points <= ISCC_DPID_MAX);
-	assert(cl->cluster_label != NULL);
+	assert(iscc_check_input_clustering(cl));
 	assert(iscc_check_data_set_object(data_set_object, cl->num_data_points));
 	assert(work_area != NULL);
 	assert(size_constraint >= 2);
@@ -618,6 +615,7 @@ static inline void iscc_gr_move_point_to_cluster1(const iscc_Dpid id,
 	assert(cl->members != NULL);
 	assert(vertex_markers != NULL);
 	assert(vertex_markers[id] != curr_marker);
+	assert(cl->marker == curr_marker);
 
 	vertex_markers[id] = curr_marker;
 	cl->members[cl->size] = id;
@@ -634,6 +632,7 @@ static inline void iscc_gr_move_point_to_cluster2(const iscc_Dpid id,
 	assert(cl->members != NULL);
 	assert(vertex_markers != NULL);
 	assert(vertex_markers[id] != curr_marker);
+	assert(cl->marker == curr_marker);
 
 	--(cl->members);
 	vertex_markers[id] = curr_marker;
@@ -653,6 +652,7 @@ static inline void iscc_gr_move_array_to_cluster1(const uint32_t len_ids,
 	assert(cl != NULL);
 	assert(cl->members != NULL);
 	assert(vertex_markers != NULL);
+	assert(cl->marker == curr_marker);
 
 	const iscc_Dpid* const ids_stop = ids + len_ids;
 	iscc_Dpid* cl_mem = cl->members + cl->size;
@@ -677,6 +677,7 @@ static inline void iscc_gr_move_array_to_cluster2(const uint32_t len_ids,
 	assert(cl != NULL);
 	assert(cl->members != NULL);
 	assert(vertex_markers != NULL);
+	assert(cl->marker == curr_marker);
 
 	const iscc_Dpid* const ids_stop = ids + len_ids;
 	for (; ids != ids_stop; ++ids) {
@@ -810,13 +811,14 @@ static inline void iscc_gr_sort_edge_list(const iscc_gr_ClusterItem* const cl,
 	assert(edge_store != NULL);
 
 	iscc_gr_DistanceEdge* write_edge = edge_store + 1;
-	for (size_t i = 0; i < cl->size; ++i, ++write_edge) {
+	for (size_t i = 0; i < cl->size; ++i) {
 		if (cl->members[i] == center) continue;
 		write_edge->head = cl->members[i];
 		write_edge->distance = row_dists[i];
+		++write_edge;
 	}
 
-	assert(write_edge == edge_store + cl->size);
+	assert(write_edge == (edge_store + cl->size));
 
 	qsort(edge_store + 1, cl->size - 1, sizeof(iscc_gr_DistanceEdge), iscc_gr_compare_dist_edges);
 
