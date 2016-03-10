@@ -60,7 +60,6 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
                                  const double secondary_radius)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (seed_method > SCC_MAX_SEED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
@@ -134,7 +133,6 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
                                             const double secondary_radius)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);

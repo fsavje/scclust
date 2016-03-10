@@ -32,11 +32,7 @@
 // ==============================================================================
 
 /// Macro for internal clustering checks.
-#ifndef NDEBUG
-	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, true)
-#else
-	#define iscc_check_input_clustering(cl) scc_check_clustering(cl, false)
-#endif
+#define iscc_check_input_clustering(cl) scc_is_initialized_clustering(cl)
 
 
 // ==============================================================================

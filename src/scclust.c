@@ -176,32 +176,97 @@ scc_ErrorCode scc_copy_clustering(const scc_Clustering* const in_clustering,
 	return iscc_no_error();
 }
 
-
-bool scc_check_clustering(const scc_Clustering* const cl,
-                          const bool extensive_check)
+bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 {
-	if (cl == NULL) return false;
-	if (cl->num_data_points < 2) return false;
-	if (cl->num_data_points > ISCC_DPID_MAX) return false;
-	if (cl->num_clusters > SCC_CLABEL_MAX) return false;
-	if (cl->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
-	
-	if (cl->num_clusters != 0) {
-		if (cl->cluster_label == NULL) return false;
-
-		if (extensive_check) {
-			assert(cl->num_clusters <= SCC_CLABEL_MAX);
-			const scc_Clabel max_cluster = (scc_Clabel) cl->num_clusters;
-			for (size_t i = 0; i < cl->num_data_points; ++i) {
-				if ((cl->cluster_label[i] > 0) && (cl->cluster_label[i] < max_cluster)) continue;
-				if (cl->cluster_label[i] == 0) continue; // Since `scc_Clabel` can be unsigned
-				if (cl->cluster_label[i] == SCC_CLABEL_NA) continue;
-				return false;
-			}
-		}
-	}
+	if (clustering == NULL) return false;
+	if (clustering->num_data_points < 2) return false;
+	if (clustering->num_data_points > ISCC_DPID_MAX) return false;
+	if (clustering->num_clusters > SCC_CLABEL_MAX) return false;
+	if ((clustering->num_clusters != 0) && (clustering->cluster_label == NULL)) return false;
+	if (clustering->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
 
 	return true;
+}
+
+
+scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
+                                   const uint32_t size_constraint,
+                                   const uint64_t num_types,
+                                   const uint32_t type_size_constraints[const],
+                                   const size_t len_type_labels,
+                                   const scc_TypeLabel type_labels[const],
+                                   bool* const out_is_OK)
+{
+	if (out_is_OK == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	*out_is_OK = false;
+	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
+	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
+	if (type_size_constraints != NULL) {
+		if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+		if (num_types > UINT16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+		if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
+		if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	}
+
+	assert(clustering->num_clusters <= SCC_CLABEL_MAX);
+	const scc_Clabel max_cluster = (scc_Clabel) clustering->num_clusters;
+	for (size_t i = 0; i < clustering->num_data_points; ++i) {
+		if ((clustering->cluster_label[i] > 0) && (clustering->cluster_label[i] < max_cluster)) continue;
+		if (clustering->cluster_label[i] == 0) continue; // Since `scc_Clabel` can be unsigned
+		if (clustering->cluster_label[i] == SCC_CLABEL_NA) continue;
+		return iscc_no_error();
+	}
+
+	if (type_size_constraints == NULL) {
+		size_t* const cluster_sizes = calloc(clustering->num_clusters, sizeof(size_t));
+		if (cluster_sizes == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
+		for (size_t i = 0; i < clustering->num_data_points; ++i) {
+			if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
+				++cluster_sizes[clustering->cluster_label[i]];
+			}
+		}
+
+		bool tmp_is_OK = true;
+		for (size_t i = 0; tmp_is_OK && (i < clustering->num_clusters); ++i) {
+			if (cluster_sizes[i] < size_constraint) {
+				tmp_is_OK = false;
+			}
+		}
+
+		free(cluster_sizes);
+		if (!tmp_is_OK) return iscc_no_error();
+
+	} else {
+		size_t* const cluster_type_sizes = calloc(num_types * clustering->num_clusters, sizeof(size_t));
+		if (cluster_type_sizes == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
+		for (size_t i = 0; i < clustering->num_data_points; ++i) {
+			if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
+				++cluster_type_sizes[(clustering->cluster_label[i] * num_types) + type_labels[i]];
+			}
+		}
+
+		bool tmp_is_OK = true;
+		for (size_t i = 0; tmp_is_OK && (i < clustering->num_clusters); ++i) {
+			size_t tmp_total_size = 0;
+			for (size_t t = 0; tmp_is_OK && (t < num_types); ++t) {
+				tmp_total_size += cluster_type_sizes[(i * num_types) + t];
+				if (cluster_type_sizes[(i * num_types) + t] < type_size_constraints[t]) {
+					tmp_is_OK = false;
+				}
+			}
+			if (tmp_is_OK && (tmp_total_size < size_constraint)) {
+				tmp_is_OK = false;
+			}
+		}
+
+		free(cluster_type_sizes);
+		if (!tmp_is_OK) return iscc_no_error();
+	}
+
+	*out_is_OK = true;
+	return iscc_no_error();
 }
 
 
