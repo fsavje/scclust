@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
-#include "src/dist_search.h"
+#include "../src/dist_search.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -26,8 +26,8 @@
 #include <climits>
 #include <cmath>
 #include "ANN.h"
-#include "src/config.h"
-#include "src/data_obj_int.h"
+#include "../src/config.h"
+#include "../src/scc_data_obj_int.h"
 
 typedef struct scc_DataSetObject scc_DataSetObject;
 

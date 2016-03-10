@@ -238,9 +238,7 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
-			if (updating) {
-				iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
-			}
+			if (updating) iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
 		#endif
 
 		if (iscc_fs_check_neighbors_marks(*sorted_v, nng, marks)) {
@@ -324,9 +322,7 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
-			if (updating) {
-				iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
-			}
+			if (updating) iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
 		#endif
 
 		if (not_excluded[*sorted_v]) {
