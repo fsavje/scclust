@@ -24,6 +24,7 @@ run_test test_nng_clustering
 run_test test_nng_core_internal
 run_test test_nng_core
 run_test test_nng_findseeds_internal
+run_test test_nng_findseeds_stable
 run_test test_nng_findseeds
 run_test test_scclust
 

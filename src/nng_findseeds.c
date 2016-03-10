@@ -65,12 +65,12 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* nng,
 
 //iscc_findseeds_approximation();
 
-static scc_ErrorCode iscc_exclusion_graph(const iscc_Digraph* nng,
-                                          const bool* not_excluded,
-                                          iscc_Digraph* out_dg);
+static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* nng,
+                                             const bool* not_excluded,
+                                             iscc_Digraph* out_dg);
 
 static inline scc_ErrorCode iscc_fs_add_seed(iscc_Dpid s,
-                                             iscc_SeedResult* out_seeds);
+                                             iscc_SeedResult* seed_result);
 
 static inline bool iscc_fs_check_neighbors_marks(iscc_Dpid v,
                                                  const iscc_Digraph*  nng,
@@ -238,7 +238,9 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
-			iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
+			if (updating) {
+				iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
+			}
 		#endif
 
 		if (iscc_fs_check_neighbors_marks(*sorted_v, nng, marks)) {
@@ -297,7 +299,7 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 
 	scc_ErrorCode ec;
 	iscc_Digraph exclusion_graph;
-	if ((ec = iscc_exclusion_graph(nng, not_excluded, &exclusion_graph)) != SCC_ER_OK) {
+	if ((ec = iscc_fs_exclusion_graph(nng, not_excluded, &exclusion_graph)) != SCC_ER_OK) {
 		free(not_excluded);
 		return ec;
 	}
@@ -322,7 +324,9 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
-			iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
+			if (updating) {
+				iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
+			}
 		#endif
 
 		if (not_excluded[*sorted_v]) {
@@ -404,9 +408,9 @@ bool iscc_findseeds_onearc_updating(const scc_Digraph* const nng, ...) {
 */
 
 
-static scc_ErrorCode iscc_exclusion_graph(const iscc_Digraph* const nng,
-                                          const bool* const not_excluded,
-                                          iscc_Digraph* const out_dg)
+static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
+                                             const bool* const not_excluded,
+                                             iscc_Digraph* const out_dg)
 {
 	assert(iscc_digraph_is_initialized(nng));
 	assert(not_excluded != NULL);
@@ -440,25 +444,25 @@ static scc_ErrorCode iscc_exclusion_graph(const iscc_Digraph* const nng,
 
 
 static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
-                                             iscc_SeedResult* const out_seeds)
+                                             iscc_SeedResult* const seed_result)
 {
-	assert(out_seeds != NULL);
-	assert(out_seeds->capacity > 1);
-	assert(out_seeds->count <= out_seeds->capacity);
-	assert(out_seeds->seeds != NULL);
+	assert(seed_result != NULL);
+	assert(seed_result->capacity > 0);
+	assert(seed_result->count <= seed_result->capacity);
+	assert(seed_result->seeds != NULL);
 
-	if (out_seeds->count == SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (seed_result->count == SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 
-	if (out_seeds->count == out_seeds->capacity) {
-		out_seeds->capacity = out_seeds->capacity + (out_seeds->capacity >> 3) + 1024;
-		if (out_seeds->capacity > SCC_CLABEL_MAX) out_seeds->capacity = SCC_CLABEL_MAX;
-		iscc_Dpid* const seeds_tmp_ptr = realloc(out_seeds->seeds, sizeof(iscc_Dpid[out_seeds->capacity]));
+	if (seed_result->count == seed_result->capacity) {
+		seed_result->capacity = seed_result->capacity + (seed_result->capacity >> 3) + 1024;
+		if (seed_result->capacity > SCC_CLABEL_MAX) seed_result->capacity = SCC_CLABEL_MAX;
+		iscc_Dpid* const seeds_tmp_ptr = realloc(seed_result->seeds, sizeof(iscc_Dpid[seed_result->capacity]));
 		if (seeds_tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
-		out_seeds->seeds = seeds_tmp_ptr;
+		seed_result->seeds = seeds_tmp_ptr;
 	}
 
-	out_seeds->seeds[out_seeds->count] = s;
-	++(out_seeds->count);
+	seed_result->seeds[seed_result->count] = s;
+	++(seed_result->count);
 
 	return iscc_no_error();
 }
@@ -487,14 +491,15 @@ static inline void iscc_fs_mark_seed_neighbors(const iscc_Dpid s,
                                                bool marks[const static nng->vertices])
 {
 	assert(!marks[s]);
-	marks[s] = true;
 
 	const iscc_Dpid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
 	for (const iscc_Dpid* s_arc = nng->head + nng->tail_ptr[s];
 	        s_arc != s_arc_stop; ++s_arc) {
-		assert(!marks[*s_arc] || (*s_arc == s));
+		assert(!marks[*s_arc]);
 		marks[*s_arc] = true;
 	}
+
+	marks[s] = true; // Mark seed last, if there're self-loops
 }
 
 

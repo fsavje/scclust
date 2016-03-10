@@ -10,7 +10,7 @@ STDTESTS=test_data_obj test_digraph_core test_digraph_debug test_digraph_operati
          test_dist_search test_error test_greedy_clustering test_nng_clustering \
          test_nng_core test_nng_findseeds test_scclust
 SPECTESTS=test_digraph_operations_internal test_greedy_clustering_internal test_nng_core_internal \
-          test_nng_findseeds_internal
+          test_nng_findseeds_internal test_nng_findseeds_stable
 
 ALLTESTS=$(STDTESTS) $(SPECTESTS)
 DEBUGOBJS=$(addprefix $(DEBUGDIR)/,$(OBJECTS))
@@ -42,6 +42,10 @@ test_nng_core_internal: $(filter-out $(DEBUGDIR)/nng_core.o,$(DEBUGOBJS))
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_nng_findseeds_internal: $(filter-out $(DEBUGDIR)/nng_findseeds.o,$(DEBUGOBJS))
+	mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_findseeds_stable: $(filter-out $(DEBUGDIR)/nng_findseeds.o,$(DEBUGOBJS))
 	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
