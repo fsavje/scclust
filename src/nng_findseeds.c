@@ -338,27 +338,42 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 
 			not_excluded[*sorted_v] = false;
 
-			if (updating) {
+			if (!updating) {
 				const iscc_Dpid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
-				for (const iscc_Dpid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
-				        ex_arc != ex_arc_stop; ++ex_arc) {
+				const iscc_Dpid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
+				for (; ex_arc != ex_arc_stop; ++ex_arc) {
+					not_excluded[*ex_arc] = false;
+				}
+				
+			} else {
+				// Loop through all excluded vertices (the seed's neighbors) and decrease the exclude count of all their neighbors.
+				// Since most of the seed's neighbors' neighbors will be neighbors themselves (and thus excluded) we don't want to
+				// waste computations on decreasing their count since they will fall out of the queue anyways. Therefore, we want
+				// to make two passes over the neighbors: one to exclude all neighbors that is not already excluded (and record them),
+				// and another to decrease the count on non-excluded neighbors' neighbors. As we never will return to the seed's edges,
+				// we use that as a scratch area.
+				iscc_Dpid* const ex_arc_start = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
+				const iscc_Dpid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
+				const iscc_Dpid* ex_arc = ex_arc_start;
+				iscc_Dpid* write_arc = ex_arc_start;
+
+				for (; ex_arc != ex_arc_stop; ++ex_arc) {
 					if (not_excluded[*ex_arc]) {
-						not_excluded[*ex_arc] = false;
-						const iscc_Dpid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
-						for (iscc_Dpid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
-						        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
-							if (not_excluded[*ex_arc_arc]) {
-								iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
-							}
-						}
+						*write_arc = *ex_arc;
+						++write_arc;
 					}
+					not_excluded[*ex_arc] = false;
 				}
 
-			} else {
-				const iscc_Dpid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
-				for (const iscc_Dpid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
-				        ex_arc != ex_arc_stop; ++ex_arc) {
-					not_excluded[*ex_arc] = false;
+				ex_arc = ex_arc_start;
+				for (; ex_arc != write_arc; ++ex_arc) {
+					const iscc_Dpid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
+					for (iscc_Dpid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
+					        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
+						if (not_excluded[*ex_arc_arc]) {
+							iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
+						}
+					}
 				}
 			}
 		}
