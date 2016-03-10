@@ -317,19 +317,19 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 }
 
 
-scc_ErrorCode iscc_make_nng_clusters(scc_Clustering* const clustering,
-                                     void* const data_set_object,
-                                     const iscc_SeedResult* const seed_result,
-                                     iscc_Digraph* const nng,
-                                     const bool nng_is_ordered,
-                                     const uint32_t size_constraint,
-                                     scc_UnassignedMethod main_unassigned_method,
-                                     bool main_radius_constraint,
-                                     double main_radius,
-                                     const bool main_data_points[const],
-                                     scc_UnassignedMethod secondary_unassigned_method,
-                                     bool secondary_radius_constraint,
-                                     double secondary_radius)
+scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering,
+                                                void* const data_set_object,
+                                                const iscc_SeedResult* const seed_result,
+                                                iscc_Digraph* const nng,
+                                                const bool nng_is_ordered,
+                                                const uint32_t size_constraint,
+                                                scc_UnassignedMethod main_unassigned_method,
+                                                bool main_radius_constraint,
+                                                double main_radius,
+                                                const bool main_data_points[const],
+                                                scc_UnassignedMethod secondary_unassigned_method,
+                                                bool secondary_radius_constraint,
+                                                double secondary_radius)
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
@@ -444,7 +444,7 @@ scc_ErrorCode iscc_make_nng_clusters(scc_Clustering* const clustering,
 			size_t dbg_main_count = 0;
 		#endif
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = (clustering->cluster_label[i] != SCC_CLABEL_NA);
+			main_assign[i] = (clustering->cluster_label[i] == SCC_CLABEL_NA);
 			#ifndef NDEBUG
 				dbg_main_count += main_assign[i];
 			#endif
@@ -457,7 +457,7 @@ scc_ErrorCode iscc_make_nng_clusters(scc_Clustering* const clustering,
 			size_t dbg_secondary_count = 0;
 		#endif
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = main_data_points[i] && (clustering->cluster_label[i] != SCC_CLABEL_NA);
+			main_assign[i] = main_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
 			num_main_assign += main_assign[i];
 			#ifndef NDEBUG
 				dbg_secondary_count += !main_data_points[i] && (clustering->cluster_label[i] != SCC_CLABEL_NA);
@@ -473,9 +473,9 @@ scc_ErrorCode iscc_make_nng_clusters(scc_Clustering* const clustering,
 			return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = main_data_points[i] && (clustering->cluster_label[i] != SCC_CLABEL_NA);
+			main_assign[i] = main_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
 			num_main_assign += main_assign[i];
-			secondary_assign[i] = !main_data_points[i] && (clustering->cluster_label[i] != SCC_CLABEL_NA);
+			secondary_assign[i] = !main_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
 			num_secondary_assign += secondary_assign[i];
 		}
 		assert(num_assigned_as_seed_or_neighbor + num_assigned_by_nng + num_main_assign + num_secondary_assign == clustering->num_data_points);

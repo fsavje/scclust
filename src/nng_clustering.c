@@ -95,19 +95,19 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
 		return ec;
 	}
 
-	ec = iscc_make_nng_clusters(clustering,
-	                            data_set_object,
-	                            &seed_result,
-	                            &nng,
-	                            true,
-	                            size_constraint,
-	                            main_unassigned_method,
-	                            main_radius_constraint,
-	                            main_radius,
-	                            main_data_points,
-	                            secondary_unassigned_method,
-	                            secondary_radius_constraint,
-	                            secondary_radius);
+	ec = iscc_make_nng_clusters_from_seeds(clustering,
+	                                       data_set_object,
+	                                       &seed_result,
+	                                       &nng,
+	                                       true,
+	                                       size_constraint,
+	                                       main_unassigned_method,
+	                                       main_radius_constraint,
+	                                       main_radius,
+	                                       main_data_points,
+	                                       secondary_unassigned_method,
+	                                       secondary_radius_constraint,
+	                                       secondary_radius);
 
 	iscc_free_digraph(&nng);
 	free(seed_result.seeds);
@@ -180,19 +180,19 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 		return ec;
 	}
 
-	ec = iscc_make_nng_clusters(clustering,
-	                            data_set_object,
-	                            &seed_result,
-	                            &nng,
-	                            false,
-	                            size_constraint,
-	                            main_unassigned_method,
-	                            main_radius_constraint,
-	                            main_radius,
-	                            main_data_points,
-	                            secondary_unassigned_method,
-	                            secondary_radius_constraint,
-	                            secondary_radius);
+	ec = iscc_make_nng_clusters_from_seeds(clustering,
+	                                       data_set_object,
+	                                       &seed_result,
+	                                       &nng,
+	                                       false,
+	                                       size_constraint,
+	                                       main_unassigned_method,
+	                                       main_radius_constraint,
+	                                       main_radius,
+	                                       main_data_points,
+	                                       secondary_unassigned_method,
+	                                       secondary_radius_constraint,
+	                                       secondary_radius);
 
 	iscc_free_digraph(&nng);
 	free(seed_result.seeds);
