@@ -157,17 +157,19 @@ scc_ErrorCode scc_copy_clustering(const scc_Clustering* const in_clustering,
 	*tmp_cl = (scc_Clustering) {
 		.num_data_points = in_clustering->num_data_points,
 		.num_clusters = in_clustering->num_clusters,
-		.cluster_label = malloc(sizeof(scc_Clabel[in_clustering->num_data_points])),
+		.cluster_label = NULL,
 		.external_labels = false,
 		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
 	};
 
-	if (tmp_cl->cluster_label == NULL) {
-		free(&tmp_cl);
-		return iscc_make_error(SCC_ER_NO_MEMORY);
+	if (in_clustering->num_clusters > 0) {
+		tmp_cl->cluster_label = malloc(sizeof(scc_Clabel[in_clustering->num_data_points]));
+		if (tmp_cl->cluster_label == NULL) {
+			free(&tmp_cl);
+			return iscc_make_error(SCC_ER_NO_MEMORY);
+		}
+		memcpy(tmp_cl->cluster_label, in_clustering->cluster_label, in_clustering->num_data_points * sizeof(scc_Clabel));
 	}
-
-	memcpy(tmp_cl->cluster_label, in_clustering->cluster_label, in_clustering->num_data_points * sizeof(scc_Clabel));
 
 	assert(iscc_check_input_clustering(tmp_cl));
 

@@ -274,6 +274,27 @@ void scc_ut_copy_clustering(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 
 	scc_free_clustering(&out_cl);
+
+
+	scc_Clustering in_cl2 = {
+		.num_data_points = 10,
+		.num_clusters = 0,
+		.cluster_label = NULL,
+		.external_labels = false,
+		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+	};
+
+	scc_Clustering* out_cl2;
+	scc_ErrorCode ec2 = scc_copy_clustering(&in_cl2, &out_cl2);
+	assert_non_null(out_cl2);
+	assert_int_equal(out_cl2->num_data_points, 10);
+	assert_int_equal(out_cl2->num_clusters, 0);
+	assert_null(out_cl2->cluster_label);
+	assert_false(out_cl2->external_labels);
+	assert_int_equal(out_cl2->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(ec2, SCC_ER_OK);
+
+	scc_free_clustering(&out_cl2);
 }
 
 

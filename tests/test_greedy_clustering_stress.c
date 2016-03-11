@@ -63,5 +63,5 @@ int main(void)
 		cmocka_unit_test(scc_ut_top_down_greedy_clustering_stress),
 	};
 	
-	return cmocka_run_group_tests_name("greedy_clustering.c", test_cases, NULL, NULL);
+	return cmocka_run_group_tests_name("stress greedy_clustering.c", test_cases, NULL, NULL);
 }

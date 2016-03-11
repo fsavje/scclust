@@ -402,7 +402,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		assert(clustering->num_data_points <= ISCC_DPID_MAX);
 		const iscc_Dpid num_data_points_dpid = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed.
 		for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
-			if (clustering->cluster_label[i] == SCC_CLABEL_NA) {
+			if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
 				seed_or_neighbor[search_count] = i;
 				++search_count;
 			}
@@ -893,21 +893,22 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 		size_t dbg_count_seeds = 0;
 	#endif
 
-	double sum_dist = 0;
-	double* const output_dists = malloc(sizeof(double[size_constraint]));
+	double sum_dist = 0.0;
+	const uint32_t num_neighbors = size_constraint - 1;
+	double* const output_dists = malloc(sizeof(double[num_neighbors]));
 	for (size_t s = 0; s < seed_result->count; s += step) {
-		assert((nng->tail_ptr[s] + size_constraint) == nng->tail_ptr[s + 1]);
+		assert((nng->tail_ptr[s] + num_neighbors) == nng->tail_ptr[s + 1]);
 		if (!iscc_get_dist_rows(data_set_object,
 		                        1,
 		                        (seed_result->seeds + s),
-		                        size_constraint,
+		                        num_neighbors,
 		                        nng->head + nng->tail_ptr[s],
 		                        output_dists)) {
 			free(output_dists);
 			return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 		}
 
-		for (size_t d = 0; d < size_constraint; ++d) {
+		for (size_t d = 0; d < num_neighbors; ++d) {
 			sum_dist += output_dists[d];
 		}
 
@@ -939,11 +940,11 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 
 	size_t num_assigned_by_nng = 0;
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
-		if (!scratch[i]) {
+		if (scratch[i]) {
 			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[i + 1];
 			for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[i];
 			        v_arc != v_arc_stop; ++v_arc) {
-				if (scratch[*v_arc]) {
+				if (!scratch[*v_arc]) {
 					assert(clustering->cluster_label[*v_arc] != SCC_CLABEL_NA);
 					clustering->cluster_label[i] = clustering->cluster_label[*v_arc];
 					++num_assigned_by_nng;
