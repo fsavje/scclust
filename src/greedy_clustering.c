@@ -32,7 +32,7 @@
 #include "scclust_int.h"
 
 // Maximum number of data points to check when finding centers.
-static const uint_fast16_t ISCC_GR_NUM_TO_CHECK = 1000;
+static const uint_fast16_t ISCC_GR_NUM_TO_CHECK = 100;
 
 
 // ==============================================================================
@@ -718,7 +718,8 @@ static scc_ErrorCode iscc_gr_find_centers(iscc_gr_ClusterItem* const cl,
 
 	size_t step = cl->size / ISCC_GR_NUM_TO_CHECK;
 	if (step < 2) step = 2;
-	uint_fast16_t num_to_check = ((uint_fast16_t) (1 + (cl->size - 1) / step));
+	uint_fast16_t num_to_check = ((uint_fast16_t) (1 + (cl->size - step) / step));
+	num_to_check = (ISCC_GR_NUM_TO_CHECK < num_to_check) ? ISCC_GR_NUM_TO_CHECK : num_to_check;
 	assert(num_to_check <= ISCC_GR_NUM_TO_CHECK);
 
 	for (size_t i = 0; i < num_to_check; ++i) {

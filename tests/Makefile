@@ -7,8 +7,8 @@ DEBUGDIR=../dbg
 BUILDDIR=build
 
 STDTESTS=test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
-         test_dist_search test_error test_greedy_clustering test_nng_clustering \
-         test_nng_core test_nng_findseeds test_scclust
+         test_dist_search test_error test_greedy_clustering test_greedy_clustering_stress \
+         test_nng_clustering test_nng_core test_nng_findseeds test_scclust
 SPECTESTS=test_digraph_operations_internal test_greedy_clustering_internal test_nng_core_internal \
           test_nng_findseeds_internal test_nng_findseeds_stable
 

@@ -20,6 +20,7 @@ run_test test_dist_search
 run_test test_error
 run_test test_greedy_clustering_internal
 run_test test_greedy_clustering
+run_test test_greedy_clustering_stress
 run_test test_nng_clustering
 run_test test_nng_core_internal
 run_test test_nng_core
