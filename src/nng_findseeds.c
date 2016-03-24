@@ -543,7 +543,6 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 	for (size_t v = 0; v < vertices; ++v) {
 		if (max_inwards_tmp < out_sort->inwards_count[v]) max_inwards_tmp = out_sort->inwards_count[v];
 	}
-	assert(max_inwards_tmp >= 0);
 	const size_t max_inwards = (size_t) max_inwards_tmp; // If `iscc_Dpid` is signed
 
 	size_t* bucket_count = calloc(max_inwards + 1, sizeof(size_t));

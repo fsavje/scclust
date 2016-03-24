@@ -171,7 +171,7 @@ scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* const clustering,
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_INVALID_INPUT);
 
 	scc_ErrorCode ec;
-	size_t size_largest_cluster;
+	size_t size_largest_cluster = 0; // Initialize to avoid gcc warning
 	iscc_gr_ClusterStack cl_stack;
 	if (clustering->num_clusters == 0) {
 		if (clustering->cluster_label == NULL) {
@@ -370,7 +370,7 @@ static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* const c
 			}
 			--(cl_stack->items);
 		} else {
-			iscc_gr_ClusterItem* new_cluster;
+			iscc_gr_ClusterItem* new_cluster = NULL; // Initialize to avoid gcc warning
 			if ((ec = iscc_gr_push_to_stack(cl_stack, &new_cluster)) != SCC_ER_OK) {
 				return ec;
 			}
@@ -385,7 +385,7 @@ static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* const c
 		}
 	}
 
-	assert(current_label >= 0);
+	assert(current_label <= SIZE_MAX);
 	cl->num_clusters = (size_t) current_label;
 
 	assert(cl_stack->items == 0);
@@ -439,8 +439,9 @@ static scc_ErrorCode iscc_gr_break_cluster_into_two(iscc_gr_ClusterItem* const c
 	assert(out_new_cluster != NULL);
 
 	scc_ErrorCode ec;
-	iscc_Dpid center1, center2;
-	// Must be before `iscc_gr_get_next_marker`
+	iscc_Dpid center1 = ISCC_DPID_MAX, center2 = ISCC_DPID_MAX; // Initialize these to avoid gcc warning
+	// `iscc_gr_find_centers` must be before `iscc_gr_get_next_marker`
+	// since the marker becomes invalid after `iscc_gr_find_centers`
 	if ((ec = iscc_gr_find_centers(cluster_to_break,
 	                               data_set_object,
 	                               work_area,

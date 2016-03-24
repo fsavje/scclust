@@ -165,7 +165,7 @@ scc_ErrorCode scc_copy_clustering(const scc_Clustering* const in_clustering,
 	if (in_clustering->num_clusters > 0) {
 		tmp_cl->cluster_label = malloc(sizeof(scc_Clabel[in_clustering->num_data_points]));
 		if (tmp_cl->cluster_label == NULL) {
-			free(&tmp_cl);
+			free(tmp_cl);
 			return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
 		memcpy(tmp_cl->cluster_label, in_clustering->cluster_label, in_clustering->num_data_points * sizeof(scc_Clabel));

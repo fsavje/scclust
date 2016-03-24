@@ -26,6 +26,11 @@
 #ifndef SCC_SCCLUST_HG
 #define SCC_SCCLUST_HG
 
+#ifdef __cplusplus
+// So g++ defines integer limits
+#define __STDC_LIMIT_MACROS
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -61,33 +66,6 @@ static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
  *  Type labels must be in the sequence `[0, 1, ..., 65535]`.
  */
 typedef uint_fast16_t scc_TypeLabel;
-
-
-// ==============================================================================
-// Library specific types and structs, non-serviceable
-// ==============================================================================
-
-/// Type used for clusterings
-typedef struct scc_Clustering scc_Clustering;
-
-/// Type used for clustering statistics
-typedef struct scc_ClusteringStats scc_ClusteringStats;
-
-/// Struct to store clustering statistics
-struct scc_ClusteringStats {
-	uint64_t num_populated_clusters;
-	uint64_t num_assigned;
-	uint64_t min_cluster_size;
-	uint64_t max_cluster_size;
-	double avg_cluster_size;
-	double sum_dists;
-	double min_dist;
-	double max_dist;
-	double cl_avg_min_dist;
-	double cl_avg_max_dist;
-	double cl_avg_dist_weighted;
-	double cl_avg_dist_unweighted;
-};
 
 
 // ==============================================================================
@@ -132,6 +110,29 @@ bool scc_get_latest_error(size_t len_error_message_buffer,
 // ==============================================================================
 // Utility functions
 // ==============================================================================
+
+/// Type used for clusterings
+typedef struct scc_Clustering scc_Clustering;
+
+/// Type used for clustering statistics
+typedef struct scc_ClusteringStats scc_ClusteringStats;
+
+/// Struct to store clustering statistics
+struct scc_ClusteringStats {
+	uint64_t num_populated_clusters;
+	uint64_t num_assigned;
+	uint64_t min_cluster_size;
+	uint64_t max_cluster_size;
+	double avg_cluster_size;
+	double sum_dists;
+	double min_dist;
+	double max_dist;
+	double cl_avg_min_dist;
+	double cl_avg_max_dist;
+	double cl_avg_dist_weighted;
+	double cl_avg_dist_unweighted;
+};
+
 
 void scc_free_clustering(scc_Clustering** clustering);
 

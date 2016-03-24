@@ -26,6 +26,11 @@
 #ifndef SCC_CONFIG_HG
 #define SCC_CONFIG_HG
 
+#ifdef __cplusplus
+// So g++ defines integer limits
+#define __STDC_LIMIT_MACROS
+#endif
+
 #include <limits.h>
 #include <stdint.h>
 

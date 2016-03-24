@@ -18,6 +18,9 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
+// So g++ defines integer limits
+#define __STDC_LIMIT_MACROS
+
 #include "../src/dist_search.h"
 
 #include <stddef.h>
