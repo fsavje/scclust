@@ -385,7 +385,6 @@ static scc_ErrorCode iscc_gr_run_greedy_clustering(iscc_gr_ClusterStack* const c
 		}
 	}
 
-	assert(current_label <= SIZE_MAX);
 	cl->num_clusters = (size_t) current_label;
 
 	assert(cl_stack->items == 0);
