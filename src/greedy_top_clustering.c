@@ -233,17 +233,6 @@ scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* const clustering,
 }
 
 
-scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* const clustering,
-                                              void* const data_set_object,
-                                              const uint32_t size_constraint)
-{
-	(void) clustering;
-	(void) data_set_object;
-	(void) size_constraint;
-	return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
-}
-
-
 // ==============================================================================
 // Internal function implementations 
 // ==============================================================================
