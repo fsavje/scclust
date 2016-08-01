@@ -461,7 +461,7 @@ static scc_ErrorCode iscc_gr_break_cluster_into_two(iscc_gr_ClusterItem* const c
 	iscc_Dpid* const k_nn_array2 = work_area->dpid_array2;
 	uint_fast16_t* const vertex_markers = work_area->vertex_markers;
 
-	// `edge_store1` and `` have been populated by `iscc_gr_populate_edge_lists`
+	// `edge_store1` and `edge_store2` have been populated by `iscc_gr_populate_edge_lists`
 	iscc_gr_DistanceEdge* last_assigned_edge1 = work_area->edge_store1;
 	iscc_gr_DistanceEdge* last_assigned_edge2 = work_area->edge_store2;
 
