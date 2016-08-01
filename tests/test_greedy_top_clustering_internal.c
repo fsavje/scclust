@@ -21,14 +21,14 @@
 #define SCC_DOUBLE_ASSERT
 
 #include "test_suite.h"
-#include "../src/greedy_clustering.c"
+#include "../src/greedy_top_clustering.c"
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "data_object_test.h"
-#include "../src/config.h"
+#include "../src/scclust_int.h"
 
 
 void scc_ut_gr_empty_cl_stack(void** state)

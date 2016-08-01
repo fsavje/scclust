@@ -69,11 +69,11 @@ scc_ErrorCode scc_get_data_set_object(const uintmax_t num_data_points,
 	if (tmp_dso == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	*tmp_dso = (scc_DataSetObject) {
+		.data_set_object_version = ISCC_CURRENT_DATASETOBJ_VERSION,
 		.num_data_points = (size_t) num_data_points,
 		.num_dimensions = (uint_fast16_t) num_dimensions,
 		.data_matrix = NULL,
 		.external_matrix = !deep_matrix_copy,
-		.data_set_object_version = ISCC_CURRENT_DATASETOBJ_VERSION,
 	};
 
 	if (deep_matrix_copy) {

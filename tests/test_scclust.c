@@ -552,7 +552,7 @@ void scc_ut_get_clustering_stats(void** state)
 {
 	(void) state;
 
-	const scc_ClusteringStats ISCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+	const scc_ClusteringStats ISCC_NULL_CLUSTERING_STATS = { 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 	scc_Clabel cluster_labels1[15] = { 0, 1, 3, 2, 2, 3, 2, 1, 1, 0, 3, 3, 2, 1, 1 };
 
@@ -580,8 +580,10 @@ void scc_ut_get_clustering_stats(void** state)
 
 	scc_ErrorCode ec4 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, &out_stats1);
 	assert_int_equal(ec4, SCC_ER_OK);
-	assert_int_equal(out_stats1.num_populated_clusters, 4);
+	assert_int_equal(out_stats1.num_data_points, 15);
 	assert_int_equal(out_stats1.num_assigned, 15);
+	assert_int_equal(out_stats1.num_clusters, 4);
+	assert_int_equal(out_stats1.num_populated_clusters, 4);
 	assert_int_equal(out_stats1.min_cluster_size, 2);
 	assert_int_equal(out_stats1.max_cluster_size, 5);
 	assert_double_equal(out_stats1.avg_cluster_size, 3.75);
@@ -616,8 +618,10 @@ void scc_ut_get_clustering_stats(void** state)
 	scc_ClusteringStats out_stats2;
 	scc_ErrorCode ec5 = scc_get_clustering_stats(&cl2, scc_ut_test_data_large, &out_stats2);
 	assert_int_equal(ec5, SCC_ER_OK);
-	assert_int_equal(out_stats2.num_populated_clusters, 5);
+	assert_int_equal(out_stats2.num_data_points, 100);
 	assert_int_equal(out_stats2.num_assigned, 14);
+	assert_int_equal(out_stats2.num_clusters, 6);
+	assert_int_equal(out_stats2.num_populated_clusters, 5);
 	assert_int_equal(out_stats2.min_cluster_size, 1);
 	assert_int_equal(out_stats2.max_cluster_size, 4);
 	assert_double_equal(out_stats2.avg_cluster_size, 2.8);

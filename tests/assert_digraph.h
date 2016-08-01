@@ -95,7 +95,7 @@ void _assert_empty_digraph(const iscc_Digraph* test_dg,
 
 void _assert_balanced_digraph(const iscc_Digraph* test_dg,
                               const size_t vertices,
-                              const size_t arcs_per_vertex,
+                              const iscc_Arci arcs_per_vertex,
                               const char* const name_dg,
                               const char* const file,
                               const int line)

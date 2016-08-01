@@ -35,16 +35,15 @@ extern "C" {
 // Structs, types and variables
 // ==============================================================================
 
-static const int64_t ISCC_CURRENT_DATASETOBJ_VERSION = 1;
-
 struct scc_DataSetObject {
+	int32_t data_set_object_version;
 	size_t num_data_points;
 	uint_fast16_t num_dimensions;
 	double* data_matrix;
 	bool external_matrix;
-	int64_t data_set_object_version;
 };
 
+static const int32_t ISCC_CURRENT_DATASETOBJ_VERSION = 1;
 
 #ifdef __cplusplus
 }

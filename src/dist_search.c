@@ -55,7 +55,7 @@ static inline void iscc_add_dist_to_list(double add_dist,
 // ==============================================================================
 
 bool iscc_check_data_set_object(void* const data_set_object,
-                                const uint64_t required_data_points)
+                                const size_t required_data_points)
 {
 	if (data_set_object == NULL) return false;
 	const scc_DataSetObject* const data_set_object_cast = (const scc_DataSetObject*) data_set_object;

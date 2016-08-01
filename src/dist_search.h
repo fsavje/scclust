@@ -36,16 +36,16 @@ extern "C" {
 // ==============================================================================
 
 bool iscc_check_data_set_object(void* data_set_object,
-                                uint64_t required_data_points);
+                                size_t required_data_points);
 
 
-// `output_dists` must be of length `(n_points - 1) n_points / 2`
+// `output_dists` must be of length `(len_point_indices - 1) len_point_indices / 2`
 bool iscc_get_dist_matrix(void* data_set_object,
                           size_t len_point_indices,
                           const iscc_Dpid point_indices[],
                           double output_dists[]);
 
-// `output_dists` must be of length `n_columns * n_query_rows`
+// `output_dists` must be of length `len_query_indices * len_column_indices`
 bool iscc_get_dist_rows(void* data_set_object,
                         size_t len_query_indices,
                         const iscc_Dpid query_indices[],

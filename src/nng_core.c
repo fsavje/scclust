@@ -630,43 +630,32 @@ static scc_ErrorCode iscc_make_nng(void* const data_set_object,
 	assert(max_arcs >= k);
 	assert(out_nng != NULL);
 
-	scc_ErrorCode ec;
-	if ((ec = iscc_init_digraph(len_query_indicators, max_arcs, out_nng)) != SCC_ER_OK) return ec;
-
 	iscc_NNSearchObject* nn_search_object;
 	if (!iscc_init_nn_search_object(data_set_object,
 	                                len_search_indices,
 	                                search_indices,
 	                                &nn_search_object)) {
-		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
 
-	if (!iscc_nearest_neighbor_search(nn_search_object,
-	                                  len_query_indicators,
-	                                  query_indicators,
-	                                  out_query_indicators,
-	                                  k,
-	                                  radius_search,
-	                                  radius,
-	                                  accept_partial,
-	                                  out_nng->tail_ptr,
-	                                  out_nng->head)) {
-		iscc_free_digraph(out_nng);
+	scc_ErrorCode ec;
+	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
+                                               len_query_indicators,
+                                               query_indicators,
+                                               out_query_indicators,
+                                               k,
+                                               radius_search,
+                                               radius,
+                                               accept_partial,
+                                               max_arcs,
+                                               out_nng)) != SCC_ER_OK) {
 		iscc_close_nn_search_object(&nn_search_object);
-		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
+		return ec;
 	}
 
 	if (!iscc_close_nn_search_object(&nn_search_object)) {
 		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-	}
-
-	if (max_arcs > out_nng->tail_ptr[out_nng->vertices]) {
-		if ((ec = iscc_change_arc_storage(out_nng, out_nng->tail_ptr[out_nng->vertices])) != SCC_ER_OK) {
-			iscc_free_digraph(out_nng);
-			return ec;
-		}
 	}
 
 	return iscc_no_error();
@@ -728,7 +717,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 
 	/* When there's identical data points, `iscc_nearest_neighbor_search` may not
 	 * return a self-loop when a query is a search point. The NNG clustering functions
-	 * requires this. However, if all data points are unique, or the query and search sets
+	 * require this. However, if all data points are unique, or the query and search sets
 	 * are disjoint, it's safe to call `iscc_make_nng` without `iscc_ensure_self_match`. */
 
 	if (search_indices == NULL) {
