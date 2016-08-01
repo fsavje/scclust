@@ -182,7 +182,8 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	assert(num_data_points > 0);
 	assert(size_constraint <= num_data_points);
 	assert(size_constraint > 0);
-	assert(num_types > 0);
+	assert(num_types >= 2);
+	assert(num_types <= ISCC_TYPELABEL_MAX);
 	assert(type_size_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(!radius_constraint || (radius > 0.0));
@@ -288,7 +289,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		                        radius_constraint,
 		                        radius,
 		                        false,
-		                        size_constraint * tc.num_queries,
+		                        (size_constraint * tc.num_queries),
 		                        &nng_sum[1])) != SCC_ER_OK) {
 			free(seedable);
 			iscc_free_digraph(&nng_sum[0]);
@@ -764,7 +765,8 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 {
 	assert(num_data_points > 1);
 	assert(size_constraint > 0);
-	assert(num_types > 1);
+	assert(num_types >= 2);
+	assert(num_types <= ISCC_TYPELABEL_MAX);
 	assert(type_size_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(out_type_result != NULL);
@@ -814,7 +816,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	}
 
 	out_type_result->type_groups[0] = out_type_result->point_store + out_type_result->type_group_size[0];
-	for (size_t i = 1; i < num_types; ++i) {
+	for (uint_fast16_t i = 1; i < num_types; ++i) {
 		out_type_result->type_groups[i] = out_type_result->type_groups[i - 1] + out_type_result->type_group_size[i];
 	}
 

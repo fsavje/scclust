@@ -204,7 +204,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
 	if (type_size_constraints != NULL) {
 		if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (num_types > UINT16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+		if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 		if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 		if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 	}

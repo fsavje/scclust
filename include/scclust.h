@@ -63,7 +63,7 @@ static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
 /** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
  *  
  *  \note
- *  Type labels must be in the sequence `[0, 1, ..., 65535]`.
+ *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
  */
 typedef uint_fast16_t scc_TypeLabel;
 
