@@ -35,7 +35,7 @@
 // ============================================================================== 
 
 scc_ErrorCode iscc_init_digraph(const size_t vertices,
-                                const uint64_t max_arcs,
+                                const uintmax_t max_arcs,
                                 iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
@@ -67,7 +67,7 @@ scc_ErrorCode iscc_init_digraph(const size_t vertices,
 
 
 scc_ErrorCode iscc_empty_digraph(const size_t vertices,
-                                 const uint64_t max_arcs,
+                                 const uintmax_t max_arcs,
                                  iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
@@ -119,7 +119,7 @@ void iscc_free_digraph(iscc_Digraph* const dg)
 
 
 scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
-                                      const uint64_t new_max_arcs)
+                                      const uintmax_t new_max_arcs)
 {
 	assert(iscc_digraph_is_initialized(dg));
 	assert(dg->tail_ptr[dg->vertices] <= new_max_arcs);
@@ -134,7 +134,7 @@ scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
 		iscc_Dpid* const tmp_ptr = realloc(dg->head, sizeof(iscc_Dpid[new_max_arcs]));
 		if (tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		dg->head = tmp_ptr;
-		dg->max_arcs = new_max_arcs;
+		dg->max_arcs = (size_t) new_max_arcs;
 	}
 
 	return iscc_no_error();

@@ -105,7 +105,7 @@ static const iscc_Digraph ISCC_NULL_DIGRAPH = { 0, 0, NULL, NULL };
  *  \param[out] out_dg a scc_Digraph with allocated memory.
  */
 scc_ErrorCode iscc_init_digraph(size_t vertices,
-                                uint64_t max_arcs,
+                                uintmax_t max_arcs,
                                 iscc_Digraph* out_dg);
 
 /** Construct an empty digraph.
@@ -118,7 +118,7 @@ scc_ErrorCode iscc_init_digraph(size_t vertices,
  *  \param[out] out_dg a scc_Digraph with allocated memory.
  */
 scc_ErrorCode iscc_empty_digraph(size_t vertices,
-                                 uint64_t max_arcs,
+                                 uintmax_t max_arcs,
                                  iscc_Digraph* out_dg);
 
 /** Checks whether provided digraph is initialized.
@@ -154,7 +154,7 @@ void iscc_free_digraph(iscc_Digraph* dg);
  *  \param         new_max_arcs new size of memory.
  */
 scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* dg,
-                                      uint64_t new_max_arcs);
+                                      uintmax_t new_max_arcs);
 
 
 #endif // ifndef SCC_DIGRAPH_CORE_HG

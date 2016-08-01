@@ -34,21 +34,21 @@
 // Internal function prototypes
 // ==============================================================================
 
-static inline uint64_t iscc_do_union_and_delete(uint_fast16_t num_dgs,
-                                                const iscc_Digraph dgs[restrict static num_dgs],
-                                                iscc_Dpid row_markers[restrict],
-                                                const bool tails_to_keep[restrict],
-                                                bool write,
-                                                iscc_Arci out_tail_ptr[restrict],
-                                                iscc_Dpid out_head[restrict]);
-
-static inline uint64_t iscc_do_adjacency_product(const iscc_Digraph* dg_a,
-                                                 const iscc_Digraph* dg_b,
+static inline uintmax_t iscc_do_union_and_delete(uint_fast16_t num_dgs,
+                                                 const iscc_Digraph dgs[restrict static num_dgs],
                                                  iscc_Dpid row_markers[restrict],
-                                                 bool force_loops,
+                                                 const bool tails_to_keep[restrict],
                                                  bool write,
                                                  iscc_Arci out_tail_ptr[restrict],
                                                  iscc_Dpid out_head[restrict]);
+
+static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* dg_a,
+                                                  const iscc_Digraph* dg_b,
+                                                  iscc_Dpid row_markers[restrict],
+                                                  bool force_loops,
+                                                  bool write,
+                                                  iscc_Arci out_tail_ptr[restrict],
+                                                  iscc_Dpid out_head[restrict]);
 
 
 // ==============================================================================
@@ -93,7 +93,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 	const size_t vertices = in_dgs[0].vertices;
 
 	// Try greedy memory count first
-	uint64_t out_arcs_write = 0;
+	uintmax_t out_arcs_write = 0;
 	for (uint_fast16_t i = 0; i < num_in_dgs; ++i) {
 		assert(iscc_digraph_is_initialized(&in_dgs[i]));
 		assert(in_dgs[i].vertices == vertices);
@@ -239,7 +239,7 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	// Try greedy memory count first
-	uint64_t out_arcs_write = 0;
+	uintmax_t out_arcs_write = 0;
 	const iscc_Dpid* const arc_a_stop = in_dg_a->head + in_dg_a->tail_ptr[vertices];
 	for (const iscc_Dpid* arc_a = in_dg_a->head; arc_a != arc_a_stop; ++arc_a) {
 		out_arcs_write += in_dg_b->tail_ptr[*arc_a + 1] - in_dg_b->tail_ptr[*arc_a];
@@ -283,13 +283,13 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 // Internal function implementations 
 // ==============================================================================
 
-static inline uint64_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
-                                                const iscc_Digraph dgs[restrict const static num_dgs],
-                                                iscc_Dpid row_markers[restrict const],
-                                                const bool tails_to_keep[restrict const],
-                                                const bool write,
-                                                iscc_Arci out_tail_ptr[restrict const],
-                                                iscc_Dpid out_head[restrict const])
+static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
+                                                 const iscc_Digraph dgs[restrict const static num_dgs],
+                                                 iscc_Dpid row_markers[restrict const],
+                                                 const bool tails_to_keep[restrict const],
+                                                 const bool write,
+                                                 iscc_Arci out_tail_ptr[restrict const],
+                                                 iscc_Dpid out_head[restrict const])
 {
 	assert(num_dgs > 0);
 	assert(dgs != NULL);
@@ -297,7 +297,7 @@ static inline uint64_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	assert(dgs[0].vertices > 0);
 	assert(row_markers != NULL);
 
-	uint64_t counter = 0;
+	uintmax_t counter = 0;
 	assert(dgs->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed 
 
@@ -384,13 +384,13 @@ static inline uint64_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 }
 
 
-static inline uint64_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a,
-                                                 const iscc_Digraph* const dg_b,
-                                                 iscc_Dpid row_markers[restrict const],
-                                                 const bool force_loops,
-                                                 const bool write,
-                                                 iscc_Arci out_tail_ptr[restrict const],
-                                                 iscc_Dpid out_head[restrict const])
+static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a,
+                                                  const iscc_Digraph* const dg_b,
+                                                  iscc_Dpid row_markers[restrict const],
+                                                  const bool force_loops,
+                                                  const bool write,
+                                                  iscc_Arci out_tail_ptr[restrict const],
+                                                  iscc_Dpid out_head[restrict const])
 {
 	assert(iscc_digraph_is_initialized(dg_a));
 	assert(iscc_digraph_is_initialized(dg_b));
@@ -398,7 +398,7 @@ static inline uint64_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a,
 	assert(dg_a->vertices == dg_b->vertices);
 	assert(row_markers != NULL);
 
-	uint64_t counter = 0;
+	uintmax_t counter = 0;
 	assert(dg_a->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) dg_a->vertices; // If `iscc_Dpid` is signed 
 

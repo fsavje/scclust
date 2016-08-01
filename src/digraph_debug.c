@@ -63,7 +63,7 @@ bool iscc_is_empty_digraph(const iscc_Digraph* const dg)
 
 
 bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
-                              const uint64_t arcs_per_vertex)
+                              const iscc_Arci arcs_per_vertex)
 {
 	if (!iscc_is_valid_digraph(dg)) return false;
 
@@ -117,7 +117,7 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 
 
 scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
-                                       const uint64_t max_arcs,
+                                       const uintmax_t max_arcs,
                                        const iscc_Arci tail_ptr[const static vertices + 1],
                                        const iscc_Dpid head[const static max_arcs],
                                        iscc_Digraph* const out_dg)
@@ -148,8 +148,8 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 	assert(out_dg != NULL);
 
 	size_t vertices = 0;
-	size_t all_arcs = 0;
-	size_t max_arcs = 0;
+	uintmax_t all_arcs = 0;
+	uintmax_t max_arcs = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
 		if (dg_str[c] == '#' || dg_str[c] == '.') ++all_arcs;
@@ -195,7 +195,7 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
 	if (in_dg->vertices == 0) return iscc_empty_digraph(0, 0, out_dg);
 
 	const size_t num_vertices = in_dg->vertices;
-	const size_t num_arcs = in_dg->tail_ptr[in_dg->vertices];
+	const uintmax_t num_arcs = in_dg->tail_ptr[in_dg->vertices];
 
 	if ((ec = iscc_init_digraph(num_vertices, num_arcs, out_dg)) != SCC_ER_OK) return ec;
 

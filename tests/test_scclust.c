@@ -474,7 +474,7 @@ void scc_ut_get_clustering_info(void** state)
 		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
 	};
 
-	uint64_t out_num_data_points, out_num_clusters;
+	uintmax_t out_num_data_points, out_num_clusters;
 
 	scc_ErrorCode ec1 = scc_get_clustering_info(&in_cl, NULL, NULL);
 	assert_int_equal(ec1, SCC_ER_OK);

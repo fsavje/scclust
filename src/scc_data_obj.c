@@ -45,8 +45,8 @@ void scc_free_data_set_object(scc_DataSetObject** const out_data_set_object)
 	}
 }
 
-scc_ErrorCode scc_get_data_set_object(const uint64_t num_data_points,
-                                      const uint64_t num_dimensions,
+scc_ErrorCode scc_get_data_set_object(const uintmax_t num_data_points,
+                                      const uintmax_t num_dimensions,
                                       const size_t len_data_matrix,
                                       double data_matrix[const],
                                       const bool deep_matrix_copy,

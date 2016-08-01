@@ -63,7 +63,7 @@ static scc_ErrorCode iscc_make_nng(void* data_set_object,
                                    bool radius_search,
                                    double radius,
                                    bool accept_partial,
-                                   uint64_t max_arcs,
+                                   uintmax_t max_arcs,
                                    iscc_Digraph* out_nng);
 
 static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_search_object,
@@ -74,7 +74,7 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_se
                                                       bool radius_search,
                                                       double radius,
                                                       bool accept_partial,
-                                                      uint64_t max_arcs,
+                                                      uintmax_t max_arcs,
                                                       iscc_Digraph* out_nng);
 
 static inline void iscc_ensure_self_match(iscc_Digraph* nng,
@@ -618,7 +618,7 @@ static scc_ErrorCode iscc_make_nng(void* const data_set_object,
                                    const bool radius_search,
                                    const double radius,
                                    const bool accept_partial,
-                                   const uint64_t max_arcs,
+                                   const uintmax_t max_arcs,
                                    iscc_Digraph* const out_nng)
 {
 	assert(iscc_check_data_set_object(data_set_object, len_query_indicators));
@@ -680,7 +680,7 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
                                                       const bool radius_search,
                                                       const double radius,
                                                       const bool accept_partial,
-                                                      const uint64_t max_arcs,
+                                                      const uintmax_t max_arcs,
                                                       iscc_Digraph* const out_nng)
 {
 	assert(nn_search_object != NULL);

@@ -57,7 +57,7 @@ void scc_free_clustering(scc_Clustering** const clustering)
 }
 
 
-scc_ErrorCode scc_init_empty_clustering(const uint64_t num_data_points,
+scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
                                         scc_Clabel external_cluster_labels[const],
                                         scc_Clustering** const out_clustering)
 {
@@ -89,8 +89,8 @@ scc_ErrorCode scc_init_empty_clustering(const uint64_t num_data_points,
 }
 
 
-scc_ErrorCode scc_init_existing_clustering(const uint64_t num_data_points,
-                                           const uint64_t num_clusters,
+scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
+                                           const uintmax_t num_clusters,
                                            scc_Clabel current_cluster_labels[const],
                                            const bool deep_label_copy,
                                            scc_Clustering** const out_clustering)
@@ -192,7 +192,7 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 
 scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
                                    const uint32_t size_constraint,
-                                   const uint64_t num_types,
+                                   const uintmax_t num_types,
                                    const uint32_t type_size_constraints[const],
                                    const size_t len_type_labels,
                                    const scc_TypeLabel type_labels[const],
@@ -272,8 +272,8 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
-                                      uint64_t* const out_num_data_points,
-                                      uint64_t* const out_num_clusters)
+                                      uintmax_t* const out_num_data_points,
+                                      uintmax_t* const out_num_clusters)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	

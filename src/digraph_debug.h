@@ -72,7 +72,7 @@ bool iscc_is_empty_digraph(const iscc_Digraph* dg);
  *  \return \c true if \p dg is balanced, otherwise \c false.
  */
 bool iscc_is_balanced_digraph(const iscc_Digraph* dg,
-                              uint64_t arcs_per_vertex);
+                              iscc_Arci arcs_per_vertex);
 
 /** Checks whether two digraphs are logically identical.
  *
@@ -100,7 +100,7 @@ bool iscc_digraphs_equal(const iscc_Digraph* dg_a,
  *  \param[out] out_dg the constructed scc_Digraph.
  */
 scc_ErrorCode iscc_digraph_from_pieces(size_t vertices,
-                                       uint64_t max_arcs,
+                                       uintmax_t max_arcs,
                                        const iscc_Arci tail_ptr[static vertices + 1],
                                        const iscc_Dpid head[static max_arcs],
                                        iscc_Digraph* out_dg);
