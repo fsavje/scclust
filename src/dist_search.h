@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "config.h"
+#include "scclust_int.h"
 
 #ifdef __cplusplus
 extern "C" {

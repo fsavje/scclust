@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
-#include "../src/config.h"
+#include "../src/scclust_int.h"
 
 
 void scc_ut_do_union_and_delete(void** state)

@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "config.h"
 #include "error.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

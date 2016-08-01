@@ -23,8 +23,8 @@
 #include "../src/digraph_debug.h"
 
 #include <stddef.h>
-#include "../src/config.h"
 #include "../src/digraph_core.h"
+#include "../src/scclust_int.h"
 
 void scc_ut_is_valid_digraph(void** state)
 {

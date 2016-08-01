@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "../src/config.h"
+#include "../src/scclust_int.h"
 
 // ISCC_DPID_MAX should be UINT32_MAX
 // ISCC_ARCI_MAX should be UINT32_MAX

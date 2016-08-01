@@ -26,9 +26,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "config.h"
 #include "../include/scc_data_obj.h"
 #include "scc_data_obj_int.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

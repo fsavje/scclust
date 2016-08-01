@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/scclust.h"
-#include "config.h"
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "dist_search.h"

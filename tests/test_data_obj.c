@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "../src/config.h"
 #include "../src/scc_data_obj_int.h"
+#include "../src/scclust_int.h"
 
 // ISCC_DPID_MAX should be UINT32_MAX
 // SIZE_MAX is redefined to (UINT32_MAX - 10) by test_suite.h

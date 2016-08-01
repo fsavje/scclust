@@ -25,10 +25,10 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "config.h"
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "error.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../include/scclust.h"
-#include "config.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

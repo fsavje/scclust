@@ -25,9 +25,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "config.h"
 #include "digraph_core.h"
 #include "error.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

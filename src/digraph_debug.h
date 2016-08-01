@@ -32,8 +32,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "config.h"
 #include "digraph_core.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================

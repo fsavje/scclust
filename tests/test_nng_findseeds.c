@@ -23,9 +23,9 @@
 
 #include <stddef.h>
 #include "../include/scclust.h"
-#include "../src/config.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
+#include "../src/scclust_int.h"
 
 #ifdef SCC_STABLE_CLUSTERING
     #error Please run this test without the SCC_STABLE_CLUSTERING flag

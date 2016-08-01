@@ -27,9 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/scclust.h"
-#include "config.h"
 #include "error.h"
 #include "scc_data_obj_int.h"
+#include "scclust_int.h"
 
 
 // ==============================================================================
