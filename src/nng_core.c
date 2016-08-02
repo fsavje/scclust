@@ -41,7 +41,6 @@
 
 typedef struct iscc_TypeCount iscc_TypeCount;
 struct iscc_TypeCount {
-	size_t num_queries;
 	uint32_t sum_type_constraints;
 	size_t* type_group_size;
 	iscc_Dpid* point_store;
@@ -86,7 +85,6 @@ static scc_ErrorCode iscc_type_count(size_t num_data_points,
                                      uint_fast16_t num_types,
                                      const uint32_t type_size_constraints[static num_types],
                                      const scc_TypeLabel type_labels[static num_data_points],
-                                     const bool main_data_points[],
                                      iscc_TypeCount* out_type_result);
 
 static scc_ErrorCode iscc_assign_seeds_and_neighbors(scc_Clustering* clustering,
@@ -193,7 +191,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 
 	bool* seedable;
 	const bool* seedable_const;
-
 	if (radius_constraint) {
 		seedable = malloc(sizeof(bool[num_data_points]));
 		if (seedable == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -215,6 +212,16 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		free(seedable);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
+	
+	size_t num_queries;
+	if (main_data_points == NULL) {
+		num_queries = num_data_points;
+	} else {
+		num_queries = 0;
+		for (size_t i = 0; i < num_data_points; ++i) {
+			num_queries += main_data_points[i];
+		}
+	}
 
 	scc_ErrorCode ec;
 	iscc_TypeCount tc;
@@ -223,7 +230,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	                          num_types,
 	                          type_size_constraints,
 	                          type_labels,
-	                          main_data_points,
 	                          &tc)) != SCC_ER_OK) {
 		free(seedable);
 		free(nng_by_type);
@@ -243,7 +249,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 			                        radius_constraint,
 			                        radius,
 			                        false,
-			                        (type_size_constraints[i] * tc.num_queries),
+			                        (type_size_constraints[i] * num_queries),
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
@@ -289,7 +295,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		                        radius_constraint,
 		                        radius,
 		                        false,
-		                        (size_constraint * tc.num_queries),
+		                        (size_constraint * num_queries),
 		                        &nng_sum[1])) != SCC_ER_OK) {
 			free(seedable);
 			iscc_free_digraph(&nng_sum[0]);
@@ -749,7 +755,6 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
                                      const uint_fast16_t num_types,
                                      const uint32_t type_size_constraints[const static num_types],
                                      const scc_TypeLabel type_labels[const static num_data_points],
-                                     const bool main_data_points[const],
                                      iscc_TypeCount* const out_type_result)
 {
 	assert(num_data_points > 1);
@@ -761,7 +766,6 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	assert(out_type_result != NULL);
 
 	*out_type_result = (iscc_TypeCount) {
-		.num_queries = 0,
 		.sum_type_constraints = 0,
 		.type_group_size = calloc(num_types, sizeof(size_t)),
 		.point_store = malloc(sizeof(iscc_Dpid[num_data_points])),
@@ -775,16 +779,8 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	if (main_data_points == NULL) {
-		out_type_result->num_queries = num_data_points;
-		for (size_t i = 0; i < num_data_points; ++i) {
-			++out_type_result->type_group_size[type_labels[i]];
-		}
-	} else {
-		for (size_t i = 0; i < num_data_points; ++i) {
-			out_type_result->num_queries += main_data_points[i];
-			++out_type_result->type_group_size[type_labels[i]];
-		}
+	for (size_t i = 0; i < num_data_points; ++i) {
+		++out_type_result->type_group_size[type_labels[i]];
 	}
 
 	for (uint_fast16_t i = 0; i < num_types; ++i) {
