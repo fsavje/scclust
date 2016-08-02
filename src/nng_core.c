@@ -36,7 +36,7 @@
 
 
 // ==============================================================================
-// Internal structs
+// Internal structs & variables
 // ==============================================================================
 
 typedef struct iscc_TypeCount iscc_TypeCount;
@@ -46,6 +46,9 @@ struct iscc_TypeCount {
 	iscc_Dpid* point_store;
 	iscc_Dpid** type_groups;
 };
+
+
+static const size_t ISCC_ESTIMATE_AVG_MAX_SAMPLE = 1000;
 
 
 // ==============================================================================
@@ -212,7 +215,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		free(seedable);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
-	
+
 	size_t num_queries;
 	if (main_data_points == NULL) {
 		num_queries = num_data_points;
@@ -870,41 +873,58 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
-	assert(size_constraint > 0);
+	assert(size_constraint >= 2);
+	assert(out_avg_seed_dist != NULL);
 
-	const size_t to_sample = (seed_result->count > 1000) ? 1000 : seed_result->count;
+	const size_t to_sample = (seed_result->count > ISCC_ESTIMATE_AVG_MAX_SAMPLE) ? ISCC_ESTIMATE_AVG_MAX_SAMPLE : seed_result->count;
 	const size_t step = ((seed_result->count - 1) / to_sample) + 1;
 
 	#ifndef NDEBUG
 		size_t dbg_count_seeds = 0;
+		for (size_t s = 0; s < seed_result->count; s += step) {
+			++dbg_count_seeds;
+		}
+		assert(dbg_count_seeds == to_sample);
 	#endif
 
 	double sum_dist = 0.0;
-	const uint32_t num_neighbors = size_constraint - 1;
-	double* const output_dists = malloc(sizeof(double[num_neighbors]));
+	double* const dist_scratch = malloc(sizeof(double[size_constraint]));
+	if (dist_scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
 	for (size_t s = 0; s < seed_result->count; s += step) {
-		assert((nng->tail_ptr[s] + num_neighbors) == nng->tail_ptr[s + 1]);
+		const iscc_Dpid seed = seed_result->seeds[s];
+		const size_t num_neighbors = (nng->tail_ptr[seed + 1] - nng->tail_ptr[seed]);
+		const iscc_Dpid* const neighbors = nng->head + nng->tail_ptr[seed];
+
+		// Either zero or one self-loops
+		assert((num_neighbors == size_constraint) || 
+		       (num_neighbors == size_constraint - 1));
+
 		if (!iscc_get_dist_rows(data_set_object,
 		                        1,
-		                        (seed_result->seeds + s),
+		                        &seed,
 		                        num_neighbors,
-		                        nng->head + nng->tail_ptr[s],
-		                        output_dists)) {
-			free(output_dists);
+		                        neighbors,
+		                        dist_scratch)) {
+			free(dist_scratch);
 			return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 		}
 
-		for (size_t d = 0; d < num_neighbors; ++d) {
-			sum_dist += output_dists[d];
+		double tmp_dist = 0.0;
+		size_t num_non_self_loops = 0;
+		for (size_t i = 0; i < num_neighbors; ++i) {
+			if (neighbors[i] != seed) {
+				tmp_dist += dist_scratch[i];
+				++num_non_self_loops;
+			}
 		}
-
-		#ifndef NDEBUG
-			++dbg_count_seeds;
-		#endif
+		assert((num_non_self_loops == size_constraint) || 
+		       (num_non_self_loops == size_constraint - 1));
+		assert(num_non_self_loops > 0);
+		sum_dist += tmp_dist / ((double) num_non_self_loops);
 	}
 
-	free(output_dists);
-	assert(dbg_count_seeds == to_sample);
+	free(dist_scratch);
 
 	*out_avg_seed_dist = sum_dist / ((double) to_sample);
 
