@@ -94,6 +94,29 @@ static const iscc_Digraph ISCC_NULL_DIGRAPH = { 0, 0, NULL, NULL };
 // Function prototypes
 // ==============================================================================
 
+/** Destructor for digraphs.
+ *
+ *  Frees the memory allocated by the inputted digraph and writes the null digraph to it.
+ *
+ *  \param[in,out] dg digraph to destroy. When #scc_free_digraph returns, \p dg is set to #SCC_NULL_DIGRAPH.
+ */
+void iscc_free_digraph(iscc_Digraph* dg);
+
+/** Checks whether provided digraph is initialized.
+ *
+ *  This function returns \c true if \p dg is initialized. That is, scc_Digraph::tail_ptr
+ *  and scc_Digraph::head are allocated. If scc_Digraph::max_arcs is zero, it checks so
+ *  scc_Digraph::head is \c NULL.
+ *
+ *  \param[in] dg digraph to check.
+ *
+ *  \return \c true if \p dg is correctly initialized, otherwise \c false.
+ *
+ *  \note This function does not check whether \p dg is a valid digraph, that is whether
+ *        the information is sound.
+ */
+bool iscc_digraph_is_initialized(const iscc_Digraph* dg);
+
 /** Generic constructor for digraphs.
  *
  *  Initializes and allocates memory for specified digraph. The memory spaces
@@ -120,29 +143,6 @@ scc_ErrorCode iscc_init_digraph(size_t vertices,
 scc_ErrorCode iscc_empty_digraph(size_t vertices,
                                  uintmax_t max_arcs,
                                  iscc_Digraph* out_dg);
-
-/** Checks whether provided digraph is initialized.
- *
- *  This function returns \c true if \p dg is initialized. That is, scc_Digraph::tail_ptr
- *  and scc_Digraph::head are allocated. If scc_Digraph::max_arcs is zero, it checks so
- *  scc_Digraph::head is \c NULL.
- *
- *  \param[in] dg digraph to check.
- *
- *  \return \c true if \p dg is correctly initialized, otherwise \c false.
- *
- *  \note This function does not check whether \p dg is a valid digraph, that is whether
- *        the information is sound.
- */
-bool iscc_digraph_is_initialized(const iscc_Digraph* dg);
-
-/** Destructor for digraphs.
- *
- *  Frees the memory allocated by the inputted digraph and writes the null digraph to it.
- *
- *  \param[in,out] dg digraph to destroy. When #scc_free_digraph returns, \p dg is set to #SCC_NULL_DIGRAPH.
- */
-void iscc_free_digraph(iscc_Digraph* dg);
 
 /** Reallocate arc memory.
  *

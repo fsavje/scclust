@@ -34,6 +34,26 @@
 // External function implementations
 // ============================================================================== 
 
+void iscc_free_digraph(iscc_Digraph* const dg)
+{
+	if (dg != NULL) {
+		free(dg->head);
+		free(dg->tail_ptr);
+		*dg = ISCC_NULL_DIGRAPH;
+	}
+}
+
+
+bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
+{
+	if ((dg == NULL) || (dg->tail_ptr == NULL)) return false;
+	if ((dg->vertices > ISCC_DPID_MAX) || (dg->max_arcs > ISCC_ARCI_MAX)) return false;
+	if ((dg->max_arcs == 0) && (dg->head != NULL)) return false;
+	if ((dg->max_arcs > 0) && (dg->head == NULL)) return false;
+	return true;
+}
+
+
 scc_ErrorCode iscc_init_digraph(const size_t vertices,
                                 const uintmax_t max_arcs,
                                 iscc_Digraph* const out_dg)
@@ -95,26 +115,6 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
 	assert(iscc_digraph_is_initialized(out_dg));
 
 	return iscc_no_error();
-}
-
-
-bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
-{
-	if ((dg == NULL) || (dg->tail_ptr == NULL)) return false;
-	if ((dg->vertices > ISCC_DPID_MAX) || (dg->max_arcs > ISCC_ARCI_MAX)) return false;
-	if ((dg->max_arcs == 0) && (dg->head != NULL)) return false;
-	if ((dg->max_arcs > 0) && (dg->head == NULL)) return false;
-	return true;
-}
-
-
-void iscc_free_digraph(iscc_Digraph* const dg)
-{
-	if (dg != NULL) {
-		free(dg->head);
-		free(dg->tail_ptr);
-		*dg = ISCC_NULL_DIGRAPH;
-	}
 }
 
 
