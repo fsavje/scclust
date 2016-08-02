@@ -107,7 +107,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* clustering,
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* clustering,
                                               iscc_NNSearchObject* nn_search_object,
                                               size_t num_to_assign,
-                                              bool to_assign[restrict static clustering->num_data_points],
+                                              const bool to_assign[restrict static clustering->num_data_points],
                                               bool radius_constraint,
                                               double radius);
 
@@ -947,6 +947,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 	size_t num_assigned_by_nng = 0;
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		if (scratch[i]) {
+			assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
 			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[i + 1];
 			for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[i];
 			        v_arc != v_arc_stop; ++v_arc) {
@@ -967,7 +968,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
                                               iscc_NNSearchObject* const nn_search_object,
                                               const size_t num_to_assign,
-                                              bool to_assign[restrict const static clustering->num_data_points],
+                                              const bool to_assign[restrict const static clustering->num_data_points],
                                               const bool radius_constraint,
                                               const double radius)
 {
@@ -982,22 +983,35 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
 	                                           clustering->num_data_points,
 	                                           to_assign,
-	                                           to_assign,
+	                                           NULL,
 	                                           1,
 	                                           radius_constraint,
 	                                           radius,
-	                                           false,
+	                                           true,
 	                                           num_to_assign,
 	                                           &priority_graph)) != SCC_ER_OK) {
 		return ec;
 	}
 
-	for (size_t i = 0; i < clustering->num_data_points; ++i) {
-		if (to_assign[i]) {
-			assert(priority_graph.tail_ptr[i] != priority_graph.tail_ptr[i + 1]);
-			assert(!to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
-			assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
-			clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
+	if (radius_constraint) {
+		for (size_t i = 0; i < clustering->num_data_points; ++i) {
+			if (to_assign[i] && (priority_graph.tail_ptr[i] < priority_graph.tail_ptr[i + 1])) {
+				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
+				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
+				assert(!to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
+				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
+				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
+			}
+		}
+	} else {
+		for (size_t i = 0; i < clustering->num_data_points; ++i) {
+			if (to_assign[i]) {
+				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
+				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
+				assert(!to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
+				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
+				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
+			}
 		}
 	}
 
