@@ -268,7 +268,12 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	free(tc.type_groups);
 
 	if (ec == SCC_ER_OK) {
-		ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, seedable_const, out_nng);
+		if (size_constraint > tc.sum_type_constraints) {
+			// If general size constaint (besides type constraints), we need to keep self-loops
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, seedable_const, true, out_nng);
+		} else {
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, seedable_const, false, out_nng);
+		}
 	}
 
 	for (uint_fast16_t i = 0; i < num_non_zero_type_constraints; ++i) {
@@ -308,7 +313,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		ec = iscc_digraph_difference(&nng_sum[1], &nng_sum[0], additional_nn_needed);
 
 		if (ec == SCC_ER_OK) {
-			ec = iscc_digraph_union_and_delete(2, nng_sum, seedable_const, out_nng);
+			ec = iscc_digraph_union_and_delete(2, nng_sum, seedable_const, false, out_nng);
 		}
 
 		iscc_free_digraph(&nng_sum[0]);
