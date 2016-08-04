@@ -94,6 +94,7 @@ scc_ErrorCode iscc_delete_loops(iscc_Digraph* dg);
 scc_ErrorCode iscc_digraph_union_and_delete(uint_fast16_t num_in_dgs,
                                             const iscc_Digraph in_dgs[static num_in_dgs],
                                             const bool tails_to_keep[],
+                                            bool keep_self_loops,
                                             iscc_Digraph* out_dg);
 
 scc_ErrorCode iscc_digraph_difference(iscc_Digraph* minuend_dg,

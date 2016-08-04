@@ -431,7 +431,7 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
 	 * by calling `iscc_digraph_union_and_delete` with `not_excluded`.
 	 */
 	const iscc_Digraph nng_sum[2] = { *nng, nng_nng_transpose };
-	ec = iscc_digraph_union_and_delete(2, nng_sum, not_excluded, out_dg);
+	ec = iscc_digraph_union_and_delete(2, nng_sum, not_excluded, false, out_dg);
 	iscc_free_digraph(&nng_nng_transpose);
 	if (ec != SCC_ER_OK) return ec;
 

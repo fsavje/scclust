@@ -38,6 +38,7 @@ static inline uintmax_t iscc_do_union_and_delete(uint_fast16_t num_dgs,
                                                  const iscc_Digraph dgs[restrict static num_dgs],
                                                  iscc_Dpid row_markers[restrict],
                                                  const bool tails_to_keep[restrict],
+                                                 bool keep_self_loops,
                                                  bool write,
                                                  iscc_Arci out_tail_ptr[restrict],
                                                  iscc_Dpid out_head[restrict]);
@@ -83,6 +84,7 @@ scc_ErrorCode iscc_delete_loops(iscc_Digraph* const dg)
 scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
                                             const iscc_Digraph in_dgs[const static num_in_dgs],
                                             const bool tails_to_keep[const],
+                                            const bool keep_self_loops,
                                             iscc_Digraph* const out_dg)
 {
 	assert(num_in_dgs > 0);
@@ -112,7 +114,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 
 		out_arcs_write = iscc_do_union_and_delete(num_in_dgs, in_dgs,
 		                                          row_markers, tails_to_keep,
-		                                          false, NULL, NULL);
+		                                          keep_self_loops, false, NULL, NULL);
 
 		// Try again. If fail, give up.
 		if ((ec = iscc_init_digraph(vertices, out_arcs_write, out_dg)) != SCC_ER_OK) {
@@ -123,7 +125,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 
 	out_arcs_write = iscc_do_union_and_delete(num_in_dgs, in_dgs,
 	                                          row_markers, tails_to_keep,
-	                                          true, out_dg->tail_ptr, out_dg->head);
+	                                          keep_self_loops, true, out_dg->tail_ptr, out_dg->head);
 
 	free(row_markers);
 
@@ -287,6 +289,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
                                                  const iscc_Digraph dgs[restrict const static num_dgs],
                                                  iscc_Dpid row_markers[restrict const],
                                                  const bool tails_to_keep[restrict const],
+                                                 const bool keep_self_loops,
                                                  const bool write,
                                                  iscc_Arci out_tail_ptr[restrict const],
                                                  iscc_Dpid out_head[restrict const])
@@ -307,7 +310,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 
 	if ((tails_to_keep == NULL) && !write) {
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
-			row_markers[v] = v;
+			if (!keep_self_loops) row_markers[v] = v;
 			for (uint_fast16_t i = 0; i < num_dgs; ++i) {
 				const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
 				for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
@@ -323,7 +326,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	} else if ((tails_to_keep != NULL) && !write) {
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
 			if (tails_to_keep[v]) {
-				row_markers[v] = v;
+				if (!keep_self_loops) row_markers[v] = v;
 				for (uint_fast16_t i = 0; i < num_dgs; ++i) {
 					const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
 					for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
@@ -342,7 +345,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 		assert(out_head != NULL);
 		out_tail_ptr[0] = 0;
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
-			row_markers[v] = v;
+			if (!keep_self_loops) row_markers[v] = v;
 			for (uint_fast16_t i = 0; i < num_dgs; ++i) {
 				const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
 				for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
@@ -363,7 +366,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 		out_tail_ptr[0] = 0;
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
 			if (tails_to_keep[v]) {
-				row_markers[v] = v;
+				if (!keep_self_loops) row_markers[v] = v;
 				for (uint_fast16_t i = 0; i < num_dgs; ++i) {
 					const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
 					for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
