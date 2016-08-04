@@ -407,7 +407,7 @@ void scc_ut_digraph_difference(void** state)
 	iscc_Digraph subtrahend_dg2;
 	iscc_digraph_from_string("...##/##..#/.#.#./#.#.#/..#../", &subtrahend_dg2);
 	iscc_Digraph ref_dg2;
-	iscc_digraph_from_string(".##../..##./#...#/.#.../##.#./", &ref_dg2);
+	iscc_digraph_from_string("###../..##./#.#.#/.#.#./##.##/", &ref_dg2);
 	scc_ErrorCode ec2 = iscc_digraph_difference(&minuend_dg2, &subtrahend_dg2, 5);
 	assert_equal_digraph(&minuend_dg2, &ref_dg2);
 	assert_int_equal(ec2, SCC_ER_OK);

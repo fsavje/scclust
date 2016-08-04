@@ -160,7 +160,6 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 	assert(minuend_dg->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) minuend_dg->vertices; // If `iscc_Dpid` is signed
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		row_markers[v] = v;
 		const iscc_Dpid* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
 		for (const iscc_Dpid* v_arc_s = subtrahend_dg->head + subtrahend_dg->tail_ptr[v];
 		        v_arc_s != v_arc_s_stop; ++v_arc_s) {
