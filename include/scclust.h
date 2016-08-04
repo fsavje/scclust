@@ -292,11 +292,6 @@ scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
                                               uint32_t size_constraint);
 
 
-// ==============================================================================
-// One-dimensional clustering
-// ==============================================================================
-
-
 #ifdef __cplusplus
 }
 #endif
