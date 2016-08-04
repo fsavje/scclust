@@ -417,7 +417,7 @@ void scc_ut_digraph_difference(void** state)
 	iscc_Digraph subtrahend_dg2b;
 	iscc_digraph_from_string("...##/##..#/.#.#./#.#.#/..#../", &subtrahend_dg2b);
 	iscc_Digraph ref_dg2b;
-	iscc_digraph_from_string(".##../..##./#...#/.#.../##.../", &ref_dg2b);
+	iscc_digraph_from_string("##.../..##./#.#../.#.#./##.../", &ref_dg2b);
 	scc_ErrorCode ec2b = iscc_digraph_difference(&minuend_dg2b, &subtrahend_dg2b, 2);
 	assert_equal_digraph(&minuend_dg2b, &ref_dg2b);
 	assert_int_equal(ec2b, SCC_ER_OK);
@@ -437,7 +437,7 @@ void scc_ut_digraph_difference(void** state)
 	iscc_Digraph subtrahend_dg4;
 	iscc_digraph_from_string("...../...../...../...../...../", &subtrahend_dg4);
 	iscc_Digraph ref_dg4;
-	iscc_digraph_from_string("..#../#.##./#..../##.../##.../", &ref_dg4);
+	iscc_digraph_from_string("#.#../#.##./#.#../##.../##..#/", &ref_dg4);
 	scc_ErrorCode ec4 = iscc_digraph_difference(&minuend_dg4, &subtrahend_dg4, 5);
 	assert_equal_digraph(&minuend_dg4, &ref_dg4);
 	assert_int_equal(ec4, SCC_ER_OK);
@@ -447,7 +447,7 @@ void scc_ut_digraph_difference(void** state)
 	iscc_Digraph subtrahend_dg5;
 	iscc_digraph_from_string("...##/##..#/.#.#./#.#.#/..#../", &subtrahend_dg5);
 	iscc_Digraph ref_dg5;
-	iscc_digraph_from_string("..#../..##./#..../.#.../##.../", &ref_dg5);
+	iscc_digraph_from_string("#.#../..##./#.#../.#.../##..#/", &ref_dg5);
 	scc_ErrorCode ec5 = iscc_digraph_difference(&minuend_dg5, &subtrahend_dg5, 5);
 	assert_equal_digraph(&minuend_dg5, &ref_dg5);
 	assert_int_equal(ec5, SCC_ER_OK);
@@ -457,7 +457,7 @@ void scc_ut_digraph_difference(void** state)
 	iscc_Digraph subtrahend_dg5b;
 	iscc_digraph_from_string("...##/##..#/.#.#./#.#.#/..#../", &subtrahend_dg5b);
 	iscc_Digraph ref_dg5b;
-	iscc_digraph_from_string("..#../..#../#..../.#.../#..../", &ref_dg5b);
+	iscc_digraph_from_string("#..../..#../#..../.#.../#..../", &ref_dg5b);
 	scc_ErrorCode ec5b = iscc_digraph_difference(&minuend_dg5b, &subtrahend_dg5b, 1);
 	assert_equal_digraph(&minuend_dg5b, &ref_dg5b);
 	assert_int_equal(ec5b, SCC_ER_OK);
@@ -688,6 +688,7 @@ int main(void)
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_delete_loops),
 		cmocka_unit_test(scc_ut_digraph_union_and_delete),
+		cmocka_unit_test(scc_ut_digraph_union_and_delete_keep_loops),
 		cmocka_unit_test(scc_ut_digraph_difference),
 		cmocka_unit_test(scc_ut_digraph_transpose),
 		cmocka_unit_test(scc_ut_adjacency_product),
