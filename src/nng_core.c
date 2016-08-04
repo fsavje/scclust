@@ -808,6 +808,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	}
 
 	for (size_t i = 0; i < num_data_points; ++i) {
+		assert(type_labels[i] < (scc_TypeLabel) num_types);
 		++out_type_result->type_group_size[type_labels[i]];
 	}
 
