@@ -90,9 +90,9 @@ static scc_ErrorCode iscc_type_count(size_t num_data_points,
                                      const scc_TypeLabel type_labels[static num_data_points],
                                      iscc_TypeCount* out_type_result);
 
-static scc_ErrorCode iscc_assign_seeds_and_neighbors(scc_Clustering* clustering,
-                                                     const iscc_SeedResult* seed_result,
-                                                     iscc_Digraph* nng);
+static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* clustering,
+                                              const iscc_SeedResult* seed_result,
+                                              iscc_Digraph* nng);
 
 scc_ErrorCode iscc_estimate_avg_seed_dist(void* data_set_object,
                                           const iscc_SeedResult* seed_result,
@@ -819,21 +819,15 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 }
 
 
-static scc_ErrorCode iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
-                                                     const iscc_SeedResult* const seed_result,
-                                                     iscc_Digraph* const nng)
+static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
+                                              const iscc_SeedResult* const seed_result,
+                                              iscc_Digraph* const nng)
 {
 	assert(iscc_check_input_clustering(clustering));
+	assert(clustering->cluster_label != NULL);
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
-
-	// Initialize clustering
-	if (clustering->cluster_label == NULL) {
-		clustering->external_labels = false;
-		clustering->cluster_label = malloc(sizeof(scc_Clabel[clustering->num_data_points]));
-		if (clustering->cluster_label == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
-	}
 
 	clustering->num_clusters = seed_result->count;
 
@@ -841,12 +835,13 @@ static scc_ErrorCode iscc_assign_seeds_and_neighbors(scc_Clustering* const clust
 		clustering->cluster_label[i] = SCC_CLABEL_NA;
 	}
 
+	size_t num_assigned = 0;
 	scc_Clabel clabel = 0;
 	const iscc_Dpid* const seed_stop = seed_result->seeds + seed_result->count;
 	for (const iscc_Dpid* seed = seed_result->seeds;
 	        seed != seed_stop; ++seed, ++clabel) {
 		assert(clabel != SCC_CLABEL_NA);
-		assert(clabel <= SCC_CLABEL_MAX);
+		assert(clabel < SCC_CLABEL_MAX);
 		assert(clustering->cluster_label[*seed] == SCC_CLABEL_NA);
 
 		const iscc_Dpid* const s_arc_stop = nng->head + nng->tail_ptr[*seed + 1];
@@ -855,12 +850,14 @@ static scc_ErrorCode iscc_assign_seeds_and_neighbors(scc_Clustering* const clust
 			assert(clustering->cluster_label[*s_arc] == SCC_CLABEL_NA);
 			clustering->cluster_label[*s_arc] = clabel;
 		}
-		clustering->cluster_label[*seed] = clabel; // Assign seed last so `assert` work also in case of self-loops
+		num_assigned += (nng->tail_ptr[*seed + 1] - nng->tail_ptr[*seed]) + // Number of arcs from seed
+		                    (clustering->cluster_label[*seed] == SCC_CLABEL_NA); // In the case of no seed self-loop
+		clustering->cluster_label[*seed] = clabel; // Assign seed last so seed `assert` work also in case of self-loops
 	}
 
 	assert(clabel == (scc_Clabel) clustering->num_clusters);
 
-	return iscc_no_error();
+	return num_assigned;
 }
 
 

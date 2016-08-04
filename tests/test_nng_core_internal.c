@@ -1018,6 +1018,7 @@ void scc_ut_assign_seeds_and_neighbors(void** state)
 {
 	(void) state;
 
+	scc_Clabel external_cluster_labels[10];
 	const scc_Clabel M = SCC_CLABEL_NA;
 
 	iscc_Digraph nng1;
@@ -1032,44 +1033,61 @@ void scc_ut_assign_seeds_and_neighbors(void** state)
 	                         "..... ..###/"
 	                         "....# ...#./"
 	                         "...#. ....#/", &nng1);
-
-	iscc_Dpid fp_seeds[3] = {0, 4, 7};
-	iscc_SeedResult sr = {
+	iscc_Dpid fp_seeds1[3] = {0, 4, 7};
+	iscc_SeedResult sr1 = {
 		.capacity = 10,
 		.count = 3,
-		.seeds = fp_seeds,
+		.seeds = fp_seeds1,
 	};
-
 	scc_Clustering* cl1;
-	assert_int_equal(scc_init_empty_clustering(10, NULL, &cl1), SCC_ER_OK);
+	assert_int_equal(scc_init_empty_clustering(10, external_cluster_labels, &cl1), SCC_ER_OK);
 	const scc_Clabel ref_cluster_label1[10] = { 0, 0, 1, 1, 1, 0, M, 2, 2, 2 };
-	scc_ErrorCode ec1 = iscc_assign_seeds_and_neighbors(cl1, &sr, &nng1);
-	assert_int_equal(ec1, SCC_ER_OK);
+	size_t num_assigned1 = iscc_assign_seeds_and_neighbors(cl1, &sr1, &nng1);
+	assert_int_equal(num_assigned1, 9);
 	assert_int_equal(cl1->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl1->num_data_points, 10);
 	assert_int_equal(cl1->num_clusters, 3);
 	assert_non_null(cl1->cluster_label);
+	assert_ptr_equal(cl1->cluster_label, external_cluster_labels);
+	assert_memory_equal(external_cluster_labels, ref_cluster_label1, 10 * sizeof(scc_Clabel));
 	assert_memory_equal(cl1->cluster_label, ref_cluster_label1, 10 * sizeof(scc_Clabel));
-	assert_false(cl1->external_labels);
+	assert_true(cl1->external_labels);
 	scc_free_clustering(&cl1);
+	assert_free_digraph(&nng1);
 
-	scc_Clabel external_cluster_labels[10];
+	iscc_Digraph nng2;
+	iscc_digraph_from_string(".#.#. #..../"
+	                         "..#.. ...#./"
+	                         "..#.. .#.../"
+	                         ".#... #..#./"
+	                         "..##. ...../"
+
+	                         "...#. .#.../"
+	                         "....# ...#./"
+	                         "..... ..###/"
+	                         "....# ...#./"
+	                         "...#. ....#/", &nng2);
+	iscc_Dpid fp_seeds2[3] = {0, 7};
+	iscc_SeedResult sr2 = {
+		.capacity = 10,
+		.count = 2,
+		.seeds = fp_seeds2,
+	};
 	scc_Clustering* cl2;
 	assert_int_equal(scc_init_empty_clustering(10, external_cluster_labels, &cl2), SCC_ER_OK);
-	const scc_Clabel ref_cluster_label2[10] = { 0, 0, 1, 1, 1, 0, M, 2, 2, 2 };
-	scc_ErrorCode ec2 = iscc_assign_seeds_and_neighbors(cl2, &sr, &nng1);
-	assert_int_equal(ec2, SCC_ER_OK);
+	const scc_Clabel ref_cluster_label2[10] = { 0, 0, M, 0, M, 0, M, 1, 1, 1 };
+	size_t num_assigned2 = iscc_assign_seeds_and_neighbors(cl2, &sr2, &nng2);
+	assert_int_equal(num_assigned2, 7);
 	assert_int_equal(cl2->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl2->num_data_points, 10);
-	assert_int_equal(cl2->num_clusters, 3);
+	assert_int_equal(cl2->num_clusters, 2);
 	assert_non_null(cl2->cluster_label);
 	assert_ptr_equal(cl2->cluster_label, external_cluster_labels);
 	assert_memory_equal(external_cluster_labels, ref_cluster_label2, 10 * sizeof(scc_Clabel));
 	assert_memory_equal(cl2->cluster_label, ref_cluster_label2, 10 * sizeof(scc_Clabel));
 	assert_true(cl2->external_labels);
 	scc_free_clustering(&cl2);
-
-	assert_free_digraph(&nng1);
+	assert_free_digraph(&nng2);
 }
 
 
