@@ -512,7 +512,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		#ifndef NDEBUG
 			size_t dbg_secondary_count = 0;
 			for (size_t i = 0; i < clustering->num_data_points; ++i) {
-				dbg_secondary_count += !main_data_points[i] && (clustering->cluster_label[i] != SCC_CLABEL_NA);
+				dbg_secondary_count += !main_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
 			}
 			assert(total_assigned + num_main_assign + dbg_secondary_count == clustering->num_data_points);
 		#endif
