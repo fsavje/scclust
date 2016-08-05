@@ -18,7 +18,6 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
-#define SCC_DOUBLE_ASSERT
 #include "test_suite.h"
 #include "assert_digraph.h"
 #include "../src/nng_core.c"
@@ -1091,78 +1090,6 @@ void scc_ut_assign_seeds_and_neighbors(void** state)
 }
 
 
-void scc_ut_estimate_avg_seed_dist(void** state)
-{
-	(void) state;
-
-	iscc_Dpid fp_seeds[4] = {0, 4, 7, 12};
-	iscc_SeedResult sr = {
-		.capacity = 10,
-		.count = 4,
-		.seeds = fp_seeds,
-	};
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string(".#... #.... ...../"
-	                         "..#.. ...#. ...#./"
-	                         "..#.. .#... .#.../"
-	                         ".#... #..#. ..#.#/"
-	                         "..##. ..... ...../"
-
-	                         "...#. .#... ....#/"
-	                         "....# ...#. ..#../"
-	                         "..... ..### ...../"
-	                         "....# ...#. .#.../"
-	                         "...#. ....# ...#./"
-
-	                         "...## ...#. #..#./"
-	                         ".##.. .#... .#.../"
-	                         "..... ..... #.##./"
-	                         ".#.#. #..#. ..#../"
-	                         "..#.. ###.. ..##./", &nng1);
-	double out1 = 0.0;
-	scc_ErrorCode ec1 = iscc_estimate_avg_seed_dist(&scc_ut_test_data_small_struct,
-	                                                &sr,
-	                                                &nng1,
-	                                                3,
-	                                                &out1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	const double ref1 = 0.99083651;
-	assert_double_equal(out1, ref1);
-	assert_free_digraph(&nng1);
-
-
-	iscc_Digraph nng2;
-	iscc_digraph_from_string(".#... ##... ...../"
-	                         "..#.. ...#. ...#./"
-	                         "..#.. .#... .#.../"
-	                         ".#... #..#. ..#.#/"
-	                         "..##. ..... ....#/"
-
-	                         "...#. .#... ....#/"
-	                         "....# ...#. ..#../"
-	                         "..... ..### ...../"
-	                         "....# ...#. .#.../"
-	                         "...#. ....# ...#./"
-
-	                         "...## ...#. #..#./"
-	                         ".##.. .#... .#.../"
-	                         "..... ..... #.##./"
-	                         ".#.#. #..#. ..#../"
-	                         "..#.. ###.. ..##./", &nng2);
-	double out2 = 0.0;
-	scc_ErrorCode ec2 = iscc_estimate_avg_seed_dist(&scc_ut_test_data_small_struct,
-	                                                &sr,
-	                                                &nng2,
-	                                                3,
-	                                                &out2);
-	assert_int_equal(ec2, SCC_ER_OK);
-	const double ref2 = 0.8982535896;
-	assert_double_equal(out2, ref2);
-	assert_free_digraph(&nng2);
-}
-
-
 void scc_ut_assign_by_nng(void** state)
 {
 	(void) state;
@@ -1394,7 +1321,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_ensure_self_match),
 		cmocka_unit_test(scc_ut_type_count),
 		cmocka_unit_test(scc_ut_assign_seeds_and_neighbors),
-		cmocka_unit_test(scc_ut_estimate_avg_seed_dist),
 		cmocka_unit_test(scc_ut_assign_by_nng),
 		cmocka_unit_test(scc_ut_assign_by_nn_search),
 	};

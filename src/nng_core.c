@@ -94,12 +94,6 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* clustering,
                                               const iscc_SeedResult* seed_result,
                                               iscc_Digraph* nng);
 
-scc_ErrorCode iscc_estimate_avg_seed_dist(void* data_set_object,
-                                          const iscc_SeedResult* seed_result,
-                                          const iscc_Digraph* nng,
-                                          uint32_t size_constraint,
-                                          double* out_avg_seed_dist);
-
 static size_t iscc_assign_by_nng(scc_Clustering* clustering,
                                  iscc_Digraph* nng,
                                  bool scratch[restrict static clustering->num_data_points]);
@@ -331,41 +325,103 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 }
 
 
+scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
+                                          const iscc_SeedResult* const seed_result,
+                                          const iscc_Digraph* const nng,
+                                          const uint32_t size_constraint,
+                                          double* const out_avg_seed_dist) {
+	assert(iscc_check_data_set_object(data_set_object, nng->vertices));
+	assert(seed_result->count > 0);
+	assert(seed_result->seeds != NULL);
+	assert(iscc_digraph_is_initialized(nng));
+	assert(size_constraint >= 2);
+	assert(out_avg_seed_dist != NULL);
+
+	const size_t to_sample = (seed_result->count > ISCC_ESTIMATE_AVG_MAX_SAMPLE) ? ISCC_ESTIMATE_AVG_MAX_SAMPLE : seed_result->count;
+	const size_t step = ((seed_result->count - 1) / to_sample) + 1;
+
+	#ifndef NDEBUG
+		size_t dbg_count_seeds = 0;
+		for (size_t s = 0; s < seed_result->count; s += step) {
+			++dbg_count_seeds;
+		}
+		assert(dbg_count_seeds == to_sample);
+	#endif
+
+	double sum_dist = 0.0;
+	double* const dist_scratch = malloc(sizeof(double[size_constraint]));
+	if (dist_scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+
+	for (size_t s = 0; s < seed_result->count; s += step) {
+		const iscc_Dpid seed = seed_result->seeds[s];
+		const size_t num_neighbors = (nng->tail_ptr[seed + 1] - nng->tail_ptr[seed]);
+		const iscc_Dpid* const neighbors = nng->head + nng->tail_ptr[seed];
+
+		// Either zero or one self-loops
+		assert((num_neighbors == size_constraint) || 
+		       (num_neighbors == size_constraint - 1));
+
+		if (!iscc_get_dist_rows(data_set_object,
+		                        1,
+		                        &seed,
+		                        num_neighbors,
+		                        neighbors,
+		                        dist_scratch)) {
+			free(dist_scratch);
+			return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
+		}
+
+		double tmp_dist = 0.0;
+		size_t num_non_self_loops = 0;
+		for (size_t i = 0; i < num_neighbors; ++i) {
+			if (neighbors[i] != seed) {
+				tmp_dist += dist_scratch[i];
+				++num_non_self_loops;
+			}
+		}
+		assert((num_non_self_loops == size_constraint) || 
+		       (num_non_self_loops == size_constraint - 1));
+		assert(num_non_self_loops > 0);
+		sum_dist += tmp_dist / ((double) num_non_self_loops);
+	}
+
+	free(dist_scratch);
+
+	*out_avg_seed_dist = sum_dist / ((double) to_sample);
+
+	return iscc_no_error();
+}
+
+
 scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering,
                                                 void* const data_set_object,
                                                 const iscc_SeedResult* const seed_result,
                                                 iscc_Digraph* const nng,
                                                 const bool nng_is_ordered,
-                                                const uint32_t size_constraint,
                                                 scc_UnassignedMethod main_unassigned_method,
-                                                bool main_radius_constraint,
-                                                double main_radius,
+                                                const bool main_radius_constraint,
+                                                const double main_radius,
                                                 const bool main_data_points[const],
                                                 scc_UnassignedMethod secondary_unassigned_method,
-                                                bool secondary_radius_constraint,
-                                                double secondary_radius)
+                                                const bool secondary_radius_constraint,
+                                                const double secondary_radius)
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
-	assert(size_constraint > 0);
-	assert((seed_result->count * size_constraint) <= clustering->num_data_points);
 	assert((main_unassigned_method == SCC_UM_IGNORE) ||
 	       (main_unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
 	       (main_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
-	       (main_unassigned_method == SCC_UM_CLOSEST_SEED) ||
-	       (main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS));
+	       (main_unassigned_method == SCC_UM_CLOSEST_SEED));
 	assert(!main_radius_constraint || (main_radius > 0.0));
 	assert((main_data_points != NULL) || (secondary_unassigned_method == SCC_UM_IGNORE));
 	assert((secondary_unassigned_method == SCC_UM_IGNORE) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
-	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED) ||
-	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS));
+	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED));
 	assert(!secondary_radius_constraint || (secondary_radius > 0.0));
 
-	scc_ErrorCode ec;
 	// Assign seeds and their neighbors
 	const size_t num_assigned_as_seed_or_neighbor = iscc_assign_seeds_and_neighbors(clustering, seed_result, nng);
 	size_t total_assigned = num_assigned_as_seed_or_neighbor;
@@ -376,31 +432,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		return iscc_no_error();
 	}
 
-	// Estimate assign radius if we need to, and modify options
-	if ((main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) || 
-	        (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS)) {
-		double avg_seed_dist;
-		if ((ec = iscc_estimate_avg_seed_dist(data_set_object,
-		                                      seed_result,
-		                                      nng,
-		                                      size_constraint,
-		                                      &avg_seed_dist)) != SCC_ER_OK) {
-			return ec;
-		}
-
-		if (main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) {
-			main_unassigned_method = SCC_UM_CLOSEST_SEED;
-			main_radius_constraint = true;
-			main_radius = avg_seed_dist;
-		}
-		
-		if (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) {
-			secondary_unassigned_method = SCC_UM_CLOSEST_SEED;
-			secondary_radius_constraint = true;
-			secondary_radius = avg_seed_dist;
-		}
-	}
-	
 	// If SCC_UM_CLOSEST_ASSIGNED, construct array with seeds and their neighbors for the nn search object
 	iscc_Dpid* seed_or_neighbor = NULL;
 	if ((main_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
@@ -523,6 +554,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	assert(((secondary_unassigned_method == SCC_UM_IGNORE) && (secondary_assign == NULL)) ||
 	       ((secondary_unassigned_method != SCC_UM_IGNORE) && (secondary_assign != NULL)));
 
+	scc_ErrorCode ec = SCC_ER_OK;
 	// Run assign to closest assigned
 	if ((main_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	        (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED)) {
@@ -876,74 +908,6 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
 	assert(clabel == (scc_Clabel) clustering->num_clusters);
 
 	return num_assigned;
-}
-
-
-scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
-                                          const iscc_SeedResult* const seed_result,
-                                          const iscc_Digraph* const nng,
-                                          const uint32_t size_constraint,
-                                          double* const out_avg_seed_dist) {
-	assert(iscc_check_data_set_object(data_set_object, nng->vertices));
-	assert(seed_result->count > 0);
-	assert(seed_result->seeds != NULL);
-	assert(iscc_digraph_is_initialized(nng));
-	assert(size_constraint >= 2);
-	assert(out_avg_seed_dist != NULL);
-
-	const size_t to_sample = (seed_result->count > ISCC_ESTIMATE_AVG_MAX_SAMPLE) ? ISCC_ESTIMATE_AVG_MAX_SAMPLE : seed_result->count;
-	const size_t step = ((seed_result->count - 1) / to_sample) + 1;
-
-	#ifndef NDEBUG
-		size_t dbg_count_seeds = 0;
-		for (size_t s = 0; s < seed_result->count; s += step) {
-			++dbg_count_seeds;
-		}
-		assert(dbg_count_seeds == to_sample);
-	#endif
-
-	double sum_dist = 0.0;
-	double* const dist_scratch = malloc(sizeof(double[size_constraint]));
-	if (dist_scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
-
-	for (size_t s = 0; s < seed_result->count; s += step) {
-		const iscc_Dpid seed = seed_result->seeds[s];
-		const size_t num_neighbors = (nng->tail_ptr[seed + 1] - nng->tail_ptr[seed]);
-		const iscc_Dpid* const neighbors = nng->head + nng->tail_ptr[seed];
-
-		// Either zero or one self-loops
-		assert((num_neighbors == size_constraint) || 
-		       (num_neighbors == size_constraint - 1));
-
-		if (!iscc_get_dist_rows(data_set_object,
-		                        1,
-		                        &seed,
-		                        num_neighbors,
-		                        neighbors,
-		                        dist_scratch)) {
-			free(dist_scratch);
-			return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
-
-		double tmp_dist = 0.0;
-		size_t num_non_self_loops = 0;
-		for (size_t i = 0; i < num_neighbors; ++i) {
-			if (neighbors[i] != seed) {
-				tmp_dist += dist_scratch[i];
-				++num_non_self_loops;
-			}
-		}
-		assert((num_non_self_loops == size_constraint) || 
-		       (num_non_self_loops == size_constraint - 1));
-		assert(num_non_self_loops > 0);
-		sum_dist += tmp_dist / ((double) num_non_self_loops);
-	}
-
-	free(dist_scratch);
-
-	*out_avg_seed_dist = sum_dist / ((double) to_sample);
-
-	return iscc_no_error();
 }
 
 

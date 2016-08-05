@@ -217,13 +217,13 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
                                                    const bool nng_is_ordered,
                                                    const uint32_t size_constraint,
                                                    const scc_SeedMethod seed_method,
-                                                   const scc_UnassignedMethod main_unassigned_method,
-                                                   const bool main_radius_constraint,
-                                                   const double main_radius,
+                                                   scc_UnassignedMethod main_unassigned_method,
+                                                   bool main_radius_constraint,
+                                                   double main_radius,
                                                    const bool main_data_points[const],
-                                                   const scc_UnassignedMethod secondary_unassigned_method,
-                                                   const bool secondary_radius_constraint,
-                                                   const double secondary_radius)
+                                                   scc_UnassignedMethod secondary_unassigned_method,
+                                                   bool secondary_radius_constraint,
+                                                   double secondary_radius)
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
@@ -253,6 +253,42 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	if ((ec = iscc_find_seeds(nng, seed_method, &seed_result)) != SCC_ER_OK) {
 		return ec;
 	}
+
+	// Estimate assign radius if we need to, and modify options
+	if ((main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) || 
+	        (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS)) {
+		double avg_seed_dist;
+		if ((ec = iscc_estimate_avg_seed_dist(data_set_object,
+		                                      &seed_result,
+		                                      nng,
+		                                      size_constraint,
+		                                      &avg_seed_dist)) != SCC_ER_OK) {
+			free(seed_result.seeds);
+			return ec;
+		}
+
+		if (main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) {
+			if (avg_seed_dist > 0.0) {
+				main_unassigned_method = SCC_UM_CLOSEST_SEED;
+				main_radius_constraint = true;
+				main_radius = avg_seed_dist;
+			} else {
+				free(seed_result.seeds);
+				return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+			}
+		}
+		
+		if (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS) {
+			if (avg_seed_dist > 0.0) {
+				secondary_unassigned_method = SCC_UM_CLOSEST_SEED;
+				secondary_radius_constraint = true;
+				secondary_radius = avg_seed_dist;
+			} else {
+				free(seed_result.seeds);
+				return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+			}
+		}
+	}
 	
 	// Initialize cluster labels
 	if (clustering->cluster_label == NULL) {
@@ -269,7 +305,6 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	                                       &seed_result,
 	                                       nng,
 	                                       nng_is_ordered,
-	                                       size_constraint,
 	                                       main_unassigned_method,
 	                                       main_radius_constraint,
 	                                       main_radius,
