@@ -85,6 +85,7 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
 	if (main_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_radius_constraint && (main_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if ((main_data_points != NULL) && (len_main_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((main_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method == SCC_UM_ASSIGN_BY_NNG) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && (secondary_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
@@ -152,6 +153,7 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 	if (main_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_radius_constraint && (main_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if ((main_data_points != NULL) && (len_main_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((main_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method == SCC_UM_ASSIGN_BY_NNG) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && (secondary_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);

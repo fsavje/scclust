@@ -358,13 +358,12 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	       (main_unassigned_method == SCC_UM_CLOSEST_SEED) ||
 	       (main_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS));
 	assert(!main_radius_constraint || (main_radius > 0.0));
+	assert((main_data_points != NULL) || (secondary_unassigned_method == SCC_UM_IGNORE));
 	assert((secondary_unassigned_method == SCC_UM_IGNORE) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS));
 	assert(!secondary_radius_constraint || (secondary_radius > 0.0));
-
-	if (main_data_points == NULL) secondary_unassigned_method = SCC_UM_IGNORE;
 
 	scc_ErrorCode ec;
 	// Assign seeds and their neighbors
