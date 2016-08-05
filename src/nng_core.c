@@ -366,13 +366,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 
 	if (main_data_points == NULL) secondary_unassigned_method = SCC_UM_IGNORE;
 
-	// Initialize cluster labels
-	if (clustering->cluster_label == NULL) {
-		clustering->external_labels = false;
-		clustering->cluster_label = malloc(sizeof(scc_Clabel[clustering->num_data_points]));
-		if (clustering->cluster_label == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
-	}
-
 	scc_ErrorCode ec;
 	// Assign seeds and their neighbors
 	const size_t num_assigned_as_seed_or_neighbor = iscc_assign_seeds_and_neighbors(clustering, seed_result, nng);
