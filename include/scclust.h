@@ -155,11 +155,15 @@ bool scc_is_initialized_clustering(const scc_Clustering* clustering);
 
 scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
                                    uint32_t size_constraint,
-                                   uintmax_t num_types,
-                                   const uint32_t type_size_constraints[],
-                                   size_t len_type_labels,
-                                   const scc_TypeLabel type_labels[],
                                    bool* out_is_OK);
+
+scc_ErrorCode scc_check_clustering_types(const scc_Clustering* clustering,
+                                         uint32_t size_constraint,
+                                         uintmax_t num_types,
+                                         const uint32_t type_size_constraints[],
+                                         size_t len_type_labels,
+                                         const scc_TypeLabel type_labels[],
+                                         bool* out_is_OK);
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
                                       uintmax_t* out_num_data_points,
