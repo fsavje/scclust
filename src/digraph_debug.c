@@ -54,14 +54,6 @@ bool iscc_is_valid_digraph(const iscc_Digraph* const dg)
 }
 
 
-bool iscc_is_empty_digraph(const iscc_Digraph* const dg)
-{
-	if (!iscc_is_valid_digraph(dg)) return false;
-	if (dg->tail_ptr[dg->vertices] != 0) return false;
-	return true;
-}
-
-
 bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
                               const iscc_Arci arcs_per_vertex)
 {

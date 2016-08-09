@@ -54,6 +54,13 @@ bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
 }
 
 
+bool iscc_digraph_is_empty(const iscc_Digraph* const dg)
+{
+	assert(iscc_digraph_is_initialized(dg));
+	return (dg->tail_ptr[dg->vertices] == 0);
+}
+
+
 scc_ErrorCode iscc_init_digraph(const size_t vertices,
                                 const uintmax_t max_arcs,
                                 iscc_Digraph* const out_dg)

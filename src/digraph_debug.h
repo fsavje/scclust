@@ -51,16 +51,6 @@
  */
 bool iscc_is_valid_digraph(const iscc_Digraph* dg);
 
-/** Checks whether provided digraph is empty.
- *
- *  This function returns \c true if \p dg is valid and does not contain any arcs.
- *
- *  \param[in] dg digraph to check.
- *
- *  \return \c true if \p dg is empty, otherwise \c false.
- */
-bool iscc_is_empty_digraph(const iscc_Digraph* dg);
-
 /** Checks whether provided digraph is a balanced digraph.
  *
  *  This function returns \c true if \p dg is valid and all vertices have equally many

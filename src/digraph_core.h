@@ -117,6 +117,19 @@ void iscc_free_digraph(iscc_Digraph* dg);
  */
 bool iscc_digraph_is_initialized(const iscc_Digraph* dg);
 
+/** Checks whether provided digraph is empty.
+ *
+ *  This function returns \c true if \p dg does not contain any arcs.
+ *
+ *  \param[in] dg digraph to check.
+ *
+ *  \return \c true if \p dg is empty, otherwise \c false.
+ *
+ *  \note This function does not check whether \p dg is a valid digraph, that is whether
+ *        the information is sound.
+ */
+bool iscc_digraph_is_empty(const iscc_Digraph* dg);
+
 /** Generic constructor for digraphs.
  *
  *  Initializes and allocates memory for specified digraph. The memory spaces
