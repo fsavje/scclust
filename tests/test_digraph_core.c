@@ -245,8 +245,9 @@ void scc_ut_change_arc_storage(void** state)
 	(void) state;
 
 	iscc_Arci tails[6] = { 0, 1, 2, 3, 4, 5 };
-	iscc_Arci tails_ref[6] = { 0, 1, 2, 3, 4, 5 };
+	const iscc_Arci tails_ref[6] = { 0, 1, 2, 3, 4, 5 };
 	iscc_Arci tails_zero[6] = { 0, 0, 0, 0, 0, 0 };
+	const iscc_Arci tails_zero_ref[6] = { 0, 0, 0, 0, 0, 0 };
 
 	iscc_Digraph dg = {
 		.vertices = 5,
@@ -287,6 +288,7 @@ void scc_ut_change_arc_storage(void** state)
 	assert_int_equal(dg.vertices, 5);
 	assert_int_equal(dg.max_arcs, 100);
 	assert_non_null(dg.head);
+	dg.head[99] = 1234567;
 	assert_non_null(dg.tail_ptr);
 	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
 	assert_int_equal(ec4, SCC_ER_OK);
@@ -298,7 +300,38 @@ void scc_ut_change_arc_storage(void** state)
 	assert_int_equal(dg.max_arcs, 0);
 	assert_null(dg.head);
 	assert_non_null(dg.tail_ptr);
+	assert_memory_equal(dg.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
 	assert_int_equal(ec5, SCC_ER_OK);
+
+	iscc_Arci tails2[6] = { 0, 0, 0, 0, 0, 0 };
+
+	iscc_Digraph dg2 = {
+		.vertices = 5,
+		.max_arcs = 0,
+		.head = NULL,
+		.tail_ptr = tails2,
+	};
+
+	assert_true(iscc_digraph_is_initialized(&dg2));
+	scc_ErrorCode ec6 = iscc_change_arc_storage(&dg2, 0);
+	assert_int_equal(dg2.vertices, 5);
+	assert_int_equal(dg2.max_arcs, 0);
+	assert_null(dg2.head);
+	assert_non_null(dg2.tail_ptr);
+	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec6, SCC_ER_OK);
+
+	assert_true(iscc_digraph_is_initialized(&dg2));
+	scc_ErrorCode ec7 = iscc_change_arc_storage(&dg2, 10);
+	assert_int_equal(dg2.vertices, 5);
+	assert_int_equal(dg2.max_arcs, 10);
+	assert_non_null(dg2.head);
+	dg2.head[9] = 1234567;
+	assert_non_null(dg2.tail_ptr);
+	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
+	assert_int_equal(ec7, SCC_ER_OK);
+
+	free(dg2.head);
 }
 
 

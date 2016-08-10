@@ -73,6 +73,16 @@ void scc_ut_is_valid_digraph(void** state)
 	};
 
 	assert_true(iscc_is_valid_digraph(&dg2));
+
+	iscc_Arci tail_ptr3[5] = {0, 0, 0, 0, 0};
+	iscc_Digraph dg3 = {
+		.vertices = 4,
+		.max_arcs = 0,
+		.head = NULL,
+		.tail_ptr = tail_ptr3,
+	};
+
+	assert_true(iscc_is_valid_digraph(&dg3));
 }
 
 
@@ -165,10 +175,30 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr5,
 	};
 
+	iscc_Arci tail_ptr6[5] = {0, 0, 0, 0, 0};
+	iscc_Digraph dg6 = {
+		.vertices = 4,
+		.max_arcs = 0,
+		.head = NULL,
+		.tail_ptr = tail_ptr6,
+	};
+
+	iscc_Dpid head7[1] = {0};
+	iscc_Arci tail_ptr7[5] = {0, 0, 0, 0, 0};
+	iscc_Digraph dg7 = {
+		.vertices = 4,
+		.max_arcs = 1,
+		.head = head7,
+		.tail_ptr = tail_ptr7,
+	};
+
 	assert_true(iscc_digraphs_equal(&dg1, &dg1));
 	
 	assert_true(iscc_digraphs_equal(&dg1, &dg2));
 	assert_true(iscc_digraphs_equal(&dg2, &dg1));
+
+	assert_true(iscc_digraphs_equal(&dg6, &dg7));
+	assert_true(iscc_digraphs_equal(&dg7, &dg6));
 	
 	assert_false(iscc_digraphs_equal(&dg1, &dg3));
 	assert_false(iscc_digraphs_equal(&dg3, &dg1));
@@ -178,6 +208,12 @@ void scc_ut_digraphs_equal(void** state)
 	
 	assert_false(iscc_digraphs_equal(&dg1, &dg5));
 	assert_false(iscc_digraphs_equal(&dg5, &dg1));
+
+	assert_false(iscc_digraphs_equal(&dg1, &dg6));
+	assert_false(iscc_digraphs_equal(&dg6, &dg1));
+
+	assert_false(iscc_digraphs_equal(&dg1, &dg7));
+	assert_false(iscc_digraphs_equal(&dg7, &dg1));
 }
 
 

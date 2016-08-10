@@ -44,11 +44,13 @@ bool iscc_is_valid_digraph(const iscc_Digraph* const dg)
 	for (size_t i = 0; i < dg->vertices; ++i) {
 		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
 	}
-	assert(dg->vertices <= ISCC_DPID_MAX);
-	iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
-	const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
-	for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
-		if (*arc >= vertices) return false;
+	if (dg->tail_ptr[dg->vertices] > 0) {
+		assert(dg->vertices <= ISCC_DPID_MAX);
+		iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
+		const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
+		for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
+			if (*arc >= vertices) return false;
+		}
 	}
 	return true;
 }
@@ -73,6 +75,7 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 	assert(iscc_digraph_is_initialized(dg_a));
 	assert(iscc_digraph_is_initialized(dg_b));
 	if (dg_a->vertices != dg_b->vertices) return false;
+	if ((dg_a->tail_ptr[dg_a->vertices] == 0) && (dg_b->tail_ptr[dg_b->vertices] == 0)) return true;
 
 	int_fast8_t* const single_row = calloc(dg_a->vertices, sizeof(int_fast8_t));
 
@@ -192,7 +195,9 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
 	if ((ec = iscc_init_digraph(num_vertices, num_arcs, out_dg)) != SCC_ER_OK) return ec;
 
 	memcpy(out_dg->tail_ptr, in_dg->tail_ptr, (num_vertices + 1) * sizeof(iscc_Arci));
-	memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(iscc_Dpid));
+	if (num_arcs > 0) {
+		memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(iscc_Dpid));
+	}
 
 	return iscc_no_error();
 }
