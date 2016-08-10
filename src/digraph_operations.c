@@ -90,7 +90,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
                                             const bool keep_self_loops,
                                             iscc_Digraph* const out_dg)
 {
-	assert(num_in_dgs >= 2);
+	assert(num_in_dgs > 0);
 	assert(in_dgs != NULL);
 	assert(iscc_digraph_is_initialized(&in_dgs[0]));
 	assert(out_dg != NULL);
@@ -310,7 +310,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
                                                  iscc_Arci out_tail_ptr[restrict const],
                                                  iscc_Dpid out_head[restrict const])
 {
-	assert(num_dgs >= 2);
+	assert(num_dgs > 0);
 	assert(dgs != NULL);
 	assert(iscc_digraph_is_initialized(&dgs[0]));
 	assert(dgs[0].vertices > 0);

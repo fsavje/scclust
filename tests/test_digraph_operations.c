@@ -246,7 +246,12 @@ void scc_ut_digraph_union_and_delete(void** state)
 	assert_free_digraph(&ut_control132_ttk);
 	assert_free_digraph(&ut_control213_ttk);
 	assert_free_digraph(&ut_control321_ttk);
+}
 
+
+void scc_ut_digraph_union_and_delete_empty(void** state)
+{
+	(void) state;
 
 	iscc_Digraph ut_dg4;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg4);
@@ -422,6 +427,38 @@ void scc_ut_digraph_union_and_delete(void** state)
 }
 
 
+void scc_ut_digraph_union_and_delete_single(void** state)
+{
+	(void) state;
+	
+	iscc_Digraph ut_dg7;
+	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
+	const bool tails_to_keep5[4] = { true, true, false, false };
+
+	const iscc_Digraph sum_7[1] = {ut_dg7};
+	iscc_Digraph ut_make7;
+	iscc_Digraph ut_make7_ttk;
+	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, NULL, false, &ut_make7);
+	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, tails_to_keep5, false, &ut_make7_ttk);
+	assert_int_equal(ec31, SCC_ER_OK);
+	assert_int_equal(ec32, SCC_ER_OK);
+	assert_valid_digraph(&ut_make7, 4);
+	assert_valid_digraph(&ut_make7_ttk, 4);
+	iscc_Digraph ut_control7;
+	iscc_Digraph ut_control7_ttk;
+	iscc_digraph_from_string("...#/...#/...#/..../", &ut_control7);
+	iscc_digraph_from_string("...#/...#/..../..../", &ut_control7_ttk);
+	assert_equal_digraph(&ut_make7, &ut_control7);
+	assert_equal_digraph(&ut_make7_ttk, &ut_control7_ttk);
+
+	assert_free_digraph(&ut_dg7);
+	assert_free_digraph(&ut_make7);
+	assert_free_digraph(&ut_make7_ttk);
+	assert_free_digraph(&ut_control7);
+	assert_free_digraph(&ut_control7_ttk);
+}
+
+
 void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 {
 	(void) state;
@@ -570,7 +607,12 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	assert_free_digraph(&ut_control132_ttk);
 	assert_free_digraph(&ut_control213_ttk);
 	assert_free_digraph(&ut_control321_ttk);
+}
 
+
+void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
+{
+	(void) state;
 
 	iscc_Digraph ut_dg4;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg4);
@@ -743,6 +785,38 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	assert_free_digraph(&ut_control55_ttk);
 	assert_free_digraph(&ut_control66);
 	assert_free_digraph(&ut_control66_ttk);
+}
+
+
+void scc_ut_digraph_union_and_delete_keep_loops_single(void** state)
+{
+	(void) state;
+	
+	iscc_Digraph ut_dg7;
+	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
+	const bool tails_to_keep5[4] = { true, true, false, false };
+
+	const iscc_Digraph sum_7[1] = {ut_dg7};
+	iscc_Digraph ut_make7;
+	iscc_Digraph ut_make7_ttk;
+	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, NULL, true, &ut_make7);
+	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, tails_to_keep5, true, &ut_make7_ttk);
+	assert_int_equal(ec31, SCC_ER_OK);
+	assert_int_equal(ec32, SCC_ER_OK);
+	assert_valid_digraph(&ut_make7, 4);
+	assert_valid_digraph(&ut_make7_ttk, 4);
+	iscc_Digraph ut_control7;
+	iscc_Digraph ut_control7_ttk;
+	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_control7);
+	iscc_digraph_from_string("#..#/.#.#/..../..../", &ut_control7_ttk);
+	assert_equal_digraph(&ut_make7, &ut_control7);
+	assert_equal_digraph(&ut_make7_ttk, &ut_control7_ttk);
+
+	assert_free_digraph(&ut_dg7);
+	assert_free_digraph(&ut_make7);
+	assert_free_digraph(&ut_make7_ttk);
+	assert_free_digraph(&ut_control7);
+	assert_free_digraph(&ut_control7_ttk);
 }
 
 
@@ -1194,7 +1268,11 @@ int main(void)
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_delete_loops),
 		cmocka_unit_test(scc_ut_digraph_union_and_delete),
+		cmocka_unit_test(scc_ut_digraph_union_and_delete_empty),
+		cmocka_unit_test(scc_ut_digraph_union_and_delete_single),
 		cmocka_unit_test(scc_ut_digraph_union_and_delete_keep_loops),
+		cmocka_unit_test(scc_ut_digraph_union_and_delete_keep_loops_empty),
+		cmocka_unit_test(scc_ut_digraph_union_and_delete_keep_loops_single),
 		cmocka_unit_test(scc_ut_digraph_difference),
 		cmocka_unit_test(scc_ut_digraph_transpose),
 		cmocka_unit_test(scc_ut_adjacency_product),
