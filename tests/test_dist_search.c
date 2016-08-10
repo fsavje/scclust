@@ -1291,6 +1291,65 @@ void scc_ut_nearest_neighbor_search_radius(void** state)
 	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 4 * sizeof(iscc_Dpid));
 
 
+	iscc_NNSearchObject* nn_search_object5d;
+	const bool query5d[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true };
+	iscc_Arci out_nn_ref5d[101];
+	iscc_Dpid out_nn_indices5d[10];
+	const iscc_Arci ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5d));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5d, 100, query5d, NULL,
+                                             3, true, 0.1, false, out_nn_ref5d, out_nn_indices5d));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5d));
+	assert_memory_equal(out_nn_ref5d, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
+
+
+	iscc_NNSearchObject* nn_search_object5e;
+	bool query5e[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true };
+	iscc_Arci out_nn_ref5e[101];
+	iscc_Dpid out_nn_indices5e[10];
+	const iscc_Arci ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	const bool ref_query5e[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false };
+	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5e));
+	assert_true(iscc_nearest_neighbor_search(nn_search_object5e, 100, query5e, query5e,
+                                             3, true, 0.1, false, out_nn_ref5e, out_nn_indices5e));
+	assert_true(iscc_close_nn_search_object(&nn_search_object5e));
+	assert_memory_equal(out_nn_ref5e, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
+
+
 	iscc_NNSearchObject* nn_search_object6a;
 	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	iscc_Arci out_nn_ref6a[16];

@@ -367,6 +367,71 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_free_digraph(&ref_nng5c);
 
 
+	const bool query5d[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true };
+	const iscc_Arci ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	iscc_Digraph out_nng5d;
+	scc_ErrorCode ec5d = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
+                                      100, query5d, NULL,
+                                      3, true, 0.1, false, 10, &out_nng5d);
+	assert_int_equal(ec5d, SCC_ER_OK);
+	assert_int_equal(out_nng5d.vertices, 100);
+	assert_int_equal(out_nng5d.max_arcs, 0);
+	assert_null(out_nng5d.head);
+	assert_non_null(out_nng5d.tail_ptr);
+	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
+	iscc_free_digraph(&out_nng5d);
+
+
+	bool query5e[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true };
+	const iscc_Arci ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	const bool ref_query5e[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false };
+	iscc_Digraph out_nng5e;
+	scc_ErrorCode ec5e = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
+                                      100, query5e, query5e,
+                                      3, true, 0.1, false, 10, &out_nng5e);
+	assert_int_equal(ec5e, SCC_ER_OK);
+	assert_int_equal(out_nng5e.vertices, 100);
+	assert_int_equal(out_nng5e.max_arcs, 0);
+	assert_null(out_nng5e.head);
+	assert_non_null(out_nng5e.tail_ptr);
+	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
+	iscc_free_digraph(&out_nng5e);
+	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
+
+
 	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6a[15] = { true, true, false, false, true, false, true, true, true, false, true, false, true, true, true };
 	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
@@ -798,6 +863,77 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
 	iscc_free_digraph(&out_nng5c);
 	iscc_free_digraph(&ref_nng5c);
+
+
+	const bool query5d[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                            true, true, true, true, true };
+	const iscc_Arci ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	iscc_Digraph out_nng5d;
+	iscc_NNSearchObject* nn_search_object5d;
+	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5d);
+	scc_ErrorCode ec5d = iscc_make_nng_from_search_object(nn_search_object5d,
+	                                                    100, query5d, NULL,
+                                                        3, true, 0.1, false, 10, &out_nng5d);
+	iscc_close_nn_search_object(&nn_search_object5d);
+	assert_int_equal(ec5d, SCC_ER_OK);
+	assert_int_equal(out_nng5d.vertices, 100);
+	assert_int_equal(out_nng5d.max_arcs, 0);
+	assert_null(out_nng5d.head);
+	assert_non_null(out_nng5d.tail_ptr);
+	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
+	iscc_free_digraph(&out_nng5d);
+
+
+	bool query5e[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	                      true, true, true, true, true };
+	const iscc_Arci ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	const bool ref_query5e[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+	                                false, false, false, false, false };
+	iscc_Digraph out_nng5e;
+	iscc_NNSearchObject* nn_search_object5e;
+	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5e);
+	scc_ErrorCode ec5e = iscc_make_nng_from_search_object(nn_search_object5e,
+	                                                    100, query5e, query5e,
+                                                        3, true, 0.1, false, 10, &out_nng5e);
+	iscc_close_nn_search_object(&nn_search_object5e);
+	assert_int_equal(ec5e, SCC_ER_OK);
+	assert_int_equal(out_nng5e.vertices, 100);
+	assert_int_equal(out_nng5e.max_arcs, 0);
+	assert_null(out_nng5e.head);
+	assert_non_null(out_nng5e.tail_ptr);
+	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
+	iscc_free_digraph(&out_nng5e);
+	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
 
 
 	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
