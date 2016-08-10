@@ -60,6 +60,9 @@ scc_ErrorCode iscc_delete_loops(iscc_Digraph* const dg)
 {
 	assert(iscc_digraph_is_initialized(dg));
 
+	if (iscc_digraph_is_empty(dg)) return iscc_no_error();
+	assert(dg->head != NULL);
+
 	iscc_Arci head_write = 0;
 	assert(dg->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed 
@@ -87,7 +90,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
                                             const bool keep_self_loops,
                                             iscc_Digraph* const out_dg)
 {
-	assert(num_in_dgs > 0);
+	assert(num_in_dgs >= 2);
 	assert(in_dgs != NULL);
 	assert(iscc_digraph_is_initialized(&in_dgs[0]));
 	assert(out_dg != NULL);
@@ -146,7 +149,11 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 	assert(iscc_digraph_is_initialized(subtrahend_dg));
 	assert(minuend_dg->vertices > 0);
 	assert(minuend_dg->vertices == subtrahend_dg->vertices);
+	assert((subtrahend_dg->tail_ptr[minuend_dg->vertices] == 0) || (subtrahend_dg->head != NULL));
 	assert(max_out_degree > 0);
+
+	if (iscc_digraph_is_empty(minuend_dg)) return iscc_no_error();
+	assert(minuend_dg->head != NULL);
 
 	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[minuend_dg->vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -167,8 +174,8 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 		}
 
 		row_counter = 0;
-		const iscc_Dpid* const arc_m_stop = minuend_dg->head + minuend_dg->tail_ptr[v + 1];
 		const iscc_Dpid* arc_m = minuend_dg->head + minuend_dg->tail_ptr[v];
+		const iscc_Dpid* const arc_m_stop = minuend_dg->head + minuend_dg->tail_ptr[v + 1];
 		minuend_dg->tail_ptr[v] = out_arcs_write;
 		for (; ((row_counter < max_out_degree) && (arc_m != arc_m_stop)); ++arc_m) {
 			if (row_markers[*arc_m] != v) {
@@ -197,6 +204,10 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
 	if ((ec = iscc_empty_digraph(in_dg->vertices, in_dg->tail_ptr[in_dg->vertices], out_dg)) != SCC_ER_OK) {
 		return ec;
 	}
+
+	if (iscc_digraph_is_empty(in_dg)) return iscc_no_error();
+	assert(in_dg->head != NULL);
+	assert(out_dg->head != NULL);
 
 	const iscc_Dpid* const arc_c_stop = in_dg->head + in_dg->tail_ptr[in_dg->vertices];
 	for (const iscc_Dpid* arc_c = in_dg->head;
@@ -230,9 +241,15 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 {
 	assert(iscc_digraph_is_initialized(in_dg_a));
 	assert(iscc_digraph_is_initialized(in_dg_b));
+	assert(!iscc_digraph_is_empty(in_dg_a));
+	assert(!iscc_digraph_is_empty(in_dg_b));
 	assert(in_dg_a->vertices > 0);
 	assert(in_dg_a->vertices == in_dg_b->vertices);
 	assert(out_dg != NULL);
+
+	if (iscc_digraph_is_empty(in_dg_a) || iscc_digraph_is_empty(in_dg_b)) {
+		return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+	}
 
 	const size_t vertices = in_dg_a->vertices;
 
@@ -293,15 +310,22 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
                                                  iscc_Arci out_tail_ptr[restrict const],
                                                  iscc_Dpid out_head[restrict const])
 {
-	assert(num_dgs > 0);
+	assert(num_dgs >= 2);
 	assert(dgs != NULL);
 	assert(iscc_digraph_is_initialized(&dgs[0]));
 	assert(dgs[0].vertices > 0);
 	assert(row_markers != NULL);
 
+	#ifndef NDEBUG
+		for (uint_fast16_t i = 0; i < num_dgs; ++i) {
+			assert(iscc_digraph_is_initialized(&dgs[i]));
+			assert(dgs[i].vertices == dgs[0].vertices);
+		}
+	#endif
+
 	uintmax_t counter = 0;
 	assert(dgs->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed 
+	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed
 
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		row_markers[v] = ISCC_DPID_MAX;
@@ -341,7 +365,6 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 
 	} else if ((tails_to_keep == NULL) && write) {
 		assert(out_tail_ptr != NULL);
-		assert(out_head != NULL);
 		out_tail_ptr[0] = 0;
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
 			if (!keep_self_loops) row_markers[v] = v;
@@ -357,11 +380,11 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 				}
 			}
 			out_tail_ptr[v + 1] = (iscc_Arci) counter;
+			assert((counter == 0) || (out_head != NULL));
 		}
 
 	} else if ((tails_to_keep != NULL) && write) {
 		assert(out_tail_ptr != NULL);
-		assert(out_head != NULL);
 		out_tail_ptr[0] = 0;
 		for (iscc_Dpid v = 0; v < vertices; ++v) {
 			if (tails_to_keep[v]) {
@@ -379,6 +402,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 				}
 			}
 			out_tail_ptr[v + 1] = (iscc_Arci) counter;
+			assert((counter == 0) || (out_head != NULL));
 		}
 	}
 
@@ -396,6 +420,8 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 {
 	assert(iscc_digraph_is_initialized(dg_a));
 	assert(iscc_digraph_is_initialized(dg_b));
+	assert(!iscc_digraph_is_empty(dg_a));
+	assert(!iscc_digraph_is_empty(dg_b));
 	assert(dg_a->vertices > 0);
 	assert(dg_a->vertices == dg_b->vertices);
 	assert(row_markers != NULL);
