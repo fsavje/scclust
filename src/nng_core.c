@@ -189,8 +189,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	assert(!radius_constraint || (radius > 0.0));
 	assert(out_nng != NULL);
 
-	*out_nng = ISCC_NULL_DIGRAPH; // So `out_nng` can be freed without init below.
-
 	bool* seedable;
 	const bool* seedable_const;
 	if (radius_constraint) {
@@ -285,8 +283,8 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	free(nng_by_type);
 
 	if (ec != SCC_ER_OK) {
+		// When `ec != SCC_ER_OK`, error is from `iscc_digraph_union_and_delete` so `out_nng` is already freed 
 		free(seedable);
-		iscc_free_digraph(out_nng);
 		return ec;
 	}
 
@@ -294,7 +292,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 		uint32_t additional_nn_needed = size_constraint - tc.sum_type_constraints;
 		iscc_Digraph nng_sum[2];
 		nng_sum[0] = *out_nng;
-		*out_nng = ISCC_NULL_DIGRAPH;
 
 		if ((ec = iscc_make_nng(data_set_object,
 		                        num_data_points,
