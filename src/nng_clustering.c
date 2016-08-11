@@ -104,6 +104,8 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
 		return ec;
 	}
 
+	assert(!iscc_digraph_is_empty(&nng));
+
 	ec = iscc_make_clustering_from_nng(clustering,
 	                                   data_set_object,
 	                                   &nng,
@@ -178,6 +180,8 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 		return ec;
 	}
 
+	assert(!iscc_digraph_is_empty(&nng));
+
 	ec = iscc_make_clustering_from_nng(clustering,
 	                                   data_set_object,
 	                                   &nng,
@@ -229,6 +233,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
 	assert(iscc_digraph_is_initialized(nng));
 	assert(size_constraint > 0);
+	assert(!iscc_digraph_is_empty(nng));
 	assert(seed_method <= SCC_MAX_SEED_METHOD);
 	assert((main_unassigned_method == SCC_UM_IGNORE) ||
 	       (main_unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||

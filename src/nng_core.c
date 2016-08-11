@@ -151,6 +151,11 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set_object,
 		return ec;
 	}
 
+	if (iscc_digraph_is_empty(out_nng)) {
+		iscc_free_digraph(out_nng);
+		return iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+	}
+
 	iscc_ensure_self_match(out_nng, num_data_points, NULL);
 
 	if ((ec = iscc_delete_loops(out_nng)) != SCC_ER_OK) {
@@ -250,10 +255,14 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
-			iscc_ensure_self_match(&nng_by_type[num_non_zero_type_constraints],
+			++num_non_zero_type_constraints;
+			if (iscc_digraph_is_empty(&nng_by_type[num_non_zero_type_constraints - 1])) {
+				ec = iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+				break;
+			}
+			iscc_ensure_self_match(&nng_by_type[num_non_zero_type_constraints - 1],
 			                       tc.type_group_size[i],
 			                       tc.type_groups[i]);
-			++num_non_zero_type_constraints;
 		}
 	}
 
@@ -304,7 +313,11 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 			return ec;
 		}
 
-		ec = iscc_digraph_difference(&nng_sum[1], &nng_sum[0], additional_nn_needed);
+		if (iscc_digraph_is_empty(&nng_sum[1])) {
+			ec = iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+		} else {
+			ec = iscc_digraph_difference(&nng_sum[1], &nng_sum[0], additional_nn_needed);
+		}
 
 		if (ec == SCC_ER_OK) {
 			ec = iscc_digraph_union_and_delete(2, nng_sum, seedable_const, false, out_nng);
@@ -334,6 +347,7 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(size_constraint >= 2);
 	assert(out_avg_seed_dist != NULL);
 
@@ -411,6 +425,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert((main_unassigned_method == SCC_UM_IGNORE) ||
 	       (main_unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
 	       (main_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
@@ -771,6 +786,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
                                           const iscc_Dpid search_indices[const])
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(len_search_indices > 0);
 
 	/* When there's identical data points, `iscc_nearest_neighbor_search` may not
@@ -878,6 +894,7 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 
 	clustering->num_clusters = seed_result->count;
 
@@ -917,6 +934,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(scratch != NULL);
 
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {

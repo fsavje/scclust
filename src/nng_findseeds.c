@@ -115,6 +115,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
                               iscc_SeedResult* const out_seeds)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
 	assert(out_seeds->capacity > 0);
@@ -172,6 +173,7 @@ static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,
                                             iscc_SeedResult* const out_seeds)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
 	assert(out_seeds->capacity > 0);
@@ -214,6 +216,7 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
                                             iscc_SeedResult* const out_seeds)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
 	assert(out_seeds->capacity > 0);
@@ -282,6 +285,7 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
                                               iscc_SeedResult* const out_seeds)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
 	assert(out_seeds->capacity > 0);
@@ -409,6 +413,7 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
                                              iscc_Digraph* const out_dg)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(not_excluded != NULL);
 	assert(out_dg != NULL);
 
@@ -417,6 +422,7 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
 	iscc_Digraph nng_transpose;
 	ec = iscc_digraph_transpose(nng, &nng_transpose);
 	if (ec != SCC_ER_OK) return ec;
+	assert(!iscc_digraph_is_empty(&nng_transpose));
 
 	iscc_Digraph nng_nng_transpose;
 	ec = iscc_adjacency_product(nng, &nng_transpose, true, &nng_nng_transpose);
@@ -515,6 +521,7 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
                                              iscc_fs_SortResult* const out_sort)
 {
 	assert(iscc_digraph_is_initialized(nng));
+	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_sort != NULL);
 
