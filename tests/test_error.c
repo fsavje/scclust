@@ -137,11 +137,23 @@ void scc_ut_get_error_message(void** state)
 	assert_int_equal(ec13, SCC_ER_DIST_SEARCH_ERROR);
 	assert_string_equal(text_buffer, "(dummy8.c:8) Failed to calculate distances.");
 
-	scc_ErrorCode ec14 = iscc_make_error_func(SCC_ER_NOT_IMPLEMENTED, "dummy9.c", 9);
+	scc_ErrorCode ec14 = iscc_make_error_func(SCC_ER_NO_CLUST_EXIST_CONSTRAINT, "dummy9.c", 9);
 	bool err_res14 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res14);
-	assert_int_equal(ec14, SCC_ER_NOT_IMPLEMENTED);
-	assert_string_equal(text_buffer, "(dummy9.c:9) Requested functionality is not yet implemented.");
+	assert_int_equal(ec14, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+	assert_string_equal(text_buffer, "(dummy9.c:9) No clustering satisfying the specified constraints exists.");
+
+	scc_ErrorCode ec15 = iscc_make_error_func(SCC_ER_NO_CLUST_EXIST_RADIUS, "dummy10.c", 10);
+	bool err_res15 = scc_get_latest_error(buffer_size, text_buffer);
+	assert_true(err_res15);
+	assert_int_equal(ec15, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	assert_string_equal(text_buffer, "(dummy10.c:10) No clustering satisfying the specified radius constraints exists.");
+
+	scc_ErrorCode ec16 = iscc_make_error_func(SCC_ER_NOT_IMPLEMENTED, "dummy11.c", 11);
+	bool err_res16 = scc_get_latest_error(buffer_size, text_buffer);
+	assert_true(err_res16);
+	assert_int_equal(ec16, SCC_ER_NOT_IMPLEMENTED);
+	assert_string_equal(text_buffer, "(dummy11.c:11) Requested functionality is not yet implemented.");
 }
 
 

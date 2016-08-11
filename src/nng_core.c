@@ -857,7 +857,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 			free(out_type_result->type_group_size);
 			free(out_type_result->point_store);
 			free(out_type_result->type_groups);
-			return iscc_make_error(SCC_ER_INVALID_INPUT);
+			return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 		}
 		out_type_result->sum_type_constraints += type_size_constraints[i];
 	}

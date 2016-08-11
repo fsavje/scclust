@@ -1134,7 +1134,7 @@ void scc_ut_type_count(void** state)
 	                                    type_size_constraints2,
 	                                    type_labels1,
 	                                    &tc2);
-	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
+	assert_int_equal(ec2, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 
 
 	const uint32_t size_constraint3 = 4;

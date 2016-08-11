@@ -81,6 +81,7 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	if (seed_method > SCC_MAX_SEED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (main_radius_constraint && (main_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
@@ -146,6 +147,7 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);

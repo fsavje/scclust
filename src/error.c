@@ -109,6 +109,12 @@ bool scc_get_latest_error(const size_t len_error_message_buffer,
 		case SCC_ER_DIST_SEARCH_ERROR:
 			error_message = "Failed to calculate distances.";
 			break;
+		case SCC_ER_NO_CLUST_EXIST_CONSTRAINT:
+			error_message = "No clustering satisfying the specified constraints exists.";
+			break;
+		case SCC_ER_NO_CLUST_EXIST_RADIUS:
+			error_message = "No clustering satisfying the specified radius constraints exists.";
+			break;
 		case SCC_ER_NOT_IMPLEMENTED:
 			error_message = "Requested functionality is not yet implemented.";
 			break;

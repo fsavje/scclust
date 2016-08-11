@@ -167,7 +167,7 @@ scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* const clustering,
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 
 	scc_ErrorCode ec;
 	size_t size_largest_cluster = 0; // Initialize to avoid gcc warning
