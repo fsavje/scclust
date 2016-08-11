@@ -119,9 +119,9 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set_object,
                                                 iscc_Digraph* const out_nng)
 {
 	assert(iscc_check_data_set_object(data_set_object, num_data_points));
-	assert(num_data_points > 0);
+	assert(num_data_points >= 2);
 	assert(size_constraint <= num_data_points);
-	assert(size_constraint > 0);
+	assert(size_constraint >= 2);
 	assert(!radius_constraint || (radius > 0.0));
 	assert(out_nng != NULL);
 
@@ -179,9 +179,9 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
                                                 iscc_Digraph* const out_nng)
 {
 	assert(iscc_check_data_set_object(data_set_object, num_data_points));
-	assert(num_data_points > 0);
+	assert(num_data_points >= 2);
 	assert(size_constraint <= num_data_points);
-	assert(size_constraint > 0);
+	assert(size_constraint >= 2);
 	assert(num_types >= 2);
 	assert(num_types <= ISCC_TYPELABEL_MAX);
 	assert(type_size_constraints != NULL);
@@ -826,7 +826,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
                                      iscc_TypeCount* const out_type_result)
 {
 	assert(num_data_points > 1);
-	assert(size_constraint > 0);
+	assert(size_constraint >= 2);
 	assert(num_types >= 2);
 	assert(num_types <= ISCC_TYPELABEL_MAX);
 	assert(type_size_constraints != NULL);

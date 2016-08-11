@@ -146,7 +146,7 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (!iscc_check_data_set_object(data_set_object, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
-	if (size_constraint == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
@@ -234,8 +234,8 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
 	assert(iscc_digraph_is_initialized(nng));
-	assert(size_constraint > 0);
 	assert(!iscc_digraph_is_empty(nng));
+	assert(size_constraint >= 2);
 	assert(seed_method <= SCC_MAX_SEED_METHOD);
 	assert((main_unassigned_method == SCC_UM_IGNORE) ||
 	       (main_unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
