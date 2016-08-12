@@ -76,7 +76,9 @@ bool scc_get_latest_error(const size_t len_error_message_buffer,
 	if ((len_error_message_buffer == 0) || (error_message_buffer == NULL)) return false;
 
 	if (iscc_error_code == SCC_ER_OK) {
-		snprintf(error_message_buffer, len_error_message_buffer, "%s", "No error.");
+		if (snprintf(error_message_buffer, len_error_message_buffer, "%s", "No error.") < 0) {
+			return false;
+		}
 		return true;
 	}
 
@@ -123,7 +125,9 @@ bool scc_get_latest_error(const size_t len_error_message_buffer,
 			break;
 	}
 
-	snprintf(error_message_buffer, len_error_message_buffer, "(%s:%d) %s", iscc_error_file, iscc_error_line, error_message);
+	if (snprintf(error_message_buffer, len_error_message_buffer, "(%s:%d) %s", iscc_error_file, iscc_error_line, error_message) < 0) {
+		return false;
+	}
 
 	return true;
 }
