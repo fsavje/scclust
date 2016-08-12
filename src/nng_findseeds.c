@@ -263,8 +263,8 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 					const iscc_Dpid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
 					for (iscc_Dpid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
-						// Only decrease if vertex can be seed (i.e., not already assigned and not already considered)
-						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc])) {
+						// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
+						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
 							iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
 						}
 					}
@@ -579,7 +579,7 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 		}
 		for (iscc_Dpid v = (iscc_Dpid) vertices; v > 0; ) {
 			--v;
-			--out_sort->bucket_index[out_sort->inwards_count[v]];
+			--(out_sort->bucket_index[out_sort->inwards_count[v]]);
 			*out_sort->bucket_index[out_sort->inwards_count[v]] = v;
 			out_sort->vertex_index[v] = out_sort->bucket_index[out_sort->inwards_count[v]];
 		}
