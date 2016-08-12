@@ -36,30 +36,10 @@
 // External function implementations
 // ==============================================================================
 
-bool iscc_is_valid_digraph(const iscc_Digraph* const dg)
-{
-	if (!iscc_digraph_is_initialized(dg)) return false;
-	if (dg->tail_ptr[0] != 0) return false;
-	if (dg->tail_ptr[dg->vertices] > dg->max_arcs) return false;
-	for (size_t i = 0; i < dg->vertices; ++i) {
-		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
-	}
-	if (dg->tail_ptr[dg->vertices] > 0) {
-		assert(dg->vertices <= ISCC_DPID_MAX);
-		iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
-		const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
-		for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
-			if (*arc >= vertices) return false;
-		}
-	}
-	return true;
-}
-
-
 bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
                               const iscc_Arci arcs_per_vertex)
 {
-	if (!iscc_is_valid_digraph(dg)) return false;
+	if (!iscc_digraph_is_valid(dg)) return false;
 
 	for (size_t i = 0; i <= dg->vertices; ++i) {
 		if (dg->tail_ptr[i] != i * arcs_per_vertex) return false;
@@ -72,8 +52,8 @@ bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
 bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
                          const iscc_Digraph* const dg_b)
 {
-	assert(iscc_digraph_is_initialized(dg_a));
-	assert(iscc_digraph_is_initialized(dg_b));
+	assert(iscc_digraph_is_valid(dg_a));
+	assert(iscc_digraph_is_valid(dg_b));
 	if (dg_a->vertices != dg_b->vertices) return false;
 	if ((dg_a->tail_ptr[dg_a->vertices] == 0) && (dg_b->tail_ptr[dg_b->vertices] == 0)) return true;
 
@@ -175,7 +155,7 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 	}
 	out_dg->tail_ptr[vertices] = curr_array_pos;
 
-	assert(iscc_is_valid_digraph(out_dg));
+	assert(iscc_digraph_is_valid(out_dg));
 
 	return iscc_no_error();
 }

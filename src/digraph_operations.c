@@ -58,7 +58,7 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* dg_a,
 
 scc_ErrorCode iscc_delete_loops(iscc_Digraph* const dg)
 {
-	assert(iscc_digraph_is_initialized(dg));
+	assert(iscc_digraph_is_valid(dg));
 
 	if (iscc_digraph_is_empty(dg)) return iscc_no_error();
 	assert(dg->head != NULL);
@@ -92,7 +92,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 {
 	assert(num_in_dgs > 0);
 	assert(in_dgs != NULL);
-	assert(iscc_digraph_is_initialized(&in_dgs[0]));
+	assert(iscc_digraph_is_valid(&in_dgs[0]));
 	assert(out_dg != NULL);
 
 	const size_t vertices = in_dgs[0].vertices;
@@ -100,7 +100,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 	// Try greedy memory count first
 	uintmax_t out_arcs_write = 0;
 	for (uint_fast16_t i = 0; i < num_in_dgs; ++i) {
-		assert(iscc_digraph_is_initialized(&in_dgs[i]));
+		assert(iscc_digraph_is_valid(&in_dgs[i]));
 		assert(in_dgs[i].vertices == vertices);
 		out_arcs_write += in_dgs[i].tail_ptr[vertices];
 	}
@@ -145,8 +145,8 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
                                       const iscc_Digraph* const subtrahend_dg,
                                       const uint32_t max_out_degree)
 {
-	assert(iscc_digraph_is_initialized(minuend_dg));
-	assert(iscc_digraph_is_initialized(subtrahend_dg));
+	assert(iscc_digraph_is_valid(minuend_dg));
+	assert(iscc_digraph_is_valid(subtrahend_dg));
 	assert(minuend_dg->vertices > 0);
 	assert(minuend_dg->vertices == subtrahend_dg->vertices);
 	assert((subtrahend_dg->tail_ptr[minuend_dg->vertices] == 0) || (subtrahend_dg->head != NULL));
@@ -196,7 +196,7 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
                                      iscc_Digraph* const out_dg)
 {
-	assert(iscc_digraph_is_initialized(in_dg));
+	assert(iscc_digraph_is_valid(in_dg));
 	assert(in_dg->vertices > 0);
 	assert(out_dg != NULL);
 
@@ -239,8 +239,8 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
                                      const bool force_loops,
                                      iscc_Digraph* const out_dg)
 {
-	assert(iscc_digraph_is_initialized(in_dg_a));
-	assert(iscc_digraph_is_initialized(in_dg_b));
+	assert(iscc_digraph_is_valid(in_dg_a));
+	assert(iscc_digraph_is_valid(in_dg_b));
 	assert(!iscc_digraph_is_empty(in_dg_a));
 	assert(!iscc_digraph_is_empty(in_dg_b));
 	assert(in_dg_a->vertices > 0);

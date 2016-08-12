@@ -117,6 +117,17 @@ void iscc_free_digraph(iscc_Digraph* dg);
  */
 bool iscc_digraph_is_initialized(const iscc_Digraph* dg);
 
+/** Checks whether provided digraph is valid.
+ *
+ *  This function returns \c true if \p dg is a valid scc_Digraph instance. That is,
+ *  \p dg describes a valid digraph. 
+ *
+ *  \param[in] dg digraph to check.
+ *
+ *  \return \c true if \p dg is valid, otherwise \c false.
+ */
+bool iscc_digraph_is_valid(const iscc_Digraph* dg);
+
 /** Checks whether provided digraph is empty.
  *
  *  This function returns \c true if \p dg does not contain any arcs.

@@ -114,7 +114,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
                               const scc_SeedMethod seed_method,
                               iscc_SeedResult* const out_seeds)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
@@ -172,7 +172,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,
                                             iscc_SeedResult* const out_seeds)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
@@ -215,7 +215,7 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
                                             const bool updating,
                                             iscc_SeedResult* const out_seeds)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
@@ -284,7 +284,7 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
                                               const bool updating,
                                               iscc_SeedResult* const out_seeds)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_seeds != NULL);
@@ -412,7 +412,7 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
                                              const bool* const not_excluded,
                                              iscc_Digraph* const out_dg)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(not_excluded != NULL);
 	assert(out_dg != NULL);
@@ -520,7 +520,7 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
                                              const bool make_indices,
                                              iscc_fs_SortResult* const out_sort)
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(nng->vertices > 1);
 	assert(out_sort != NULL);

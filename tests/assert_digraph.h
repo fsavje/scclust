@@ -73,7 +73,7 @@ void _assert_valid_digraph(const iscc_Digraph* test_dg,
                            const char* const file,
                            const int line)
 {
-	if (!iscc_is_valid_digraph(test_dg) || test_dg->vertices != vertices) {
+	if (!iscc_digraph_is_valid(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not sound\n", name_dg);
 		_fail(file, line);
 	}
@@ -86,7 +86,7 @@ void _assert_empty_digraph(const iscc_Digraph* test_dg,
                            const char* const file,
                            const int line)
 {
-	if (!iscc_is_valid_digraph(test_dg) || !iscc_digraph_is_empty(test_dg) || test_dg->vertices != vertices) {
+	if (!iscc_digraph_is_valid(test_dg) || !iscc_digraph_is_empty(test_dg) || test_dg->vertices != vertices) {
 		print_error("%s is not empty\n", name_dg);
 		_fail(file, line);
 	}

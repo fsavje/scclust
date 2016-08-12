@@ -26,65 +26,6 @@
 #include "../src/digraph_core.h"
 #include "../src/scclust_int.h"
 
-void scc_ut_is_valid_digraph(void** state)
-{
-	(void) state;
-
-	iscc_Dpid head1[4] = {0, 1, 2, 3};
-	iscc_Arci tail_ptr1[5] = {0, 1, 2, 3, 4};
-	iscc_Digraph dg1 = {
-		.vertices = 4,
-		.max_arcs = 4,
-		.head = head1,
-		.tail_ptr = tail_ptr1,
-	};
-
-	assert_true(iscc_is_valid_digraph(&dg1));
-
-	dg1.tail_ptr[0] = 10;
-	assert_false(iscc_is_valid_digraph(&dg1));
-	dg1.tail_ptr[0] = 0;
-	assert_true(iscc_is_valid_digraph(&dg1));
-
-	dg1.tail_ptr[4] = 10;
-	assert_false(iscc_is_valid_digraph(&dg1));
-	dg1.tail_ptr[4] = 4;
-	assert_true(iscc_is_valid_digraph(&dg1));
-
-	dg1.tail_ptr[3] = 4;
-	dg1.tail_ptr[4] = 3;
-	assert_false(iscc_is_valid_digraph(&dg1));
-	dg1.tail_ptr[3] = 3;
-	dg1.tail_ptr[4] = 4;
-	assert_true(iscc_is_valid_digraph(&dg1));
-
-	dg1.head[0] = 10;
-	assert_false(iscc_is_valid_digraph(&dg1));
-	dg1.head[0] = 0;
-	assert_true(iscc_is_valid_digraph(&dg1));
-
-	iscc_Dpid head2[4] = {123, 124, 125, 126};
-	iscc_Arci tail_ptr2[5] = {0, 0, 0, 0, 0};
-	iscc_Digraph dg2 = {
-		.vertices = 4,
-		.max_arcs = 4,
-		.head = head2,
-		.tail_ptr = tail_ptr2,
-	};
-
-	assert_true(iscc_is_valid_digraph(&dg2));
-
-	iscc_Arci tail_ptr3[5] = {0, 0, 0, 0, 0};
-	iscc_Digraph dg3 = {
-		.vertices = 4,
-		.max_arcs = 0,
-		.head = NULL,
-		.tail_ptr = tail_ptr3,
-	};
-
-	assert_true(iscc_is_valid_digraph(&dg3));
-}
-
 
 void scc_ut_is_balanced_digraph(void** state)
 {
@@ -375,7 +316,6 @@ void scc_ut_copy_digraph(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
-		cmocka_unit_test(scc_ut_is_valid_digraph),
 		cmocka_unit_test(scc_ut_is_balanced_digraph),
 		cmocka_unit_test(scc_ut_digraphs_equal),
 		cmocka_unit_test(scc_ut_digraph_from_pieces),

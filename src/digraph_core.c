@@ -54,6 +54,26 @@ bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
 }
 
 
+bool iscc_digraph_is_valid(const iscc_Digraph* const dg)
+{
+	if (!iscc_digraph_is_initialized(dg)) return false;
+	if (dg->tail_ptr[0] != 0) return false;
+	if (dg->tail_ptr[dg->vertices] > dg->max_arcs) return false;
+	for (size_t i = 0; i < dg->vertices; ++i) {
+		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
+	}
+	if (dg->tail_ptr[dg->vertices] > 0) {
+		assert(dg->vertices <= ISCC_DPID_MAX);
+		iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
+		const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
+		for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
+			if (*arc >= vertices) return false;
+		}
+	}
+	return true;
+}
+
+
 bool iscc_digraph_is_empty(const iscc_Digraph* const dg)
 {
 	assert(iscc_digraph_is_initialized(dg));
@@ -119,7 +139,7 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
 		}
 	}
 
-	assert(iscc_digraph_is_initialized(out_dg));
+	assert(iscc_digraph_is_valid(out_dg));
 
 	return iscc_no_error();
 }

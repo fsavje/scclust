@@ -343,7 +343,7 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 	assert(iscc_check_data_set_object(data_set_object, nng->vertices));
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(size_constraint >= 2);
 	assert(out_avg_seed_dist != NULL);
@@ -421,7 +421,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert((main_unassigned_method == SCC_UM_IGNORE) ||
 	       (main_unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
@@ -782,7 +782,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
                                           const size_t len_search_indices,
                                           const iscc_Dpid search_indices[const])
 {
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(len_search_indices > 0);
 
@@ -890,7 +890,7 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
 	assert(clustering->cluster_label != NULL);
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 
 	clustering->num_clusters = seed_result->count;
@@ -930,7 +930,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
                                  bool scratch[restrict const static clustering->num_data_points])
 {
 	assert(iscc_check_input_clustering(clustering));
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(scratch != NULL);
 

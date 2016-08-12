@@ -233,7 +233,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_check_data_set_object(data_set_object, clustering->num_data_points));
-	assert(iscc_digraph_is_initialized(nng));
+	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(size_constraint >= 2);
 	assert(seed_method <= SCC_MAX_SEED_METHOD);
