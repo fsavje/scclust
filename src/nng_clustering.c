@@ -150,6 +150,7 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	if (num_types < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_types > UINT_FAST16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 	if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
