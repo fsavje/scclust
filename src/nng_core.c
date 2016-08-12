@@ -133,6 +133,7 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set_object,
 		for (size_t i = 0; i < num_data_points; ++i) {
 			num_queries += main_data_points[i];
 		}
+		if (num_queries == 0) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	}
 
 	scc_ErrorCode ec;
@@ -189,6 +190,17 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	assert(!radius_constraint || (radius > 0.0));
 	assert(out_nng != NULL);
 
+	size_t num_queries;
+	if (main_data_points == NULL) {
+		num_queries = num_data_points;
+	} else {
+		num_queries = 0;
+		for (size_t i = 0; i < num_data_points; ++i) {
+			num_queries += main_data_points[i];
+		}
+		if (num_queries == 0) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+	}
+
 	bool* seedable;
 	const bool* seedable_const;
 	if (radius_constraint) {
@@ -211,16 +223,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	if (nng_by_type == NULL) {
 		free(seedable);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
-	}
-
-	size_t num_queries;
-	if (main_data_points == NULL) {
-		num_queries = num_data_points;
-	} else {
-		num_queries = 0;
-		for (size_t i = 0; i < num_data_points; ++i) {
-			num_queries += main_data_points[i];
-		}
 	}
 
 	scc_ErrorCode ec;
@@ -696,8 +698,8 @@ static scc_ErrorCode iscc_make_nng(void* const data_set_object,
 	assert(len_search_indices > 0);
 	assert(len_query_indicators > 0);
 	assert(k > 0);
+	assert(len_search_indices >= k);
 	assert(!radius_search || (radius > 0.0));
-	assert(max_arcs >= k);
 	assert(out_nng != NULL);
 
 	iscc_NNSearchObject* nn_search_object;

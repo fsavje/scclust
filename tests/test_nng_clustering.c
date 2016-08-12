@@ -67,6 +67,16 @@ void scc_ut_nng_clustering(void** state)
 	                                     F, F, F, F, F, F, F, F, F, F,
 	                                     T, T, T, T, T, T, T, T, T, T,
 	                                     F, F, F, F, F, F, F, F, F, F };
+	const bool main_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
@@ -169,6 +179,13 @@ void scc_ut_nng_clustering(void** state)
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	scc_free_clustering(&cl);
+
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+	                        100, main_data_points_none, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	scc_free_clustering(&cl);
 
 
@@ -2893,6 +2910,16 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                     F, F, F, F, F, F, F, F, F, F,
 	                                     T, T, T, T, T, T, T, T, T, T,
 	                                     F, F, F, F, F, F, F, F, F, F };
+	const bool main_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F,
+	                                          F, F, F, F, F, F, F, F, F, F };
 	const uint32_t type_size_constraints_one[3] = { 0, 1, 0 };
 	const uint32_t type_size_constraints_three[3] = { 1, 1, 1 };
 	const uint32_t type_size_constraints_four[3] = { 1, 0, 3 };
@@ -3105,6 +3132,14 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
+	scc_free_clustering(&cl);
+
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+                                       3, type_size_constraints_three, 100, type_labels_three,
+                                       SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+                                       100, main_data_points_none, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	scc_free_clustering(&cl);
 
 
