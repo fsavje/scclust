@@ -7,10 +7,11 @@ DEBUGDIR=../dbg
 BUILDDIR=build
 
 STDTESTS=test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
-         test_dist_search test_error test_greedy_top_clustering test_greedy_top_clustering_stress \
-         test_nng_clustering test_nng_clustering_stress test_nng_core test_nng_findseeds test_scclust
-SPECTESTS=test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_core_internal \
-          test_nng_findseeds_internal test_nng_findseeds_stable
+         test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
+         test_nng_core test_nng_findseeds test_scclust \
+         stress_greedy_top_clustering stress_nng_clustering
+SPECTESTS=test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
+          test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
 
 ALLTESTS=$(STDTESTS) $(SPECTESTS)
 DEBUGOBJS=$(addprefix $(DEBUGDIR)/,$(OBJECTS))
@@ -34,6 +35,10 @@ test_digraph_operations_internal: $(filter-out $(DEBUGDIR)/digraph_operations.o,
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
 test_greedy_top_clustering_internal: $(filter-out $(DEBUGDIR)/greedy_top_clustering.o,$(DEBUGOBJS))
+	mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_clustering_internal: $(filter-out $(DEBUGDIR)/nng_clustering.o,$(DEBUGOBJS))
 	mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
 
