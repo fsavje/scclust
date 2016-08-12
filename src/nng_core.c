@@ -350,17 +350,10 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 	assert(size_constraint >= 2);
 	assert(out_avg_seed_dist != NULL);
 
-	const size_t to_sample = (seed_result->count > ISCC_ESTIMATE_AVG_MAX_SAMPLE) ? ISCC_ESTIMATE_AVG_MAX_SAMPLE : seed_result->count;
-	const size_t step = ((seed_result->count - 1) / to_sample) + 1;
+	const size_t step = (seed_result->count > ISCC_ESTIMATE_AVG_MAX_SAMPLE) ? (seed_result->count / ISCC_ESTIMATE_AVG_MAX_SAMPLE) : 1;
+	assert(step > 0);
 
-	#ifndef NDEBUG
-		size_t dbg_count_seeds = 0;
-		for (size_t s = 0; s < seed_result->count; s += step) {
-			++dbg_count_seeds;
-		}
-		assert(dbg_count_seeds == to_sample);
-	#endif
-
+	size_t sampled = 0;
 	double sum_dist = 0.0;
 	double* const dist_scratch = malloc(sizeof(double[size_constraint]));
 	if (dist_scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -395,12 +388,13 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set_object,
 		assert((num_non_self_loops == size_constraint) || 
 		       (num_non_self_loops == size_constraint - 1));
 		assert(num_non_self_loops > 0);
+		++sampled;
 		sum_dist += tmp_dist / ((double) num_non_self_loops);
 	}
 
 	free(dist_scratch);
 
-	*out_avg_seed_dist = sum_dist / ((double) to_sample);
+	*out_avg_seed_dist = sum_dist / ((double) sampled);
 
 	return iscc_no_error();
 }
