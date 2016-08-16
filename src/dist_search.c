@@ -331,7 +331,7 @@ bool iscc_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
 	if (sort_scratch == NULL) return false;
 	double* const sort_scratch_end = sort_scratch + k - 1;
 
-	if (radius_search) radius = pow(radius, 2.0);
+	if (radius_search) radius = radius * radius;
 
 	out_nn_ref[0] = 0;
 	if (search_indices == NULL) {
