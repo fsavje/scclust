@@ -1,60 +1,113 @@
-CFLAGS=-std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-EXLIBS=-lcmocka
+# ==============================================================================
+# scclust -- A C library for size constrained clustering
+# https://github.com/fsavje/scclust
+#
+# Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library. If not, see http://www.gnu.org/licenses/
+# ==============================================================================
 
-OBJECTS=digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch.o dist_search.o error.o \
-        greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o nng_core.o \
-        nng_findseeds.o scc_data_obj.o scclust.o
-DEBUGDIR=../dbg
-BUILDDIR=build
+DPID = SCC_DPID_UINT32
+ARC = SCC_ARC32
+ANN_SEARCH = N
+ANN_TREE = SCC_ANN_KDTREE
 
-STDTESTS=test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
-         test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
-         test_nng_core test_nng_findseeds test_scclust \
-         stress_greedy_top_clustering stress_nng_clustering
-SPECTESTS=test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
-          test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
+CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
+XTRA_FLAGS =
+XTRA_LIBS = -lcmocka
 
-ALLTESTS=$(STDTESTS) $(SPECTESTS)
-DEBUGOBJS=$(addprefix $(DEBUGDIR)/,$(OBJECTS))
+BUILDDIR = build
+OBJDIR = ../build
+OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o dist_search.o \
+          error.o greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o \
+          nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
+OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
 
+STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
+           test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
+           test_nng_core test_nng_findseeds test_scclust \
+           stress_greedy_top_clustering stress_nng_clustering
+SPECTESTS = test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
+            test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
+
+ALLTESTS = $(STDTESTS) $(SPECTESTS)
+
+
+# Parse options
+
+ifneq ($(DPID), SCC_DPID_UINT32)
+XTRA_FLAGS += -D$(DPID)
+endif
+
+ifneq ($(ARC), SCC_ARC32)
+XTRA_FLAGS += -D$(ARC)
+endif
+
+ifeq ($(ANN_SEARCH), Y)
+OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
+XTRA_LIBS += exlib/libANN/lib/libANN.a -lstdc++
+$(ALLTESTS): | ../exlib/libANN/lib/libANN.a
+endif
+
+ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
+XTRA_FLAGS += -D$(ANN_TREE)
+endif
+
+
+# Main targets
 
 .PHONY: all clean $(ALLTESTS)
 
 all: $(ALLTESTS)
 
 clean:
-	cd .. && $(MAKE) clean-debug
+	cd .. && $(MAKE) clean
 	$(RM) -R $(BUILDDIR)
 
-$(STDTESTS): $(DEBUGOBJS)
+$(STDTESTS): $(OBJECTS)
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_digraph_operations_internal: $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_greedy_top_clustering_internal: $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_clustering_internal: $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_core_internal: $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_findseeds_internal: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
+	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+
+
+# Dependencies
+
+$(OBJECTS):
+	cd .. && $(MAKE) library DEBUG=Y TESTH=Y ANN_SEARCH=$(ANN_SEARCH) DPID=$(DPID) ARC=$(ARC) ANNTREE=$(ANNTREE)
+
+../exlib/libANN/lib/libANN.a:
+	cd ../exlib/libANN/ && $(MAKE)
+
+
+# Build folders
+
+$(ALLTESTS): | $(BUILDDIR)
+$(BUILDDIR):
 	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-
-test_digraph_operations_internal: $(filter-out $(DEBUGDIR)/digraph_operations.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-test_greedy_top_clustering_internal: $(filter-out $(DEBUGDIR)/greedy_top_clustering.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-test_nng_clustering_internal: $(filter-out $(DEBUGDIR)/nng_clustering.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-test_nng_core_internal: $(filter-out $(DEBUGDIR)/nng_core.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-test_nng_findseeds_internal: $(filter-out $(DEBUGDIR)/nng_findseeds.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-test_nng_findseeds_stable: $(filter-out $(DEBUGDIR)/nng_findseeds.o,$(DEBUGOBJS))
-	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $@.c $^ $(EXLIBS) -o $(BUILDDIR)/$@.out
-
-
-$(DEBUGOBJS):
-	cd .. && $(MAKE) debug
