@@ -90,7 +90,7 @@ bool iscc_init_nn_search_object(void* const data_set_object,
 		}
 	} else if (search_indices != NULL) {
 		for (size_t i = 0; i < len_search_indices; ++i) {
-			assert(search_indices[i] < data_set_object_cast->num_data_points);
+			assert(static_cast<size_t>(search_indices[i]) < data_set_object_cast->num_data_points);
 			search_points[i] = data_set_object_cast->data_matrix + search_indices[i] * data_set_object_cast->num_dimensions;
 		}
 	}

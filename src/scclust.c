@@ -263,7 +263,7 @@ scc_ErrorCode scc_check_clustering_types(const scc_Clustering* const clustering,
 
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
-			++cluster_type_sizes[(clustering->cluster_label[i] * num_types) + type_labels[i]];
+			++cluster_type_sizes[(((size_t) clustering->cluster_label[i]) * num_types) + ((size_t) type_labels[i])];
 		}
 	}
 

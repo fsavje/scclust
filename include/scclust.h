@@ -31,6 +31,7 @@
 #define __STDC_LIMIT_MACROS
 #endif
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -51,6 +52,9 @@ extern "C" {
  *  than the maximum number that can be stored in #scc_Clabel. I.e., 
  *  cluster labels must be in the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`, 
  *  and `SCC_CLABEL_NA` may not be in this sequence (but it may be `SCC_CLABEL_MAX`).
+ *
+ *  \note
+ *  The library has been tested with #scc_Clabel set to `uint32_t`, `uint64_t` and `int`.
  */
 typedef uint32_t scc_Clabel;
 
@@ -58,12 +62,15 @@ typedef uint32_t scc_Clabel;
 static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;
 
 /// Label given to unassigned vertices.
-static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
+static const scc_Clabel SCC_CLABEL_NA = SCC_CLABEL_MAX;
 
 /** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
  *  
  *  \note
  *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
+ *
+ *  \note
+ *  The library has been tested with #scc_TypeLabel set to `uint_fast16_t` and `int`.
  */
 typedef uint_fast16_t scc_TypeLabel;
 

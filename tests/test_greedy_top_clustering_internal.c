@@ -192,7 +192,7 @@ void scc_ut_gr_run_greedy_clustering(void** state)
 	scc_Clustering cl1 = {
 		.num_data_points = 100,
 		.num_clusters = 0,
-		.cluster_label = malloc(sizeof(iscc_Dpid[100])),
+		.cluster_label = malloc(sizeof(scc_Clabel[100])),
 		.external_labels = false,
 		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
 	};
@@ -214,14 +214,13 @@ void scc_ut_gr_run_greedy_clustering(void** state)
 	free(cl_stack1.clusters);
 	free(cl_stack1.dpid_store);
 
-
 	for (size_t i = 0; i < 100; ++i) {
 		wa.vertex_markers[i] = 0;
 	}
 	scc_Clustering cl2 = {
 		.num_data_points = 100,
 		.num_clusters = 0,
-		.cluster_label = malloc(sizeof(iscc_Dpid[100])),
+		.cluster_label = malloc(sizeof(scc_Clabel[100])),
 		.external_labels = false,
 		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
 	};
@@ -363,8 +362,8 @@ void scc_ut_gr_push_to_stack(void** state)
 	assert_memory_equal(cl_stack.dpid_store, ref_dpid_store, 20 * sizeof(iscc_Dpid));
 
 	iscc_gr_ClusterStack cl_stack_fail = {
-		.capacity = UINT32_MAX,
-		.items = UINT32_MAX,
+		.capacity = SIZE_MAX,
+		.items = SIZE_MAX,
 		.clusters = calloc(3, sizeof(iscc_gr_ClusterItem)),
 		.dpid_store = calloc(20, sizeof(iscc_Dpid)),
 	};

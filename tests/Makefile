@@ -56,7 +56,7 @@ endif
 
 ifeq ($(ANN_SEARCH), Y)
 OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
-XTRA_LIBS += exlib/libANN/lib/libANN.a -lstdc++
+XTRA_LIBS += ../exlib/libANN/lib/libANN.a -lstdc++
 $(ALLTESTS): | ../exlib/libANN/lib/libANN.a
 endif
 
@@ -100,7 +100,7 @@ test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
 # Dependencies
 
 $(OBJECTS):
-	cd .. && $(MAKE) library DEBUG=Y TESTH=Y ANN_SEARCH=$(ANN_SEARCH) DPID=$(DPID) ARC=$(ARC) ANNTREE=$(ANNTREE)
+	cd .. && $(MAKE) library DEBUG=Y TESTH=Y DPID=$(DPID) ARC=$(ARC) ANN_SEARCH=$(ANN_SEARCH) ANN_TREE=$(ANN_TREE)
 
 ../exlib/libANN/lib/libANN.a:
 	cd ../exlib/libANN/ && $(MAKE)

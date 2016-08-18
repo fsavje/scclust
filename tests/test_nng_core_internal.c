@@ -360,7 +360,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng5c;
 	scc_ErrorCode ec5c = iscc_make_nng(scc_ut_test_data_large, 50, NULL,
                                       100, query5c, NULL,
-                                      3, true, 30.0, true, 4, &out_nng5c);
+                                      3, true, 30.0, true, 8, &out_nng5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
 	iscc_free_digraph(&out_nng5c);
@@ -475,7 +475,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng6d;
 	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 10, NULL,
                                       10, NULL, out_indicators6d,
-                                      2, true, 0.2, true, 14, &out_nng6d);
+                                      2, true, 0.2, true, 16, &out_nng6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);
 	assert_memory_equal(out_indicators6d, ref_indicators6d, 10 * sizeof(bool));
@@ -857,7 +857,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c);
 	scc_ErrorCode ec5c = iscc_make_nng_from_search_object(nn_search_object5c,
 	                                                    100, query5c, NULL,
-                                                        3, true, 30.0, true, 4, &out_nng5c);
+                                                        3, true, 30.0, true, 8, &out_nng5c);
 	iscc_close_nn_search_object(&nn_search_object5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
@@ -987,7 +987,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d);
 	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d,
 	                                                    10, NULL, out_indicators6d,
-                                                        2, true, 0.2, true, 14, &out_nng6d);
+                                                        2, true, 0.2, true, 16, &out_nng6d);
 	iscc_close_nn_search_object(&nn_search_object6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);

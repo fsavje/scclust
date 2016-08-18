@@ -390,8 +390,8 @@ static scc_ErrorCode iscc_gr_push_to_stack(iscc_gr_ClusterStack* const cl_stack,
 	assert(cl != NULL);
 
 	if (cl_stack->items == cl_stack->capacity) {
-		const uint64_t capacity_tmp = cl_stack->capacity + 16 + (cl_stack->capacity >> 4);
-		if (capacity_tmp > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+		const uintmax_t capacity_tmp = cl_stack->capacity + 16 + (cl_stack->capacity >> 4);
+		if ((capacity_tmp > SIZE_MAX) || (capacity_tmp < cl_stack->capacity)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 		iscc_gr_ClusterItem* const clusters_tmp = realloc(cl_stack->clusters, sizeof(iscc_gr_ClusterItem[(size_t) capacity_tmp]));
 		if (clusters_tmp == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		cl_stack->clusters = clusters_tmp;

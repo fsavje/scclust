@@ -27,10 +27,6 @@
 #include "../include/scclust.h"
 #include "../src/scclust_int.h"
 
-// ISCC_DPID_MAX should be UINT32_MAX
-// ISCC_ARCI_MAX should be UINT32_MAX
-// SIZE_MAX is redefined to (UINT32_MAX - 10) by test_suite.h
-
 
 void scc_ut_free_digraph(void** state)
 {
@@ -115,13 +111,17 @@ void scc_ut_digraph_is_initialized(void** state)
 	assert_false(iscc_digraph_is_initialized(&dg));
 	dg.tail_ptr = tails;
 
-	dg.vertices = ((size_t) UINT32_MAX) + 1;
-	assert_false(iscc_digraph_is_initialized(&dg));
-	dg.vertices = 10;
-	
-	dg.max_arcs = ((size_t) UINT32_MAX) + 1;
-	assert_false(iscc_digraph_is_initialized(&dg));
-	dg.max_arcs = 100;
+	#if ISCC_DPID_MAX_MACRO < SIZE_MAX
+		dg.vertices = ((size_t) ISCC_DPID_MAX) + 1;
+		assert_false(iscc_digraph_is_initialized(&dg));
+		dg.vertices = 10;
+	#endif
+
+	#if ISCC_ARCI_MAX_MACRO < SIZE_MAX
+		dg.max_arcs = ((size_t) ISCC_ARCI_MAX) + 1;
+		assert_false(iscc_digraph_is_initialized(&dg));
+		dg.max_arcs = 100;
+	#endif
 
 	dg.max_arcs = 0;
 	assert_false(iscc_digraph_is_initialized(&dg));
@@ -228,13 +228,11 @@ void scc_ut_init_digraph(void** state)
 {
 	(void) state;
 
-	iscc_Digraph dg1;
-	scc_ErrorCode ec1 = iscc_init_digraph(100, ((uint64_t) UINT32_MAX) + 1, &dg1);
-	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
-	
-	iscc_Digraph dg2;
-	scc_ErrorCode ec2 = iscc_init_digraph(100, ((uint64_t) UINT32_MAX) - 5, &dg2);
-	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
+	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+		iscc_Digraph dg1;
+		scc_ErrorCode ec1 = iscc_init_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+	#endif
 
 	iscc_Digraph dg3;
 	scc_ErrorCode ec3 = iscc_init_digraph(100, 1000, &dg3);
@@ -263,13 +261,11 @@ void scc_ut_empty_digraph(void** state)
 {
 	(void) state;
 
-	iscc_Digraph dg1;
-	scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uint64_t) UINT32_MAX) + 1, &dg1);
-	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
-	
-	iscc_Digraph dg2;
-	scc_ErrorCode ec2 = iscc_empty_digraph(100, ((uint64_t) UINT32_MAX) - 5, &dg2);
-	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
+	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+		iscc_Digraph dg1;
+		scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+	#endif
 
 	iscc_Digraph dg3;
 	scc_ErrorCode ec3 = iscc_empty_digraph(100, 1000, &dg3);
@@ -316,23 +312,16 @@ void scc_ut_change_arc_storage(void** state)
 		.tail_ptr = tails,
 	};
 
-	assert_true(iscc_digraph_is_initialized(&dg));
-	scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uint64_t) UINT32_MAX) + 1);
-	assert_int_equal(dg.vertices, 5);
-	assert_int_equal(dg.max_arcs, 10);
-	assert_non_null(dg.head);
-	assert_non_null(dg.tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
-	assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
-
-	assert_true(iscc_digraph_is_initialized(&dg));
-	scc_ErrorCode ec2 = iscc_change_arc_storage(&dg, ((uint64_t) UINT32_MAX) - 5);
-	assert_int_equal(dg.vertices, 5);
-	assert_int_equal(dg.max_arcs, 10);
-	assert_non_null(dg.head);
-	assert_non_null(dg.tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
-	assert_int_equal(ec2, SCC_ER_TOO_LARGE_DIGRAPH);
+	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+		assert_true(iscc_digraph_is_initialized(&dg));
+		scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uintmax_t) ISCC_ARCI_MAX) + 1);
+		assert_int_equal(dg.vertices, 5);
+		assert_int_equal(dg.max_arcs, 10);
+		assert_non_null(dg.head);
+		assert_non_null(dg.tail_ptr);
+		assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+	#endif
 
 	assert_true(iscc_digraph_is_initialized(&dg));
 	scc_ErrorCode ec3 = iscc_change_arc_storage(&dg, 10);

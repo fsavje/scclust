@@ -23,7 +23,7 @@
 # > make doc
 # > make
 
-# This makefile has the following options:
+# This makefile has the following options (see documentation for more details):
 
 # Compile with debug asserts (Y/N)
 DEBUG = N
@@ -43,8 +43,8 @@ ANN_SEARCH = N
 # Tree data type used by ANN (SCC_ANN_KDTREE/SCC_ANN_BDTREE)
 ANN_TREE = SCC_ANN_KDTREE
 
-# See documentation for detailed descriptions of these options. 
 
+# Set up
 
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 CXXFLAGS = -std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
@@ -118,7 +118,7 @@ endif
 
 ifeq ($(ANN_SEARCH), Y)
 OBJECTS := $(filter-out $(BUILDDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(BUILDDIR)/dist_nnsearch_ANN.o
-XTRA_LIBS += exlib/libANN/lib/libANN.a -lstdc++
+XTRA_LIBS += exlib/libANN/lib/libANN.a
 endif
 
 ifneq ($(ANN_TREE), SCC_ANN_KDTREE)

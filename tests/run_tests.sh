@@ -1,29 +1,37 @@
 #!/bin/sh
 
+REDCOLOR='\033[0;31m'
+NOCOLOR='\033[0m'
+
 run_test()
 {
 	build/$1.out
 	if [ "$?" != "0" ]; then
+		printf "${REDCOLOR}ERROR FOUND!${NOCOLOR}\n"
 		exit 1
 	fi
 }
 
 STRESS=false
-while getopts ":s" opt; do
-  case $opt in
-    s)
-      echo "Running stress tests." >&2
-      STRESS=true
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-  esac
+while getopts ":c:s" opt; do
+	case $opt in
+		c)
+			COMPOPT=$OPTARG
+			printf "${REDCOLOR}Compiling with: $OPTARG${NOCOLOR}\n"
+			;;
+		s)
+			STRESS=true
+			printf "${REDCOLOR}Running stress tests.${NOCOLOR}\n"
+			;;
+		\?)
+			printf "${REDCOLOR}Invalid option: -$OPTARG${NOCOLOR}\n"
+			exit 1
+			;;
+	esac
 done
 
 make clean
-make all
+make all $COMPOPT
 
 run_test test_data_obj
 run_test test_digraph_core
@@ -48,4 +56,4 @@ if [ $STRESS = true ]; then
 	run_test stress_nng_clustering
 fi
 
-echo "\n*** ALL TESTS PASSED! ***"
+printf "${REDCOLOR}*** ALL TESTS PASSED! ***${NOCOLOR}\n"

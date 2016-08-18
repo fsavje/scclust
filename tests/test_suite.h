@@ -30,9 +30,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#undef SIZE_MAX
-#define SIZE_MAX (UINT32_MAX - 10)
-
 #define malloc(size) _test_malloc(size, __FILE__, __LINE__)
 #define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
 #define realloc(ptr, size) _test_realloc(ptr, size, __FILE__, __LINE__)

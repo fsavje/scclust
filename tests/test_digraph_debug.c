@@ -171,7 +171,7 @@ void scc_ut_digraph_from_pieces(void** state)
 	assert_int_equal(dg.max_arcs, 3);
 	assert_non_null(dg.head);
 	assert_ptr_not_equal(dg.head, head);
-	assert_memory_equal(dg.head, head, 3 * sizeof(iscc_Arci));
+	assert_memory_equal(dg.head, head, 3 * sizeof(iscc_Dpid));
 	assert_non_null(dg.tail_ptr);
 	assert_ptr_not_equal(dg.tail_ptr, tail_ptr);
 	assert_memory_equal(dg.tail_ptr, tail_ptr, 5 * sizeof(iscc_Arci));

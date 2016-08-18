@@ -73,10 +73,13 @@
 /// Maximum number that can be stored in #iscc_Dpid.
 #if defined(SCC_DPID_INT)
 	static const iscc_Dpid ISCC_DPID_MAX = INT_MAX;
+	#define ISCC_DPID_MAX_MACRO INT_MAX
 #elif defined(SCC_DPID_UINT64)
 	static const iscc_Dpid ISCC_DPID_MAX = UINT64_MAX;
+	#define ISCC_DPID_MAX_MACRO UINT64_MAX
 #else
 	static const iscc_Dpid ISCC_DPID_MAX = UINT32_MAX;
+	#define ISCC_DPID_MAX_MACRO UINT32_MAX
 #endif
 
 
@@ -95,8 +98,10 @@
 /// Maximum number that can be stored in #iscc_Arci.
 #ifdef SCC_ARC64
 	static const iscc_Arci ISCC_ARCI_MAX = UINT64_MAX;
+	#define ISCC_ARCI_MAX_MACRO UINT64_MAX
 #else
 	static const iscc_Arci ISCC_ARCI_MAX = UINT32_MAX;
+	#define ISCC_ARCI_MAX_MACRO UINT32_MAX
 #endif
 
 
