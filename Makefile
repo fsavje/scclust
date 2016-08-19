@@ -50,7 +50,6 @@ CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 CXXFLAGS = -std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 XTRA_FLAGS =
 XTRA_CFLAGS =
-XTRA_LIBS =
 
 LIBDIR = lib
 BUILDDIR = build
@@ -58,6 +57,7 @@ OBJECTS = digraph_core.o digraph_operations.o dist_nnsearch_c.o dist_search.o er
           greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o nng_core.o \
           nng_findseeds.o scc_data_obj.o scclust.o
 OBJECTS := $(addprefix $(BUILDDIR)/,$(OBJECTS))
+XTRA_OBJECTS =
 
 
 # Main targets
@@ -67,7 +67,7 @@ OBJECTS := $(addprefix $(BUILDDIR)/,$(OBJECTS))
 
 all: doc library
 
-library: $$(OBJECTS) $$(XTRA_LIBS)
+library: $$(OBJECTS) $$(XTRA_OBJECTS)
 	$(AR) rcs $(LIBDIR)/libscc.a $^
 
 doc:
@@ -92,7 +92,7 @@ $(BUILDDIR)/dist_nnsearch_ANN.o: src/dist_nnsearch_ANN.cpp
 
 # Dependencies
 
-exlib/libANN/lib/libANN.a:
+exlib/libANN/build/%.o:
 	cd exlib/libANN/ && $(MAKE)
 
 
@@ -118,7 +118,9 @@ endif
 
 ifeq ($(ANN_SEARCH), Y)
 OBJECTS := $(filter-out $(BUILDDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(BUILDDIR)/dist_nnsearch_ANN.o
-XTRA_LIBS += exlib/libANN/lib/libANN.a
+XTRA_OBJECTS += $(addprefix exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
+                                                kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
+                                                bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
 endif
 
 ifneq ($(ANN_TREE), SCC_ANN_KDTREE)

@@ -33,6 +33,7 @@ OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o 
           error.o greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o \
           nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
 OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
+XTRA_OBJECTS =
 
 STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
            test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
@@ -56,8 +57,10 @@ endif
 
 ifeq ($(ANN_SEARCH), Y)
 OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
-XTRA_LIBS += ../exlib/libANN/lib/libANN.a -lstdc++
-$(ALLTESTS): | ../exlib/libANN/lib/libANN.a
+XTRA_LIBS += -lstdc++
+XTRA_OBJECTS += $(addprefix ../exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
+                                                   kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
+                                                   bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
 endif
 
 ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
@@ -75,25 +78,25 @@ clean:
 	cd .. && $(MAKE) clean
 	$(RM) -R $(BUILDDIR)
 
-$(STDTESTS): $(OBJECTS)
+$(STDTESTS): $(OBJECTS) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_digraph_operations_internal: $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS))
+test_digraph_operations_internal: $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_greedy_top_clustering_internal: $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS))
+test_greedy_top_clustering_internal: $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_nng_clustering_internal: $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS))
+test_nng_clustering_internal: $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_nng_core_internal: $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS))
+test_nng_core_internal: $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_nng_findseeds_internal: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
+test_nng_findseeds_internal: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
-test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
+test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
 
 
@@ -102,7 +105,7 @@ test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS))
 $(OBJECTS):
 	cd .. && $(MAKE) library DEBUG=Y TESTH=Y DPID=$(DPID) ARC=$(ARC) ANN_SEARCH=$(ANN_SEARCH) ANN_TREE=$(ANN_TREE)
 
-../exlib/libANN/lib/libANN.a:
+../exlib/libANN/build/%.o:
 	cd ../exlib/libANN/ && $(MAKE)
 
 
