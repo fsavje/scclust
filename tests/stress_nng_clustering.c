@@ -157,7 +157,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 		scc_rand_uint32_t_array(0, 5, num_types, type_size_constraints);
 		scc_TypeLabel* const type_labels = malloc(sizeof(scc_TypeLabel[SAMPLE_SIZE]));
 		uint16_t* const type_labels_tmp = malloc(sizeof(uint16_t[SAMPLE_SIZE]));
-		scc_rand_uint16_t_array(0, num_types - 1, SAMPLE_SIZE, type_labels_tmp);
+		scc_rand_uint16_t_array(0, (uint16_t) (num_types - 1), SAMPLE_SIZE, type_labels_tmp);
 		for (size_t i = 0; i < SAMPLE_SIZE; ++i) {
 			type_labels[i] = ((scc_TypeLabel) type_labels_tmp[i]);
 		}
