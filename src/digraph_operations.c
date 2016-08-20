@@ -64,7 +64,7 @@ scc_ErrorCode iscc_delete_loops(iscc_Digraph* const dg)
 	assert(dg->head != NULL);
 
 	iscc_Arci head_write = 0;
-	assert(dg->vertices <= ISCC_DPID_MAX);
+	assert(dg->vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed 
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		const iscc_Dpid* v_arc = dg->head + dg->tail_ptr[v];
@@ -164,7 +164,7 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 
 	uint32_t row_counter;
 	iscc_Arci out_arcs_write = 0;
-	assert(minuend_dg->vertices <= ISCC_DPID_MAX);
+	assert(minuend_dg->vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid vertices = (iscc_Dpid) minuend_dg->vertices; // If `iscc_Dpid` is signed
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		const iscc_Dpid* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
@@ -219,7 +219,7 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
 		out_dg->tail_ptr[v + 1] += out_dg->tail_ptr[v];
 	}
 
-	assert(in_dg->vertices <= ISCC_DPID_MAX);
+	assert(in_dg->vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid vertices = (iscc_Dpid) in_dg->vertices; // If `iscc_Dpid` is signed 
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		const iscc_Dpid* const arc_stop = in_dg->head + in_dg->tail_ptr[v + 1];
@@ -324,7 +324,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	#endif
 
 	uintmax_t counter = 0;
-	assert(dgs->vertices <= ISCC_DPID_MAX);
+	assert(dgs->vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed
 
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
@@ -427,7 +427,7 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 	assert(row_markers != NULL);
 
 	uintmax_t counter = 0;
-	assert(dg_a->vertices <= ISCC_DPID_MAX);
+	assert(dg_a->vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid vertices = (iscc_Dpid) dg_a->vertices; // If `iscc_Dpid` is signed 
 
 	const iscc_Arci* const dg_a_tail_ptr = dg_a->tail_ptr;

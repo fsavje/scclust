@@ -67,7 +67,7 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
 	*out_clustering = NULL;
 
 	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 
 	scc_Clustering* tmp_cl = malloc(sizeof(scc_Clustering));
@@ -101,7 +101,7 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
 	*out_clustering = NULL;
 
 	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_clusters > SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
@@ -183,7 +183,7 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 	if (clustering == NULL) return false;
 	if (clustering->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
 	if (clustering->num_data_points < 2) return false;
-	if (clustering->num_data_points > ISCC_DPID_MAX) return false;
+	if (clustering->num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return false;
 	if (clustering->num_clusters > SCC_CLABEL_MAX) return false;
 	if ((clustering->num_clusters > 0) && (clustering->cluster_label == NULL)) return false;
 
@@ -393,7 +393,7 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 		cl_members[c] = cl_members[c - 1] + cluster_size[c];
 	}
 
-	assert(clustering->num_data_points <= ISCC_DPID_MAX);
+	assert(clustering->num_data_points <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid num_data_points = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed
 	for (iscc_Dpid i = 0; i < num_data_points; ++i) {
 		if (clustering->cluster_label[i] != SCC_CLABEL_NA) {

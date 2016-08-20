@@ -255,7 +255,7 @@ static scc_ErrorCode iscc_gr_empty_cl_stack(const size_t num_data_points,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	assert(num_data_points <= ISCC_DPID_MAX);
+	assert(num_data_points <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid num_data_points_dpid = (iscc_Dpid) num_data_points; // If `iscc_Dpid` is signed
 	for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
 		out_cl_stack->dpid_store[i] = i;
@@ -311,7 +311,7 @@ static scc_ErrorCode iscc_gr_init_cl_stack(const scc_Clustering* const in_cl,
 	}
 	*out_size_largest_cluster = size_largest_cluster;
 
-	assert(in_cl->num_data_points <= ISCC_DPID_MAX);
+	assert(in_cl->num_data_points <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid num_data_points = (iscc_Dpid) in_cl->num_data_points; // If `iscc_Dpid` is signed
 	for (iscc_Dpid i = 0; i < num_data_points; ++i) {
 		if (cluster_label[i] != SCC_CLABEL_NA) {

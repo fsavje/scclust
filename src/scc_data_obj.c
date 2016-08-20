@@ -58,7 +58,7 @@ scc_ErrorCode scc_get_data_set_object(const uintmax_t num_data_points,
 	*out_data_set_object = NULL;
 
 	if (num_data_points == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_dimensions == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (num_dimensions > UINT16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);

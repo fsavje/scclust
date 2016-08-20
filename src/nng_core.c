@@ -448,7 +448,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		if (seed_or_neighbor == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 		iscc_Dpid* write_seed_or_neighbor = seed_or_neighbor;
-		assert(clustering->num_data_points <= ISCC_DPID_MAX);
+		assert(clustering->num_data_points <= ((uintmax_t) ISCC_DPID_MAX));
 		const iscc_Dpid num_data_points_dpid = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed.
 		for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
 			if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
@@ -788,7 +788,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 	 * are disjoint, it's safe to call `iscc_make_nng` without `iscc_ensure_self_match`. */
 
 	if (search_indices == NULL) {
-		assert(len_search_indices <= ISCC_DPID_MAX);
+		assert(len_search_indices <= ((uintmax_t) ISCC_DPID_MAX));
 		const iscc_Dpid len_search_indices_dpid = (iscc_Dpid) len_search_indices; // If `iscc_Dpid` is signed.
 		for (iscc_Dpid search_point = 0; search_point < len_search_indices_dpid; ++search_point) {
 			iscc_Dpid* v_arc = nng->head + nng->tail_ptr[search_point];
@@ -867,7 +867,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 		out_type_result->type_groups[i] = out_type_result->type_groups[i - 1] + out_type_result->type_group_size[i];
 	}
 
-	assert(num_data_points <= ISCC_DPID_MAX);
+	assert(num_data_points <= ((uintmax_t) ISCC_DPID_MAX));
 	const iscc_Dpid num_data_points_dpid = (iscc_Dpid) num_data_points; // if case `iscc_Dpid` is signed.
 	for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
 		--(out_type_result->type_groups[type_labels[i]]);

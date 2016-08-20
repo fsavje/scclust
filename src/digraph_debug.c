@@ -98,7 +98,7 @@ scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
                                        iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ISCC_DPID_MAX);
+	assert(vertices <= ((uintmax_t) ISCC_DPID_MAX));
 	assert(max_arcs > 0);
 	assert(max_arcs <= ISCC_ARCI_MAX);
 	assert(max_arcs <= SIZE_MAX);
