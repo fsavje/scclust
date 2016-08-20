@@ -25,7 +25,7 @@ ANN_TREE = SCC_ANN_KDTREE
 
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 XTRA_FLAGS =
-XTRA_LIBS = -lcmocka
+XTRA_LIBS = -lcmocka -lm
 
 BUILDDIR = build
 OBJDIR = ../build
