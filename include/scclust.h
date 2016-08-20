@@ -62,7 +62,7 @@ typedef uint32_t scc_Clabel;
 static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;
 
 /// Label given to unassigned vertices.
-static const scc_Clabel SCC_CLABEL_NA = SCC_CLABEL_MAX;
+static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;
 
 /** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
  *  

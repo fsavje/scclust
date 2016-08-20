@@ -26,12 +26,21 @@ run_test_suite()
 		SUITEOPTS="CLABEL=UINT64"
 		sed -i '40,80s/typedef uint32_t scc_Clabel;/typedef uint64_t scc_Clabel;/' ../include/scclust.h
 		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_MAX = UINT64_MAX;/' ../include/scclust.h
+		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_NA = UINT64_MAX;/' ../include/scclust.h
 
 	elif [ "$1" == "INT" ]; then
 		SUITEOPTS="CLABEL=INT"
 		sed -i '60i#define SCC_RUN_CLABEL_TYPE_TESTS' ../include/scclust.h
 		sed -i '40,80s/typedef uint32_t scc_Clabel;/typedef int scc_Clabel;/' ../include/scclust.h
 		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_MAX = INT_MAX;/' ../include/scclust.h
+		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_NA = INT_MAX;/' ../include/scclust.h
+
+	elif [ "$1" == "INT_MNA" ]; then
+		SUITEOPTS="CLABEL=INT"
+		sed -i '60i#define SCC_RUN_CLABEL_TYPE_TESTS' ../include/scclust.h
+		sed -i '40,80s/typedef uint32_t scc_Clabel;/typedef int scc_Clabel;/' ../include/scclust.h
+		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_MAX = INT_MAX;/' ../include/scclust.h
+		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_NA = -1;/' ../include/scclust.h
 
 	else
 		printf "${REDCOLOR}UNKNOWN CLABEL.${NOCOLOR}\n"
@@ -98,10 +107,12 @@ cp ../include/scclust.h ../include/scclust_save.h
 run_test_suite UINT32 UINT16
 run_test_suite UINT64 UINT16
 run_test_suite INT UINT16
+run_test_suite INT_MNA UINT16
 
 run_test_suite UINT32 INT
 run_test_suite UINT64 INT
 run_test_suite INT INT
+run_test_suite INT_MNA INT
 
 mv ../include/scclust_save.h ../include/scclust.h
 
