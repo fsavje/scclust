@@ -43,7 +43,7 @@ void scc_rand_bool_array(const size_t len_out_array,
 uint16_t scc_rand_uint(const uint16_t min,
                        const uint16_t max)
 {
-	return (((uint16_t) rand()) % (max - min + 1)) + min;
+	return (uint16_t) ((((uint16_t) rand()) % (max - min + 1)) + min);
 }
 
 
@@ -56,7 +56,7 @@ void scc_rand_uint16_t_array(const uint16_t min,
 	assert(out_array != NULL);
 
 	for (size_t i = 0; i < len_out_array; ++i) {
-		out_array[i] = (((uint16_t) rand()) % (max - min + 1)) + min;
+		out_array[i] = (uint16_t) ((((uint16_t) rand()) % (max - min + 1)) + min);
 	}
 }
 
