@@ -19,4 +19,4 @@ install:
     - rm -rf cmocka-1.0.0
 
 script:
-  - cd tests && ./run_tests.sh
+  - cd tests && ./compiler_test.sh
