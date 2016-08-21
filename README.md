@@ -1,14 +1,16 @@
 # scclust
 
-**scclust** is a C99 library for size constrained clustering. Given a set of data points, scclust derives a partition that maximizes similarity of points assigned to the same cluster subject to user-specified conditions on the minimum size and composition of the clusters.
+[![Build Status](https://travis-ci.org/fsavje/scclust.svg?branch=master)](https://travis-ci.org/fsavje/scclust)
 
-scclust is made with large data sets in mind, and it can cluster hundreds of millions of data points within minutes in an ordinary desktop computer. It is also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management is separated from the rest of the library.
+**scclust** is a C99 library for size constrained clustering. Subject to user-specified conditions on the minimum size and composition of the clusters, scclust derives a partition of a set of data points so that the similarity of points assigned to the same cluster is maximized.
+
+scclust is made with large data sets in mind, and it can cluster hundreds of millions of data points within minutes on an ordinary desktop computer. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management is separated from the rest of the library.
 
 The library is currently in alpha, and breaking changes to the API might happen.
 
 ## How to compile scclust
 
-This snippet downloads and compiles scclust.
+This snippet downloads and compiles scclust:
 ```bash
 wget https://github.com/fsavje/scclust/archive/master.zip
 unzip master.zip 
@@ -19,9 +21,11 @@ scclust compiles into a static library by default.
 
 ## How to use scclust
 
-The library can be used in several different ways for different purposes. We recommend looking at the examples distributed with the code and the documentation for the full picture. Here we give you a minimal working example showing the simple use case: we have a set of data points and want to construct clusters that contain at least three unit each.
+The library can be used in several different ways, for different purposes. We recommend looking at the examples distributed with the code and the documentation for the full picture. Here we give you a minimal working example showing the simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
 
 ```c
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include "../include/scclust.h"
 #include "../include/scc_data_obj.h"
