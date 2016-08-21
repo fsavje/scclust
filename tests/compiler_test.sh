@@ -5,13 +5,15 @@ NOCOLOR='\033[0m'
 
 run_tests()
 {
-	printf "${REDCOLOR}Running tests compiled with: $SUITEOPTS $1${NOCOLOR}\n"
-	./run_tests.sh $STRESS -c "$1"
+	printf "Running tests compiled with: $SUITEOPTS $1\n"
+	./run_tests.sh $STRESS -c "$1" &> tmp_output_results
 	if [ "$?" != "0" ]; then
-		printf "${REDCOLOR}REMAINING TESTS ABORTED.${NOCOLOR}\n"
+		printf "${REDCOLOR}*** TEST SUITE FAILED, ABORTING:${NOCOLOR}\n"
+		printf "$(cat tmp_output_results)"
 		mv ../include/scclust_save.h ../include/scclust.h
 		exit 1
 	fi
+	rm tmp_output_results
 }
 
 run_test_suite()
@@ -36,7 +38,7 @@ run_test_suite()
 		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_NA = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_NA = INT_MAX;/' ../include/scclust.h
 
 	elif [ "$1" == "INT_MNA" ]; then
-		SUITEOPTS="CLABEL=INT"
+		SUITEOPTS="CLABEL=INT_MNA"
 		sed -i '60i#define SCC_RUN_CLABEL_TYPE_TESTS' ../include/scclust.h
 		sed -i '40,80s/typedef uint32_t scc_Clabel;/typedef int scc_Clabel;/' ../include/scclust.h
 		sed -i '40,80s/static const scc_Clabel SCC_CLABEL_MAX = UINT32_MAX;/static const scc_Clabel SCC_CLABEL_MAX = INT_MAX;/' ../include/scclust.h
