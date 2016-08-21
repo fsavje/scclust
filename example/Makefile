@@ -34,7 +34,7 @@ clean:
 	$(RM) *.out
 
 $(EXAMPLES): ../lib/libscc.a
-	$(CC) $(CFLAGS) $@.c $^ -o $@.out
+	$(CC) $(CFLAGS) $@.c $^ -lm -o $@.out
 
 
 # Dependencies
