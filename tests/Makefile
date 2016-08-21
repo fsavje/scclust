@@ -23,6 +23,7 @@ ARC = SCC_ARC32
 ANN_SEARCH = N
 ANN_TREE = SCC_ANN_KDTREE
 
+LINKER = $(CC)
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
 XTRA_FLAGS =
 XTRA_LIBS = -lcmocka -lm
@@ -42,7 +43,7 @@ STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_opera
 SPECTESTS = test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
             test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
 
-ALLTESTS = $(STDTESTS) $(SPECTESTS)
+ALLTESTS = $(addprefix $(BUILDDIR)/,$(addsuffix .out,$(STDTESTS) $(SPECTESTS)))
 
 
 # Parse options
@@ -57,7 +58,7 @@ endif
 
 ifeq ($(ANN_SEARCH), Y)
 OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
-XTRA_LIBS += -lstdc++
+LINKER = $(CXX)
 XTRA_OBJECTS += $(addprefix ../exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
                                                    kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
                                                    bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
@@ -70,7 +71,7 @@ endif
 
 # Main targets
 
-.PHONY: all clean $(ALLTESTS)
+.PHONY: all clean
 
 all: $(ALLTESTS)
 
@@ -78,29 +79,32 @@ clean:
 	cd .. && $(MAKE) clean
 	$(RM) -R $(BUILDDIR)
 
-$(STDTESTS): $(OBJECTS) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/%.out: $(BUILDDIR)/%.o $(OBJECTS) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_digraph_operations_internal: $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_digraph_operations_internal.out: $(BUILDDIR)/test_digraph_operations_internal.o $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_greedy_top_clustering_internal: $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_greedy_top_clustering_internal.out: $(BUILDDIR)/test_greedy_top_clustering_internal.o $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_nng_clustering_internal: $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_nng_clustering_internal.out: $(BUILDDIR)/test_nng_clustering_internal.o $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_nng_core_internal: $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_nng_core_internal.out: $(BUILDDIR)/test_nng_core_internal.o $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_nng_findseeds_internal: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_nng_findseeds_internal.out: $(BUILDDIR)/test_nng_findseeds_internal.o $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-test_nng_findseeds_stable: $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
-	$(CC) $(CFLAGS) $(XTRA_FLAGS) $@.c $^ $(XTRA_LIBS) -o $(BUILDDIR)/$@.out
+$(BUILDDIR)/test_nng_findseeds_stable.out: $(BUILDDIR)/test_nng_findseeds_stable.o $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
 
 # Dependencies
+
+$(BUILDDIR)/%.o: %.c
+	$(CC) -c $(CFLAGS) $(XTRA_FLAGS) $< -o $@
 
 $(OBJECTS):
 	cd .. && $(MAKE) library DEBUG=Y TESTH=Y DPID=$(DPID) ARC=$(ARC) ANN_SEARCH=$(ANN_SEARCH) ANN_TREE=$(ANN_TREE)
