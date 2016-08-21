@@ -11,6 +11,7 @@ run_tests()
 		printf "${REDCOLOR}*** TEST SUITE FAILED, ABORTING:${NOCOLOR}\n"
 		printf "$(cat tmp_output_results)"
 		mv ../include/scclust_save.h ../include/scclust.h
+		rm tmp_output_results
 		exit 1
 	fi
 	rm tmp_output_results
@@ -118,4 +119,4 @@ run_test_suite INT_MNA INT
 
 mv ../include/scclust_save.h ../include/scclust.h
 
-printf "${REDCOLOR}ALL TYPE TESTS DONE${NOCOLOR}\n"
+printf "${REDCOLOR}ALL COMPILER TESTS DONE${NOCOLOR}\n"

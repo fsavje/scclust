@@ -184,7 +184,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	assert(size_constraint <= num_data_points);
 	assert(size_constraint >= 2);
 	assert(num_types >= 2);
-	assert(num_types <= ISCC_TYPELABEL_MAX);
+	assert(num_types <= ((uintmax_t) ISCC_TYPELABEL_MAX));
 	assert(type_size_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(!radius_constraint || (radius > 0.0));
@@ -821,7 +821,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	assert(num_data_points > 1);
 	assert(size_constraint >= 2);
 	assert(num_types >= 2);
-	assert(num_types <= ISCC_TYPELABEL_MAX);
+	assert(num_types <= ((uintmax_t) ISCC_TYPELABEL_MAX));
 	assert(type_size_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(out_type_result != NULL);
