@@ -453,11 +453,11 @@ static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
 	assert(seed_result->count <= seed_result->capacity);
 	assert(seed_result->seeds != NULL);
 
-	if (seed_result->count == SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (seed_result->count == ((uintmax_t) SCC_CLABEL_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 
 	if (seed_result->count == seed_result->capacity) {
 		seed_result->capacity = seed_result->capacity + (seed_result->capacity >> 3) + 1024;
-		if (seed_result->capacity > SCC_CLABEL_MAX) seed_result->capacity = SCC_CLABEL_MAX;
+		if (seed_result->capacity > ((uintmax_t) SCC_CLABEL_MAX)) seed_result->capacity = ((size_t) SCC_CLABEL_MAX);
 		iscc_Dpid* const seeds_tmp_ptr = realloc(seed_result->seeds, sizeof(iscc_Dpid[seed_result->capacity]));
 		if (seeds_tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		seed_result->seeds = seeds_tmp_ptr;

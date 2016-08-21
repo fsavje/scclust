@@ -104,7 +104,7 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
 	if (num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_clusters > SCC_CLABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (num_clusters > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
 	if (current_cluster_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 
@@ -184,7 +184,7 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 	if (clustering->clustering_version != ISCC_CURRENT_CLUSTSTRUCT_VERSION) return false;
 	if (clustering->num_data_points < 2) return false;
 	if (clustering->num_data_points > ((uintmax_t) ISCC_DPID_MAX)) return false;
-	if (clustering->num_clusters > SCC_CLABEL_MAX) return false;
+	if (clustering->num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) return false;
 	if ((clustering->num_clusters > 0) && (clustering->cluster_label == NULL)) return false;
 
 	return true;
@@ -200,7 +200,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
 
-	assert(clustering->num_clusters <= SCC_CLABEL_MAX);
+	assert(clustering->num_clusters <= ((uintmax_t) SCC_CLABEL_MAX));
 	const scc_Clabel max_cluster = (scc_Clabel) clustering->num_clusters;
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		if ((clustering->cluster_label[i] > 0) && (clustering->cluster_label[i] < max_cluster)) continue;
@@ -249,7 +249,7 @@ scc_ErrorCode scc_check_clustering_types(const scc_Clustering* const clustering,
 	if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 
-	assert(clustering->num_clusters <= SCC_CLABEL_MAX);
+	assert(clustering->num_clusters <= ((uintmax_t) SCC_CLABEL_MAX));
 	const scc_Clabel max_cluster = (scc_Clabel) clustering->num_clusters;
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		if ((clustering->cluster_label[i] > 0) && (clustering->cluster_label[i] < max_cluster)) continue;
