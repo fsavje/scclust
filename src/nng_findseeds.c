@@ -189,7 +189,7 @@ static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,
 	}
 
 	scc_ErrorCode ec;
-	assert(nng->vertices <= ((uintmax_t) ISCC_DPID_MAX));
+	assert(nng->vertices <= ISCC_DPID_MAX);
 	const iscc_Dpid vertices = (iscc_Dpid) nng->vertices; // If `iscc_Dpid` is signed
 	for (iscc_Dpid v = 0; v < vertices; ++v) {
 		if (iscc_fs_check_neighbors_marks(v, nng, marks)) {
@@ -570,7 +570,7 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 	}
 	free(bucket_count);
 
-	assert(vertices <= ((uintmax_t) ISCC_DPID_MAX));
+	assert(vertices <= ISCC_DPID_MAX);
 	if (make_indices) {
 		out_sort->vertex_index = malloc(sizeof(iscc_Dpid*[vertices]));
 		if (out_sort->vertex_index == NULL) {

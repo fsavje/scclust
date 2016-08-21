@@ -47,7 +47,7 @@ void iscc_free_digraph(iscc_Digraph* const dg)
 bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
 {
 	if ((dg == NULL) || (dg->tail_ptr == NULL)) return false;
-	if ((dg->vertices > ((uintmax_t) ISCC_DPID_MAX)) || (dg->max_arcs > ISCC_ARCI_MAX)) return false;
+	if ((dg->vertices > ISCC_DPID_MAX) || (dg->max_arcs > ISCC_ARCI_MAX)) return false;
 	if ((dg->max_arcs == 0) && (dg->head != NULL)) return false;
 	if ((dg->max_arcs > 0) && (dg->head == NULL)) return false;
 	return true;
@@ -63,7 +63,7 @@ bool iscc_digraph_is_valid(const iscc_Digraph* const dg)
 		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
 	}
 	if (dg->tail_ptr[dg->vertices] > 0) {
-		assert(dg->vertices <= ((uintmax_t) ISCC_DPID_MAX));
+		assert(dg->vertices <= ISCC_DPID_MAX);
 		iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
 		const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
 		for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
@@ -86,7 +86,7 @@ scc_ErrorCode iscc_init_digraph(const size_t vertices,
                                 iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ((uintmax_t) ISCC_DPID_MAX));
+	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
 	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
@@ -118,7 +118,7 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
                                  iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ((uintmax_t) ISCC_DPID_MAX));
+	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
 	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
