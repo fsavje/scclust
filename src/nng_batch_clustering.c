@@ -157,6 +157,7 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 	assert(out_indices != NULL);
 	assert(assigned != NULL);
 
+	bool search_done = false;
 	scc_Clabel next_cluster_label = 0;
 	assert(clustering->num_data_points <= ISCC_DPID_MAX);
 	const iscc_Dpid num_data_points = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed
@@ -185,6 +186,12 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 			}
 		}
 
+		if (in_batch == 0) {
+			assert(curr_point == num_data_points);
+			break;
+		}
+
+		search_done = true;
 		if (!iscc_nearest_neighbor_search_index(nn_search_object,
 		                                        in_batch,
 		                                        batch_indices,
@@ -230,6 +237,7 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 							clustering->cluster_label[batch_indices[i]] = next_cluster_label;
 						}
 
+						assert(clustering->cluster_label[batch_indices[i]] == next_cluster_label);
 						++next_cluster_label;
 					} else {
 						// `i` has assigned neighbors and cannot be seed
@@ -250,6 +258,20 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 			check_indices = stop_check_indices;
 		} // Loop in batch
 	} // Loop between batches
+
+	if (next_cluster_label == 0) {
+		if (!search_done) {
+			// Never did search, i.e., main_data_points are all false
+			assert(main_data_points != NULL);
+			return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+		} else {
+			// Did search but still no clusters, i.e., too tight radius constraint
+			assert(main_radius_constraint);
+			return iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+		}
+	}
+
+	clustering->num_clusters = (size_t) next_cluster_label;
 
 	return iscc_no_error();
 }

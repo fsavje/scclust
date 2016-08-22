@@ -38,7 +38,7 @@ XTRA_OBJECTS =
 
 STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
            test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
-           test_nng_core test_nng_findseeds test_scclust \
+           test_nng_clustering_batches test_nng_core test_nng_findseeds test_scclust \
            stress_greedy_top_clustering stress_nng_clustering
 SPECTESTS = test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
             test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
