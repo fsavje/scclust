@@ -271,6 +271,16 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* clustering,
                                  bool secondary_radius_constraint,
                                  double secondary_radius);
 
+scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* clustering,
+                                         void* data_set_object,
+                                         uint32_t size_constraint,
+                                         scc_UnassignedMethod main_unassigned_method,
+                                         bool main_radius_constraint,
+                                         double main_radius,
+                                         size_t len_main_data_points,
+                                         const bool main_data_points[],
+                                         uint32_t batch_size);
+
 scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* clustering,
                                             void* data_set_object,
                                             uint32_t size_constraint,
