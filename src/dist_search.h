@@ -88,16 +88,25 @@ bool iscc_init_nn_search_object(void* data_set_object,
 
 // `out_nn_ref` must be of length `len_query_indicators + 1`
 // `out_nn_indices` must be of length `k * sum(num_query_indicators)`
-bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
-                                  size_t len_query_indicators,
-                                  const bool query_indicators[],
-                                  bool out_query_indicators[],
-                                  uint32_t k,
-                                  bool radius_search,
-                                  double radius,
-                                  bool accept_partial,
-                                  iscc_Arci out_nn_ref[],
-                                  iscc_Dpid out_nn_indices[]);
+bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* nn_search_object,
+                                          size_t len_query_indicators,
+                                          const bool query_indicators[],
+                                          bool out_query_indicators[],
+                                          uint32_t k,
+                                          bool radius_search,
+                                          double radius,
+                                          bool accept_partial,
+                                          iscc_Arci out_nn_ref[],
+                                          iscc_Dpid out_nn_indices[]);
+
+// `out_nn_indices` must be of length `k * len_query_indices`
+bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_object,
+                                        size_t len_query_indices,
+                                        const iscc_Dpid query_indices[],
+                                        uint32_t k,
+                                        bool radius_search,
+                                        double radius,
+                                        iscc_Dpid out_nn_indices[]);
 
 bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 

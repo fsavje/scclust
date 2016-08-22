@@ -749,16 +749,16 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 	scc_ErrorCode ec;
 	if ((ec = iscc_init_digraph(len_query_indicators, max_arcs, out_nng)) != SCC_ER_OK) return ec;
 
-	if (!iscc_nearest_neighbor_search(nn_search_object,
-	                                  len_query_indicators,
-	                                  query_indicators,
-	                                  out_query_indicators,
-	                                  k,
-	                                  radius_search,
-	                                  radius,
-	                                  accept_partial,
-	                                  out_nng->tail_ptr,
-	                                  out_nng->head)) {
+	if (!iscc_nearest_neighbor_search_digraph(nn_search_object,
+	                                          len_query_indicators,
+	                                          query_indicators,
+	                                          out_query_indicators,
+	                                          k,
+	                                          radius_search,
+	                                          radius,
+	                                          accept_partial,
+	                                          out_nng->tail_ptr,
+	                                          out_nng->head)) {
 		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
@@ -782,7 +782,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 	assert(!iscc_digraph_is_empty(nng));
 	assert(len_search_indices > 0);
 
-	/* When there's identical data points, `iscc_nearest_neighbor_search` may not
+	/* When there's identical data points, `iscc_nearest_neighbor_search_digraph` may not
 	 * return a self-loop when a query is a search point. The NNG clustering functions
 	 * require this. However, if all data points are unique, or the query and search sets
 	 * are disjoint, it's safe to call `iscc_make_nng` without `iscc_ensure_self_match`. */
