@@ -25,7 +25,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/scclust.h"
 #include "digraph_core.h"
 #include "dist_search.h"
 #include "error.h"
@@ -202,15 +201,6 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* const clustering,
 	iscc_free_digraph(&nng);
 
 	return ec;
-}
-
-
-scc_ErrorCode scc_nng_clustering_paired(scc_Clustering* clustering,
-                                        void* data_set_object)
-{
-	(void) clustering;
-	(void) data_set_object;
-	return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
 }
 
 

@@ -288,8 +288,6 @@ scc_ErrorCode scc_nng_clustering_with_types(scc_Clustering* clustering,
                                             bool secondary_radius_constraint,
                                             double secondary_radius);
 
-scc_ErrorCode scc_nng_clustering_paired(scc_Clustering* clustering,
-                                        void* data_set_object);
 
 // ==============================================================================
 // Greedy clustering function
