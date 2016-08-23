@@ -36,6 +36,40 @@ void scc_ut_nng_clustering_batches(void** state)
 {
 	(void) state;
 
+	/*
+	true <- TRUE
+	false <- FALSE
+	dist_mat <- aaa
+	num_points <- nrow(dist_mat)
+	size_constraint <- 2
+	ignore_remaining <- TRUE
+	radius <- Inf
+	main_data_points <- rep(TRUE, num_points)
+
+	res <- apply(dist_mat, 1, order)[1:size_constraint, ]
+	within_radius <- (apply(dist_mat, 1, sort)[size_constraint, ] < radius)
+
+	clustering <- rep(NA, num_points)
+	assign <- rep(FALSE, num_points)
+
+	cluster_label <- 0
+
+	for (i in which(main_data_points)) {
+	  if (!assign[i] && within_radius[i]) {
+	    if (!any(assign[res[, i]])) {
+	      assign[res[, i]] <- TRUE
+	      clustering[res[, i]] <- cluster_label
+	      cluster_label <- cluster_label + 1
+	    } else if(!ignore_remaining) {
+	      clustering[i] <- clustering[res[, i][which(assign[res[, i]])[1]]]
+	    }
+	  }
+	}
+
+	cluster_label
+	paste0(clustering, collapse = ", ")
+	*/
+
 	bool cl_is_OK;
 	scc_Clustering* cl;
 	scc_Clustering* cl_compare;
