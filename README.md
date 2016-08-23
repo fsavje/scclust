@@ -8,16 +8,6 @@ scclust is made with large data sets in mind, and it can cluster hundreds of mil
 
 The library is currently in alpha, and breaking changes to the API might happen.
 
-## How to compile scclust
-
-This snippet downloads and compiles scclust:
-```bash
-wget https://github.com/fsavje/scclust/archive/master.zip
-unzip master.zip 
-cd scclust-master && make library
-```
-
-scclust compiles into a static library by default. 
 
 ## How to use scclust
 
@@ -88,3 +78,145 @@ This example is distributed with the library. You can run it by calling the foll
 cd example && make
 ./simple_example.out
 ```
+
+
+## How to compile scclust
+
+This snippet downloads and compiles scclust:
+```bash
+wget https://github.com/fsavje/scclust/archive/master.zip
+unzip master.zip 
+cd scclust-master && make library
+```
+
+scclust compiles into a static library by default. 
+
+Calling `make` without the `library` target compiles the documentation as well (requires DoxyGen).
+
+
+## Compile options
+
+### Debug mode
+
+Compiles the library with a number of debug asserts. This will slow down execution, but is helpful to catch bugs.
+
+To turn on when calling `make`:
+```bash
+make library DEBUG=Y
+```
+
+To turn **off** when compiling individual files (on by default):
+```bash
+cc -c -DNDEBUG src/digraph_core.c -o digraph_core.o
+```
+
+
+### Test mode
+
+Compiles the library with test suite that watches for overflows and memory leaks. Use only when actively testing the library.
+
+To turn on when calling `make`:
+```bash
+make library TESTH=Y
+```
+
+To turn on when compiling individual files:
+```bash
+cc -c -include tests/test_suite.h src/digraph_core.c -o digraph_core.o
+```
+
+### Cluster label data type
+
+To change the date type used to store cluster labels, change the `typedef` for `scc_Clabel` in `include/scclust.h`. Remember to change `SCC_CLABEL_MAX` and `SCC_CLABEL_NA` to appropriate values. The library has been tested with `scc_Clabel` set to `uint32_t`, `uint64_t` and `int`.
+
+
+### Type label data type
+
+To change the date type used to store type labels, change the `typedef` for `scc_TypeLabel` in `include/scclust.h`. The library has been tested with `scc_Clabel` set to `uint_fast16_t` and `int`.
+
+
+### Data point ID data type
+
+The data type used to store data point IDs. This choice restricts the maximum number of points in any clustering problem solved by scclust -- a wider type allows larger problems but requires more memory. The possible types are:
+
+| Flag            | Data type  | Max data points |
+| --------------- | ---------- | --------------- |
+| SCC_DPID_UINT32 | `uint32_t` | $2^{32} − 1$    |
+| SCC_DPID_UINT64 | `uint64_t` | $2^{64} − 1$    |
+| SCC_DPID_INT    | `int`      | $2^{31} − 1$    |
+
+The default is `SCC_DPID_UINT32`. 
+
+To change type when calling `make`:
+```bash
+make library DPID=SCC_DPID_INT
+```
+
+To change type when compiling individual files:
+```bash
+cc -c -DSCC_DPID_INT src/digraph_core.c -o digraph_core.o
+```
+
+
+### Arc reference data type
+
+The data type used to store arc references. This choice restricts the size of the graphs used by scclust to solve clustering problems -- a wider type allows larger problems but requires more memory. A rough estimate of the number of the required maximum arc reference is given by $\{\text{number of points}\} \times \{\text{minimum size of clusters}\}$. The possible types are:
+
+| Flag      | Data type  | Max arc ref   |
+| --------- | ---------- | ------------- |
+| SCC_ARC32 | `uint32_t` | $2^{32} − 1$  |
+| SCC_ARC64 | `uint64_t` | $2^{64} − 1$  |
+
+The default is `SCC_ARC32`. 
+
+To change type when calling `make`:
+```bash
+make library ARC=SCC_ARC64
+```
+
+To change type when compiling individual files:
+```bash
+cc -c -DSCC_ARC64 src/digraph_core.c -o digraph_core.o
+```
+
+
+### The ANN library for nearest neighbor search
+
+scclust can use the [ANN library](https://www.cs.umd.edu/~mount/ANN/) to do all nearest neighbor searches. This will usually speed up execution considerably, but requires that the library is linked with a C++ linker.
+
+To turn on when calling `make`:
+```bash
+make library ANN_SEARCH=Y
+```
+
+When using the ANN library, it is recommended to compile with `SCC_DPID_INT`. This avoids costly type translations between the libraries. 
+
+
+### Tree data structure used by ANN
+
+The ANN library can use both k-d trees (`SCC_ANN_KDTREE`) and box-decomposition trees (`SCC_ANN_BDTREE`). The latter is more robust to clustered data points. See the [ANN manual](https://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ANNmanual_1.1.pdf) for more details.
+
+To change tree when calling `make`:
+```bash
+make library ANN_SEARCH=Y ANN_TREE=SCC_ANN_BDTREE
+```
+
+To change tree when compiling individual files:
+```bash
+cc -c -DSCC_ANN_BDTREE src/digraph_core.c -o digraph_core.o
+```
+
+The default is `SCC_ANN_KDTREE`. This option is ignore if the ANN library is not used for nearest neighbor search.
+
+
+## How to contribute to scclust
+
+Thank you for considering contributing to scclust. This is a free, open source library and it gets better if we all help out. There are many ways to do that: report bugs, suggest useful new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
+
+If you're filing a bug, please include the information needed to reproduce the bug. Besides the code you're trying to running, information about your platform and compilation options is often useful.
+
+
+## License
+
+scclust is distributed under the [GNU Lesser General Public License v2.1](https://github.com/fsavje/scclust/blob/master/LICENSE).
+
