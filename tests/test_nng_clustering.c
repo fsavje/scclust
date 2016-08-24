@@ -2935,21 +2935,21 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                               1, 2, 2, 0, 2, 0, 2, 0, 0, 1 };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_CLUSTERING);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_small_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_small_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2957,7 +2957,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 1,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 1,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2965,7 +2965,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 101,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 101,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2973,7 +2973,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        1, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2981,7 +2981,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        SIZE_MAX, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2989,7 +2989,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, NULL, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2997,7 +2997,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 50, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3005,7 +3005,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, NULL,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3013,7 +3013,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        100, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3021,7 +3021,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, 100, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3029,7 +3029,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3037,7 +3037,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -3045,7 +3045,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        50, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3053,7 +3053,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, main_data_points, 100, false, 0.0);
@@ -3061,7 +3061,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, main_data_points, SCC_UM_ASSIGN_BY_NNG, false, 0.0);
@@ -3069,7 +3069,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, true, 0.0);
@@ -3077,7 +3077,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_existing_clustering(100, 10, external_cluster_labels, false, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3086,7 +3086,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 
 	const uint32_t type_size_constraints_three_mod1[3] = { 35, 1, 1 };
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three_mod1, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3095,7 +3095,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 
 	const uint32_t type_size_constraints_three_mod2[3] = { 2, 2, 2 };
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three_mod2, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3103,7 +3103,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3111,7 +3111,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3119,7 +3119,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 10,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3127,7 +3127,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 10,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3135,7 +3135,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, main_data_points_none, SCC_UM_IGNORE, false, 0.0);
@@ -3147,7 +3147,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3168,7 +3168,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3189,7 +3189,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3210,7 +3210,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3231,7 +3231,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3252,7 +3252,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3273,7 +3273,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3294,7 +3294,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3315,7 +3315,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3336,7 +3336,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3357,7 +3357,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3378,7 +3378,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3399,7 +3399,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3420,7 +3420,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3441,7 +3441,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3462,7 +3462,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3483,7 +3483,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3504,7 +3504,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3525,7 +3525,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3546,7 +3546,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3567,7 +3567,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3588,7 +3588,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3609,7 +3609,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3630,7 +3630,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3651,7 +3651,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3672,7 +3672,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3693,7 +3693,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3714,7 +3714,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3735,7 +3735,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3756,7 +3756,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3777,7 +3777,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3798,7 +3798,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3819,7 +3819,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3840,7 +3840,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3861,7 +3861,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
                                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3882,7 +3882,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3903,7 +3903,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3924,7 +3924,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3945,7 +3945,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3966,7 +3966,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3987,7 +3987,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4008,7 +4008,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
 	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4029,7 +4029,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4050,7 +4050,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4071,7 +4071,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4092,7 +4092,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4113,7 +4113,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4134,7 +4134,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4155,7 +4155,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4176,7 +4176,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4197,7 +4197,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4218,7 +4218,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4239,7 +4239,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4260,7 +4260,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4281,7 +4281,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4302,7 +4302,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4323,7 +4323,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4344,7 +4344,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4365,7 +4365,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4386,7 +4386,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4407,7 +4407,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4428,7 +4428,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4449,7 +4449,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4470,7 +4470,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4491,7 +4491,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4512,7 +4512,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4533,7 +4533,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4554,7 +4554,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4575,7 +4575,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4596,7 +4596,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4617,7 +4617,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4638,7 +4638,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4659,7 +4659,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4680,7 +4680,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4701,7 +4701,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4722,7 +4722,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4743,7 +4743,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4764,7 +4764,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4785,7 +4785,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4806,7 +4806,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4827,7 +4827,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4848,7 +4848,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4869,7 +4869,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -4890,7 +4890,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5936,7 +5936,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	                                               1, 2, 2, 0, 2, 0, 2, 0, 0, 1 };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -5953,7 +5953,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -5970,7 +5970,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -5987,7 +5987,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6004,7 +6004,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6021,7 +6021,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6038,7 +6038,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_with_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        seed_method, main_unassigned_method, main_radius_constraint, main_radius,
                                        len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
