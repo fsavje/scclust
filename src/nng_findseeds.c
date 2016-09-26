@@ -99,11 +99,15 @@ static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* bucket_start,
                                              const iscc_Dpid inwards_count[],
                                              iscc_Dpid* vertex_index[]);
 
+#endif // ifdef SCC_STABLE_CLUSTERING
+
+#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
+
 static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
                                             const iscc_Dpid* last_pos,
                                             const iscc_Dpid inwards_count[]);
 
-#endif // ifdef SCC_STABLE_CLUSTERING
+#endif // if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
 
 
 // ==============================================================================
@@ -672,6 +676,10 @@ static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* const bucket_start
 	vertex_index[*pos] = pos;
 }
 
+#endif // ifdef SCC_STABLE_CLUSTERING
+
+
+#if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
 
 static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
                                             const iscc_Dpid* const last_pos,
@@ -685,4 +693,4 @@ static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
 	}
 }
 
-#endif // ifdef SCC_STABLE_CLUSTERING
+#endif // if defined(SCC_STABLE_CLUSTERING) && !defined(NDEBUG)
