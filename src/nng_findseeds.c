@@ -630,27 +630,26 @@ static inline void iscc_fs_decrease_v_in_sort(const iscc_Dpid v_to_decrease,
 	// Decrease count on vertex
 	--inwards_count[v_to_decrease];
 
-	// Check so list not already sorted
-	if (move_from != move_to) {
-		// Do swap
-		*move_from = *move_to;
-		*move_to = v_to_decrease;
+	// Do swap
+	assert(*move_from == v_to_decrease);
+	*move_from = *move_to;
+	*move_to = v_to_decrease;
 
-		// Update vertex index
-		vertex_index[*move_to] = move_to;
-		vertex_index[*move_from] = move_from;
-
-		#ifdef SCC_STABLE_CLUSTERING
-			// Sort old bucket by vertex ID
-			iscc_fs_debug_bucket_sort(move_to + 1, move_from, inwards_count, vertex_index);
-		#endif
-	}
+	// Update vertex index
+	vertex_index[*move_to] = move_to;
+	vertex_index[*move_from] = move_from;
 
 	#ifdef SCC_STABLE_CLUSTERING
+		// Sort old bucket by vertex ID
+		if (move_to != move_from) {
+			iscc_fs_debug_bucket_sort(move_to + 1, move_from, inwards_count, vertex_index);
+		}
+
 		// If new bucket start on or before current_pos in the sorted vertices, move it to next in line
 		if (bucket_index[inwards_count[v_to_decrease]] <= current_pos) {
 			bucket_index[inwards_count[v_to_decrease]] = current_pos + 1;
 		}
+
 		// Sort new bucket by vertex ID
 		iscc_fs_debug_bucket_sort(bucket_index[inwards_count[v_to_decrease]],
 		                          move_to, inwards_count, vertex_index);
