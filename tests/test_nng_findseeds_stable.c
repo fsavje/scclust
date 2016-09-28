@@ -144,6 +144,19 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_non_null(sr3.seeds);
 	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
 
+	iscc_Dpid fp_seeds3alt[5] = {2, 6, 8, 12, 13};
+	iscc_SeedResult sr3alt = {
+		.capacity = 1,
+		.count = 0,
+		.seeds = NULL,
+	};
+	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_ALT_UPDATING, &sr3alt);
+	assert_int_equal(ec3alt, SCC_ER_OK);
+	assert_int_equal(sr3alt.count, 5);
+	assert_int_equal(sr3alt.capacity, sr3alt.count);
+	assert_non_null(sr3alt.seeds);
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+
 	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
@@ -173,6 +186,7 @@ void scc_ut_find_seeds_stable(void** state)
 	free(sr1.seeds);
 	free(sr2.seeds);
 	free(sr3.seeds);
+	free(sr3alt.seeds);
 	free(sr4.seeds);
 	free(sr5.seeds);
 	iscc_free_digraph(&nng);
@@ -243,6 +257,19 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_non_null(sr3.seeds);
 	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
 
+	iscc_Dpid fp_seeds3alt[5] = {2, 6, 8, 12, 13};
+	iscc_SeedResult sr3alt = {
+		.capacity = 1,
+		.count = 0,
+		.seeds = NULL,
+	};
+	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_ALT_UPDATING, &sr3alt);
+	assert_int_equal(ec3alt, SCC_ER_OK);
+	assert_int_equal(sr3alt.count, 5);
+	assert_int_equal(sr3alt.capacity, sr3alt.count);
+	assert_non_null(sr3alt.seeds);
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+
 	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
@@ -272,6 +299,7 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	free(sr1.seeds);
 	free(sr2.seeds);
 	free(sr3.seeds);
+	free(sr3alt.seeds);
 	free(sr4.seeds);
 	free(sr5.seeds);
 	iscc_free_digraph(&nng);
