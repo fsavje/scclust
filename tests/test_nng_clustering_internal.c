@@ -56,7 +56,7 @@ void scc_ut_make_clustering_from_nng(void** state)
 	scc_Clustering* cl1;
 	assert_int_equal(scc_init_empty_clustering(15, external_cluster_labels, &cl1), SCC_ER_OK);
 	scc_ErrorCode ec1 = iscc_make_clustering_from_nng(cl1, &scc_ut_test_data_small_struct,
-	                                                  &nng1, false, 3, SCC_SM_LEXICAL,
+	                                                  &nng1, 3, SCC_SM_LEXICAL,
 	                                                  SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                  main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label1[15] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
@@ -94,7 +94,7 @@ void scc_ut_make_clustering_from_nng(void** state)
 	scc_Clustering* cl2;
 	assert_int_equal(scc_init_empty_clustering(15, NULL, &cl2), SCC_ER_OK);
 	scc_ErrorCode ec2 = iscc_make_clustering_from_nng(cl2, &scc_ut_test_data_small_struct,
-	                                                  &nng2, false, 3, SCC_SM_LEXICAL,
+	                                                  &nng2, 3, SCC_SM_LEXICAL,
 	                                                  SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                  main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label2[15] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
@@ -130,7 +130,7 @@ void scc_ut_make_clustering_from_nng(void** state)
 	scc_Clustering* cl3;
 	assert_int_equal(scc_init_empty_clustering(15, NULL, &cl3), SCC_ER_OK);
 	scc_ErrorCode ec3 = iscc_make_clustering_from_nng(cl3, &scc_ut_test_data_small_struct,
-	                                                  &nng3, false, 3, SCC_SM_LEXICAL,
+	                                                  &nng3, 3, SCC_SM_LEXICAL,
 	                                                  SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                                                  main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	const scc_Clabel ref_cluster_label3[15] = { 0, 0, 1, 1, 2,   1, 0, 0, 2, 1,   1, M, 2, 1, 2 };
@@ -166,7 +166,7 @@ void scc_ut_make_clustering_from_nng(void** state)
 	scc_Clustering* cl4;
 	assert_int_equal(scc_init_empty_clustering(15, NULL, &cl4), SCC_ER_OK);
 	scc_ErrorCode ec4 = iscc_make_clustering_from_nng(cl4, &scc_ut_test_data_small_struct,
-	                                                  &nng4, false, 3, SCC_SM_LEXICAL,
+	                                                  &nng4, 3, SCC_SM_LEXICAL,
 	                                                  SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                  main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	const scc_Clabel ref_cluster_label4[15] = { 0, 0, 1, 1, 2,   1, 0, 0, 2, 1,   1, 1, 2, 1, 0 };
@@ -202,7 +202,7 @@ void scc_ut_make_clustering_from_nng(void** state)
 	scc_Clustering* cl5;
 	assert_int_equal(scc_init_empty_clustering(15, NULL, &cl5), SCC_ER_OK);
 	scc_ErrorCode ec5 = iscc_make_clustering_from_nng(cl5, &scc_ut_test_data_small_struct,
-	                                                  &nng5, false, 3, SCC_SM_LEXICAL,
+	                                                  &nng5, 3, SCC_SM_LEXICAL,
 	                                                  SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                                                  main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label5[15] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, M, 2, 1, 2 };
