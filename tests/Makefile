@@ -41,7 +41,7 @@ STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_opera
            test_nng_clustering_batches test_nng_core test_nng_findseeds test_scclust \
            stress_greedy_top_clustering stress_nng_clustering
 SPECTESTS = test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
-            test_nng_core_internal test_nng_findseeds_internal test_nng_findseeds_stable
+            test_nng_core_internal test_nng_core_stable test_nng_findseeds_internal test_nng_findseeds_stable
 
 ALLTESTS = $(addprefix $(BUILDDIR)/,$(addsuffix .out,$(STDTESTS) $(SPECTESTS)))
 
@@ -94,6 +94,9 @@ $(BUILDDIR)/test_nng_clustering_internal.out: $(BUILDDIR)/test_nng_clustering_in
 $(BUILDDIR)/test_nng_core_internal.out: $(BUILDDIR)/test_nng_core_internal.o $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
+$(BUILDDIR)/test_nng_core_stable.out: $(BUILDDIR)/test_nng_core_stable.o $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(XTRA_LIBS) -o $@
+
 $(BUILDDIR)/test_nng_findseeds_internal.out: $(BUILDDIR)/test_nng_findseeds_internal.o $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
@@ -103,7 +106,7 @@ $(BUILDDIR)/test_nng_findseeds_stable.out: $(BUILDDIR)/test_nng_findseeds_stable
 
 # Dependencies
 
-$(BUILDDIR)/%.o: %.c
+$(BUILDDIR)/%.o: %.c $(BUILDDIR)
 	$(CC) -c $(CFLAGS) $(XTRA_FLAGS) $< -o $@
 
 $(OBJECTS):

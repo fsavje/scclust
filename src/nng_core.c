@@ -105,6 +105,12 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* clustering,
                                               bool radius_constraint,
                                               double radius);
 
+#ifdef SCC_STABLE_NNG
+
+static void iscc_sort_nng(iscc_Digraph* nng);
+
+#endif // ifdef SCC_STABLE_NNG
+
 
 // ==============================================================================
 // External function implementations
@@ -163,6 +169,10 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set_object,
 		iscc_free_digraph(out_nng);
 		return ec;
 	}
+
+	#ifdef SCC_STABLE_NNG
+		iscc_sort_nng(out_nng);
+	#endif // ifdef SCC_STABLE_NNG
 
 	return iscc_no_error();
 }
@@ -332,6 +342,10 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set_object,
 	}
 
 	free(seedable);
+
+	#ifdef SCC_STABLE_NNG
+		iscc_sort_nng(out_nng);
+	#endif // ifdef SCC_STABLE_NNG
 
 	return iscc_no_error();
 }
@@ -1003,3 +1017,25 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 
 	return iscc_no_error();
 }
+
+
+#ifdef SCC_STABLE_NNG
+
+static int iscc_compare_Dpid(const void* const a, const void* const b)
+{
+    const iscc_Dpid arg1 = *(const iscc_Dpid* const)a;
+    const iscc_Dpid arg2 = *(const iscc_Dpid* const)b;
+    return (arg1 > arg2) - (arg1 < arg2);
+}
+
+static void iscc_sort_nng(iscc_Digraph* const nng)
+{
+	for (size_t v = 0; v < nng->vertices; ++v) {
+		const size_t count = nng->tail_ptr[v + 1] - nng->tail_ptr[v];
+		if (count > 1) {
+			qsort(nng->head + nng->tail_ptr[v], count, sizeof(iscc_Dpid), iscc_compare_Dpid);
+		}
+	}
+}
+
+#endif // ifdef SCC_STABLE_NNG
