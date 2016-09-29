@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
-#define SCC_STABLE_CLUSTERING
+#define SCC_STABLE_FINDSEED
 
 #include "test_suite.h"
 #include "../src/nng_findseeds.c"

@@ -28,8 +28,8 @@
 #include "../src/digraph_debug.h"
 #include "../src/scclust_int.h"
 
-#ifdef SCC_STABLE_CLUSTERING
-    #error Please run this test without the SCC_STABLE_CLUSTERING flag
+#ifdef SCC_STABLE_FINDSEED
+    #error Please run this test without the SCC_STABLE_FINDSEED flag
 #endif
 
 
