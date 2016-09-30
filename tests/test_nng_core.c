@@ -904,7 +904,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds1,
 	};
 	scc_ErrorCode ec1 = iscc_make_nng_clusters_from_seeds(cl1, &scc_ut_test_data_small_struct,
-	                                                      &sr1, &nng1,
+	                                                      &sr1, &nng1, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label1[15] = { 0, 1, 2, 3, 4, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4 };
@@ -948,7 +948,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds2,
 	};
 	scc_ErrorCode ec2 = iscc_make_nng_clusters_from_seeds(cl2, &scc_ut_test_data_small_struct,
-	                                                      &sr2, &nng2,
+	                                                      &sr2, &nng2, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label2[15] = { 0, M, 1, 2, 3, 0, 0, M, M, 1, 1, 2, 2, 3, 3 };
@@ -992,7 +992,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds3,
 	};
 	scc_ErrorCode ec3 = iscc_make_nng_clusters_from_seeds(cl3, &scc_ut_test_data_small_struct,
-	                                                      &sr3, &nng3,
+	                                                      &sr3, &nng3, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label3[15] = { 0, 1, 0, 2, 3,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
@@ -1036,7 +1036,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds3a,
 	};
 	scc_ErrorCode ec3a = iscc_make_nng_clusters_from_seeds(cl3a, &scc_ut_test_data_small_struct,
-	                                                      &sr3a, &nng3a,
+	                                                      &sr3a, &nng3a, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label3a[15] = { 0, 1, 0, 2, 3,   1, 0, M, 3, 3,   2, 3, 1, 2, M };
@@ -1080,10 +1080,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds4,
 	};
 	scc_ErrorCode ec4 = iscc_make_nng_clusters_from_seeds(cl4, &scc_ut_test_data_small_struct,
-	                                                      &sr4, &nng4,
+	                                                      &sr4, &nng4, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
-	const scc_Clabel ref_cluster_label4[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 0 };
+	const scc_Clabel ref_cluster_label4[15] = { 0, 1, 0, 2, 3,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_int_equal(cl4->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl4->num_data_points, 15);
@@ -1124,10 +1124,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds4a,
 	};
 	scc_ErrorCode ec4a = iscc_make_nng_clusters_from_seeds(cl4a, &scc_ut_test_data_small_struct,
-	                                                      &sr4a, &nng4a,
+	                                                      &sr4a, &nng4a, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
-	const scc_Clabel ref_cluster_label4a[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 0 };
+	const scc_Clabel ref_cluster_label4a[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
 	assert_int_equal(ec4a, SCC_ER_OK);
 	assert_int_equal(cl4a->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl4a->num_data_points, 15);
@@ -1168,7 +1168,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds5,
 	};
 	scc_ErrorCode ec5 = iscc_make_nng_clusters_from_seeds(cl5, &scc_ut_test_data_small_struct,
-	                                                      &sr5, &nng5,
+	                                                      &sr5, &nng5, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label5[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 0 };
@@ -1212,7 +1212,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds5a,
 	};
 	scc_ErrorCode ec5a = iscc_make_nng_clusters_from_seeds(cl5a, &scc_ut_test_data_small_struct,
-	                                                      &sr5a, &nng5a,
+	                                                      &sr5a, &nng5a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.1,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label5a[15] = { 0, 1, 0, 2, 2,   1, 0, M, 3, 3,   2, 3, 1, 2, 0 };
@@ -1256,7 +1256,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds6,
 	};
 	scc_ErrorCode ec6 = iscc_make_nng_clusters_from_seeds(cl6, &scc_ut_test_data_small_struct,
-	                                                      &sr6, &nng6,
+	                                                      &sr6, &nng6, true,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label6[15] = { 0, 1, 0, 2, 0,   1, 0, 3, 3, 3,   2, 3, 1, 2, 0 };
@@ -1300,7 +1300,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds7,
 	};
 	scc_ErrorCode ec7 = iscc_make_nng_clusters_from_seeds(cl7, &scc_ut_test_data_small_struct,
-	                                                      &sr7, &nng7,
+	                                                      &sr7, &nng7, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label7[15] = { 1, 1, M, M, 2,   M, 1, M, 2, M,   M, 0, 2, 0, 0 };
@@ -1344,7 +1344,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds7a,
 	};
 	scc_ErrorCode ec7a = iscc_make_nng_clusters_from_seeds(cl7a, &scc_ut_test_data_small_struct,
-	                                                      &sr7a, &nng7a,
+	                                                      &sr7a, &nng7a, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label7a[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
@@ -1388,7 +1388,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds7b,
 	};
 	scc_ErrorCode ec7b = iscc_make_nng_clusters_from_seeds(cl7b, &scc_ut_test_data_small_struct,
-	                                                      &sr7b, &nng7b,
+	                                                      &sr7b, &nng7b, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label7b[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
@@ -1432,7 +1432,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds7c,
 	};
 	scc_ErrorCode ec7c = iscc_make_nng_clusters_from_seeds(cl7c, &scc_ut_test_data_small_struct,
-	                                                      &sr7c, &nng7c,
+	                                                      &sr7c, &nng7c, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label7c[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
@@ -1476,7 +1476,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds7d,
 	};
 	scc_ErrorCode ec7d = iscc_make_nng_clusters_from_seeds(cl7d, &scc_ut_test_data_small_struct,
-	                                                      &sr7d, &nng7d,
+	                                                      &sr7d, &nng7d, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label7d[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, M,   M, 0, 2, 0, 0 };
@@ -1520,7 +1520,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds8,
 	};
 	scc_ErrorCode ec8 = iscc_make_nng_clusters_from_seeds(cl8, &scc_ut_test_data_small_struct,
-	                                                      &sr8, &nng8,
+	                                                      &sr8, &nng8, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label8[15] = { 1, 1, 1, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
@@ -1564,7 +1564,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds8a,
 	};
 	scc_ErrorCode ec8a = iscc_make_nng_clusters_from_seeds(cl8a, &scc_ut_test_data_small_struct,
-	                                                      &sr8a, &nng8a,
+	                                                      &sr8a, &nng8a, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label8a[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -1608,7 +1608,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds8b,
 	};
 	scc_ErrorCode ec8b = iscc_make_nng_clusters_from_seeds(cl8b, &scc_ut_test_data_small_struct,
-	                                                      &sr8b, &nng8b,
+	                                                      &sr8b, &nng8b, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label8b[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -1652,7 +1652,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds8c,
 	};
 	scc_ErrorCode ec8c = iscc_make_nng_clusters_from_seeds(cl8c, &scc_ut_test_data_small_struct,
-	                                                      &sr8c, &nng8c,
+	                                                      &sr8c, &nng8c, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label8c[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -1696,7 +1696,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds8d,
 	};
 	scc_ErrorCode ec8d = iscc_make_nng_clusters_from_seeds(cl8d, &scc_ut_test_data_small_struct,
-	                                                      &sr8d, &nng8d,
+	                                                      &sr8d, &nng8d, true,
 	                                                      SCC_UM_ASSIGN_BY_NNG, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label8d[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
@@ -1740,10 +1740,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds9,
 	};
 	scc_ErrorCode ec9 = iscc_make_nng_clusters_from_seeds(cl9, &scc_ut_test_data_small_struct,
-	                                                      &sr9, &nng9,
+	                                                      &sr9, &nng9, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
-	const scc_Clabel ref_cluster_label9[15] = { 1, 1, 2, 2, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label9[15] = { 1, 1, 1, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9, SCC_ER_OK);
 	assert_int_equal(cl9->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl9->num_data_points, 15);
@@ -1784,10 +1784,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds9a,
 	};
 	scc_ErrorCode ec9a = iscc_make_nng_clusters_from_seeds(cl9a, &scc_ut_test_data_small_struct,
-	                                                      &sr9a, &nng9a,
+	                                                      &sr9a, &nng9a, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
-	const scc_Clabel ref_cluster_label9a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label9a[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9a, SCC_ER_OK);
 	assert_int_equal(cl9a->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl9a->num_data_points, 15);
@@ -1828,10 +1828,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds9b,
 	};
 	scc_ErrorCode ec9b = iscc_make_nng_clusters_from_seeds(cl9b, &scc_ut_test_data_small_struct,
-	                                                      &sr9b, &nng9b,
+	                                                      &sr9b, &nng9b, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
-	const scc_Clabel ref_cluster_label9b[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label9b[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9b, SCC_ER_OK);
 	assert_int_equal(cl9b->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl9b->num_data_points, 15);
@@ -1872,10 +1872,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds9c,
 	};
 	scc_ErrorCode ec9c = iscc_make_nng_clusters_from_seeds(cl9c, &scc_ut_test_data_small_struct,
-	                                                      &sr9c, &nng9c,
+	                                                      &sr9c, &nng9c, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
-	const scc_Clabel ref_cluster_label9c[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label9c[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9c, SCC_ER_OK);
 	assert_int_equal(cl9c->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl9c->num_data_points, 15);
@@ -1916,10 +1916,10 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds9d,
 	};
 	scc_ErrorCode ec9d = iscc_make_nng_clusters_from_seeds(cl9d, &scc_ut_test_data_small_struct,
-	                                                      &sr9d, &nng9d,
+	                                                      &sr9d, &nng9d, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
-	const scc_Clabel ref_cluster_label9d[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label9d[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9d, SCC_ER_OK);
 	assert_int_equal(cl9d->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl9d->num_data_points, 15);
@@ -1960,7 +1960,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds10,
 	};
 	scc_ErrorCode ec10 = iscc_make_nng_clusters_from_seeds(cl10, &scc_ut_test_data_small_struct,
-	                                                      &sr10, &nng10,
+	                                                      &sr10, &nng10, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label10[15] = { 1, 1, 2, 2, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
@@ -2004,7 +2004,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds10a,
 	};
 	scc_ErrorCode ec10a = iscc_make_nng_clusters_from_seeds(cl10a, &scc_ut_test_data_small_struct,
-	                                                      &sr10a, &nng10a,
+	                                                      &sr10a, &nng10a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label10a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2048,7 +2048,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds10b,
 	};
 	scc_ErrorCode ec10b = iscc_make_nng_clusters_from_seeds(cl10b, &scc_ut_test_data_small_struct,
-	                                                      &sr10b, &nng10b,
+	                                                      &sr10b, &nng10b, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label10b[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2092,7 +2092,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds10c,
 	};
 	scc_ErrorCode ec10c = iscc_make_nng_clusters_from_seeds(cl10c, &scc_ut_test_data_small_struct,
-	                                                      &sr10c, &nng10c,
+	                                                      &sr10c, &nng10c, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label10c[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2136,7 +2136,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds10d,
 	};
 	scc_ErrorCode ec10d = iscc_make_nng_clusters_from_seeds(cl10d, &scc_ut_test_data_small_struct,
-	                                                      &sr10d, &nng10d,
+	                                                      &sr10d, &nng10d, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label10d[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
@@ -2180,7 +2180,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds11,
 	};
 	scc_ErrorCode ec11 = iscc_make_nng_clusters_from_seeds(cl11, &scc_ut_test_data_small_struct,
-	                                                      &sr11, &nng11,
+	                                                      &sr11, &nng11, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label11[15] = { 1, 1, 2, M, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
@@ -2224,7 +2224,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds11a,
 	};
 	scc_ErrorCode ec11a = iscc_make_nng_clusters_from_seeds(cl11a, &scc_ut_test_data_small_struct,
-	                                                      &sr11a, &nng11a,
+	                                                      &sr11a, &nng11a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label11a[15] = { 1, 1, 2, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2268,7 +2268,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds11b,
 	};
 	scc_ErrorCode ec11b = iscc_make_nng_clusters_from_seeds(cl11b, &scc_ut_test_data_small_struct,
-	                                                      &sr11b, &nng11b,
+	                                                      &sr11b, &nng11b, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label11b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2312,7 +2312,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds11c,
 	};
 	scc_ErrorCode ec11c = iscc_make_nng_clusters_from_seeds(cl11c, &scc_ut_test_data_small_struct,
-	                                                      &sr11c, &nng11c,
+	                                                      &sr11c, &nng11c, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label11c[15] = { 1, 1, 2, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2356,7 +2356,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds11d,
 	};
 	scc_ErrorCode ec11d = iscc_make_nng_clusters_from_seeds(cl11d, &scc_ut_test_data_small_struct,
-	                                                      &sr11d, &nng11d,
+	                                                      &sr11d, &nng11d, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label11d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
@@ -2400,7 +2400,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds12,
 	};
 	scc_ErrorCode ec12 = iscc_make_nng_clusters_from_seeds(cl12, &scc_ut_test_data_small_struct,
-	                                                      &sr12, &nng12,
+	                                                      &sr12, &nng12, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label12[15] = { 1, 1, 2, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
@@ -2444,7 +2444,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds12a,
 	};
 	scc_ErrorCode ec12a = iscc_make_nng_clusters_from_seeds(cl12a, &scc_ut_test_data_small_struct,
-	                                                      &sr12a, &nng12a,
+	                                                      &sr12a, &nng12a, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label12a[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2488,7 +2488,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds12b,
 	};
 	scc_ErrorCode ec12b = iscc_make_nng_clusters_from_seeds(cl12b, &scc_ut_test_data_small_struct,
-	                                                      &sr12b, &nng12b,
+	                                                      &sr12b, &nng12b, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label12b[15] = { 1, 1, 2, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2532,7 +2532,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds12c,
 	};
 	scc_ErrorCode ec12c = iscc_make_nng_clusters_from_seeds(cl12c, &scc_ut_test_data_small_struct,
-	                                                      &sr12c, &nng12c,
+	                                                      &sr12c, &nng12c, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label12c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2576,7 +2576,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds12d,
 	};
 	scc_ErrorCode ec12d = iscc_make_nng_clusters_from_seeds(cl12d, &scc_ut_test_data_small_struct,
-	                                                      &sr12d, &nng12d,
+	                                                      &sr12d, &nng12d, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label12d[15] = { 1, 1, 2, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
@@ -2620,7 +2620,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds13,
 	};
 	scc_ErrorCode ec13 = iscc_make_nng_clusters_from_seeds(cl13, &scc_ut_test_data_small_struct,
-	                                                      &sr13, &nng13,
+	                                                      &sr13, &nng13, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      main_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label13[15] = { 1, 1, M, M, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
@@ -2664,7 +2664,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds13a,
 	};
 	scc_ErrorCode ec13a = iscc_make_nng_clusters_from_seeds(cl13a, &scc_ut_test_data_small_struct,
-	                                                      &sr13a, &nng13a,
+	                                                      &sr13a, &nng13a, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label13a[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2708,7 +2708,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds13b,
 	};
 	scc_ErrorCode ec13b = iscc_make_nng_clusters_from_seeds(cl13b, &scc_ut_test_data_small_struct,
-	                                                      &sr13b, &nng13b,
+	                                                      &sr13b, &nng13b, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label13b[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2752,7 +2752,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds13c,
 	};
 	scc_ErrorCode ec13c = iscc_make_nng_clusters_from_seeds(cl13c, &scc_ut_test_data_small_struct,
-	                                                      &sr13c, &nng13c,
+	                                                      &sr13c, &nng13c, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label13c[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
@@ -2796,7 +2796,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 		.seeds = fp_seeds13d,
 	};
 	scc_ErrorCode ec13d = iscc_make_nng_clusters_from_seeds(cl13d, &scc_ut_test_data_small_struct,
-	                                                      &sr13d, &nng13d,
+	                                                      &sr13d, &nng13d, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      main_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label13d[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
