@@ -304,17 +304,13 @@ scc_ErrorCode scc_nng_clustering_types(scc_Clustering* clustering,
 
 
 // ==============================================================================
-// Greedy clustering function
+// Hierarchical clustering function
 // ==============================================================================
 
-scc_ErrorCode scc_top_down_greedy_clustering(scc_Clustering* clustering,
-                                             void* data_set_object,
-                                             uint32_t size_constraint,
-                                             bool batch_assign);
-
-scc_ErrorCode scc_bottom_up_greedy_clustering(scc_Clustering* clustering,
-                                              void* data_set_object,
-                                              uint32_t size_constraint);
+scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* clustering,
+                                          void* data_set_object,
+                                          uint32_t size_constraint,
+                                          bool batch_assign);
 
 
 #ifdef __cplusplus
