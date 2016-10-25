@@ -54,7 +54,7 @@ XTRA_CFLAGS =
 LIBDIR = lib
 BUILDDIR = build
 OBJECTS = digraph_core.o digraph_operations.o dist_nnsearch_c.o dist_search.o error.o \
-          greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o nng_batch_clustering.o \
+          hierarchical_clustering.o nng_clustering.o nng_batch_clustering.o \
           nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
 OBJECTS := $(addprefix $(BUILDDIR)/,$(OBJECTS))
 XTRA_OBJECTS =

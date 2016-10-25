@@ -79,7 +79,7 @@ break_cluster <- function(search, k, dist, batch) {
    list(clust1, rev(clust2))
 }
 
-greedy_clustering <- function(in_clustering, k, dist, batch) {
+hierarchical_clustering <- function(in_clustering, k, dist, batch) {
    cl_stack <- list()
    if (length(unique(in_clustering)) == 1) {
       cl_stack <- list(1:length(in_clustering))
@@ -105,7 +105,7 @@ greedy_clustering <- function(in_clustering, k, dist, batch) {
 }
 */
 
-void scc_ut_top_down_greedy_clustering(void** state)
+void scc_ut_hierarchical_clustering(void** state)
 {
 	(void) state;
 
@@ -117,7 +117,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 
 	scc_Clustering* cl1_a;
 	scc_init_empty_clustering(100, NULL, &cl1_a);
-	scc_ErrorCode ec1_a = scc_top_down_greedy_clustering(cl1_a, scc_ut_test_data_large, 20, true);
+	scc_ErrorCode ec1_a = scc_hierarchical_clustering(cl1_a, scc_ut_test_data_large, 20, true);
 	assert_int_equal(ec1_a, SCC_ER_OK);
 	assert_int_equal(cl1_a->num_data_points, 100);
 	assert_int_equal(cl1_a->num_clusters, 5);
@@ -127,7 +127,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 	scc_Clabel* ext_cluster_label1 = malloc(sizeof(scc_Clabel[100]));
 	scc_Clustering* cl1_b;
 	scc_init_empty_clustering(100, ext_cluster_label1, &cl1_b);
-	scc_ErrorCode ec1_b = scc_top_down_greedy_clustering(cl1_b, scc_ut_test_data_large, 20, true);
+	scc_ErrorCode ec1_b = scc_hierarchical_clustering(cl1_b, scc_ut_test_data_large, 20, true);
 	assert_int_equal(ec1_b, SCC_ER_OK);
 	assert_int_equal(cl1_b->num_data_points, 100);
 	assert_int_equal(cl1_b->num_clusters, 5);
@@ -144,7 +144,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 
 	scc_Clustering* cl2_a;
 	scc_init_empty_clustering(100, NULL, &cl2_a);
-	scc_ErrorCode ec2_a = scc_top_down_greedy_clustering(cl2_a, scc_ut_test_data_large, 20, false);
+	scc_ErrorCode ec2_a = scc_hierarchical_clustering(cl2_a, scc_ut_test_data_large, 20, false);
 	assert_int_equal(ec2_a, SCC_ER_OK);
 	assert_int_equal(cl2_a->num_data_points, 100);
 	assert_int_equal(cl2_a->num_clusters, 4);
@@ -154,7 +154,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 	scc_Clabel* ext_cluster_label2 = malloc(sizeof(scc_Clabel[100]));
 	scc_Clustering* cl2_b;
 	scc_init_empty_clustering(100, ext_cluster_label2, &cl2_b);
-	scc_ErrorCode ec2_b = scc_top_down_greedy_clustering(cl2_b, scc_ut_test_data_large, 20, false);
+	scc_ErrorCode ec2_b = scc_hierarchical_clustering(cl2_b, scc_ut_test_data_large, 20, false);
 	assert_int_equal(ec2_b, SCC_ER_OK);
 	assert_int_equal(cl2_b->num_data_points, 100);
 	assert_int_equal(cl2_b->num_clusters, 4);
@@ -173,7 +173,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
 	scc_Clustering* cl3;
 	scc_init_existing_clustering(100, 2, cluster_label3, true, &cl3);
-	scc_ErrorCode ec3 = scc_top_down_greedy_clustering(cl3, scc_ut_test_data_large, 20, true);
+	scc_ErrorCode ec3 = scc_hierarchical_clustering(cl3, scc_ut_test_data_large, 20, true);
 	assert_int_equal(ec3, SCC_ER_OK);
 	scc_Clabel ref_label3[100] = { 1, 1, 3, 3, 3, 0, 0, 2, 0, 0, 3, 1, 2, 2, 3, 1, 0, 3, 1, 0, 0, 2, 1, 1, 1,
 	                               0, 1, 2, 0, 2, 3, 0, 0, 1, 2, 0, 3, 2, 1, 1, 1, 3, 2, 3, 1, 2, 2, 2, 1, 0,
@@ -194,7 +194,7 @@ void scc_ut_top_down_greedy_clustering(void** state)
 	                                   0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0 };
 	scc_Clustering* cl4;
 	scc_init_existing_clustering(100, 2, cluster_label4, false, &cl4);
-	scc_ErrorCode ec4 = scc_top_down_greedy_clustering(cl4, scc_ut_test_data_large, 20, false);
+	scc_ErrorCode ec4 = scc_hierarchical_clustering(cl4, scc_ut_test_data_large, 20, false);
 	assert_int_equal(ec4, SCC_ER_OK);
 	scc_Clabel ref_label4[100] = { 1, 0, 3, 3, 3, 0, 0, 2, 0, 0, 3, 0, 2, 2, 3, 1, 0, 3, 1, 0, 0, 2, 1, 1, 1,
 	                               0, 0, 2, 0, 2, 3, 0, 0, 1, 2, 0, 3, 3, 0, 0, 1, 3, 2, 3, 1, 2, 2, 2, 0, 0,
@@ -211,8 +211,8 @@ void scc_ut_top_down_greedy_clustering(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
-		cmocka_unit_test(scc_ut_top_down_greedy_clustering),
+		cmocka_unit_test(scc_ut_hierarchical_clustering),
 	};
 
-	return cmocka_run_group_tests_name("greedy_clustering.c", test_cases, NULL, NULL);
+	return cmocka_run_group_tests_name("hierarchical_clustering.c", test_cases, NULL, NULL);
 }

@@ -33,7 +33,7 @@ static const size_t DATA_DIMENSION = 3;
 static const size_t NUM_ROUNDS = 10;
 
 
-void scc_ut_stress_top_down_greedy_clustering(void** state)
+void scc_ut_stress_hierarchical_clustering(void** state)
 {
 	(void) state;
 
@@ -55,7 +55,7 @@ void scc_ut_stress_top_down_greedy_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_top_down_greedy_clustering(cl, data_set_object, size_constraint, true);
+		ec = scc_hierarchical_clustering(cl, data_set_object, size_constraint, true);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -65,7 +65,7 @@ void scc_ut_stress_top_down_greedy_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_top_down_greedy_clustering(cl, data_set_object, size_constraint, false);
+		ec = scc_hierarchical_clustering(cl, data_set_object, size_constraint, false);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -82,8 +82,8 @@ void scc_ut_stress_top_down_greedy_clustering(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
-		cmocka_unit_test(scc_ut_stress_top_down_greedy_clustering),
+		cmocka_unit_test(scc_ut_stress_hierarchical_clustering),
 	};
 
-	return cmocka_run_group_tests_name("stress greedy_top_clustering.c", test_cases, NULL, NULL);
+	return cmocka_run_group_tests_name("stress hierarchical_clustering.c", test_cases, NULL, NULL);
 }

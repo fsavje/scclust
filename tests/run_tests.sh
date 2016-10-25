@@ -40,8 +40,8 @@ run_test test_digraph_operations_internal
 run_test test_digraph_operations
 run_test test_dist_search
 run_test test_error
-run_test test_greedy_top_clustering_internal
-run_test test_greedy_top_clustering
+run_test test_hierarchical_clustering_internal
+run_test test_hierarchical_clustering
 run_test test_nng_clustering_internal
 run_test test_nng_clustering
 run_test test_nng_core_internal
@@ -53,7 +53,7 @@ run_test test_nng_findseeds
 run_test test_scclust
 
 if [ $STRESS = true ]; then
-	run_test stress_greedy_top_clustering
+	run_test stress_hierarchical_clustering
 	run_test stress_nng_clustering
 fi
 

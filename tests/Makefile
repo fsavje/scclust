@@ -31,16 +31,16 @@ XTRA_LIBS = -lcmocka -lm
 BUILDDIR = build
 OBJDIR = ../build
 OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o dist_search.o \
-          error.o greedy_bottom_clustering.o greedy_top_clustering.o nng_clustering.o \
-          nng_batch_clustering.o nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
+          error.o hierarchical_clustering.o nng_clustering.o nng_batch_clustering.o \
+          nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
 OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
 XTRA_OBJECTS =
 
 STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
-           test_dist_search test_error test_greedy_top_clustering test_nng_clustering \
+           test_dist_search test_error test_hierarchical_clustering test_nng_clustering \
            test_nng_clustering_batches test_nng_core test_nng_findseeds test_scclust \
-           stress_greedy_top_clustering stress_nng_clustering
-SPECTESTS = test_digraph_operations_internal test_greedy_top_clustering_internal test_nng_clustering_internal \
+           stress_hierarchical_clustering stress_nng_clustering
+SPECTESTS = test_digraph_operations_internal test_hierarchical_clustering_internal test_nng_clustering_internal \
             test_nng_core_internal test_nng_core_stable test_nng_findseeds_internal test_nng_findseeds_stable
 
 ALLTESTS = $(addprefix $(BUILDDIR)/,$(addsuffix .out,$(STDTESTS) $(SPECTESTS)))
@@ -85,7 +85,7 @@ $(BUILDDIR)/%.out: $(BUILDDIR)/%.o $(OBJECTS) $(XTRA_OBJECTS)
 $(BUILDDIR)/test_digraph_operations_internal.out: $(BUILDDIR)/test_digraph_operations_internal.o $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_greedy_top_clustering_internal.out: $(BUILDDIR)/test_greedy_top_clustering_internal.o $(filter-out $(OBJDIR)/greedy_top_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILDDIR)/test_hierarchical_clustering_internal.out: $(BUILDDIR)/test_hierarchical_clustering_internal.o $(filter-out $(OBJDIR)/hierarchical_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
 $(BUILDDIR)/test_nng_clustering_internal.out: $(BUILDDIR)/test_nng_clustering_internal.o $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
