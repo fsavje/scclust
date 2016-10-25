@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -430,7 +430,7 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 void scc_ut_digraph_union_and_delete_single(void** state)
 {
 	(void) state;
-	
+
 	iscc_Digraph ut_dg7;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
 	const bool tails_to_keep5[4] = { true, true, false, false };
@@ -791,7 +791,7 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 void scc_ut_digraph_union_and_delete_keep_loops_single(void** state)
 {
 	(void) state;
-	
+
 	iscc_Digraph ut_dg7;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
 	const bool tails_to_keep5[4] = { true, true, false, false };
@@ -883,7 +883,7 @@ void scc_ut_digraph_difference(void** state)
 	scc_ErrorCode ec5 = iscc_digraph_difference(&minuend_dg5, &subtrahend_dg5, 5);
 	assert_equal_digraph(&minuend_dg5, &ref_dg5);
 	assert_int_equal(ec5, SCC_ER_OK);
-	
+
 	iscc_Digraph minuend_dg5b;
 	iscc_digraph_from_string("#.#../#.##./#.#../##.../##..#/", &minuend_dg5b);
 	iscc_Digraph subtrahend_dg5b;
@@ -1277,6 +1277,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_digraph_transpose),
 		cmocka_unit_test(scc_ut_adjacency_product),
 	};
-	
+
 	return cmocka_run_group_tests_name("digraph_operations.c", test_cases, NULL, NULL);
 }

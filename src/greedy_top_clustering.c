@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -233,7 +233,7 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
 
 
 // ==============================================================================
-// Internal function implementations 
+// Internal function implementations
 // ==============================================================================
 
 static scc_ErrorCode iscc_hi_empty_cl_stack(const size_t num_data_points,
@@ -457,7 +457,6 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	iscc_hi_DistanceEdge* temp_edge2;
 
 	size_t num_unassigned = cluster_to_break->size;
-	
 	const uint_fast16_t curr_marker = iscc_hi_get_next_marker(cluster_to_break, vertex_markers);
 
 	*out_new_cluster = (iscc_hi_ClusterItem) {
@@ -497,7 +496,7 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	if (batch_assign) {
 		uint32_t num_assign_in_batch = size_constraint;
 		for (; num_unassigned > 0; num_unassigned -= num_assign_in_batch) {
-			
+
 			if (num_assign_in_batch > num_unassigned) num_assign_in_batch = (uint32_t) num_unassigned;
 
 			temp_edge1 = iscc_hi_get_next_k_nn(last_assigned_edge1, num_assign_in_batch, vertex_markers, curr_marker, k_nn_array1);
@@ -580,7 +579,7 @@ static inline iscc_hi_DistanceEdge* iscc_hi_get_next_k_nn(iscc_hi_DistanceEdge* 
 static inline iscc_hi_DistanceEdge* iscc_hi_get_next_dist(iscc_hi_DistanceEdge* const prev_dist,
                                                           const uint_fast16_t vertex_markers[const],
                                                           const uint_fast16_t curr_marker)
-{	
+{
 	assert(prev_dist != NULL);
 	assert(prev_dist->next_dist != NULL); // We should never reach the end!
 	assert(vertex_markers != NULL);

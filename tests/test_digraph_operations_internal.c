@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -49,7 +49,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
-	
+
 	const uint64_t ut_count_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_12, 6);
 	iscc_Arci out_tail_ptr_12[5];
@@ -74,7 +74,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
-	
+
 	const uint64_t ut_count_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_13, 6);
 	iscc_Arci out_tail_ptr_13[5];
@@ -99,7 +99,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
-	
+
 	const uint64_t ut_count_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_31, 6);
 	iscc_Arci out_tail_ptr_31[5];
@@ -124,7 +124,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
-	
+
 	const uint64_t ut_count_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_123, 8);
 	iscc_Arci out_tail_ptr_123[5];
@@ -149,7 +149,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
-	
+
 	const uint64_t ut_count_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_132, 8);
 	iscc_Arci out_tail_ptr_132[5];
@@ -174,7 +174,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
-	
+
 	const uint64_t ut_count_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_213, 8);
 	iscc_Arci out_tail_ptr_213[5];
@@ -199,7 +199,7 @@ void scc_ut_do_union_and_delete(void** state)
 
 
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
-	
+
 	const uint64_t ut_count_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_321, 8);
 	iscc_Arci out_tail_ptr_321[5];
@@ -221,7 +221,7 @@ void scc_ut_do_union_and_delete(void** state)
 	iscc_Dpid ref_head_321_ttk[4] = { 3, 0, 2, 3 };
 	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_Arci));
 	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(iscc_Dpid));
-	
+
 
 	iscc_free_digraph(&ut_dg1);
 	iscc_free_digraph(&ut_dg2);
@@ -453,7 +453,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
-	
+
 	const uint64_t ut_count_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_12, 10);
 	iscc_Arci out_tail_ptr_12[5];
@@ -478,7 +478,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
-	
+
 	const uint64_t ut_count_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_13, 10);
 	iscc_Arci out_tail_ptr_13[5];
@@ -503,7 +503,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
-	
+
 	const uint64_t ut_count_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_31, 10);
 	iscc_Arci out_tail_ptr_31[5];
@@ -528,7 +528,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
-	
+
 	const uint64_t ut_count_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_123, 12);
 	iscc_Arci out_tail_ptr_123[5];
@@ -553,7 +553,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
-	
+
 	const uint64_t ut_count_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_132, 12);
 	iscc_Arci out_tail_ptr_132[5];
@@ -578,7 +578,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
-	
+
 	const uint64_t ut_count_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_213, 12);
 	iscc_Arci out_tail_ptr_213[5];
@@ -603,7 +603,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
-	
+
 	const uint64_t ut_count_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_321, 12);
 	iscc_Arci out_tail_ptr_321[5];
@@ -625,7 +625,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 	iscc_Dpid ref_head_321_ttk[6] = { 0, 3, 0, 2, 1, 3 };
 	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_Arci));
 	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(iscc_Dpid));
-	
+
 
 	iscc_free_digraph(&ut_dg1);
 	iscc_free_digraph(&ut_dg2);
@@ -967,6 +967,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_do_union_and_delete_keep_loops),
 		cmocka_unit_test(scc_ut_do_adjacency_product),
 	};
-	
+
 	return cmocka_run_group_tests_name("internal digraph_operations.c", test_cases, NULL, NULL);
 }

@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -63,7 +63,7 @@ void scc_ut_gr_empty_cl_stack(void** state)
 	assert_int_equal(cl_stack2.clusters[0].marker, 0);
 	assert_ptr_equal(cl_stack2.clusters[0].members, cl_stack2.dpid_store);
 	cl_stack2.clusters[cl_stack2.capacity - 1].size = 0;
-	
+
 	free(cl_stack1.clusters);
 	free(cl_stack1.dpid_store);
 	free(cl_stack2.clusters);
@@ -563,7 +563,7 @@ void scc_ut_gr_get_next_marker(void** state)
 	                                     6, 0, 8, 0, 10,
 	                                     11, 12, 13, 14, 15,
 	                                     16, 17, 18, 0, 20 };
-	
+
 	const iscc_Dpid mems_ref[5] = { 0, 4, 6, 8, 18 };
 	iscc_Dpid mems[5] = { 0, 4, 6, 8, 18 };
 	iscc_gr_ClusterItem cl_item = {
@@ -578,7 +578,7 @@ void scc_ut_gr_get_next_marker(void** state)
 	assert_int_equal(cl_item.marker, 1);
 	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
-	
+
 	uint_fast16_t next_marker2 = iscc_gr_get_next_marker(&cl_item, vertex_markers);
 	assert_int_equal(next_marker2, 2);
 	assert_int_equal(cl_item.size, 5);
@@ -599,7 +599,7 @@ void scc_ut_gr_get_next_marker(void** state)
 	assert_int_equal(cl_item.marker, 1);
 	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
-	
+
 	uint_fast16_t next_marker4 = iscc_gr_get_next_marker(&cl_item, vertex_markers);
 	assert_int_equal(next_marker4, 2);
 	assert_int_equal(cl_item.size, 5);
@@ -811,7 +811,7 @@ void scc_ut_gr_get_next_dist(void** state)
 	assert_int_equal(next5->head, 6);
 	assert_double_equal(next5->distance, 72.125847);
 	assert_ptr_equal(next5->next_dist, &wa.edge_store2[4]);
-	
+
 	iscc_gr_DistanceEdge* next6 = iscc_gr_get_next_dist(wa.edge_store2, wa.vertex_markers, 1);
 	assert_int_equal(next6->head, 6);
 	assert_double_equal(next6->distance, 72.125847);
@@ -1207,7 +1207,7 @@ void scc_ut_gr_find_centers(void** state)
 		.marker = 0,
 		.members = members1,
 	};
-	
+
 	iscc_Dpid ref_members2[5] = { 2, 4, 6, 8, 12 };
 	iscc_Dpid members2[5] = { 2, 4, 6, 8, 12 };
 	iscc_gr_ClusterItem cl2 = {
@@ -1452,6 +1452,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_gr_break_cluster_into_two),
 		cmocka_unit_test(scc_ut_gr_run_greedy_clustering),
 	};
-	
+
 	return cmocka_run_group_tests_name("internal greedy_clustering.c", test_cases, NULL, NULL);
 }

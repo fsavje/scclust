@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -96,7 +96,7 @@ void scc_ut_digraph_is_initialized(void** state)
 	};
 
 	assert_false(iscc_digraph_is_initialized(NULL));
-	
+
 	assert_false(iscc_digraph_is_initialized(&ISCC_NULL_DIGRAPH));
 
 	assert_true(iscc_digraph_is_initialized(&dg));
@@ -126,7 +126,7 @@ void scc_ut_digraph_is_initialized(void** state)
 	dg.max_arcs = 0;
 	assert_false(iscc_digraph_is_initialized(&dg));
 	dg.max_arcs = 100;
-	
+
 	dg.max_arcs = 0;
 	assert_false(iscc_digraph_is_initialized(&dg));
 	dg.max_arcs = 100;
@@ -242,7 +242,7 @@ void scc_ut_init_digraph(void** state)
 	assert_non_null(dg3.head);
 	assert_non_null(dg3.tail_ptr);
 	assert_int_equal(ec3, SCC_ER_OK);
-	
+
 	iscc_Digraph dg4;
 	scc_ErrorCode ec4 = iscc_init_digraph(100, 0, &dg4);
 	assert_true(iscc_digraph_is_initialized(&dg4));
@@ -278,7 +278,7 @@ void scc_ut_empty_digraph(void** state)
 		assert_int_equal(dg3.tail_ptr[i], 0);
 	}
 	assert_int_equal(ec3, SCC_ER_OK);
-	
+
 	iscc_Digraph dg4;
 	scc_ErrorCode ec4 = iscc_empty_digraph(100, 0, &dg4);
 	assert_true(iscc_digraph_is_initialized(&dg4));
@@ -395,6 +395,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_empty_digraph),
 		cmocka_unit_test(scc_ut_change_arc_storage),
 	};
-	
+
 	return cmocka_run_group_tests_name("digraph_core.c", test_cases, NULL, NULL);
 }

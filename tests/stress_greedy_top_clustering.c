@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -37,7 +37,7 @@ void scc_ut_stress_top_down_greedy_clustering(void** state)
 {
 	(void) state;
 
-	srand(123456789); 
+	srand(123456789);
 
 	for (size_t r = 0; r < NUM_ROUNDS; ++r) {
 		scc_ErrorCode ec;
@@ -84,6 +84,6 @@ int main(void)
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_stress_top_down_greedy_clustering),
 	};
-	
+
 	return cmocka_run_group_tests_name("stress greedy_top_clustering.c", test_cases, NULL, NULL);
 }

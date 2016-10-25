@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -1740,7 +1740,7 @@ void scc_ut_nearest_neighbor_search_index_radius(void** state)
 	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 10 * sizeof(iscc_Dpid));
 
 	assert_true(iscc_close_nn_search_object(&nn_search_object2));
-	
+
 
 	iscc_NNSearchObject* nn_search_object4b;
 	iscc_Dpid search4b[2] = { 76, 33 };
@@ -1923,6 +1923,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_nearest_neighbor_search_index),
 		cmocka_unit_test(scc_ut_nearest_neighbor_search_index_radius),
 	};
-	
+
 	return cmocka_run_group_tests_name("dist_search.c", test_cases, NULL, NULL);
 }

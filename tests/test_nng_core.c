@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -257,7 +257,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 	iscc_Digraph out_nng9;
 	scc_ErrorCode ec9 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3, NULL, true, 0.01, &out_nng9);
-	assert_int_equal(ec9, SCC_ER_NO_CLUST_EXIST_RADIUS); 
+	assert_int_equal(ec9, SCC_ER_NO_CLUST_EXIST_RADIUS);
 }
 
 
@@ -272,7 +272,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	const scc_TypeLabel type_labels_two[15] = { 0, 1, 0, 0, 1,
 	                                            0, 0, 1, 1, 1,
 	                                            1, 0, 0, 0, 1 };
-	
+
 	const uint32_t type_size_constraints_three[3] = { 2, 0, 1 };
 	const scc_TypeLabel type_labels_three[15] = { 0, 1, 2, 2, 2,
 	                                              0, 0, 1, 1, 1,
@@ -440,7 +440,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	                         "..... ..... ...../"
 	                         "..... ..... ...../"
 	                         "..... ..... ...../"
-	                         
+
 	                         "..... .#... ..#../"
 	                         "..... ..... ...../"
 	                         "..... .#... ....#/"
@@ -498,7 +498,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	                         "..... ..... ...../"
 	                         "..... ..... ...../"
 	                         "..... ..... ...../"
-	                         
+
 	                         "..... .#... ..#../"
 	                         "..... ..... ...../"
 	                         "..... .#... ....#/"
@@ -2822,6 +2822,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_estimate_avg_seed_dist),
 		cmocka_unit_test(scc_ut_make_nng_clusters_from_seeds),
 	};
-	
+
 	return cmocka_run_group_tests_name("nng_core.c", test_cases, NULL, NULL);
 }

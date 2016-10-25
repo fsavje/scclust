@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -44,13 +44,13 @@ void scc_ut_get_compiled_version(void** state)
 	assert_int_equal(major, 123456);
 	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
 	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
-	
+
 	major = minor = patch = 123456;
 	scc_get_compiled_version(&major, NULL, &patch);
 	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
 	assert_int_equal(minor, 123456);
 	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
-	
+
 	major = minor = patch = 123456;
 	scc_get_compiled_version(&major, &minor, NULL);
 	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
@@ -68,7 +68,7 @@ void scc_ut_get_error_message(void** state)
 
 	bool err_res1 = scc_get_latest_error(0, text_buffer);
 	assert_false(err_res1);
-	
+
 	bool err_res2 = scc_get_latest_error(buffer_size, NULL);
 	assert_false(err_res2);
 
@@ -163,6 +163,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_get_compiled_version),
 		cmocka_unit_test(scc_ut_get_error_message),
 	};
-	
+
 	return cmocka_run_group_tests_name("error.c", test_cases, NULL, NULL);
 }

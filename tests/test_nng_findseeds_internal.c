@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -1012,9 +1012,9 @@ void scc_ut_fs_exclusion_graph(void** state)
 {
 	(void) state;
 
-	bool keep_vertex[18] = { true, true, true, true, true, true, 
-	                         true, true, true, true, true, true, 
-	                         true, true, true, true, true, true }; 
+	bool keep_vertex[18] = { true, true, true, true, true, true,
+	                         true, true, true, true, true, true,
+	                         true, true, true, true, true, true };
 	iscc_Digraph nng;
 	iscc_digraph_from_string(".#..#............./"
 	                         "#...#............./"
@@ -1063,8 +1063,8 @@ void scc_ut_fs_exclusion_graph(void** state)
 	iscc_free_digraph(&exg);
 	iscc_free_digraph(&exclusion_graph);
 
-	bool keep_vertex2[10] = { true, true, true, true, true, 
-	                          true, true, true, true, true }; 
+	bool keep_vertex2[10] = { true, true, true, true, true,
+	                          true, true, true, true, true };
 	iscc_Digraph nng2;
 	iscc_digraph_from_string(".#..# ...../"
 	                         "..... ...../"
@@ -1180,9 +1180,9 @@ void scc_ut_fs_exclusion_graph(void** state)
 	iscc_free_digraph(&exclusion_graph4);
 
 
-	bool keep_vertex5[18] = { true, false, true, false, true, false, 
-	                          true, false, true, false, true, false, 
-	                          true, false, true, false, true, false }; 
+	bool keep_vertex5[18] = { true, false, true, false, true, false,
+	                          true, false, true, false, true, false,
+	                          true, false, true, false, true, false };
 	iscc_Digraph nng5;
 	iscc_digraph_from_string(".#..#............./"
 	                         "#...#............./"
@@ -1231,8 +1231,8 @@ void scc_ut_fs_exclusion_graph(void** state)
 	iscc_free_digraph(&exg5);
 	iscc_free_digraph(&exclusion_graph5);
 
-	bool keep_vertex6[10] = { true, false, true, false, true, 
-	                          true, true, true, false, false }; 
+	bool keep_vertex6[10] = { true, false, true, false, true,
+	                          true, true, true, false, false };
 	iscc_Digraph nng6;
 	iscc_digraph_from_string(".#..# ...../"
 	                         "..... ...../"
@@ -1868,6 +1868,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_fs_sort_by_inwards),
 		cmocka_unit_test(scc_ut_fs_decrease_v_in_sort),
 	};
-	
+
 	return cmocka_run_group_tests_name("internal nng_findseeds.c", test_cases, NULL, NULL);
 }

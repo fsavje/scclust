@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -3728,7 +3728,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -3749,7 +3749,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4022,7 +4022,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4043,7 +4043,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4316,7 +4316,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4337,7 +4337,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4610,7 +4610,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4631,7 +4631,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4904,7 +4904,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -4925,7 +4925,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -5198,7 +5198,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -5219,7 +5219,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
@@ -6318,7 +6318,7 @@ int main(void)
 		cmocka_unit_test(scc_ut_nng_clustering_with_types),
 		cmocka_unit_test(scc_ut_nng_clustering_with_types_nonval),
 	};
-	
+
 	return cmocka_run_group_tests_name("nng_clustering.c", test_cases, NULL, NULL);
 }
 
@@ -6516,7 +6516,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
-	
+
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,

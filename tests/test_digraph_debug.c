@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -97,7 +97,7 @@ void scc_ut_digraphs_equal(void** state)
 		.head = head3,
 		.tail_ptr = tail_ptr3,
 	};
-	
+
 	iscc_Dpid head4[4] = {1, 0, 2, 3};
 	iscc_Arci tail_ptr4[5] = {0, 2, 2, 4, 4};
 	iscc_Digraph dg4 = {
@@ -134,19 +134,19 @@ void scc_ut_digraphs_equal(void** state)
 	};
 
 	assert_true(iscc_digraphs_equal(&dg1, &dg1));
-	
+
 	assert_true(iscc_digraphs_equal(&dg1, &dg2));
 	assert_true(iscc_digraphs_equal(&dg2, &dg1));
 
 	assert_true(iscc_digraphs_equal(&dg6, &dg7));
 	assert_true(iscc_digraphs_equal(&dg7, &dg6));
-	
+
 	assert_false(iscc_digraphs_equal(&dg1, &dg3));
 	assert_false(iscc_digraphs_equal(&dg3, &dg1));
 
 	assert_false(iscc_digraphs_equal(&dg1, &dg4));
 	assert_false(iscc_digraphs_equal(&dg4, &dg1));
-	
+
 	assert_false(iscc_digraphs_equal(&dg1, &dg5));
 	assert_false(iscc_digraphs_equal(&dg5, &dg1));
 
@@ -322,6 +322,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_digraph_from_string),
 		cmocka_unit_test(scc_ut_copy_digraph),
 	};
-	
+
 	return cmocka_run_group_tests_name("digraph_debug.c", test_cases, NULL, NULL);
 }

@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -115,7 +115,7 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_true(cl6->external_labels);
 	assert_int_equal(cl6->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(ec6, SCC_ER_OK);
-	
+
 	scc_Clustering* cl6a;
 	scc_ErrorCode ec6a = scc_init_empty_clustering(5, external_cluster_labels, &cl6a);
 	assert_non_null(cl6a);
@@ -309,7 +309,7 @@ void scc_ut_is_initialized_clustering(void** state)
 
 	in_cl.num_data_points = 0;
 	assert_false(scc_is_initialized_clustering(&in_cl));
-	
+
 	in_cl.num_data_points = 1;
 	assert_false(scc_is_initialized_clustering(&in_cl));
 	in_cl.num_data_points = 10;
@@ -333,7 +333,7 @@ void scc_ut_is_initialized_clustering(void** state)
 	assert_false(scc_is_initialized_clustering(&in_cl));
 	in_cl.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION;
 	assert_true(scc_is_initialized_clustering(&in_cl));
-	
+
 	in_cl.num_clusters = 0;
 	in_cl.cluster_label = NULL;
 	assert_true(scc_is_initialized_clustering(&in_cl));
@@ -576,7 +576,7 @@ void scc_ut_get_cluster_labels(void** state)
 	scc_Clabel out_cluster_labels3[21];
 	out_cluster_labels3[20] = 123;
 	const scc_Clabel ref_cluster_labels3[21] = { 1, 4, 3, 0, 2, 2, 0, 1, 4, 4,
-	                                             SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, 
+	                                             SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA,
 	                                             SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, SCC_CLABEL_NA, 123 };
 	scc_ErrorCode ec6 = scc_get_cluster_labels(&in_cl, 20, out_cluster_labels3);
 	assert_int_equal(ec6, SCC_ER_OK);
@@ -685,6 +685,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_get_cluster_labels),
 		cmocka_unit_test(scc_ut_get_clustering_stats),
 	};
-	
+
 	return cmocka_run_group_tests_name("scclust.c", test_cases, NULL, NULL);
 }

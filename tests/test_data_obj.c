@@ -3,17 +3,17 @@
  * https://github.com/fsavje/scclust
  *
  * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
@@ -133,7 +133,7 @@ void scc_ut_get_data_set_object(void** state)
 	assert_true(dso9->external_matrix);
 	assert_int_equal(dso9->data_set_object_version, ISCC_CURRENT_DATASETOBJ_VERSION);
 	assert_int_equal(ec9, SCC_ER_OK);
-	
+
 	scc_DataSetObject* dso10;
 	scc_ErrorCode ec10 = scc_get_data_set_object(5, 2, 10, coord, true, &dso10);
 	assert_non_null(dso10);
@@ -157,7 +157,7 @@ void scc_ut_get_data_set_object(void** state)
 	assert_true(dso11->external_matrix);
 	assert_int_equal(dso11->data_set_object_version, ISCC_CURRENT_DATASETOBJ_VERSION);
 	assert_int_equal(ec11, SCC_ER_OK);
-	
+
 	scc_DataSetObject* dso12;
 	scc_ErrorCode ec12 = scc_get_data_set_object(3, 1, 10, coord, true, &dso12);
 	assert_non_null(dso12);
@@ -183,6 +183,6 @@ int main(void)
 		cmocka_unit_test(scc_ut_free_data_set_object),
 		cmocka_unit_test(scc_ut_get_data_set_object),
 	};
-	
+
 	return cmocka_run_group_tests_name("data_obj.c", test_cases, NULL, NULL);
 }
