@@ -82,7 +82,7 @@ void scc_ut_get_error_message(void** state)
 	bool err_res4 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res4);
 	assert_int_equal(ec4, SCC_ER_NULL_INPUT);
-	assert_string_equal(text_buffer, "(test_error.c:81) A required input pointer is NULL.");
+	assert_string_equal(text_buffer, "(scclust:test_error.c:81) A required input pointer is NULL.");
 
 	iscc_reset_error();
 	bool err_res5 = scc_get_latest_error(buffer_size, text_buffer);
@@ -93,67 +93,67 @@ void scc_ut_get_error_message(void** state)
 	bool err_res6 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res6);
 	assert_int_equal(ec6, SCC_ER_INVALID_INPUT);
-	assert_string_equal(text_buffer, "(dummy1.c:1) Inputted function parameters are invalid.");
+	assert_string_equal(text_buffer, "(scclust:dummy1.c:1) Inputted function parameters are invalid.");
 
 	scc_ErrorCode ec7 = iscc_make_error_func(SCC_ER_INVALID_CLUSTERING, "dummy2.c", 2);
 	bool err_res7 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res7);
 	assert_int_equal(ec7, SCC_ER_INVALID_CLUSTERING);
-	assert_string_equal(text_buffer, "(dummy2.c:2) Inputted clustering is invalid.");
+	assert_string_equal(text_buffer, "(scclust:dummy2.c:2) Inputted clustering is invalid.");
 
 	scc_ErrorCode ec8 = iscc_make_error_func(SCC_ER_EMPTY_CLUSTERING, "dummy3.c", 3);
 	bool err_res8 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res8);
 	assert_int_equal(ec8, SCC_ER_EMPTY_CLUSTERING);
-	assert_string_equal(text_buffer, "(dummy3.c:3) Empty clustering is inputted when non-empty is required.");
+	assert_string_equal(text_buffer, "(scclust:dummy3.c:3) Empty clustering is inputted when non-empty is required.");
 
 	scc_ErrorCode ec9 = iscc_make_error_func(SCC_ER_INVALID_DATA_OBJ, "dummy4.c", 4);
 	bool err_res9 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res9);
 	assert_int_equal(ec9, SCC_ER_INVALID_DATA_OBJ);
-	assert_string_equal(text_buffer, "(dummy4.c:4) Inputted data object is invalid.");
+	assert_string_equal(text_buffer, "(scclust:dummy4.c:4) Inputted data object is invalid.");
 
 	scc_ErrorCode ec10 = iscc_make_error_func(SCC_ER_NO_MEMORY, "dummy5.c", 5);
 	bool err_res10 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res10);
 	assert_int_equal(ec10, SCC_ER_NO_MEMORY);
-	assert_string_equal(text_buffer, "(dummy5.c:5) Cannot allocate required memory.");
+	assert_string_equal(text_buffer, "(scclust:dummy5.c:5) Cannot allocate required memory.");
 
 	scc_ErrorCode ec11 = iscc_make_error_func(SCC_ER_TOO_LARGE_PROBLEM, "dummy6.c", 6);
 	bool err_res11 = scc_get_latest_error(100, text_buffer);
 	assert_true(err_res11);
 	assert_int_equal(ec11, SCC_ER_TOO_LARGE_PROBLEM);
-	assert_string_equal(text_buffer, "(dummy6.c:6) The clustering problem is too large under the current configuration (either too many c");
+	assert_string_equal(text_buffer, "(scclust:dummy6.c:6) The clustering problem is too large under the current configuration (either to");
 
 	scc_ErrorCode ec12 = iscc_make_error_func(SCC_ER_TOO_LARGE_DIGRAPH, "dummy7.c", 7);
 	bool err_res12 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res12);
 	assert_int_equal(ec12, SCC_ER_TOO_LARGE_DIGRAPH);
-	assert_string_equal(text_buffer, "(dummy7.c:7) The clustering problem yields a digraph with too many arcs.");
+	assert_string_equal(text_buffer, "(scclust:dummy7.c:7) The clustering problem yields a digraph with too many arcs.");
 
 	scc_ErrorCode ec13 = iscc_make_error_func(SCC_ER_DIST_SEARCH_ERROR, "dummy8.c", 8);
 	bool err_res13 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res13);
 	assert_int_equal(ec13, SCC_ER_DIST_SEARCH_ERROR);
-	assert_string_equal(text_buffer, "(dummy8.c:8) Failed to calculate distances.");
+	assert_string_equal(text_buffer, "(scclust:dummy8.c:8) Failed to calculate distances.");
 
 	scc_ErrorCode ec14 = iscc_make_error_func(SCC_ER_NO_CLUST_EXIST_CONSTRAINT, "dummy9.c", 9);
 	bool err_res14 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res14);
 	assert_int_equal(ec14, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
-	assert_string_equal(text_buffer, "(dummy9.c:9) No clustering satisfying the specified constraints exists.");
+	assert_string_equal(text_buffer, "(scclust:dummy9.c:9) No clustering satisfying the specified constraints exists.");
 
 	scc_ErrorCode ec15 = iscc_make_error_func(SCC_ER_NO_CLUST_EXIST_RADIUS, "dummy10.c", 10);
 	bool err_res15 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res15);
 	assert_int_equal(ec15, SCC_ER_NO_CLUST_EXIST_RADIUS);
-	assert_string_equal(text_buffer, "(dummy10.c:10) No clustering satisfying the specified radius constraints exists.");
+	assert_string_equal(text_buffer, "(scclust:dummy10.c:10) No clustering satisfying the specified radius constraints exists.");
 
 	scc_ErrorCode ec16 = iscc_make_error_func(SCC_ER_NOT_IMPLEMENTED, "dummy11.c", 11);
 	bool err_res16 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res16);
 	assert_int_equal(ec16, SCC_ER_NOT_IMPLEMENTED);
-	assert_string_equal(text_buffer, "(dummy11.c:11) Requested functionality is not yet implemented.");
+	assert_string_equal(text_buffer, "(scclust:dummy11.c:11) Requested functionality is not yet implemented.");
 }
 
 
