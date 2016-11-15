@@ -1,4 +1,4 @@
-/* ==============================================================================
+/* =============================================================================
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
- * ============================================================================== */
+ * ========================================================================== */
 
 #ifndef SCC_DIST_INLINE_SQDIST_HG
 #define SCC_DIST_INLINE_SQDIST_HG
@@ -27,9 +27,9 @@
 #include "scc_data_set_struct.h"
 
 
-// ==============================================================================
+// =============================================================================
 // Inline function implementations
-// ==============================================================================
+// =============================================================================
 
 static inline double iscc_get_sq_dist(const scc_DataSetObject* const data_set_object,
                                       size_t index1,
