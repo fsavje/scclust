@@ -24,9 +24,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/scc_data_obj.h"
+#include "../include/scclust.h"
 #include "dist_inline_sqdist.h"
-#include "scclust_int.h"
+#include "scclust_internal.h"
 
 
 // ==============================================================================

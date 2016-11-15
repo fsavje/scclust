@@ -23,8 +23,8 @@
 
 #include <assert.h>
 #include <stddef.h>
-#include "../include/scc_data_obj.h"
-#include "scc_data_obj_int.h"
+#include "../include/scclust.h"
+#include "scc_data_set_struct.h"
 
 
 // ==============================================================================

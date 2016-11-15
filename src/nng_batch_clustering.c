@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include "dist_search.h"
 #include "error.h"
-#include "scclust_int.h"
+#include "scclust_internal.h"
 
 
 // ==============================================================================

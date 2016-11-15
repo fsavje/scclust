@@ -27,9 +27,9 @@
 #include <climits>
 #include <cstddef>
 #include "../exlib/libANN/include/ANN/ANN.h"
-#include "../include/scc_data_obj.h"
-#include "scc_data_obj_int.h"
-#include "scclust_int.h"
+#include "../include/scclust.h"
+#include "scc_data_set_struct.h"
+#include "scclust_internal.h"
 
 #ifdef SCC_ANN_BDTREE
 	#define ANNpointSetConstructor ANNbd_tree

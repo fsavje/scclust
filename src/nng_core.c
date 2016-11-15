@@ -32,7 +32,7 @@
 #include "dist_search.h"
 #include "error.h"
 #include "nng_findseeds.h"
-#include "scclust_int.h"
+#include "scclust_internal.h"
 
 
 // ==============================================================================

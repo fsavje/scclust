@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ============================================================================== */
 
-#include "../include/scc_data_obj.h"
+#include "../include/scclust.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -26,10 +26,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/scclust.h"
 #include "error.h"
-#include "scc_data_obj_int.h"
-#include "scclust_int.h"
+#include "scc_data_set_struct.h"
+#include "scclust_internal.h"
 
 
 // ==============================================================================

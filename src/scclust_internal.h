@@ -23,8 +23,8 @@
  *  Header with internal type definitions.
  */
 
-#ifndef SCC_SCCLUST_INT_HG
-#define SCC_SCCLUST_INT_HG
+#ifndef SCC_SCCLUST_INTERNAL_HG
+#define SCC_SCCLUST_INTERNAL_HG
 
 #ifdef __cplusplus
 // So g++ defines integer limits
@@ -141,4 +141,4 @@ static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, 0, NULL, false };
 	}
 #endif
 
-#endif // ifndef SCC_SCCLUST_INT_HG
+#endif // ifndef SCC_SCCLUST_INTERNAL_HG
