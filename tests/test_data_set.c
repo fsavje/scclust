@@ -19,15 +19,14 @@
  * ========================================================================== */
 
 #include "test_suite.h"
-#include "../include/scc_data_obj.h"
+#include "../include/scclust.h"
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/scclust.h"
-#include "../src/scc_data_obj_int.h"
-#include "../src/scclust_int.h"
+#include "../src/scc_data_set_struct.h"
+#include "../src/scclust_internal.h"
 
 
 void scc_ut_free_data_set_object(void** state)

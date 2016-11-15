@@ -33,7 +33,7 @@ done
 make clean
 make all $COMPOPT
 
-run_test test_data_obj
+run_test test_data_set
 run_test test_digraph_core
 run_test test_digraph_debug
 run_test test_digraph_operations_internal

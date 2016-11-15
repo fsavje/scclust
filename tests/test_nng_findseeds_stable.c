@@ -26,7 +26,7 @@
 #include "../include/scclust.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 
 
 void scc_ut_fs_debug_bucket_sort(void** state)

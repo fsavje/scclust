@@ -20,7 +20,7 @@
 
 #include "test_suite.h"
 #include "../include/scclust.h"
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 
 #include "data_object_test.h"
 

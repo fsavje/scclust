@@ -23,8 +23,8 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/scc_data_obj.h"
-#include "../src/scc_data_obj_int.h"
+#include "../include/scclust.h"
+#include "../src/scc_data_set_struct.h"
 
 
 double coord1[300] = { 58.339591, 14.339080, 54.090796,

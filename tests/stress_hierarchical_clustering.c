@@ -20,7 +20,6 @@
 
 #include "test_suite.h"
 #include "../include/scclust.h"
-#include "../include/scc_data_obj.h"
 
 #include <stdbool.h>
 #include <stddef.h>

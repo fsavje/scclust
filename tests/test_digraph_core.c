@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/scclust.h"
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 
 
 void scc_ut_free_digraph(void** state)

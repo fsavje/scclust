@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 #include "data_object_test.h"
 
 /*
