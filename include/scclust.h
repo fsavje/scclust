@@ -116,6 +116,22 @@ bool scc_get_latest_error(size_t len_error_message_buffer,
 
 
 // =============================================================================
+// Data set object
+// =============================================================================
+
+typedef struct scc_DataSetObject scc_DataSetObject;
+
+void scc_free_data_set_object(scc_DataSetObject** out_data_set_object);
+
+scc_ErrorCode scc_get_data_set_object(uintmax_t num_data_points,
+                                      uintmax_t num_dimensions,
+                                      size_t len_data_matrix,
+                                      double data_matrix[],
+                                      bool deep_matrix_copy,
+                                      scc_DataSetObject** out_data_set_object);
+
+
+// =============================================================================
 // Clustering object
 // =============================================================================
 
