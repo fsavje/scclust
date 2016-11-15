@@ -82,7 +82,6 @@ typedef uint_fast16_t scc_TypeLabel;
 #define SCC_SCCLUST_MAJOR_VERSION 0
 #define SCC_SCCLUST_MINOR_VERSION 1
 #define SCC_SCCLUST_PATCH_VERSION 1
-#define SCC_CHECK_VERSION(major, minor) ((major == SCC_SCCLUST_MAJOR_VERSION) && (minor <= SCC_SCCLUST_MINOR_VERSION))
 
 void scc_get_compiled_version(uint32_t* out_major,
                               uint32_t* out_minor,
