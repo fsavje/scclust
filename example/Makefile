@@ -21,7 +21,7 @@
 # Set up
 
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-EXAMPLES = simple_example
+EXAMPLES = batch_example simple_example
 
 
 # Main targets
