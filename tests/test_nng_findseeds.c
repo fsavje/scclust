@@ -1,4 +1,4 @@
-/* ==============================================================================
+/* =============================================================================
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
- * ============================================================================== */
+ * ========================================================================== */
 
 #include "test_suite.h"
 #include "../src/nng_findseeds.h"
@@ -25,7 +25,7 @@
 #include "../include/scclust.h"
 #include "../src/digraph_core.h"
 #include "../src/digraph_debug.h"
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 
 #ifdef SCC_STABLE_FINDSEED
     #error Please run this test without the SCC_STABLE_FINDSEED flag

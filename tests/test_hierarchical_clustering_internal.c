@@ -1,4 +1,4 @@
-/* ==============================================================================
+/* =============================================================================
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
- * ============================================================================== */
+ * ========================================================================== */
 
 #define SCC_DOUBLE_ASSERT
 
@@ -28,7 +28,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "data_object_test.h"
-#include "../src/scclust_int.h"
+#include "../src/scclust_internal.h"
 
 
 void scc_ut_hi_empty_cl_stack(void** state)

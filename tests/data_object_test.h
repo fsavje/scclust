@@ -1,4 +1,4 @@
-/* ==============================================================================
+/* =============================================================================
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
@@ -16,15 +16,15 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see http://www.gnu.org/licenses/
- * ============================================================================== */
+ * ========================================================================== */
 
 #ifndef SCC_UT_DATA_OBJ_HG
 #define SCC_UT_DATA_OBJ_HG
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/scc_data_obj.h"
-#include "../src/scc_data_obj_int.h"
+#include "../include/scclust.h"
+#include "../src/scc_data_set_struct.h"
 
 
 double coord1[300] = { 58.339591, 14.339080, 54.090796,
@@ -135,9 +135,9 @@ double coord2[15] = { -1.40865056, -0.83518405,  0.28314478,
                       -0.08082159, -0.35893786, -0.13682160 };
 
 
-// ==============================================================================
+// =============================================================================
 // Valid data objects
-// ==============================================================================
+// =============================================================================
 
 scc_DataSetObject scc_ut_test_data_large_struct = {
 	.num_data_points = 100,
@@ -160,9 +160,9 @@ scc_DataSetObject* const scc_ut_test_data_large = &scc_ut_test_data_large_struct
 scc_DataSetObject* const scc_ut_test_data_small = &scc_ut_test_data_small_struct;
 
 
-// ==============================================================================
+// =============================================================================
 // Invalid data objects
-// ==============================================================================
+// =============================================================================
 
 scc_DataSetObject scc_ut_test_data_invalid1_struct = {
 	.num_data_points = 15,

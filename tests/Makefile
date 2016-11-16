@@ -32,11 +32,11 @@ BUILDDIR = build
 OBJDIR = ../build
 OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o dist_search.o \
           error.o hierarchical_clustering.o nng_clustering.o nng_batch_clustering.o \
-          nng_core.o nng_findseeds.o scc_data_obj.o scclust.o
+          nng_core.o nng_findseeds.o scc_data_set.o scclust.o
 OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
 XTRA_OBJECTS =
 
-STDTESTS = test_data_obj test_digraph_core test_digraph_debug test_digraph_operations \
+STDTESTS = test_data_set test_digraph_core test_digraph_debug test_digraph_operations \
            test_dist_search test_error test_hierarchical_clustering test_nng_clustering \
            test_nng_clustering_batches test_nng_core test_nng_findseeds test_scclust \
            stress_hierarchical_clustering stress_nng_clustering
