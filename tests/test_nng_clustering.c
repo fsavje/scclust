@@ -26,21 +26,21 @@
 
 
 void iscc_run_nonval_tests(scc_SeedMethod seed_method,
-                           scc_UnassignedMethod main_unassigned_method,
-                           bool main_radius_constraint,
-                           double main_radius,
-                           size_t len_main_data_points,
-                           const bool main_data_points[],
+                           scc_UnassignedMethod unassigned_method,
+                           bool radius_constraint,
+                           double radius,
+                           size_t len_primary_data_points,
+                           const bool primary_data_points[],
                            scc_UnassignedMethod secondary_unassigned_method,
                            bool secondary_radius_constraint,
                            double secondary_radius);
 
 void iscc_run_type_nonval_tests(scc_SeedMethod seed_method,
-                                scc_UnassignedMethod main_unassigned_method,
-                                bool main_radius_constraint,
-                                double main_radius,
-                                size_t len_main_data_points,
-                                const bool main_data_points[],
+                                scc_UnassignedMethod unassigned_method,
+                                bool radius_constraint,
+                                double radius,
+                                size_t len_primary_data_points,
+                                const bool primary_data_points[],
                                 scc_UnassignedMethod secondary_unassigned_method,
                                 bool secondary_radius_constraint,
                                 double secondary_radius);
@@ -57,26 +57,26 @@ void scc_ut_nng_clustering(void** state)
 	const bool F = false;
 	//const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel external_cluster_labels[100];
-	const bool main_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F };
-	const bool main_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F };
+	const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F };
+	const bool primary_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
@@ -142,28 +142,28 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        50, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                        50, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, 100, false, 0.0);
+	                        100, primary_data_points, 100, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_ASSIGN_BY_NNG, false, 0.0);
+	                        100, primary_data_points, SCC_UM_ASSIGN_BY_NNG, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_IGNORE, true, 0.0);
+	                        100, primary_data_points, SCC_UM_IGNORE, true, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -184,7 +184,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points_none, SCC_UM_IGNORE, false, 0.0);
+	                        100, primary_data_points_none, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	scc_free_clustering(&cl);
 
@@ -1474,7 +1474,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1494,7 +1494,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1514,7 +1514,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1534,7 +1534,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1554,7 +1554,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1574,7 +1574,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1594,7 +1594,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1614,7 +1614,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1634,7 +1634,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1654,7 +1654,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1674,7 +1674,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1694,7 +1694,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1714,7 +1714,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1734,7 +1734,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1754,7 +1754,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1774,7 +1774,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1794,7 +1794,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1814,7 +1814,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1834,7 +1834,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1854,7 +1854,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1874,7 +1874,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1894,7 +1894,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1914,7 +1914,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1934,7 +1934,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1954,7 +1954,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1974,7 +1974,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1994,7 +1994,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2014,7 +2014,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2034,7 +2034,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2054,7 +2054,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2074,7 +2074,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2094,7 +2094,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2114,7 +2114,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2134,7 +2134,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2154,7 +2154,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2174,7 +2174,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2194,7 +2194,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2214,7 +2214,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2234,7 +2234,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2254,7 +2254,7 @@ void scc_ut_nng_clustering(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2276,16 +2276,16 @@ void scc_ut_nng_clustering_nonval(void** state)
 
 	const bool T = true;
 	const bool F = false;
-	const bool main_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F };
+	const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F };
 
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                      0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -2408,965 +2408,965 @@ void scc_ut_nng_clustering_nonval(void** state)
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
 	                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+	                      100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	iscc_run_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-	                      100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+	                      100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 }
 
 
@@ -3381,26 +3381,26 @@ void scc_ut_nng_clustering_with_types(void** state)
 	const bool F = false;
 	//const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel external_cluster_labels[100];
-	const bool main_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F,
-	                                     T, T, T, T, T, T, T, T, T, T,
-	                                     F, F, F, F, F, F, F, F, F, F };
-	const bool main_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F,
-	                                          F, F, F, F, F, F, F, F, F, F };
+	const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F,
+	                                        T, T, T, T, T, T, T, T, T, T,
+	                                        F, F, F, F, F, F, F, F, F, F };
+	const bool primary_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F,
+	                                             F, F, F, F, F, F, F, F, F, F };
 	const uint32_t type_size_constraints_one[3] = { 0, 1, 0 };
 	const uint32_t type_size_constraints_three[3] = { 1, 1, 1 };
 	const uint32_t type_size_constraints_four[3] = { 1, 0, 3 };
@@ -3529,7 +3529,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       50, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       50, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3537,7 +3537,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       100, main_data_points, 100, false, 0.0);
+                                       100, primary_data_points, 100, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3545,7 +3545,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       100, main_data_points, SCC_UM_ASSIGN_BY_NNG, false, 0.0);
+                                       100, primary_data_points, SCC_UM_ASSIGN_BY_NNG, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3553,7 +3553,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, true, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, true, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3619,7 +3619,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       100, main_data_points_none, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points_none, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	scc_free_clustering(&cl);
 
@@ -4219,7 +4219,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4240,7 +4240,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4261,7 +4261,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4282,7 +4282,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4303,7 +4303,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4324,7 +4324,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4345,7 +4345,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                                       100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                                       100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4366,7 +4366,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4387,7 +4387,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4408,7 +4408,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4429,7 +4429,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4450,7 +4450,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4471,7 +4471,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4492,7 +4492,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 20.0,
-	                                   100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4513,7 +4513,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4534,7 +4534,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4555,7 +4555,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4576,7 +4576,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4597,7 +4597,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4618,7 +4618,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4639,7 +4639,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4660,7 +4660,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4681,7 +4681,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4702,7 +4702,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4723,7 +4723,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4744,7 +4744,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4765,7 +4765,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4786,7 +4786,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4807,7 +4807,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4828,7 +4828,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4849,7 +4849,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4870,7 +4870,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4891,7 +4891,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4912,7 +4912,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4933,7 +4933,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4954,7 +4954,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4975,7 +4975,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4996,7 +4996,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5017,7 +5017,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5038,7 +5038,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5059,7 +5059,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5080,7 +5080,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5101,7 +5101,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5122,7 +5122,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5143,7 +5143,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5164,7 +5164,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5185,7 +5185,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5206,7 +5206,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5227,7 +5227,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                                       100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                                       100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5248,7 +5248,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5269,7 +5269,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5290,7 +5290,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5311,7 +5311,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5332,7 +5332,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5353,7 +5353,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5374,7 +5374,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
-	                                   100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5396,16 +5396,16 @@ void scc_ut_nng_clustering_with_types_nonval(void** state)
 
   const bool T = true;
   const bool F = false;
-  const bool main_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-                                       F, F, F, F, F, F, F, F, F, F,
-                                       T, T, T, T, T, T, T, T, T, T,
-                                       F, F, F, F, F, F, F, F, F, F,
-                                       T, T, T, T, T, T, T, T, T, T,
-                                       F, F, F, F, F, F, F, F, F, F,
-                                       T, T, T, T, T, T, T, T, T, T,
-                                       F, F, F, F, F, F, F, F, F, F,
-                                       T, T, T, T, T, T, T, T, T, T,
-                                       F, F, F, F, F, F, F, F, F, F };
+  const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
+                                          F, F, F, F, F, F, F, F, F, F,
+                                          T, T, T, T, T, T, T, T, T, T,
+                                          F, F, F, F, F, F, F, F, F, F,
+                                          T, T, T, T, T, T, T, T, T, T,
+                                          F, F, F, F, F, F, F, F, F, F,
+                                          T, T, T, T, T, T, T, T, T, T,
+                                          F, F, F, F, F, F, F, F, F, F,
+                                          T, T, T, T, T, T, T, T, T, T,
+                                          F, F, F, F, F, F, F, F, F, F };
 
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                         0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -5508,805 +5508,805 @@ void scc_ut_nng_clustering_with_types_nonval(void** state)
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
                         0, NULL, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, false, 0.0);
+                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_IGNORE, true, 20.0);
+                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_ASSIGN_BY_NNG, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
   iscc_run_type_nonval_tests(SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 40.0,
-                        100, main_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
+                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 }
 
 
@@ -6324,11 +6324,11 @@ int main(void)
 
 
 void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
-                           const scc_UnassignedMethod main_unassigned_method,
-                           const bool main_radius_constraint,
-                           const double main_radius,
-                           const size_t len_main_data_points,
-                           const bool main_data_points[const],
+                           const scc_UnassignedMethod unassigned_method,
+                           const bool radius_constraint,
+                           const double radius,
+                           const size_t len_primary_data_points,
+                           const bool primary_data_points[const],
                            const scc_UnassignedMethod secondary_unassigned_method,
                            const bool secondary_radius_constraint,
                            const double secondary_radius)
@@ -6341,8 +6341,8 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
-                            seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                            len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                            seed_method, unassigned_method, radius_constraint, radius,
+                            len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6357,8 +6357,8 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
-                            seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                            len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                            seed_method, unassigned_method, radius_constraint, radius,
+                            len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6373,8 +6373,8 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
-                            seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                            len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                            seed_method, unassigned_method, radius_constraint, radius,
+                            len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6389,11 +6389,11 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 
 
 void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
-                                const scc_UnassignedMethod main_unassigned_method,
-                                const bool main_radius_constraint,
-                                const double main_radius,
-                                const size_t len_main_data_points,
-                                const bool main_data_points[const],
+                                const scc_UnassignedMethod unassigned_method,
+                                const bool radius_constraint,
+                                const double radius,
+                                const size_t len_primary_data_points,
+                                const bool primary_data_points[const],
                                 const scc_UnassignedMethod secondary_unassigned_method,
                                 const bool secondary_radius_constraint,
                                 const double secondary_radius)
@@ -6419,8 +6419,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6436,8 +6436,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6453,8 +6453,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6470,8 +6470,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6487,8 +6487,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6504,8 +6504,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6521,8 +6521,8 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
-                                       seed_method, main_unassigned_method, main_radius_constraint, main_radius,
-                                       len_main_data_points, main_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
+                                       seed_method, unassigned_method, radius_constraint, radius,
+                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
