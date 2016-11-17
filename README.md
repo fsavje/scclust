@@ -18,7 +18,6 @@ The library can be used in several different ways, for different purposes. We re
 #include <stddef.h>
 #include <stdio.h>
 #include "../include/scclust.h"
-#include "../include/scc_data_obj.h"
 
 int main(void) {
 	// Variable for error reporting
