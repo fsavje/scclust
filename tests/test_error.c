@@ -76,7 +76,7 @@ void scc_ut_get_error_message(void** state)
 	bool err_res3 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res3);
 	assert_int_equal(ec3, SCC_ER_OK);
-	assert_string_equal(text_buffer, "No error.");
+	assert_string_equal(text_buffer, "(scclust) No error.");
 
 	scc_ErrorCode ec4 = iscc_make_error(SCC_ER_NULL_INPUT);
 	bool err_res4 = scc_get_latest_error(buffer_size, text_buffer);
@@ -87,7 +87,7 @@ void scc_ut_get_error_message(void** state)
 	iscc_reset_error();
 	bool err_res5 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res5);
-	assert_string_equal(text_buffer, "No error.");
+	assert_string_equal(text_buffer, "(scclust) No error.");
 
 	scc_ErrorCode ec6 = iscc_make_error_func(SCC_ER_INVALID_INPUT, "dummy1.c", 1);
 	bool err_res6 = scc_get_latest_error(buffer_size, text_buffer);

@@ -21,4 +21,5 @@ install:
 script:
   - make library
   - cd example && make && ./simple_example.out && cd ..
-  - cd tests && ./compiler_test.sh
+  - cd tests && ./run_tests.sh && cd ..
+  - cd tests && ./compiler_test.sh && cd ..
