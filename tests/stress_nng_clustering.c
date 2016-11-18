@@ -49,8 +49,8 @@ void scc_ut_stress_nng_clustering(void** state)
 		bool* const primary_data_points = malloc(sizeof(bool[SAMPLE_SIZE]));
 		scc_rand_bool_array(SAMPLE_SIZE, primary_data_points);
 
-		scc_DataSetObject* data_set_object;
-		ec = scc_get_data_set_object(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set_object);
+		scc_DataSet* data_set;
+		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set);
 		assert_int_equal(ec, SCC_ER_OK);
 
 		const uint32_t size_constraint = scc_rand_uint(2, 10);
@@ -60,7 +60,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            0, NULL, SCC_UM_IGNORE, false, 0.0);
 		if (ec == SCC_ER_OK) {
@@ -72,7 +72,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            0, NULL, SCC_UM_IGNORE, false, 0.0);
 		if (ec == SCC_ER_OK) {
@@ -84,7 +84,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, false, 0.0);
 		if (ec == SCC_ER_OK) {
@@ -96,7 +96,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, false, 0.0);
 		if (ec == SCC_ER_OK) {
@@ -108,7 +108,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, true, 10.0);
 		if (ec == SCC_ER_OK) {
@@ -120,7 +120,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering(cl, data_set, size_constraint,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, true, 10.0);
 		if (ec == SCC_ER_OK) {
@@ -132,7 +132,7 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		free(data_matrix);
 		free(primary_data_points);
-		scc_free_data_set_object(&data_set_object);
+		scc_free_data_set(&data_set);
 	}
 }
 
@@ -154,8 +154,8 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		bool* const primary_data_points = malloc(sizeof(bool[SAMPLE_SIZE]));
 		scc_rand_bool_array(SAMPLE_SIZE, primary_data_points);
 
-		scc_DataSetObject* data_set_object;
-		ec = scc_get_data_set_object(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set_object);
+		scc_DataSet* data_set;
+		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set);
 		assert_int_equal(ec, SCC_ER_OK);
 
 		const uint32_t size_constraint = scc_rand_uint(2, 10);
@@ -165,7 +165,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, 0);
 		if (ec == SCC_ER_OK) {
@@ -178,7 +178,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, 1);
 		if (ec == SCC_ER_OK) {
@@ -191,7 +191,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, batch_size);
 		if (ec == SCC_ER_OK) {
@@ -204,7 +204,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, true, 10.0,
                                         0, NULL, batch_size);
 		if (ec == SCC_ER_OK) {
@@ -217,7 +217,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, false, 0.0,
                                         SAMPLE_SIZE, primary_data_points, batch_size);
 		if (ec == SCC_ER_OK) {
@@ -230,7 +230,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_batches(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_batches(cl, data_set, size_constraint,
                                         unassigned_method, true, 10.0,
                                         SAMPLE_SIZE, primary_data_points, batch_size);
 		if (ec == SCC_ER_OK) {
@@ -243,7 +243,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		free(data_matrix);
 		free(primary_data_points);
-		scc_free_data_set_object(&data_set_object);
+		scc_free_data_set(&data_set);
 	}
 }
 
@@ -276,8 +276,8 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 		bool* const primary_data_points = malloc(sizeof(bool[SAMPLE_SIZE]));
 		scc_rand_bool_array(SAMPLE_SIZE, primary_data_points);
 
-		scc_DataSetObject* data_set_object;
-		ec = scc_get_data_set_object(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set_object);
+		scc_DataSet* data_set;
+		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set);
 		assert_int_equal(ec, SCC_ER_OK);
 
 		uint32_t sum_type_constraints = 0;
@@ -291,7 +291,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -304,7 +304,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -317,7 +317,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, false, 0.0);
@@ -330,7 +330,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, false, 0.0);
@@ -343,7 +343,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, true, 10.0);
@@ -356,7 +356,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_nng_clustering_types(cl, data_set_object, size_constraint,
+		ec = scc_nng_clustering_types(cl, data_set, size_constraint,
 	                                       num_types, type_size_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       SAMPLE_SIZE, primary_data_points, secondary_unassigned_method, true, 10.0);
@@ -371,7 +371,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 		free(type_size_constraints);
 		free(type_labels);
 		free(primary_data_points);
-		scc_free_data_set_object(&data_set_object);
+		scc_free_data_set(&data_set);
 	}
 }
 

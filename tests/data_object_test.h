@@ -139,58 +139,58 @@ double coord2[15] = { -1.40865056, -0.83518405,  0.28314478,
 // Valid data objects
 // =============================================================================
 
-scc_DataSetObject scc_ut_test_data_large_struct = {
+scc_DataSet scc_ut_test_data_large_struct = {
 	.num_data_points = 100,
 	.num_dimensions = 3,
 	.data_matrix = coord1,
 	.external_matrix = true,
-	.data_set_object_version = 1, // ISCC_CURRENT_DATASETOBJ_VERSION
+	.data_set_version = 1, // ISCC_DATASET_VERSION
 };
 
-scc_DataSetObject scc_ut_test_data_small_struct = {
+scc_DataSet scc_ut_test_data_small_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = coord2,
 	.external_matrix = true,
-	.data_set_object_version = 1, // ISCC_CURRENT_DATASETOBJ_VERSION
+	.data_set_version = 1, // ISCC_DATASET_VERSION
 };
 
-scc_DataSetObject* const scc_ut_test_data_large = &scc_ut_test_data_large_struct;
+scc_DataSet* const scc_ut_test_data_large = &scc_ut_test_data_large_struct;
 
-scc_DataSetObject* const scc_ut_test_data_small = &scc_ut_test_data_small_struct;
+scc_DataSet* const scc_ut_test_data_small = &scc_ut_test_data_small_struct;
 
 
 // =============================================================================
 // Invalid data objects
 // =============================================================================
 
-scc_DataSetObject scc_ut_test_data_invalid1_struct = {
+scc_DataSet scc_ut_test_data_invalid1_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 0,
 	.data_matrix = coord2,
 	.external_matrix = true,
-	.data_set_object_version = 1, // ISCC_CURRENT_DATASETOBJ_VERSION
+	.data_set_version = 1, // ISCC_DATASET_VERSION
 };
 
-scc_DataSetObject scc_ut_test_data_invalid2_struct = {
+scc_DataSet scc_ut_test_data_invalid2_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = NULL,
 	.external_matrix = true,
-	.data_set_object_version = 1, // ISCC_CURRENT_DATASETOBJ_VERSION
+	.data_set_version = 1, // ISCC_DATASET_VERSION
 };
 
-scc_DataSetObject scc_ut_test_data_invalid3_struct = {
+scc_DataSet scc_ut_test_data_invalid3_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = coord2,
 	.external_matrix = true,
-	.data_set_object_version = 0,
+	.data_set_version = 0,
 };
 
 const size_t scc_ut_num_invalid_data = 3;
 
-scc_DataSetObject* const scc_ut_test_data_invalid[3] = {
+scc_DataSet* const scc_ut_test_data_invalid[3] = {
 	&scc_ut_test_data_invalid1_struct,
 	&scc_ut_test_data_invalid2_struct,
 	&scc_ut_test_data_invalid3_struct,

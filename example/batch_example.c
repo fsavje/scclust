@@ -36,16 +36,16 @@ int main(void) {
 
 	const size_t DATA_SIZE = SAMPLE_SIZE * DATA_DIMENSION;
 
-	double* const data_set = malloc(sizeof(double[DATA_SIZE]));
+	double* const raw_data = malloc(sizeof(double[DATA_SIZE]));
 	scc_Clabel* const cluster_labels = malloc(sizeof(scc_Clabel[SAMPLE_SIZE]));
-	if ((data_set == NULL) || (cluster_labels == NULL)) {
-		free(data_set);
+	if ((raw_data == NULL) || (cluster_labels == NULL)) {
+		free(raw_data);
 		free(cluster_labels);
 		return 1;
 	}
 
 	for (size_t i = 0; i < DATA_SIZE; ++i) {
-		data_set[i] = ((double) rand()) / ((double) RAND_MAX);
+		raw_data[i] = ((double) rand()) / ((double) RAND_MAX);
 	}
 
 	printf("DONE.\n");
@@ -54,15 +54,15 @@ int main(void) {
 	const clock_t begin = clock();
 
 	// Construct scclust data set object
-	scc_DataSetObject* data_set_object;
-	ec = scc_get_data_set_object(SAMPLE_SIZE,
-	                             DATA_DIMENSION,
-	                             DATA_SIZE,
-	                             data_set,
-	                             false,
-	                             &data_set_object);
+	scc_DataSet* data_set;
+	ec = scc_init_data_set(SAMPLE_SIZE,
+	                       DATA_DIMENSION,
+	                       DATA_SIZE,
+	                       raw_data,
+	                       false,
+	                       &data_set);
 	if(ec != SCC_ER_OK) {
-		free(data_set);
+		free(raw_data);
 		free(cluster_labels);
 		return 1;
 	}
@@ -71,13 +71,13 @@ int main(void) {
 	scc_Clustering* cl;
 	ec = scc_init_empty_clustering(SAMPLE_SIZE, cluster_labels, &cl);
 	if(ec != SCC_ER_OK) {
-		free(data_set);
+		free(raw_data);
 		free(cluster_labels);
 		return 1;
 	}
 
 	ec = scc_nng_clustering_batches(cl,
-	                                data_set_object,
+	                                data_set,
 	                                1000,
 	                                SCC_UM_ASSIGN_BY_NNG,
 	                                false,
@@ -86,7 +86,7 @@ int main(void) {
 	                                NULL,
 	                                100);
 	if(ec != SCC_ER_OK) {
-		free(data_set);
+		free(raw_data);
 		free(cluster_labels);
 		return 1;
 	}
@@ -105,7 +105,7 @@ int main(void) {
 
 	// Free cluster and data set objects
 	scc_free_clustering(&cl);
-	scc_free_data_set_object(&data_set_object);
-	free(data_set);
+	scc_free_data_set(&data_set);
+	free(raw_data);
 	free(cluster_labels);
 }

@@ -611,7 +611,7 @@ void scc_ut_get_clustering_stats(void** state)
 	cl1.num_clusters = 4;
 
 	scc_ErrorCode ec3 = scc_get_clustering_stats(&cl1, NULL, &out_stats1);
-	assert_int_equal(ec3, SCC_ER_INVALID_DATA_OBJ);
+	assert_int_equal(ec3, SCC_ER_NULL_INPUT);
 	assert_memory_equal(&out_stats1, &ISCC_NULL_CLUSTERING_STATS, sizeof(scc_ClusteringStats));
 
 	scc_ErrorCode ec4 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, &out_stats1);

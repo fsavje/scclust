@@ -113,7 +113,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_batches(cl, &scc_ut_test_data_small_struct, 3,
 	                                SCC_UM_IGNORE, false, 0.0, 0, NULL, 10);
-	assert_int_equal(ec, SCC_ER_INVALID_DATA_OBJ);
+	assert_int_equal(ec, SCC_ER_DIST_SEARCH_ERROR);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);

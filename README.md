@@ -24,7 +24,7 @@ int main(void) {
 	scc_ErrorCode ec;
 
 	// Our data set: 10 two-dimensional points
-	double data_set[20] = { 0.088316633,  0.807443027,
+	double raw_data[20] = { 0.088316633,  0.807443027,
 	                       -1.080004390,  0.969638235,
 	                        1.316503268,  1.492648875,
 	                        0.140829264, -0.100874408,
@@ -36,8 +36,8 @@ int main(void) {
 	                        1.509341003, -0.026534633 };
 
 	// Construct scclust data set object
-	scc_DataSetObject* data_set_object;
-	ec = scc_get_data_set_object(10, 2, 20, data_set, false, &data_set_object);
+	scc_DataSet* data_set;
+	ec = scc_init_data_set(10, 2, 20, raw_data, false, &data_set);
 	if(ec != SCC_ER_OK) return 1; // Check error
 
 	// Make empty clustering to populate
@@ -47,7 +47,7 @@ int main(void) {
 	if(ec != SCC_ER_OK) return 1;
 
 	// Derive a clustering where each cluster contains at least 3 points
-	ec = scc_nng_clustering(cl, data_set_object, 3, SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED,
+	ec = scc_nng_clustering(cl, data_set, 3, SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED,
 	                        false, 0.0, 0, NULL, SCC_UM_IGNORE, false, 0.0);
 	if(ec != SCC_ER_OK) return 1;
 
@@ -59,7 +59,7 @@ int main(void) {
 
 	// Free cluster and data set objects
 	scc_free_clustering(&cl);
-	scc_free_data_set_object(&data_set_object);
+	scc_free_data_set(&data_set);
 }
 ```
 
