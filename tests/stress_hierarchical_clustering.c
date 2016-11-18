@@ -46,15 +46,15 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 		double* const data_matrix = malloc(sizeof(double[DATA_DIMENSION * SAMPLE_SIZE]));
 		scc_rand_double_array(0, 100, DATA_DIMENSION * SAMPLE_SIZE, data_matrix);
 
-		scc_DataSetObject* data_set_object;
-		ec = scc_get_data_set_object(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set_object);
+		scc_DataSet* data_set;
+		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set);
 		assert_int_equal(ec, SCC_ER_OK);
 
 		const uint32_t size_constraint = scc_rand_uint(2, 10);
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_hierarchical_clustering(cl, data_set_object, size_constraint, true);
+		ec = scc_hierarchical_clustering(cl, data_set, size_constraint, true);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -64,7 +64,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 
 		ec = scc_init_empty_clustering(SAMPLE_SIZE, NULL, &cl);
 		assert_int_equal(ec, SCC_ER_OK);
-		ec = scc_hierarchical_clustering(cl, data_set_object, size_constraint, false);
+		ec = scc_hierarchical_clustering(cl, data_set, size_constraint, false);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -73,7 +73,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 		scc_free_clustering(&cl);
 
 		free(data_matrix);
-		scc_free_data_set_object(&data_set_object);
+		scc_free_data_set(&data_set);
 	}
 }
 
