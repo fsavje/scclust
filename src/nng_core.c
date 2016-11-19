@@ -435,7 +435,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert((unassigned_method == SCC_UM_IGNORE) ||
-	       (unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
+	       (unassigned_method == SCC_UM_ANY_NEIGHBOR) ||
 	       (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	       (unassigned_method == SCC_UM_CLOSEST_SEED));
 	assert(!radius_constraint || (radius > 0.0));
@@ -483,12 +483,12 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 
 	// Run assignment by nng. When nng is ordered, we can use it for `SCC_UM_CLOSEST_ASSIGNED` as well.
 	// (NNG already contains radius constraint.)
-	if ((unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
+	if ((unassigned_method == SCC_UM_ANY_NEIGHBOR) ||
 	        (nng_is_ordered && (unassigned_method == SCC_UM_CLOSEST_ASSIGNED))) {
 		total_assigned += iscc_assign_by_nng(clustering, nng, main_assign); // Use `main_assign` as scratch
 
-		// Ignore remaining points if SCC_UM_ASSIGN_BY_NNG
-		if (unassigned_method == SCC_UM_ASSIGN_BY_NNG) {
+		// Ignore remaining points if SCC_UM_ANY_NEIGHBOR
+		if (unassigned_method == SCC_UM_ANY_NEIGHBOR) {
 			unassigned_method = SCC_UM_IGNORE;
 		}
 

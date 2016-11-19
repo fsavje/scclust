@@ -159,15 +159,11 @@ scc_ErrorCode scc_copy_clustering(const scc_Clustering* in_clustering,
 
 scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
                                    uint32_t size_constraint,
+                                   uintmax_t num_types,
+                                   const uint32_t type_size_constraints[],
+                                   size_t len_type_labels,
+                                   const scc_TypeLabel type_labels[],
                                    bool* out_is_OK);
-
-scc_ErrorCode scc_check_clustering_types(const scc_Clustering* clustering,
-                                         uint32_t size_constraint,
-                                         uintmax_t num_types,
-                                         const uint32_t type_size_constraints[],
-                                         size_t len_type_labels,
-                                         const scc_TypeLabel type_labels[],
-                                         bool* out_is_OK);
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
                                       uintmax_t* out_num_data_points,
@@ -245,7 +241,7 @@ typedef enum scc_SeedMethod scc_SeedMethod;
 
 enum scc_UnassignedMethod {
 	SCC_UM_IGNORE,
-	SCC_UM_ASSIGN_BY_NNG,
+	SCC_UM_ANY_NEIGHBOR,
 	SCC_UM_CLOSEST_ASSIGNED,
 	SCC_UM_CLOSEST_SEED,
 	SCC_UM_CLOSEST_SEED_EST_RADIUS,
@@ -253,18 +249,22 @@ enum scc_UnassignedMethod {
 
 typedef enum scc_UnassignedMethod scc_UnassignedMethod;
 
-scc_ErrorCode scc_nng_clustering(scc_Clustering* clustering,
-                                 void* data_set,
-                                 uint32_t size_constraint,
-                                 scc_SeedMethod seed_method,
-                                 scc_UnassignedMethod unassigned_method,
-                                 bool radius_constraint,
-                                 double radius,
-                                 size_t len_primary_data_points,
-                                 const bool primary_data_points[],
-                                 scc_UnassignedMethod secondary_unassigned_method,
-                                 bool secondary_radius_constraint,
-                                 double secondary_radius);
+scc_ErrorCode scc_make_clustering(scc_Clustering* clustering,
+                                  void* data_set,
+                                  uint32_t size_constraint,
+                                  uintmax_t num_types,
+                                  const uint32_t type_size_constraints[],
+                                  size_t len_type_labels,
+                                  const scc_TypeLabel type_labels[],
+                                  scc_SeedMethod seed_method,
+                                  scc_UnassignedMethod unassigned_method,
+                                  bool radius_constraint,
+                                  double radius,
+                                  size_t len_primary_data_points,
+                                  const bool primary_data_points[],
+                                  scc_UnassignedMethod secondary_unassigned_method,
+                                  bool secondary_radius_constraint,
+                                  double secondary_radius);
 
 scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* clustering,
                                          void* data_set,
@@ -276,23 +276,6 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* clustering,
                                          const bool primary_data_points[],
                                          uint32_t batch_size);
 
-scc_ErrorCode scc_nng_clustering_types(scc_Clustering* clustering,
-                                       void* data_set,
-                                       uint32_t size_constraint,
-                                       uintmax_t num_types,
-                                       const uint32_t type_size_constraints[],
-                                       size_t len_type_labels,
-                                       const scc_TypeLabel type_labels[],
-                                       scc_SeedMethod seed_method,
-                                       scc_UnassignedMethod unassigned_method,
-                                       bool radius_constraint,
-                                       double radius,
-                                       size_t len_primary_data_points,
-                                       const bool primary_data_points[],
-                                       scc_UnassignedMethod secondary_unassigned_method,
-                                       bool secondary_radius_constraint,
-                                       double secondary_radius);
-
 scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* clustering,
                                           void* data_set,
                                           uint32_t size_constraint,
@@ -302,9 +285,6 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* clustering,
 // =============================================================================
 // Clustering stats function
 // =============================================================================
-
-/// Type used for clustering statistics
-typedef struct scc_ClusteringStats scc_ClusteringStats;
 
 /// Struct to store clustering statistics
 struct scc_ClusteringStats {
@@ -323,6 +303,9 @@ struct scc_ClusteringStats {
 	double cl_avg_dist_weighted;
 	double cl_avg_dist_unweighted;
 };
+
+/// Type used for clustering statistics
+typedef struct scc_ClusteringStats scc_ClusteringStats;
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
                                        void* data_set,

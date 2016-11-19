@@ -40,15 +40,16 @@ int main(void) {
 	ec = scc_init_data_set(10, 2, 20, raw_data, false, &data_set);
 	if(ec != SCC_ER_OK) return 1; // Check error
 
-	// Make empty clustering to populate
+	// Make empty clustering object
 	scc_Clabel cluster_labels[10];
 	scc_Clustering* cl;
 	ec = scc_init_empty_clustering(10, cluster_labels, &cl);
 	if(ec != SCC_ER_OK) return 1;
 
-	// Derive a clustering where each cluster contains at least 3 points
-	ec = scc_nng_clustering(cl, data_set, 3, SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED,
-	                        false, 0.0, 0, NULL, SCC_UM_IGNORE, false, 0.0);
+	// Construct a clustering where each cluster contains at least 3 points
+	ec = scc_make_clustering(cl, data_set, 3, 0, NULL, 0, NULL,
+	                         SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
+	                         0, NULL, SCC_UM_IGNORE, false, 0.0);
 	if(ec != SCC_ER_OK) return 1;
 
 	printf("Cluster assignment:\n");

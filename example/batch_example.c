@@ -79,7 +79,7 @@ int main(void) {
 	ec = scc_nng_clustering_batches(cl,
 	                                data_set,
 	                                1000,
-	                                SCC_UM_ASSIGN_BY_NNG,
+	                                SCC_UM_ANY_NEIGHBOR,
 	                                false,
 	                                0.0,
 	                                0,
