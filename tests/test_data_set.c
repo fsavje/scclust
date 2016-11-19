@@ -44,7 +44,7 @@ void scc_ut_free_data_set(void** state)
 		.num_dimensions = 3,
 		.data_matrix = NULL,
 		.external_matrix = false,
-		.data_set_version = ISCC_DATASET_VERSION,
+		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
 	scc_DataSet* dso2 = malloc(sizeof(scc_DataSet));
@@ -53,7 +53,7 @@ void scc_ut_free_data_set(void** state)
 		.num_dimensions = 3,
 		.data_matrix = coord1,
 		.external_matrix = false,
-		.data_set_version = ISCC_DATASET_VERSION,
+		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
 	scc_DataSet* dso3 = malloc(sizeof(scc_DataSet));
@@ -62,7 +62,7 @@ void scc_ut_free_data_set(void** state)
 		.num_dimensions = 3,
 		.data_matrix = coord2,
 		.external_matrix = true,
-		.data_set_version = ISCC_DATASET_VERSION,
+		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
 	scc_free_data_set(NULL);
@@ -131,7 +131,7 @@ void scc_ut_get_data_set(void** state)
 	assert_ptr_equal(dso9->data_matrix, coord);
 	assert_memory_equal(dso9->data_matrix, ref_coord, 10 * sizeof(double));
 	assert_true(dso9->external_matrix);
-	assert_int_equal(dso9->data_set_version, ISCC_DATASET_VERSION);
+	assert_int_equal(dso9->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec9, SCC_ER_OK);
 
 	scc_DataSet* dso10;
@@ -143,7 +143,7 @@ void scc_ut_get_data_set(void** state)
 	assert_ptr_not_equal(dso10->data_matrix, coord);
 	assert_memory_equal(dso10->data_matrix, ref_coord, 10 * sizeof(double));
 	assert_false(dso10->external_matrix);
-	assert_int_equal(dso10->data_set_version, ISCC_DATASET_VERSION);
+	assert_int_equal(dso10->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec10, SCC_ER_OK);
 
 	scc_DataSet* dso11;
@@ -155,7 +155,7 @@ void scc_ut_get_data_set(void** state)
 	assert_ptr_equal(dso11->data_matrix, coord);
 	assert_memory_equal(dso11->data_matrix, ref_coord, 3 * sizeof(double));
 	assert_true(dso11->external_matrix);
-	assert_int_equal(dso11->data_set_version, ISCC_DATASET_VERSION);
+	assert_int_equal(dso11->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec11, SCC_ER_OK);
 
 	scc_DataSet* dso12;
@@ -167,7 +167,7 @@ void scc_ut_get_data_set(void** state)
 	assert_ptr_not_equal(dso12->data_matrix, coord);
 	assert_memory_equal(dso12->data_matrix, ref_coord, 3 * sizeof(double));
 	assert_false(dso12->external_matrix);
-	assert_int_equal(dso12->data_set_version, ISCC_DATASET_VERSION);
+	assert_int_equal(dso12->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec12, SCC_ER_OK);
 
 	scc_free_data_set(&dso9);

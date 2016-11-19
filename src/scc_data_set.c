@@ -59,7 +59,7 @@ scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
 	if (tmp_dso == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	*tmp_dso = (scc_DataSet) {
-		.data_set_version = ISCC_DATASET_VERSION,
+		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 		.num_data_points = (size_t) num_data_points,
 		.num_dimensions = (uint_fast16_t) num_dimensions,
 		.data_matrix = NULL,
@@ -99,7 +99,7 @@ bool scc_is_initialized_data_set(const scc_DataSet* const data_set,
                                  const uintmax_t num_data_points)
 {
 	if (data_set == NULL) return false;
-	if (data_set->data_set_version != ISCC_DATASET_VERSION) return false;
+	if (data_set->data_set_version != ISCC_DATASET_STRUCT_VERSION) return false;
 	if (data_set->num_data_points < num_data_points) return false;
 	if (data_set->num_dimensions == 0) return false;
 	if (data_set->data_matrix == NULL) return false;

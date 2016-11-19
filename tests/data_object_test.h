@@ -144,7 +144,7 @@ scc_DataSet scc_ut_test_data_large_struct = {
 	.num_dimensions = 3,
 	.data_matrix = coord1,
 	.external_matrix = true,
-	.data_set_version = 1, // ISCC_DATASET_VERSION
+	.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 };
 
 scc_DataSet scc_ut_test_data_small_struct = {
@@ -152,7 +152,7 @@ scc_DataSet scc_ut_test_data_small_struct = {
 	.num_dimensions = 1,
 	.data_matrix = coord2,
 	.external_matrix = true,
-	.data_set_version = 1, // ISCC_DATASET_VERSION
+	.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 };
 
 scc_DataSet* const scc_ut_test_data_large = &scc_ut_test_data_large_struct;
@@ -169,7 +169,7 @@ scc_DataSet scc_ut_test_data_invalid1_struct = {
 	.num_dimensions = 0,
 	.data_matrix = coord2,
 	.external_matrix = true,
-	.data_set_version = 1, // ISCC_DATASET_VERSION
+	.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 };
 
 scc_DataSet scc_ut_test_data_invalid2_struct = {
@@ -177,7 +177,7 @@ scc_DataSet scc_ut_test_data_invalid2_struct = {
 	.num_dimensions = 1,
 	.data_matrix = NULL,
 	.external_matrix = true,
-	.data_set_version = 1, // ISCC_DATASET_VERSION
+	.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 };
 
 scc_DataSet scc_ut_test_data_invalid3_struct = {

@@ -43,7 +43,7 @@ struct scc_DataSet {
 	bool external_matrix;
 };
 
-static const int32_t ISCC_DATASET_VERSION = 1;
+static const int32_t ISCC_DATASET_STRUCT_VERSION = 722328001;
 
 #ifdef __cplusplus
 }

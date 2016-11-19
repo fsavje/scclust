@@ -194,7 +194,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 		.num_clusters = 0,
 		.cluster_label = malloc(sizeof(scc_Clabel[100])),
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 	iscc_hi_ClusterStack cl_stack1;
 	iscc_hi_empty_cl_stack(100, &cl_stack1);
@@ -222,7 +222,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 		.num_clusters = 0,
 		.cluster_label = malloc(sizeof(scc_Clabel[100])),
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 	iscc_hi_ClusterStack cl_stack2;
 	iscc_hi_empty_cl_stack(100, &cl_stack2);
@@ -256,7 +256,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 		.num_clusters = 2,
 		.cluster_label = cluster_label3,
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 	size_t size_largest_cluster3;
 	iscc_hi_ClusterStack cl_stack3;
@@ -291,7 +291,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 		.num_clusters = 2,
 		.cluster_label = cluster_label4,
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 	size_t size_largest_cluster4;
 	iscc_hi_ClusterStack cl_stack4;

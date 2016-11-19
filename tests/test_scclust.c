@@ -45,7 +45,7 @@ void scc_ut_free_clustering(void** state)
 		.num_clusters = 0,
 		.cluster_label = NULL,
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_Clustering* cl2 = malloc(sizeof(scc_Clustering));
@@ -54,7 +54,7 @@ void scc_ut_free_clustering(void** state)
 		.num_clusters = 3,
 		.cluster_label = labels1,
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_Clustering* cl3 = malloc(sizeof(scc_Clustering));
@@ -63,7 +63,7 @@ void scc_ut_free_clustering(void** state)
 		.num_clusters = 3,
 		.cluster_label = labels2,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_free_clustering(NULL);
@@ -113,7 +113,7 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_non_null(cl6->cluster_label);
 	assert_ptr_equal(cl6->cluster_label, external_cluster_labels);
 	assert_true(cl6->external_labels);
-	assert_int_equal(cl6->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl6->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec6, SCC_ER_OK);
 
 	scc_Clustering* cl6a;
@@ -124,7 +124,7 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_non_null(cl6a->cluster_label);
 	assert_ptr_equal(cl6a->cluster_label, external_cluster_labels);
 	assert_true(cl6a->external_labels);
-	assert_int_equal(cl6a->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl6a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec6a, SCC_ER_OK);
 
 	scc_Clustering* cl7;
@@ -134,7 +134,7 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_int_equal(cl7->num_clusters, 0);
 	assert_null(cl7->cluster_label);
 	assert_false(cl7->external_labels);
-	assert_int_equal(cl7->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl7->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec7, SCC_ER_OK);
 
 	scc_free_clustering(&cl6);
@@ -191,7 +191,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_ptr_equal(cl9->cluster_label, cluster_labels);
 	assert_memory_equal(cl9->cluster_label, ref_cluster_labels, 10 * sizeof(scc_Clabel));
 	assert_true(cl9->external_labels);
-	assert_int_equal(cl9->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl9->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec9, SCC_ER_OK);
 
 	scc_Clustering* cl10;
@@ -203,7 +203,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_ptr_equal(cl10->cluster_label, cluster_labels);
 	assert_memory_equal(cl10->cluster_label, ref_cluster_labels, 6 * sizeof(scc_Clabel));
 	assert_true(cl10->external_labels);
-	assert_int_equal(cl10->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl10->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec10, SCC_ER_OK);
 
 	scc_Clustering* cl11;
@@ -215,7 +215,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_ptr_not_equal(cl11->cluster_label, cluster_labels);
 	assert_memory_equal(cl11->cluster_label, ref_cluster_labels, 10 * sizeof(scc_Clabel));
 	assert_false(cl11->external_labels);
-	assert_int_equal(cl11->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl11->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec11, SCC_ER_OK);
 
 	scc_Clustering* cl12;
@@ -227,7 +227,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_ptr_not_equal(cl12->cluster_label, cluster_labels);
 	assert_memory_equal(cl12->cluster_label, ref_cluster_labels, 6 * sizeof(scc_Clabel));
 	assert_false(cl12->external_labels);
-	assert_int_equal(cl12->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(cl12->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec12, SCC_ER_OK);
 
 	scc_free_clustering(&cl9);
@@ -249,7 +249,7 @@ void scc_ut_copy_clustering(void** state)
 		.num_clusters = 5,
 		.cluster_label = cluster_labels,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_Clustering* out_cl;
@@ -261,7 +261,7 @@ void scc_ut_copy_clustering(void** state)
 	assert_ptr_not_equal(out_cl->cluster_label, cluster_labels);
 	assert_memory_equal(out_cl->cluster_label, ref_cluster_labels, 10 * sizeof(scc_Clabel));
 	assert_false(out_cl->external_labels);
-	assert_int_equal(out_cl->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(out_cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec, SCC_ER_OK);
 
 	scc_free_clustering(&out_cl);
@@ -272,7 +272,7 @@ void scc_ut_copy_clustering(void** state)
 		.num_clusters = 0,
 		.cluster_label = NULL,
 		.external_labels = false,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_Clustering* out_cl2;
@@ -282,7 +282,7 @@ void scc_ut_copy_clustering(void** state)
 	assert_int_equal(out_cl2->num_clusters, 0);
 	assert_null(out_cl2->cluster_label);
 	assert_false(out_cl2->external_labels);
-	assert_int_equal(out_cl2->clustering_version, ISCC_CURRENT_CLUSTSTRUCT_VERSION);
+	assert_int_equal(out_cl2->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(ec2, SCC_ER_OK);
 
 	scc_free_clustering(&out_cl2);
@@ -300,7 +300,7 @@ void scc_ut_is_initialized_clustering(void** state)
 		.num_clusters = 5,
 		.cluster_label = cluster_labels,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	assert_false(scc_is_initialized_clustering(NULL));
@@ -331,7 +331,7 @@ void scc_ut_is_initialized_clustering(void** state)
 
 	in_cl.clustering_version = 0;
 	assert_false(scc_is_initialized_clustering(&in_cl));
-	in_cl.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION;
+	in_cl.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION;
 	assert_true(scc_is_initialized_clustering(&in_cl));
 
 	in_cl.num_clusters = 0;
@@ -356,7 +356,7 @@ void scc_ut_check_clustering(void** state)
 		.num_clusters = 4,
 		.cluster_label = cluster_labels1,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	bool is_OK;
@@ -417,7 +417,7 @@ void scc_ut_check_clustering_types(void** state)
 		.num_clusters = 4,
 		.cluster_label = cluster_labels1,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	bool is_OK;
@@ -507,7 +507,7 @@ void scc_ut_get_clustering_info(void** state)
 		.num_clusters = 5,
 		.cluster_label = cluster_labels,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	uintmax_t out_num_data_points, out_num_clusters;
@@ -544,7 +544,7 @@ void scc_ut_get_cluster_labels(void** state)
 		.num_clusters = 0,
 		.cluster_label = cluster_labels,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_Clabel out_cluster_labels_tmp[10];
@@ -597,7 +597,7 @@ void scc_ut_get_clustering_stats(void** state)
 		.num_clusters = 4,
 		.cluster_label = cluster_labels1,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_ErrorCode ec1 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, NULL);
@@ -648,7 +648,7 @@ void scc_ut_get_clustering_stats(void** state)
 		.num_clusters = 6,
 		.cluster_label = cluster_labels2,
 		.external_labels = true,
-		.clustering_version = ISCC_CURRENT_CLUSTSTRUCT_VERSION,
+		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
 	scc_ClusteringStats out_stats2;
