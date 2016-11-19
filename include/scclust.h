@@ -245,7 +245,7 @@ typedef enum scc_SeedMethod scc_SeedMethod;
 
 enum scc_UnassignedMethod {
 	SCC_UM_IGNORE,
-	SCC_UM_ASSIGN_BY_NNG,
+	SCC_UM_ANY_NEIGHBOR,
 	SCC_UM_CLOSEST_ASSIGNED,
 	SCC_UM_CLOSEST_SEED,
 	SCC_UM_CLOSEST_SEED_EST_RADIUS,

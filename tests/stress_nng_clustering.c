@@ -159,7 +159,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		assert_int_equal(ec, SCC_ER_OK);
 
 		const uint32_t size_constraint = scc_rand_uint(2, 10);
-		const scc_UnassignedMethod unassigned_method = scc_rand_uint(SCC_UM_IGNORE, SCC_UM_ASSIGN_BY_NNG);
+		const scc_UnassignedMethod unassigned_method = scc_rand_uint(SCC_UM_IGNORE, SCC_UM_ANY_NEIGHBOR);
 		const uint32_t batch_size = scc_rand_uint(10, 100);
 
 

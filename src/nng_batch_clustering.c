@@ -71,7 +71,7 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* const clustering,
 	if (data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
-	if ((unassigned_method != SCC_UM_IGNORE) && (unassigned_method != SCC_UM_ASSIGN_BY_NNG)) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if ((unassigned_method != SCC_UM_IGNORE) && (unassigned_method != SCC_UM_ANY_NEIGHBOR)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (radius_constraint && (radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if ((primary_data_points != NULL) && (len_primary_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 

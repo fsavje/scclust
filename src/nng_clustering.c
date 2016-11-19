@@ -87,7 +87,7 @@ scc_ErrorCode scc_nng_clustering(scc_Clustering* const clustering,
 	if ((primary_data_points != NULL) && (len_primary_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if ((primary_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (secondary_unassigned_method == SCC_UM_ASSIGN_BY_NNG) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (secondary_unassigned_method == SCC_UM_ANY_NEIGHBOR) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && (secondary_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 
 	if (clustering->num_clusters != 0) return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
@@ -159,7 +159,7 @@ scc_ErrorCode scc_nng_clustering_types(scc_Clustering* const clustering,
 	if ((primary_data_points != NULL) && (len_primary_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if ((primary_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (secondary_unassigned_method == SCC_UM_ASSIGN_BY_NNG) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (secondary_unassigned_method == SCC_UM_ANY_NEIGHBOR) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (secondary_radius_constraint && (secondary_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
 
 	if (clustering->num_clusters != 0) return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
@@ -229,7 +229,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	assert(size_constraint >= 2);
 	assert(seed_method <= SCC_MAX_SEED_METHOD);
 	assert((unassigned_method == SCC_UM_IGNORE) ||
-	       (unassigned_method == SCC_UM_ASSIGN_BY_NNG) ||
+	       (unassigned_method == SCC_UM_ANY_NEIGHBOR) ||
 	       (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	       (unassigned_method == SCC_UM_CLOSEST_SEED) ||
 	       (unassigned_method == SCC_UM_CLOSEST_SEED_EST_RADIUS));
