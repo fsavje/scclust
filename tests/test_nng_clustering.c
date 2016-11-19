@@ -79,110 +79,160 @@ void scc_ut_nng_clustering(void** state)
 	                                             F, F, F, F, F, F, F, F, F, F };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           1, NULL, 0, NULL,
+	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_OK);
+	scc_free_clustering(&cl);
+
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_CLUSTERING);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_small_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_small_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_DIST_SEARCH_ERROR);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 1,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 1,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 101,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 101,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	scc_free_clustering(&cl);
 
+	uint32_t test_type_size_constraints[5];
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, test_type_size_constraints, 0, NULL,
+	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	scc_free_clustering(&cl);
+
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 10, NULL,
+	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	scc_free_clustering(&cl);
+
+	scc_TypeLabel test_type_labels[5];
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, test_type_labels,
+	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	scc_free_clustering(&cl);
+
+	scc_init_empty_clustering(100, external_cluster_labels, &cl);
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        100, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        50, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, 100, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_ANY_NEIGHBOR, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_IGNORE, true, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
 	scc_init_existing_clustering(100, 10, external_cluster_labels, false, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NOT_IMPLEMENTED);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, NULL, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_RADIUS);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points_none, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
@@ -193,7 +243,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -204,7 +255,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -213,7 +264,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref1_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref1_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -224,7 +276,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref1_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 2, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -233,7 +285,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref2_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref2_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -244,7 +297,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref2_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 10, &cl_is_OK);
+	ec = scc_check_clustering(cl, 10, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -253,7 +306,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref3_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref3_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -264,7 +318,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref3_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -273,7 +327,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -284,7 +339,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -293,7 +348,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -304,7 +360,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -313,7 +369,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref5_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref5_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -324,7 +381,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref5_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -333,7 +390,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref6_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref6_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -344,7 +402,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref6_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -353,7 +411,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref7_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref7_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -364,7 +423,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref7_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -373,7 +432,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref8_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref8_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -384,7 +444,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref8_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -393,7 +453,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -404,7 +465,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -413,7 +474,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -424,7 +486,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -432,7 +494,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref10_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref10_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -443,7 +506,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref10_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -452,7 +515,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref11_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref11_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -463,7 +527,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref11_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -472,7 +536,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref12_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref12_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -483,7 +548,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref12_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -492,7 +557,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref13_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref13_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -503,7 +569,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref13_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -512,7 +578,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -523,7 +590,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -532,7 +599,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -543,7 +611,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -552,7 +620,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref15_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref15_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -563,7 +632,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref15_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -572,7 +641,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref16_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref16_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -583,7 +653,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref16_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -592,7 +662,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref17_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref17_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -603,7 +674,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref17_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -612,7 +683,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref18_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref18_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -623,7 +695,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref18_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -632,7 +704,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -643,7 +716,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -652,7 +725,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -663,7 +737,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -672,7 +746,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref20_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref20_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -683,7 +758,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref20_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -692,7 +767,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref21_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref21_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -703,7 +779,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref21_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -712,7 +788,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref22_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref22_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -723,7 +800,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref22_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -732,7 +809,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref23_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref23_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -743,7 +821,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref23_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -752,7 +830,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+                           0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -763,7 +842,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -772,7 +851,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -783,7 +863,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -792,7 +872,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref25_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref25_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -803,7 +884,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref25_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -812,7 +893,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel ref26_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref26_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -823,7 +905,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref26_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -832,7 +914,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -843,7 +926,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -852,7 +935,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB1_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB1_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -863,7 +947,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB1_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 2, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -872,7 +956,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB2_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB2_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -883,7 +968,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB2_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 10, &cl_is_OK);
+	ec = scc_check_clustering(cl, 10, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -892,7 +977,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB3_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB3_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -903,7 +989,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB3_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -912,7 +998,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -923,7 +1010,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -932,7 +1019,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -943,7 +1031,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -952,7 +1040,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB5_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB5_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -963,7 +1052,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB5_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -972,7 +1061,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB6_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB6_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -983,7 +1073,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB6_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -992,7 +1082,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB7_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB7_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1003,7 +1094,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB7_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1012,7 +1103,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB8_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB8_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1023,7 +1115,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB8_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1032,7 +1124,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1043,7 +1136,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1052,7 +1145,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1063,7 +1157,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1072,7 +1166,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB10_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB10_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1083,7 +1178,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB10_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1092,7 +1187,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB11_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB11_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1103,7 +1199,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB11_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1112,7 +1208,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB12_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB12_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1123,7 +1220,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB12_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1132,7 +1229,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB13_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB13_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1143,7 +1241,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB13_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1152,7 +1250,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1163,7 +1262,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1172,7 +1271,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1183,7 +1283,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1192,7 +1292,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB15_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB15_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1203,7 +1304,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB15_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1212,7 +1313,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB16_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB16_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1223,7 +1325,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB16_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1232,7 +1334,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB17_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB17_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1243,7 +1346,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB17_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1252,7 +1355,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB18_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB18_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1263,7 +1367,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB18_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1272,7 +1376,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1283,7 +1388,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1292,7 +1397,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1303,7 +1409,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1312,7 +1418,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB20_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB20_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1323,7 +1430,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB20_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1332,7 +1439,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB21_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB21_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1343,7 +1451,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB21_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1352,7 +1460,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB22_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB22_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1363,7 +1472,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB22_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1372,7 +1481,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB23_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB23_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1383,7 +1493,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB23_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1392,7 +1502,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1403,7 +1514,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1412,7 +1523,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1423,7 +1535,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1432,7 +1544,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB25_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB25_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1443,7 +1556,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB25_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1452,7 +1565,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refB26_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refB26_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1463,7 +1577,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refB26_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1472,7 +1586,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1483,7 +1598,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1492,7 +1607,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC1_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC1_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1503,7 +1619,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC1_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 2, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1512,7 +1628,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC2_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC2_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1523,7 +1640,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC2_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 10, &cl_is_OK);
+	ec = scc_check_clustering(cl, 10, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1532,7 +1649,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC3_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC3_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1543,7 +1661,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC3_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1552,7 +1670,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1563,7 +1682,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1572,7 +1691,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1583,7 +1703,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1592,7 +1712,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC5_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC5_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1603,7 +1724,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC5_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1612,7 +1733,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC6_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC6_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1623,7 +1745,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC6_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1632,7 +1754,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC7_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC7_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1643,7 +1766,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC7_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1652,7 +1775,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC8_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC8_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1663,7 +1787,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC8_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1672,7 +1796,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1683,7 +1808,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1692,7 +1817,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC9_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC9_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1703,7 +1829,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC9_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1712,7 +1838,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC10_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC10_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1723,7 +1850,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC10_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1732,7 +1859,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC11_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC11_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1743,7 +1871,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC11_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1752,7 +1880,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC12_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC12_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1763,7 +1892,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC12_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1772,7 +1901,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC13_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC13_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1783,7 +1913,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC13_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1792,7 +1922,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1803,7 +1934,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1812,7 +1943,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC14_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC14_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1823,7 +1955,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC14_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1832,7 +1964,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC15_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC15_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1843,7 +1976,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC15_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1852,7 +1985,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC16_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC16_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1863,7 +1997,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC16_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1872,7 +2006,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC17_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC17_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1883,7 +2018,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC17_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1892,7 +2027,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC18_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC18_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1903,7 +2039,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC18_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1912,7 +2048,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1923,7 +2060,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1932,7 +2069,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC19_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC19_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1943,7 +2081,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC19_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1952,7 +2090,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC20_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC20_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1963,7 +2102,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC20_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1972,7 +2111,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC21_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC21_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -1983,7 +2123,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC21_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -1992,7 +2132,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC22_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC22_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2003,7 +2144,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC22_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2012,7 +2153,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC23_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC23_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2023,7 +2165,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC23_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2032,7 +2174,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2043,7 +2186,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2052,7 +2195,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC24_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC24_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2063,7 +2207,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC24_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2072,7 +2216,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC25_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC25_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2083,7 +2228,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC25_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2092,7 +2237,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refC26_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refC26_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2103,7 +2249,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refC26_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2112,7 +2258,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refD1_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refD1_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2123,7 +2270,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refD1_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2132,7 +2279,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refD2_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refD2_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2143,7 +2291,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refD2_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2152,7 +2300,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refD3_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refD3_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2163,7 +2312,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refD3_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2172,7 +2321,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refD4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refD4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2183,7 +2333,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refD4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2192,7 +2342,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refE1_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refE1_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_IGNORE, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2203,7 +2354,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refE1_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2212,7 +2363,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refE2_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refE2_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2223,7 +2375,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refE2_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2232,7 +2384,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refE3_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refE3_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2243,7 +2396,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refE3_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -2252,7 +2405,8 @@ void scc_ut_nng_clustering(void** state)
 	//const scc_Clabel refE4_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t refE4_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -2263,7 +2417,7 @@ void scc_ut_nng_clustering(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, refE4_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3416,21 +3570,21 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                               1, 2, 2, 0, 2, 0, 2, 0, 0, 1 };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
 	assert_int_equal(ec, SCC_ER_INVALID_CLUSTERING);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_small_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_small_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3438,7 +3592,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 1,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 1,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3446,7 +3600,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 101,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 101,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3454,15 +3608,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
-                                       1, type_size_constraints_three, 100, type_labels_three,
-                                       SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       0, NULL, SCC_UM_IGNORE, false, 0.0);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	scc_free_clustering(&cl);
-
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        SIZE_MAX, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3470,7 +3616,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, NULL, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3478,7 +3624,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 50, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3486,7 +3632,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, NULL,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3494,7 +3640,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        100, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3502,7 +3648,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, 100, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3510,7 +3656,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3518,7 +3664,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -3526,7 +3672,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        50, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -3534,7 +3680,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, primary_data_points, 100, false, 0.0);
@@ -3542,7 +3688,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, primary_data_points, SCC_UM_ANY_NEIGHBOR, false, 0.0);
@@ -3550,7 +3696,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, true, 0.0);
@@ -3558,7 +3704,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_existing_clustering(100, 10, external_cluster_labels, false, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3567,7 +3713,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 
 	const uint32_t type_size_constraints_three_mod1[3] = { 35, 1, 1 };
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three_mod1, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3576,7 +3722,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 
 	const uint32_t type_size_constraints_three_mod2[3] = { 2, 2, 2 };
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three_mod2, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3584,7 +3730,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3592,7 +3738,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3600,7 +3746,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3608,7 +3754,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3616,7 +3762,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        100, primary_data_points_none, SCC_UM_IGNORE, false, 0.0);
@@ -3628,7 +3774,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3640,7 +3786,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3649,7 +3795,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3661,7 +3807,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3670,7 +3816,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3682,7 +3828,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3691,7 +3837,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3703,7 +3849,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3712,7 +3858,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3724,7 +3870,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3733,7 +3879,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3745,7 +3891,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3754,7 +3900,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3766,7 +3912,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3775,7 +3921,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3787,7 +3933,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3796,7 +3942,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3808,7 +3954,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3817,7 +3963,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3829,7 +3975,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3838,7 +3984,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3850,7 +3996,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3859,7 +4005,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3871,7 +4017,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3880,7 +4026,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3892,7 +4038,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3901,7 +4047,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3913,7 +4059,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3922,7 +4068,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3934,7 +4080,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3943,7 +4089,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3955,7 +4101,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3964,7 +4110,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3976,7 +4122,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -3985,7 +4131,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -3997,7 +4143,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4006,7 +4152,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4018,7 +4164,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4027,7 +4173,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4039,7 +4185,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4048,7 +4194,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4060,7 +4206,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4069,7 +4215,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4081,7 +4227,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4090,7 +4236,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4102,7 +4248,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4111,7 +4257,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4123,7 +4269,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4132,7 +4278,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4144,7 +4290,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4153,7 +4299,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4165,7 +4311,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4174,7 +4320,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4186,7 +4332,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4195,7 +4341,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0);
@@ -4207,7 +4353,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4216,7 +4362,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4228,7 +4374,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4237,7 +4383,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4249,7 +4395,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4258,7 +4404,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4270,7 +4416,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4279,7 +4425,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4291,7 +4437,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4300,7 +4446,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4312,7 +4458,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4321,7 +4467,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4333,7 +4479,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4342,7 +4488,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4354,7 +4500,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4363,7 +4509,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4375,7 +4521,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4384,7 +4530,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4396,7 +4542,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4405,7 +4551,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4417,7 +4563,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4426,7 +4572,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4438,7 +4584,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4447,7 +4593,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4459,7 +4605,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4468,7 +4614,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4480,7 +4626,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4489,7 +4635,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_IGNORE, false, 0.0);
@@ -4501,7 +4647,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4510,7 +4656,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4522,7 +4668,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4531,7 +4677,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4543,7 +4689,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4552,7 +4698,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4564,7 +4710,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4573,7 +4719,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4585,7 +4731,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4594,7 +4740,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4606,7 +4752,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4615,7 +4761,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4627,7 +4773,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4636,7 +4782,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4648,7 +4794,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4657,7 +4803,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4669,7 +4815,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4678,7 +4824,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4690,7 +4836,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4699,7 +4845,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4711,7 +4857,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4720,7 +4866,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4732,7 +4878,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4741,7 +4887,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4753,7 +4899,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4762,7 +4908,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4774,7 +4920,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4783,7 +4929,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
@@ -4795,7 +4941,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4804,7 +4950,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4816,7 +4962,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4825,7 +4971,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4837,7 +4983,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4846,7 +4992,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4858,7 +5004,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4867,7 +5013,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4879,7 +5025,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4888,7 +5034,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4900,7 +5046,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4909,7 +5055,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4921,7 +5067,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4930,7 +5076,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4942,7 +5088,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4951,7 +5097,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4963,7 +5109,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4972,7 +5118,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -4984,7 +5130,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -4993,7 +5139,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -5005,7 +5151,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5014,7 +5160,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -5026,7 +5172,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5035,7 +5181,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -5047,7 +5193,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5056,7 +5202,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -5068,7 +5214,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5077,7 +5223,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0);
@@ -5089,7 +5235,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5098,7 +5244,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5110,7 +5256,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5119,7 +5265,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5131,7 +5277,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5140,7 +5286,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5152,7 +5298,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5161,7 +5307,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5173,7 +5319,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5182,7 +5328,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5194,7 +5340,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5203,7 +5349,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5215,7 +5361,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5224,7 +5370,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0,
                                        100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5236,7 +5382,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5245,7 +5391,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5257,7 +5403,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5266,7 +5412,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5278,7 +5424,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5287,7 +5433,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5299,7 +5445,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5308,7 +5454,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5320,7 +5466,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5329,7 +5475,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
 	                                   3, type_size_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5341,7 +5487,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5350,7 +5496,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5362,7 +5508,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -5371,7 +5517,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	//const scc_Clabel ref0_cluster_label[100] = { 0, 0, 1, 1, 2,   M, 0, M, 2, M,   1, 1, 2, 1, 0 };
 	//const size_t ref0_num_clusters = 3;
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
 	                                   3, type_size_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED_EST_RADIUS, true, 20.0,
 	                                   100, primary_data_points, SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0);
@@ -5383,7 +5529,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	//assert_memory_equal(cl->cluster_label, ref0_cluster_label, 100 * sizeof(scc_Clabel));
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -6340,7 +6486,8 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
+	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -6349,14 +6496,15 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 3, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
+	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -6365,14 +6513,15 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 2, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 10,
+	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -6381,7 +6530,7 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering(cl, 10, &cl_is_OK);
+	ec = scc_check_clustering(cl, 10, 0, NULL, 0, NULL, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
@@ -6417,7 +6566,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	                                               1, 2, 2, 0, 2, 0, 2, 0, 0, 1 };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6427,14 +6576,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6444,14 +6593,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_three, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 3,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 3,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6461,14 +6610,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 3, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 2,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 2,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6478,14 +6627,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 2, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 5,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 5,
                                        3, type_size_constraints_one, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6495,14 +6644,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 5, 3, type_size_constraints_one, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 4,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 4,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6512,14 +6661,14 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 4, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);
 
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_types(cl, &scc_ut_test_data_large_struct, 8,
+	ec = scc_make_clustering(cl, &scc_ut_test_data_large_struct, 8,
                                        3, type_size_constraints_four, 100, type_labels_three,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius);
@@ -6529,7 +6678,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
 	assert_non_null(cl->cluster_label);
 	assert_ptr_equal(cl->cluster_label, external_cluster_labels);
 	assert_true(cl->external_labels);
-	ec = scc_check_clustering_types(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
+	ec = scc_check_clustering(cl, 8, 3, type_size_constraints_four, 100, type_labels_three, &cl_is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_free_clustering(&cl);

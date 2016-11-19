@@ -362,43 +362,61 @@ void scc_ut_check_clustering(void** state)
 	bool is_OK;
 	scc_ErrorCode ec;
 
-	ec = scc_check_clustering(&cl1, 2, NULL);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, NULL);
 	assert_int_equal(ec, SCC_ER_NULL_INPUT);
 
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 1, NULL, 0, NULL, &is_OK);
+	assert_int_equal(ec, SCC_ER_OK);
+	assert_true(is_OK);
+
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
 	cl1.num_clusters = 0;
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_EMPTY_CLUSTERING);
 	assert_false(is_OK);
 	cl1.num_clusters = 4;
 
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+ 	uint32_t test_type_size_constraints[5];
+	ec = scc_check_clustering(&cl1, 2, 0, test_type_size_constraints, 0, NULL, &is_OK);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	assert_false(is_OK);
+
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 5, NULL, &is_OK);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	assert_false(is_OK);
+
+ 	scc_TypeLabel test_type_labels[5];
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, test_type_labels, &is_OK);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
+	assert_false(is_OK);
+
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
 	cluster_labels1[2] = 5;
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_false(is_OK);
 
 	cluster_labels1[2] = SCC_CLABEL_NA;
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 	cluster_labels1[2] = 3;
 
-	ec = scc_check_clustering(&cl1, 5, &is_OK);
+	ec = scc_check_clustering(&cl1, 5, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_false(is_OK);
 
-	ec = scc_check_clustering(&cl1, 2, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 }
@@ -423,74 +441,70 @@ void scc_ut_check_clustering_types(void** state)
 	bool is_OK;
 	scc_ErrorCode ec;
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, NULL);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, NULL);
 	assert_int_equal(ec, SCC_ER_NULL_INPUT);
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
 	cl1.num_clusters = 0;
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_EMPTY_CLUSTERING);
 	assert_false(is_OK);
 	cl1.num_clusters = 4;
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 2, 1, type_size_constraints, 15, type_labels, &is_OK);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	assert_false(is_OK);
-
-	ec = scc_check_clustering_types(&cl1, 2, UINT16_MAX + 1, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, UINT16_MAX + 1, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_TOO_LARGE_PROBLEM);
 	assert_false(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, NULL, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, NULL, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_NULL_INPUT);
 	assert_false(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 14, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 14, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	assert_false(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, NULL, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_NULL_INPUT);
 	assert_false(is_OK);
 
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 
-	ec = scc_check_clustering_types(&cl1, 5, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 5, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_false(is_OK);
 
 	type_labels[0] = 1;
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_false(is_OK);
 	type_labels[0] = 0;
 
 	cluster_labels1[2] = 5;
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_false(is_OK);
 
 	cluster_labels1[2] = SCC_CLABEL_NA;
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 	cluster_labels1[2] = 3;
 
-	ec = scc_check_clustering_types(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
+	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(is_OK);
 }

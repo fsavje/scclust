@@ -56,7 +56,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 		assert_int_equal(ec, SCC_ER_OK);
 		ec = scc_hierarchical_clustering(cl, data_set, size_constraint, true);
 		if (ec == SCC_ER_OK) {
-			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
+			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
 			assert_true(cl_is_OK);
 		}
@@ -66,7 +66,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 		assert_int_equal(ec, SCC_ER_OK);
 		ec = scc_hierarchical_clustering(cl, data_set, size_constraint, false);
 		if (ec == SCC_ER_OK) {
-			ec = scc_check_clustering(cl, size_constraint, &cl_is_OK);
+			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
 			assert_true(cl_is_OK);
 		}
