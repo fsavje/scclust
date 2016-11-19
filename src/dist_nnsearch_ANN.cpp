@@ -66,13 +66,13 @@ bool iscc_init_nn_search_object(void* const data_set,
                                 iscc_NNSearchObject** const out_nn_search_object)
 {
 	assert(iscc_open_search_objects >= 0);
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
+	if (data_set == NULL) return false;
+	scc_DataSet* const data_set_cast = static_cast<scc_DataSet*>(data_set);
+	if (!scc_is_initialized_data_set(data_set_cast, len_search_indices)) return false;
 
 	if (len_search_indices > INT_MAX) return false;
-
-	scc_DataSet* const data_set_cast = static_cast<scc_DataSet*>(data_set);
 
 	ANNpoint* search_points;
 	try {
