@@ -94,6 +94,7 @@ void scc_get_compiled_version(uint32_t* out_major,
 
 enum scc_ErrorCode {
 	SCC_ER_OK,
+	SCC_ER_UNKNOWN_ERROR,
 	SCC_ER_NULL_INPUT,
 	SCC_ER_INVALID_INPUT,
 	SCC_ER_INVALID_CLUSTERING,
