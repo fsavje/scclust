@@ -94,7 +94,6 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* nn_search_object,
                                           uint32_t k,
                                           bool radius_search,
                                           double radius,
-                                          bool accept_partial,
                                           iscc_Arci out_nn_ref[],
                                           iscc_Dpid out_nn_indices[]);
 

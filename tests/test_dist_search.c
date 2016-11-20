@@ -756,7 +756,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Arci ref_nn_ref1a[11] = { 0, 2, 4, 6, 8, 10, 10, 10, 10, 10, 10 };
 	const iscc_Dpid ref_nn_indices1a[10] = { 0, 10, 4, 12, 2, 14, 4, 12, 4, 12 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 10, query1a, NULL,
-                                                     2, false, 0.0, true, out_nn_ref1a, out_nn_indices1a));
+                                                     2, false, 0.0, out_nn_ref1a, out_nn_indices1a));
 	assert_memory_equal(out_nn_ref1a, ref_nn_ref1a, 11 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices1a, ref_nn_indices1a, 10 * sizeof(iscc_Dpid));
 
@@ -775,7 +775,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 27, 27, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 };
 	const iscc_Dpid ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 100, query1b, NULL,
-                                                     3, false, 0.0, false, out_nn_ref1b, out_nn_indices1b));
+                                                     3, false, 0.0, out_nn_ref1b, out_nn_indices1b));
 	assert_memory_equal(out_nn_ref1b, ref_nn_ref1b, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices1b, ref_nn_indices1b, 30 * sizeof(iscc_Dpid));
 
@@ -793,7 +793,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
 	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 100, query1c, NULL,
-                                                     2, false, 0.0, true, out_nn_ref1c, out_nn_indices1c));
+                                                     2, false, 0.0, out_nn_ref1c, out_nn_indices1c));
 	assert_memory_equal(out_nn_ref1c, ref_nn_ref1c, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices1c, ref_nn_indices1c, 4 * sizeof(iscc_Dpid));
 
@@ -817,7 +817,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
 	const iscc_Dpid ref_nn_indices2a[15] = { 2, 44, 54, ISCC_DPID_NA, ISCC_DPID_NA, 54, ISCC_DPID_NA, ISCC_DPID_NA, 54, 44, 2, 54, 54, ISCC_DPID_NA, ISCC_DPID_NA };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object2, 100, query2, NULL,
-                                                     3, false, 0.0, false, out_nn_ref2a, out_nn_indices2a));
+                                                     3, false, 0.0, out_nn_ref2a, out_nn_indices2a));
 	// 11 and 38 are identical, returning any is fine.
 	assert_true((out_nn_indices2a[3] == 11) || (out_nn_indices2a[3] == 38));
 	assert_true((out_nn_indices2a[4] == 11) || (out_nn_indices2a[4] == 38));
@@ -837,7 +837,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                      10, 10, 10, 10, 10, 10 };
 	const iscc_Dpid ref_nn_indices2b[10] = { 2, 44, ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, 44, 2, 54, ISCC_DPID_NA };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object2, 100, query2, NULL,
-                                                     2, false, 0.0, false, out_nn_ref2b, out_nn_indices2b));
+                                                     2, false, 0.0, out_nn_ref2b, out_nn_indices2b));
 	// 11 and 38 are identical, returning any is fine.
 	assert_true((out_nn_indices2b[2] == 11) || (out_nn_indices2b[2] == 38));
 	assert_true((out_nn_indices2b[3] == 11) || (out_nn_indices2b[3] == 38));
@@ -864,7 +864,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                          33, 76, 33, 33, 33, 76, 76, 33, 33, 33, 76, 33, 33, 76, 33, 33, 76, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 76, 33, 33 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object4b, 100, NULL, NULL,
-                                                     1, false, 0.0, true, out_nn_ref4b, out_nn_indices4b));
+                                                     1, false, 0.0, out_nn_ref4b, out_nn_indices4b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object4b));
 	assert_memory_equal(out_nn_ref4b, ref_nn_ref4b, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices4b, ref_nn_indices4b, 100 * sizeof(iscc_Dpid));
@@ -880,7 +880,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	                                         76, 76, 76, 33, 33, 33, 76, 33, 76, 33, 33, 76 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4c, &nn_search_object4c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object4c, 50, NULL, NULL,
-                                                     1, false, 0.0, false, out_nn_ref4c, out_nn_indices4c));
+                                                     1, false, 0.0, out_nn_ref4c, out_nn_indices4c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object4c));
 	assert_memory_equal(out_nn_ref4c, ref_nn_ref4c, 51 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices4c, ref_nn_indices4c, 50 * sizeof(iscc_Dpid));
@@ -900,7 +900,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5a, 100, query5a, NULL,
-                                                     5, false, 0.0, true, out_nn_ref5a, out_nn_indices5a));
+                                                     5, false, 0.0, out_nn_ref5a, out_nn_indices5a));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5a));
 	assert_memory_equal(out_nn_ref5a, ref_nn_ref5a, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices5a, ref_nn_indices5a, 5 * sizeof(iscc_Dpid));
@@ -920,7 +920,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5b, 100, query5b, NULL,
-                                                     4, false, 0.0, false, out_nn_ref5b, out_nn_indices5b));
+                                                     4, false, 0.0, out_nn_ref5b, out_nn_indices5b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5b));
 	assert_memory_equal(out_nn_ref5b, ref_nn_ref5b, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices5b, ref_nn_indices5b, 8 * sizeof(iscc_Dpid));
@@ -940,7 +940,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5c, 100, query5c, NULL,
-                                                     3, false, 0.0, true, out_nn_ref5c, out_nn_indices5c));
+                                                     3, false, 0.0, out_nn_ref5c, out_nn_indices5c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5c));
 	assert_memory_equal(out_nn_ref5c, ref_nn_ref5c, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 6 * sizeof(iscc_Dpid));
@@ -953,7 +953,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6a, 15, NULL, NULL,
-                                                     2, false, 0.0, false, out_nn_ref6a, out_nn_indices6a));
+                                                     2, false, 0.0, out_nn_ref6a, out_nn_indices6a));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6a));
 	assert_memory_equal(out_nn_ref6a, ref_nn_ref6a, 16 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices6a, ref_nn_indices6a, 30 * sizeof(iscc_Dpid));
@@ -966,7 +966,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices6b[20] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6b, 10, NULL, NULL,
-                                                     2, false, 0.0, true, out_nn_ref6b, out_nn_indices6b));
+                                                     2, false, 0.0, out_nn_ref6b, out_nn_indices6b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6b));
 	assert_memory_equal(out_nn_ref6b, ref_nn_ref6b, 11 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices6b, ref_nn_indices6b, 20 * sizeof(iscc_Dpid));
@@ -979,7 +979,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6c, 15, NULL, NULL,
-                                                     2, false, 0.0, false, out_nn_ref6c, out_nn_indices6c));
+                                                     2, false, 0.0, out_nn_ref6c, out_nn_indices6c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6c));
 	assert_memory_equal(out_nn_ref6c, ref_nn_ref6c, 16 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices6c, ref_nn_indices6c, 30 * sizeof(iscc_Dpid));
@@ -992,7 +992,7 @@ void scc_ut_nearest_neighbor_search_digraph(void** state)
 	const iscc_Dpid ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6d, 10, NULL, NULL,
-                                                     2, false, 0.0, true, out_nn_ref6d, out_nn_indices6d));
+                                                     2, false, 0.0, out_nn_ref6d, out_nn_indices6d));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6d));
 	assert_memory_equal(out_nn_ref6d, ref_nn_ref6d, 11 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices6d, ref_nn_indices6d, 20 * sizeof(iscc_Dpid));
@@ -1010,19 +1010,18 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	false <- FALSE
 	k <- 2
 	radius <- 35
-	accept_partial <- TRUE
 	dist_mat <- aaa
 	search <- c(0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
 	query <- c(true, true, true, true, true, false, false, false, false, false)
 
 	res <- apply(dist_mat[which(query), search + 1], 1, order)[1:k, ]
 	res_ok <- (apply(dist_mat[which(query), search + 1], 1, sort)[1:k, ] < radius)
-	if (!accept_partial) res_ok[, !res_ok[k, ]] <- FALSE
+	res_ok[, !res_ok[k, ]] <- FALSE
 	res <- res[res_ok]
 	ids <- rep(0, length(query))
 	ids[query] <- colSums(res_ok)
 	indica <- rep("true", length(query))
-	if (!accept_partial) indica[query][!res_ok[1, ]] <- "false"
+	indica[query][!res_ok[1, ]] <- "false"
 
 	length(res)
 	paste0(indica, collapse = ", ")
@@ -1039,14 +1038,14 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	bool out_indicators1a[10] = { true, true, true, true, true, true, true, true, true, true };
 	iscc_Arci out_nn_ref1a[11];
 	iscc_Dpid out_nn_indices1a[10];
-	const bool ref_indicators1a[10] = { true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref1a[11] = { 0, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6 };
-	const iscc_Dpid ref_nn_indices1a[6] = { 0, 10, 4, 2, 4, 4 };
+	const bool ref_indicators1a[10] = { true, false, false, false, false, true, true, true, true, true };
+	const iscc_Arci ref_nn_ref1a[11] = { 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
+	const iscc_Dpid ref_nn_indices1a[2] = { 0, 10 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 10, query1a, out_indicators1a,
-                                                     2, true, 35.0, true, out_nn_ref1a, out_nn_indices1a));
+                                                     2, true, 35.0, out_nn_ref1a, out_nn_indices1a));
 	assert_memory_equal(out_indicators1a, ref_indicators1a, 10 * sizeof(bool));
 	assert_memory_equal(out_nn_ref1a, ref_nn_ref1a, 11 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices1a, ref_nn_indices1a, 6 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_nn_indices1a, ref_nn_indices1a, 2 * sizeof(iscc_Dpid));
 
 
 	// 3, 6, 9, 15, 19, 20, 23, 33, 88, 90
@@ -1063,7 +1062,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                                      15, 15, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 };
 	const iscc_Dpid ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 100, query1b, NULL,
-                                                     3, true, 50.0, false, out_nn_ref1b, out_nn_indices1b));
+                                                     3, true, 50.0, out_nn_ref1b, out_nn_indices1b));
 	assert_memory_equal(out_nn_ref1b, ref_nn_ref1b, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices1b, ref_nn_indices1b, 21 * sizeof(iscc_Dpid));
 
@@ -1090,7 +1089,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
 	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object1, 100, query1c, out_indicators1c,
-                                                     2, true, 40.0, true, out_nn_ref1c, out_nn_indices1c));
+                                                     2, true, 40.0, out_nn_ref1c, out_nn_indices1c));
 	assert_memory_equal(out_indicators1c, ref_indicators1c, 100 * sizeof(bool));
 	assert_memory_equal(out_nn_ref1c, ref_nn_ref1c, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(out_nn_indices1c, ref_nn_indices1c, 4 * sizeof(iscc_Dpid));
@@ -1124,7 +1123,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                                      6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
 	const iscc_Dpid ref_nn_indices2a[9] = { ISCC_DPID_NA, ISCC_DPID_NA, 54, ISCC_DPID_NA, ISCC_DPID_NA, 54, 54, ISCC_DPID_NA, ISCC_DPID_NA };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object2, 100, query2, out_indicators2a,
-                                                     3, true, 30.0, false, out_nn_ref2a, out_nn_indices2a));
+                                                     3, true, 30.0, out_nn_ref2a, out_nn_indices2a));
 	// 11 and 38 are identical, returning any is fine.
 	assert_true((out_nn_indices2a[0] == 11) || (out_nn_indices2a[0] == 38));
 	assert_true((out_nn_indices2a[1] == 11) || (out_nn_indices2a[1] == 38));
@@ -1147,26 +1146,26 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                               true, true, true, true, true };
 	iscc_Arci out_nn_ref2b[101];
 	iscc_Dpid out_nn_indices2b[10];
-	const bool ref_indicators2b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-                                         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+	const bool ref_indicators2b[100] = { true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                         true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
                                          true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
                                          true, true, true, true };
-	const iscc_Arci ref_nn_ref2b[101] = { 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-	                                      8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
-	const iscc_Dpid ref_nn_indices2b[8] = { 2, ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, 44, 54, ISCC_DPID_NA };
+	const iscc_Arci ref_nn_ref2b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+	                                      6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+	const iscc_Dpid ref_nn_indices2b[6] = { ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, ISCC_DPID_NA, 54, ISCC_DPID_NA };
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object2, 100, query2, out_indicators2b,
-                                                     2, true, 35.0, true, out_nn_ref2b, out_nn_indices2b));
+                                                     2, true, 35.0, out_nn_ref2b, out_nn_indices2b));
 	// 11 and 38 are identical, returning any is fine.
+	assert_true((out_nn_indices2b[0] == 11) || (out_nn_indices2b[0] == 38));
 	assert_true((out_nn_indices2b[1] == 11) || (out_nn_indices2b[1] == 38));
 	assert_true((out_nn_indices2b[2] == 11) || (out_nn_indices2b[2] == 38));
 	assert_true((out_nn_indices2b[3] == 11) || (out_nn_indices2b[3] == 38));
-	assert_true((out_nn_indices2b[4] == 11) || (out_nn_indices2b[4] == 38));
-	assert_true((out_nn_indices2b[7] == 11) || (out_nn_indices2b[7] == 38));
-	out_nn_indices2b[1] = out_nn_indices2b[2] = out_nn_indices2b[3] = ISCC_DPID_NA;
-	out_nn_indices2b[4] = out_nn_indices2b[7] = ISCC_DPID_NA;
+	assert_true((out_nn_indices2b[5] == 11) || (out_nn_indices2b[5] == 38));
+	out_nn_indices2b[0] = out_nn_indices2b[1] = out_nn_indices2b[2] = ISCC_DPID_NA;
+	out_nn_indices2b[3] = out_nn_indices2b[5] = ISCC_DPID_NA;
 	assert_memory_equal(out_indicators2b, ref_indicators2b, 100 * sizeof(bool));
 	assert_memory_equal(out_nn_ref2b, ref_nn_ref2b, 101 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 8 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 6 * sizeof(iscc_Dpid));
 
 	assert_true(iscc_close_nn_search_object(&nn_search_object2));
 
@@ -1181,17 +1180,17 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                               true, true, true, true, true };
 	iscc_Arci out_nn_ref4b[101];
 	iscc_Dpid out_nn_indices4b[100];
-	const bool ref_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true };
+	const bool ref_indicators4b[100] = { false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false,
+		                                  false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false,
+		                                  false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false, false, false, false, false, false, false, true, false,
+		                                  false, false, false, true, true, false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false,
+		                                  false, false, false, false };
 	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
 	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object4b, 100, NULL, out_indicators4b,
-                                                     1, true, 20.0, true, out_nn_ref4b, out_nn_indices4b));
+                                                     1, true, 20.0, out_nn_ref4b, out_nn_indices4b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object4b));
 	assert_memory_equal(out_indicators4b, ref_indicators4b, 100 * sizeof(bool));
 	assert_memory_equal(out_nn_ref4b, ref_nn_ref4b, 101 * sizeof(iscc_Arci));
@@ -1212,7 +1211,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	const iscc_Dpid ref_nn_indices4c[10] = { 76, 33, 76, 33, 76, 33, 76, 33, 33, 76 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4c, &nn_search_object4c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object4c, 50, NULL, out_indicators4c,
-                                                     2, true, 50.0, false, out_nn_ref4c, out_nn_indices4c));
+                                                     2, true, 50.0, out_nn_ref4c, out_nn_indices4c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object4c));
 	assert_memory_equal(out_indicators4c, ref_indicators4c, 50 * sizeof(bool));
 	assert_memory_equal(out_nn_ref4c, ref_nn_ref4c, 51 * sizeof(iscc_Arci));
@@ -1228,21 +1227,19 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	iscc_Arci out_nn_ref5a[101];
 	iscc_Dpid out_nn_indices5a[5];
-	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-	const iscc_Dpid ref_nn_indices5a[3] = { 15, 50, 96 };
+	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5a, 100, query5a, query5a,
-                                                     5, true, 20.0, true, out_nn_ref5a, out_nn_indices5a));
+                                                     5, true, 20.0, out_nn_ref5a, out_nn_indices5a));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5a));
 	assert_memory_equal(query5a, ref_indicators5a, 100 * sizeof(bool));
 	assert_memory_equal(out_nn_ref5a, ref_nn_ref5a, 101 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices5a, ref_nn_indices5a, 3 * sizeof(iscc_Dpid));
 
 
 	// 15, 65
@@ -1264,7 +1261,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	const iscc_Dpid ref_nn_indices5b[4] = { 15, 50, 96, 1 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5b, 100, query5b, query5b,
-                                                     4, true, 20.5, false, out_nn_ref5b, out_nn_indices5b));
+                                                     4, true, 20.5, out_nn_ref5b, out_nn_indices5b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5b));
 	assert_memory_equal(query5b, ref_indicators5b, 100 * sizeof(bool));
 	assert_memory_equal(out_nn_ref5b, ref_nn_ref5b, 101 * sizeof(iscc_Arci));
@@ -1281,14 +1278,14 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	iscc_Arci out_nn_ref5c[101];
 	iscc_Dpid out_nn_indices5c[6];
 	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-	const iscc_Dpid ref_nn_indices5c[4] = { 15, 1, 42, 8 };
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+	const iscc_Dpid ref_nn_indices5c[3] = { 15, 1, 42 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5c, 100, query5c, NULL,
-                                                     3, true, 30.0, true, out_nn_ref5c, out_nn_indices5c));
+                                                     3, true, 30.0, out_nn_ref5c, out_nn_indices5c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5c));
 	assert_memory_equal(out_nn_ref5c, ref_nn_ref5c, 101 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_nn_indices5c, ref_nn_indices5c, 3 * sizeof(iscc_Dpid));
 
 
 	iscc_NNSearchObject* nn_search_object5d;
@@ -1312,7 +1309,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5d));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5d, 100, query5d, NULL,
-                                                     3, true, 0.1, false, out_nn_ref5d, out_nn_indices5d));
+                                                     3, true, 0.1, out_nn_ref5d, out_nn_indices5d));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5d));
 	assert_memory_equal(out_nn_ref5d, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
 
@@ -1344,7 +1341,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	                                false, false, false, false, false };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5e));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object5e, 100, query5e, query5e,
-                                                     3, true, 0.1, false, out_nn_ref5e, out_nn_indices5e));
+                                                     3, true, 0.1, out_nn_ref5e, out_nn_indices5e));
 	assert_true(iscc_close_nn_search_object(&nn_search_object5e));
 	assert_memory_equal(out_nn_ref5e, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
 	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
@@ -1359,7 +1356,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	const iscc_Dpid ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6a, 15, NULL, out_indicators6a,
-                                                     2, true, 0.2, false, out_nn_ref6a, out_nn_indices6a));
+                                                     2, true, 0.2, out_nn_ref6a, out_nn_indices6a));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6a));
 	assert_memory_equal(out_indicators6a, ref_indicators6a, 15 * sizeof(bool));
 	assert_memory_equal(out_nn_ref6a, ref_nn_ref6a, 16 * sizeof(iscc_Arci));
@@ -1369,14 +1366,14 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	iscc_NNSearchObject* nn_search_object6b;
 	iscc_Arci out_nn_ref6b[11];
 	iscc_Dpid out_nn_indices6b[20];
-	const iscc_Arci ref_nn_ref6b[11] = { 0, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14 };
-	const iscc_Dpid ref_nn_indices6b[14] = { 0, 8, 1, 2, 3, 4, 13, 5, 6, 12, 7, 8, 0, 9 };
+	const iscc_Arci ref_nn_ref6b[11] = { 0, 2, 2, 2, 2, 4, 4, 6, 6, 8, 8 };
+	const iscc_Dpid ref_nn_indices6b[8] = { 0, 8, 4, 13, 6, 12, 8, 0 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6b));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6b, 10, NULL, NULL,
-                                                     2, true, 0.1, true, out_nn_ref6b, out_nn_indices6b));
+                                                     2, true, 0.1, out_nn_ref6b, out_nn_indices6b));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6b));
 	assert_memory_equal(out_nn_ref6b, ref_nn_ref6b, 11 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices6b, ref_nn_indices6b, 14 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_nn_indices6b, ref_nn_indices6b, 8 * sizeof(iscc_Dpid));
 
 
 	iscc_NNSearchObject* nn_search_object6c;
@@ -1388,7 +1385,7 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	const iscc_Dpid ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6c, 15, NULL, out_indicators6c,
-                                                     2, true, 0.3, false, out_nn_ref6c, out_nn_indices6c));
+                                                     2, true, 0.3, out_nn_ref6c, out_nn_indices6c));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6c));
 	assert_memory_equal(out_indicators6c, ref_indicators6c, 15 * sizeof(bool));
 	assert_memory_equal(out_nn_ref6c, ref_nn_ref6c, 16 * sizeof(iscc_Arci));
@@ -1399,16 +1396,16 @@ void scc_ut_nearest_neighbor_search_digraph_radius(void** state)
 	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
 	iscc_Arci out_nn_ref6d[11];
 	iscc_Dpid out_nn_indices6d[20];
-	const bool ref_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14 };
-	const iscc_Dpid ref_nn_indices6d[14] = { 0, 8, 1, 7, 2, 3, 4, 5, 6, 7, 1, 8, 0, 9 };
+	const bool ref_indicators6d[10] = { true, true, false, false, false, false, false, true, true, false };
+	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
+	const iscc_Dpid ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
 	assert_true(iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d));
 	assert_true(iscc_nearest_neighbor_search_digraph(nn_search_object6d, 10, NULL, out_indicators6d,
-                                                     2, true, 0.2, true, out_nn_ref6d, out_nn_indices6d));
+                                                     2, true, 0.2, out_nn_ref6d, out_nn_indices6d));
 	assert_true(iscc_close_nn_search_object(&nn_search_object6d));
 	assert_memory_equal(out_indicators6d, ref_indicators6d, 10 * sizeof(bool));
 	assert_memory_equal(out_nn_ref6d, ref_nn_ref6d, 11 * sizeof(iscc_Arci));
-	assert_memory_equal(out_nn_indices6d, ref_nn_indices6d, 14 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_nn_indices6d, ref_nn_indices6d, 8 * sizeof(iscc_Dpid));
 }
 
 

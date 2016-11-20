@@ -125,7 +125,6 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
                                           const uint32_t k,
                                           const bool radius_search,
                                           const double radius,
-                                          const bool accept_partial,
                                           iscc_Arci* const out_nn_ref,
                                           iscc_Dpid* const out_nn_indices)
 {
@@ -199,8 +198,6 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 						assert(num_found >= 0);
 						if (num_found >= k_int) {
 							out_nn_ref[q + 1] += k;
-						} else if (accept_partial) {
-							out_nn_ref[q + 1] += static_cast<iscc_Arci>(num_found);
 						} else if (out_query_indicators != NULL) {
 							out_query_indicators[q] = false;
 						}
@@ -266,9 +263,8 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 				                                          SCC_ANN_EPS);    // error margin
 
 				assert(num_found >= 0);
-				if (accept_partial || (num_found >= k_int)) {
-					if (num_found >= k_int) num_found = k_int;
-					const ANNidx* const idx_stop = idx_scratch + num_found;
+				if (num_found >= k_int) {
+					const ANNidx* const idx_stop = idx_scratch + k;
 					if (search_indices == NULL) {
 						// Sequential indices, just do casting
 						for (const ANNidx* idx_tmp = idx_scratch; idx_tmp != idx_stop; ++idx_tmp, ++write_nnidx) {
@@ -280,7 +276,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 							*write_nnidx = search_indices[*idx_tmp];
 						}
 					}
-					out_nn_ref[q + 1] += static_cast<iscc_Arci>(num_found);
+					out_nn_ref[q + 1] += k;
 				} else if (out_query_indicators != NULL) {
 					out_query_indicators[q] = false;
 				}

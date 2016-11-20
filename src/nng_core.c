@@ -64,7 +64,6 @@ static scc_ErrorCode iscc_make_nng(void* data_set,
                                    uint32_t k,
                                    bool radius_search,
                                    double radius,
-                                   bool accept_partial,
                                    uintmax_t max_arcs,
                                    iscc_Digraph* out_nng);
 
@@ -75,7 +74,6 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_se
                                                       uint32_t k,
                                                       bool radius_search,
                                                       double radius,
-                                                      bool accept_partial,
                                                       uintmax_t max_arcs,
                                                       iscc_Digraph* out_nng);
 
@@ -154,7 +152,6 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set,
 	                        size_constraint,
 	                        radius_constraint,
 	                        radius,
-	                        false,
 	                        (size_constraint * num_queries),
 	                        out_nng)) != SCC_ER_OK) {
 		return ec;
@@ -264,7 +261,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 			                        type_constraints[i],
 			                        radius_constraint,
 			                        radius,
-			                        false,
 			                        (type_constraints[i] * num_queries),
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
@@ -318,7 +314,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		                        size_constraint,
 		                        radius_constraint,
 		                        radius,
-		                        false,
 		                        (size_constraint * num_queries),
 		                        &nng_sum[1])) != SCC_ER_OK) {
 			free(seedable);
@@ -703,7 +698,6 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
                                    const uint32_t k,
                                    const bool radius_search,
                                    const double radius,
-                                   const bool accept_partial,
                                    const uintmax_t max_arcs,
                                    iscc_Digraph* const out_nng)
 {
@@ -731,7 +725,6 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
                                                k,
                                                radius_search,
                                                radius,
-                                               accept_partial,
                                                max_arcs,
                                                out_nng)) != SCC_ER_OK) {
 		iscc_close_nn_search_object(&nn_search_object);
@@ -754,7 +747,6 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
                                                       const uint32_t k,
                                                       const bool radius_search,
                                                       const double radius,
-                                                      const bool accept_partial,
                                                       const uintmax_t max_arcs,
                                                       iscc_Digraph* const out_nng)
 {
@@ -775,7 +767,6 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 	                                          k,
 	                                          radius_search,
 	                                          radius,
-	                                          accept_partial,
 	                                          out_nng->tail_ptr,
 	                                          out_nng->head)) {
 		iscc_free_digraph(out_nng);
@@ -996,7 +987,6 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 	                                           1,
 	                                           radius_constraint,
 	                                           radius,
-	                                           true,
 	                                           num_to_assign,
 	                                           &priority_graph)) != SCC_ER_OK) {
 		return ec;
