@@ -105,7 +105,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0);
-	assert_int_equal(ec, SCC_ER_DIST_SEARCH_ERROR);
+	assert_int_equal(ec, SCC_ER_INVALID_DATA_OBJ);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
@@ -3588,7 +3588,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_size_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0);
-	assert_int_equal(ec, SCC_ER_DIST_SEARCH_ERROR);
+	assert_int_equal(ec, SCC_ER_INVALID_DATA_OBJ);
 	scc_free_clustering(&cl);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);

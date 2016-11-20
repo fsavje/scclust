@@ -28,6 +28,28 @@
 #include "../src/scclust_internal.h"
 
 
+void scc_ut_check_data_set(void** state)
+{
+	(void) state;
+
+	assert_true(iscc_check_data_set(scc_ut_test_data_large, 100));
+	assert_true(iscc_check_data_set(scc_ut_test_data_large, 50));
+	assert_true(iscc_check_data_set(scc_ut_test_data_large, 0));
+
+	assert_true(iscc_check_data_set(scc_ut_test_data_small, 15));
+	assert_true(iscc_check_data_set(scc_ut_test_data_small, 10));
+	assert_true(iscc_check_data_set(scc_ut_test_data_small, 0));
+
+	assert_false(iscc_check_data_set(NULL, 0));
+	assert_false(iscc_check_data_set(scc_ut_test_data_large, 200));
+	assert_false(iscc_check_data_set(scc_ut_test_data_small, 20));
+
+	for (size_t i = 0; i < scc_ut_num_invalid_data; ++i) {
+		assert_false(iscc_check_data_set(scc_ut_test_data_invalid[i], 0));
+	}
+}
+
+
 void scc_ut_get_dist_matrix(void** state)
 {
 	(void) state;
@@ -1890,6 +1912,7 @@ void scc_ut_nearest_neighbor_search_index_radius(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
+		cmocka_unit_test(scc_ut_check_data_set),
 		cmocka_unit_test(scc_ut_get_dist_matrix),
 		cmocka_unit_test(scc_ut_get_dist_rows),
 		cmocka_unit_test(scc_ut_init_close_max_dist_object),

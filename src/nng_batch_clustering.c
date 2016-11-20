@@ -68,7 +68,7 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* const clustering,
                                          uint32_t batch_size)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 	if ((unassigned_method != SCC_UM_IGNORE) && (unassigned_method != SCC_UM_ANY_NEIGHBOR)) return iscc_make_error(SCC_ER_INVALID_INPUT);

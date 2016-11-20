@@ -56,7 +56,7 @@ bool iscc_init_nn_search_object(void* const data_set,
                                 const iscc_Dpid search_indices[const],
                                 iscc_NNSearchObject** const out_nn_search_object)
 {
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
 
@@ -89,7 +89,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 	const size_t len_search_indices = nn_search_object->len_search_indices;
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 
-	if (!scc_is_initialized_data_set(data_set, len_query_indicators)) return false;
+	assert(iscc_check_data_set(data_set, len_query_indicators));
 	assert(len_search_indices > 0);
 	assert(len_query_indicators > 0);
 	assert(k > 0);
@@ -209,7 +209,7 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 	const size_t len_search_indices = nn_search_object->len_search_indices;
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(len_query_indices > 0);
 	assert(query_indices != NULL);
