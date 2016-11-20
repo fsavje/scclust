@@ -144,7 +144,7 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 {
 	if (clustering == NULL) return false;
 	if (clustering->clustering_version != ISCC_CLUSTERING_STRUCT_VERSION) return false;
-	if (clustering->num_data_points < 2) return false;
+	if (clustering->num_data_points == 0) return false;
 	if (clustering->num_data_points > ISCC_DPID_MAX) return false;
 	if (clustering->num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) return false;
 	if ((clustering->num_clusters > 0) && (clustering->cluster_label == NULL)) return false;
@@ -322,7 +322,7 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 	*out_stats = ISCC_NULL_CLUSTERING_STATS;
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
 	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
-	if (data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 
 	size_t* const cluster_size = calloc(clustering->num_clusters, sizeof(size_t));
 	if (cluster_size == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);

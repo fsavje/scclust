@@ -95,12 +95,11 @@ void scc_free_data_set(scc_DataSet** const data_set)
 }
 
 
-bool scc_is_initialized_data_set(const scc_DataSet* const data_set,
-                                 const uintmax_t num_data_points)
+bool scc_is_initialized_data_set(const scc_DataSet* const data_set)
 {
 	if (data_set == NULL) return false;
 	if (data_set->data_set_version != ISCC_DATASET_STRUCT_VERSION) return false;
-	if (data_set->num_data_points < num_data_points) return false;
+	if (data_set->num_data_points == 0) return false;
 	if (data_set->num_dimensions == 0) return false;
 	if (data_set->data_matrix == NULL) return false;
 	return true;

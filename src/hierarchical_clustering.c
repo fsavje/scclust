@@ -165,7 +165,7 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
                                           const bool batch_assign)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 
@@ -337,7 +337,7 @@ static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* c
 	assert(cl_stack->clusters != NULL);
 	assert(cl_stack->dpid_store != NULL);
 	assert(iscc_check_input_clustering(cl));
-	assert(data_set != NULL);
+	assert(iscc_check_data_set(data_set, cl->num_data_points));
 	assert(work_area != NULL);
 	assert(size_constraint >= 2);
 
@@ -415,7 +415,7 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	assert(cluster_to_break != NULL);
 	assert(cluster_to_break->size >= 2 * size_constraint);
 	assert(cluster_to_break->members != NULL);
-	assert(data_set != NULL);
+	assert(iscc_check_data_set(data_set, 0));
 	assert(work_area != NULL);
 	assert(work_area->dpid_array1 != NULL);
 	assert(work_area->dpid_array2 != NULL);
@@ -688,7 +688,7 @@ static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* const cl,
 	assert(cl != NULL);
 	assert(cl->size >= 4);
 	assert(cl->members != NULL);
-	assert(data_set != NULL);
+	assert(iscc_check_data_set(data_set, 0));
 	assert(work_area != NULL);
 	assert(work_area->dpid_array1 != NULL);
 	assert(work_area->dpid_array2 != NULL);
@@ -764,7 +764,7 @@ static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cons
 	assert(cl->size >= 4);
 	assert(cl->members != NULL);
 	assert(center1 != center2);
-	assert(data_set != NULL);
+	assert(iscc_check_data_set(data_set, 0));
 	assert(work_area != NULL);
 	assert(work_area->dist_array != NULL);
 	assert(work_area->edge_store1 != NULL);

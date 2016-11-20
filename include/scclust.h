@@ -131,8 +131,8 @@ scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
 
 void scc_free_data_set(scc_DataSet** data_set);
 
-bool scc_is_initialized_data_set(const scc_DataSet* data_set,
-                                 uintmax_t num_data_points);
+bool scc_is_initialized_data_set(const scc_DataSet* data_set);
+
 
 // =============================================================================
 // Clustering object

@@ -68,11 +68,11 @@ bool iscc_init_nn_search_object(void* const data_set,
 	assert(iscc_open_search_objects >= 0);
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
-	if (data_set == NULL) return false;
-	scc_DataSet* const data_set_cast = static_cast<scc_DataSet*>(data_set);
-	if (!scc_is_initialized_data_set(data_set_cast, len_search_indices)) return false;
+	assert(iscc_check_data_set(data_set, len_search_indices));
 
 	if (len_search_indices > INT_MAX) return false;
+
+	scc_DataSet* const data_set_cast = static_cast<scc_DataSet*>(data_set);
 
 	ANNpoint* search_points;
 	try {
@@ -139,7 +139,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_open_search_objects > 0);
-	if (!scc_is_initialized_data_set(data_set, len_query_indicators)) return false;
+	assert(iscc_check_data_set(data_set, len_query_indicators));
 	assert(len_search_indices > 0);
 	assert(search_tree != NULL);
 	assert(len_query_indicators > 0);
@@ -313,7 +313,7 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_open_search_objects > 0);
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(search_tree != NULL);
 	assert(len_query_indices > 0);

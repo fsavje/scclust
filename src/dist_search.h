@@ -35,6 +35,9 @@ extern "C" {
 // Miscellaneous functions
 // =============================================================================
 
+bool iscc_check_data_set(void* data_set,
+                         size_t num_data_points);
+
 // `output_dists` must be of length `(len_point_indices - 1) len_point_indices / 2`
 bool iscc_get_dist_matrix(void* data_set,
                           size_t len_point_indices,

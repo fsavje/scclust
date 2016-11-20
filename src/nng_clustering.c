@@ -82,7 +82,7 @@ scc_ErrorCode scc_make_clustering(scc_Clustering* const clustering,
                                   const double secondary_radius)
 {
 	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
 	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
 	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
 
@@ -178,10 +178,11 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
                                                    double secondary_radius)
 {
 	assert(iscc_check_input_clustering(clustering));
-	assert(data_set != NULL);
+	assert(iscc_check_data_set(data_set, clustering->num_data_points));
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 	assert(size_constraint >= 2);
+	assert(clustering->num_data_points >= size_constraint);
 	assert(seed_method <= SCC_MAX_SEED_METHOD);
 	assert((unassigned_method == SCC_UM_IGNORE) ||
 	       (unassigned_method == SCC_UM_ANY_NEIGHBOR) ||

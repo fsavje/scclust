@@ -35,12 +35,23 @@
 // Miscellaneous function implementations
 // =============================================================================
 
+bool iscc_check_data_set(void* const data_set,
+                         const size_t num_data_points)
+{
+	if (data_set == NULL) return false;
+	const scc_DataSet* const data_set_cast = (const scc_DataSet*) data_set;
+	if (!scc_is_initialized_data_set(data_set_cast)) return false;
+	if (data_set_cast->num_data_points < num_data_points) return false;
+	return true;
+}
+
+
 bool iscc_get_dist_matrix(void* const data_set,
                           const size_t len_point_indices,
                           const iscc_Dpid point_indices[const],
                           double output_dists[])
 {
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_point_indices > 1);
 	assert(output_dists != NULL);
 
@@ -71,7 +82,7 @@ bool iscc_get_dist_rows(void* const data_set,
                         const iscc_Dpid column_indices[const],
                         double output_dists[])
 {
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_query_indices > 0);
 	assert(len_column_indices > 0);
 	assert(output_dists != NULL);
@@ -129,7 +140,7 @@ bool iscc_init_max_dist_object(void* const data_set,
                                const iscc_Dpid search_indices[const],
                                iscc_MaxDistObject** const out_max_dist_object)
 {
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(out_max_dist_object != NULL);
 
@@ -157,7 +168,7 @@ bool iscc_get_max_dist(iscc_MaxDistObject* const max_dist_object,
 	const size_t len_search_indices = max_dist_object->len_search_indices;
 	const iscc_Dpid* const search_indices = max_dist_object->search_indices;
 
-	if (!scc_is_initialized_data_set(data_set, 1)) return false;
+	assert(iscc_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(len_query_indices > 0);
 	assert(out_max_indices != NULL);
