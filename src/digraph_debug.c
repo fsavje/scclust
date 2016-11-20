@@ -130,7 +130,9 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 		if (dg_str[c] == '#' || dg_str[c] == '.') ++all_arcs;
 		if (dg_str[c] == '#') ++max_arcs;
 		if (dg_str[c] == '/' && vertices == 0) vertices = all_arcs;
-		if (dg_str[c] == '/' && (all_arcs % vertices) != 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
+		if (dg_str[c] == '/' && (all_arcs % vertices) != 0) {
+			return iscc_make_error(SCC_ER_INVALID_INPUT);
+		}
 	}
 
 	scc_ErrorCode ec;

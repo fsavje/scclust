@@ -157,7 +157,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 
 		default:
 			assert(false);
-			ec = iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+			ec = iscc_make_error(SCC_ER_UNKNOWN_ERROR);
 			break;
 	}
 
@@ -542,7 +542,9 @@ static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
 	assert(seed_result->count <= seed_result->capacity);
 	assert(seed_result->seeds != NULL);
 
-	if (seed_result->count == ((uintmax_t) SCC_CLABEL_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (seed_result->count == ((uintmax_t) SCC_CLABEL_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters (adjust the `scc_Clabel` type).");
+	}
 
 	if (seed_result->count == seed_result->capacity) {
 		seed_result->capacity = seed_result->capacity + (seed_result->capacity >> 3) + 1024;

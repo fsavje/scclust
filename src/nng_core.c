@@ -139,7 +139,9 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set,
 		for (size_t i = 0; i < num_data_points; ++i) {
 			num_queries += primary_data_points[i];
 		}
-		if (num_queries == 0) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+		if (num_queries == 0) {
+			return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "No primary data points.");
+		}
 	}
 
 	scc_ErrorCode ec;
@@ -160,7 +162,7 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set,
 
 	if (iscc_digraph_is_empty(out_nng)) {
 		iscc_free_digraph(out_nng);
-		return iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+		return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Infeasible radius constraint.");
 	}
 
 	iscc_ensure_self_match(out_nng, num_data_points, NULL);
@@ -208,7 +210,9 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		for (size_t i = 0; i < num_data_points; ++i) {
 			num_queries += primary_data_points[i];
 		}
-		if (num_queries == 0) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+		if (num_queries == 0) {
+			return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "No primary data points.");
+		}
 	}
 
 	bool* seedable;
@@ -267,7 +271,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 			}
 			++num_non_zero_type_constraints;
 			if (iscc_digraph_is_empty(&nng_by_type[num_non_zero_type_constraints - 1])) {
-				ec = iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+				ec = iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Infeasible radius constraint.");
 				break;
 			}
 			iscc_ensure_self_match(&nng_by_type[num_non_zero_type_constraints - 1],
@@ -323,7 +327,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		}
 
 		if (iscc_digraph_is_empty(&nng_sum[1])) {
-			ec = iscc_make_error(SCC_ER_NO_CLUST_EXIST_RADIUS);
+			ec = iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Infeasible radius constraint.");
 		} else {
 			ec = iscc_digraph_difference(&nng_sum[1], &nng_sum[0], additional_nn_needed);
 		}
@@ -865,7 +869,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 			free(out_type_result->type_group_size);
 			free(out_type_result->point_store);
 			free(out_type_result->type_groups);
-			return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+			return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than type size constraint.");
 		}
 		out_type_result->sum_type_constraints += type_size_constraints[i];
 	}
@@ -874,7 +878,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 		free(out_type_result->type_group_size);
 		free(out_type_result->point_store);
 		free(out_type_result->type_groups);
-		return iscc_make_error(SCC_ER_INVALID_INPUT);
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Type constraint cannot be larger than overall size constraint.");
 	}
 
 	out_type_result->type_groups[0] = out_type_result->point_store + out_type_result->type_group_size[0];

@@ -231,7 +231,7 @@ void scc_ut_init_digraph(void** state)
 	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
 		iscc_Digraph dg1;
 		scc_ErrorCode ec1 = iscc_init_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
-		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
 	iscc_Digraph dg3;
@@ -264,7 +264,7 @@ void scc_ut_empty_digraph(void** state)
 	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
 		iscc_Digraph dg1;
 		scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
-		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
 	iscc_Digraph dg3;
@@ -320,7 +320,7 @@ void scc_ut_change_arc_storage(void** state)
 		assert_non_null(dg.head);
 		assert_non_null(dg.tail_ptr);
 		assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
-		assert_int_equal(ec1, SCC_ER_TOO_LARGE_DIGRAPH);
+		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
 	assert_true(iscc_digraph_is_initialized(&dg));
