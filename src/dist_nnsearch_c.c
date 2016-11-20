@@ -80,7 +80,6 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
                                           const uint32_t k,
                                           const bool radius_search,
                                           const double radius,
-                                          const bool accept_partial,
                                           iscc_Arci out_nn_ref[const],
                                           iscc_Dpid out_nn_indices[const])
 {
@@ -136,7 +135,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 					iscc_add_dist_to_list(tmp_dist, (iscc_Dpid) s, sort_scratch_end, index_write_end, sort_scratch);
 				}
 
-				if (radius_search && !accept_partial && (found < k)) {
+				if (radius_search && (found < k)) {
 					found = 0;
 					if (out_query_indicators != NULL) out_query_indicators[q] = false;
 				}
@@ -178,7 +177,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 					iscc_add_dist_to_list(tmp_dist, search_indices[s], sort_scratch_end, index_write_end, sort_scratch);
 				}
 
-				if (radius_search && !accept_partial && (found < k)) {
+				if (radius_search && (found < k)) {
 					found = 0;
 					if (out_query_indicators != NULL) out_query_indicators[q] = false;
 				}

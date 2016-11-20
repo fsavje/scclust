@@ -49,7 +49,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng1b;
 	scc_ErrorCode ec1b = iscc_make_nng(scc_ut_test_data_large, 10, search1,
                                       100, query1b, NULL,
-                                      3, false, 0.0, false, 30, &out_nng1b);
+                                      3, false, 0.0, 30, &out_nng1b);
 	assert_int_equal(ec1b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1b, &ref_nng1b);
 	iscc_free_digraph(&out_nng1b);
@@ -71,7 +71,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng1c;
 	scc_ErrorCode ec1c = iscc_make_nng(scc_ut_test_data_large, 10, search1,
                                       100, query1c, NULL,
-                                      2, false, 0.0, true, 20, &out_nng1c);
+                                      2, false, 0.0, 20, &out_nng1c);
 	assert_int_equal(ec1c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1c, &ref_nng1c);
 	iscc_free_digraph(&out_nng1c);
@@ -90,7 +90,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng4b;
 	scc_ErrorCode ec4b = iscc_make_nng(scc_ut_test_data_large, 2, search4b,
                                       100, NULL, NULL,
-                                      1, false, 0.0, true, 100, &out_nng4b);
+                                      1, false, 0.0, 100, &out_nng4b);
 	assert_int_equal(ec4b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng4b, &ref_nng4b);
 	iscc_free_digraph(&out_nng4b);
@@ -111,7 +111,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng5a;
 	scc_ErrorCode ec5a = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5a, NULL,
-                                      5, false, 0.0, true, 5, &out_nng5a);
+                                      5, false, 0.0, 5, &out_nng5a);
 	assert_int_equal(ec5a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5a, &ref_nng5a);
 	iscc_free_digraph(&out_nng5a);
@@ -132,7 +132,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng5b;
 	scc_ErrorCode ec5b = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5b, NULL,
-                                      4, false, 0.0, false, 50, &out_nng5b);
+                                      4, false, 0.0, 50, &out_nng5b);
 	assert_int_equal(ec5b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5b, &ref_nng5b);
 	iscc_free_digraph(&out_nng5b);
@@ -153,7 +153,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng5c;
 	scc_ErrorCode ec5c = iscc_make_nng(scc_ut_test_data_large, 50, NULL,
                                       100, query5c, NULL,
-                                      3, false, 0.0, true, 6, &out_nng5c);
+                                      3, false, 0.0, 6, &out_nng5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
 	iscc_free_digraph(&out_nng5c);
@@ -167,7 +167,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng6a;
 	scc_ErrorCode ec6a = iscc_make_nng(scc_ut_test_data_small, 15, NULL,
                                       15, NULL, NULL,
-                                      2, false, 0.0, false, 30, &out_nng6a);
+                                      2, false, 0.0, 30, &out_nng6a);
 	assert_int_equal(ec6a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6a, &ref_nng6a);
 	iscc_free_digraph(&out_nng6a);
@@ -181,7 +181,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng6c;
 	scc_ErrorCode ec6c = iscc_make_nng(scc_ut_test_data_small, 10, NULL,
                                       15, NULL, NULL,
-                                      2, false, 0.0, false, 100, &out_nng6c);
+                                      2, false, 0.0, 100, &out_nng6c);
 	assert_int_equal(ec6c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6c, &ref_nng6c);
 	iscc_free_digraph(&out_nng6c);
@@ -195,7 +195,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph out_nng6d;
 	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 10, NULL,
                                       10, NULL, NULL,
-                                      2, false, 0.0, true, 20, &out_nng6d);
+                                      2, false, 0.0, 20, &out_nng6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);
 	iscc_free_digraph(&out_nng6d);
@@ -225,7 +225,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng1b;
 	scc_ErrorCode ec1b = iscc_make_nng(scc_ut_test_data_large, 10, search1,
                                       100, query1b, NULL,
-                                      3, true, 50.0, false, 21, &out_nng1b);
+                                      3, true, 50.0, 21, &out_nng1b);
 	assert_int_equal(ec1b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1b, &ref_nng1b);
 	iscc_free_digraph(&out_nng1b);
@@ -256,7 +256,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng1c;
 	scc_ErrorCode ec1c = iscc_make_nng(scc_ut_test_data_large, 10, search1,
                                       100, query1c, out_indicators1c,
-                                      2, true, 40.0, true, 10, &out_nng1c);
+                                      2, true, 40.0, 10, &out_nng1c);
 	assert_int_equal(ec1c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1c, &ref_nng1c);
 	assert_memory_equal(out_indicators1c, ref_indicators1c, 100 * sizeof(bool));
@@ -271,11 +271,13 @@ void scc_ut_make_nng_radius(void** state)
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true };
-	const bool ref_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true };
+	const bool ref_indicators4b[100] = { false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false,
+		                                  false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false,
+		                                  false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false,
+		                                  false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false,
+		                                  false, false, false, false, false, false, true, false, false, false, false, true, true, false, false, true,
+		                                  false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false,
+		                                  false, false, false, false };
 	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
 	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
@@ -284,7 +286,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng4b;
 	scc_ErrorCode ec4b = iscc_make_nng(scc_ut_test_data_large, 2, search4b,
                                       100, NULL, out_indicators4b,
-                                      1, true, 20.0, true, 14, &out_nng4b);
+                                      1, true, 20.0, 14, &out_nng4b);
 	assert_int_equal(ec4b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng4b, &ref_nng4b);
 	assert_memory_equal(out_indicators4b, ref_indicators4b, 100 * sizeof(bool));
@@ -298,20 +300,17 @@ void scc_ut_make_nng_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-	const iscc_Dpid ref_nn_indices5a[3] = { 15, 50, 96 };
 	iscc_Digraph ref_nng5a;
-	iscc_digraph_from_pieces(100, 3, ref_nn_ref5a, ref_nn_indices5a, &ref_nng5a);
+	iscc_empty_digraph(100, 0, &ref_nng5a);
 	iscc_Digraph out_nng5a;
 	scc_ErrorCode ec5a = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5a, query5a,
-                                      5, true, 20.0, true, 5, &out_nng5a);
+                                      5, true, 20.0, 5, &out_nng5a);
 	assert_int_equal(ec5a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5a, &ref_nng5a);
 	assert_memory_equal(query5a, ref_indicators5a, 100 * sizeof(bool));
@@ -338,7 +337,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng5b;
 	scc_ErrorCode ec5b = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5b, query5b,
-                                      4, true, 20.5, false, 10, &out_nng5b);
+                                      4, true, 20.5, 10, &out_nng5b);
 	assert_int_equal(ec5b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5b, &ref_nng5b);
 	assert_memory_equal(query5b, ref_indicators5b, 100 * sizeof(bool));
@@ -353,14 +352,14 @@ void scc_ut_make_nng_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
 	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-	const iscc_Dpid ref_nn_indices5c[4] = { 15, 1, 42, 8 };
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+	const iscc_Dpid ref_nn_indices5c[3] = { 15, 1, 42 };
 	iscc_Digraph ref_nng5c;
-	iscc_digraph_from_pieces(100, 4, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
+	iscc_digraph_from_pieces(100, 3, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
 	scc_ErrorCode ec5c = iscc_make_nng(scc_ut_test_data_large, 50, NULL,
                                       100, query5c, NULL,
-                                      3, true, 30.0, true, 8, &out_nng5c);
+                                      3, true, 30.0, 8, &out_nng5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
 	iscc_free_digraph(&out_nng5c);
@@ -386,7 +385,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng5d;
 	scc_ErrorCode ec5d = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5d, NULL,
-                                      3, true, 0.1, false, 10, &out_nng5d);
+                                      3, true, 0.1, 10, &out_nng5d);
 	assert_int_equal(ec5d, SCC_ER_OK);
 	assert_int_equal(out_nng5d.vertices, 100);
 	assert_int_equal(out_nng5d.max_arcs, 0);
@@ -421,7 +420,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng5e;
 	scc_ErrorCode ec5e = iscc_make_nng(scc_ut_test_data_large, 100, NULL,
                                       100, query5e, query5e,
-                                      3, true, 0.1, false, 10, &out_nng5e);
+                                      3, true, 0.1, 10, &out_nng5e);
 	assert_int_equal(ec5e, SCC_ER_OK);
 	assert_int_equal(out_nng5e.vertices, 100);
 	assert_int_equal(out_nng5e.max_arcs, 0);
@@ -441,7 +440,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng6a;
 	scc_ErrorCode ec6a = iscc_make_nng(scc_ut_test_data_small, 15, NULL,
                                       15, NULL, out_indicators6a,
-                                      2, true, 0.2, false, 20, &out_nng6a);
+                                      2, true, 0.2, 20, &out_nng6a);
 	assert_int_equal(ec6a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6a, &ref_nng6a);
 	assert_memory_equal(out_indicators6a, ref_indicators6a, 15 * sizeof(bool));
@@ -458,7 +457,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph out_nng6c;
 	scc_ErrorCode ec6c = iscc_make_nng(scc_ut_test_data_small, 10, NULL,
                                       15, NULL, out_indicators6c,
-                                      2, true, 0.3, false, 14, &out_nng6c);
+                                      2, true, 0.3, 14, &out_nng6c);
 	assert_int_equal(ec6c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6c, &ref_nng6c);
 	assert_memory_equal(out_indicators6c, ref_indicators6c, 15 * sizeof(bool));
@@ -467,15 +466,15 @@ void scc_ut_make_nng_radius(void** state)
 
 
 	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
-	const bool ref_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14 };
-	const iscc_Dpid ref_nn_indices6d[14] = { 0, 8, 1, 7, 2, 3, 4, 5, 6, 7, 1, 8, 0, 9 };
+	const bool ref_indicators6d[10] = { true, true, false, false, false, false, false, true, true, false };
+	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
+	const iscc_Dpid ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
 	iscc_Digraph ref_nng6d;
-	iscc_digraph_from_pieces(10, 14, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
+	iscc_digraph_from_pieces(10, 8, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
 	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 10, NULL,
                                       10, NULL, out_indicators6d,
-                                      2, true, 0.2, true, 16, &out_nng6d);
+                                      2, true, 0.2, 16, &out_nng6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);
 	assert_memory_equal(out_indicators6d, ref_indicators6d, 10 * sizeof(bool));
@@ -508,7 +507,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_Digraph out_nng1b;
 	scc_ErrorCode ec1b = iscc_make_nng_from_search_object(nn_search_object1,
 	                                                    100, query1b, NULL,
-                                                        3, false, 0.0, false, 30, &out_nng1b);
+                                                        3, false, 0.0, 30, &out_nng1b);
 	assert_int_equal(ec1b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1b, &ref_nng1b);
 	iscc_free_digraph(&out_nng1b);
@@ -530,7 +529,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_Digraph out_nng1c;
 	scc_ErrorCode ec1c = iscc_make_nng_from_search_object(nn_search_object1,
 	                                                    100, query1c, NULL,
-                                                        2, false, 0.0, true, 20, &out_nng1c);
+                                                        2, false, 0.0, 20, &out_nng1c);
 	assert_int_equal(ec1c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1c, &ref_nng1c);
 	iscc_free_digraph(&out_nng1c);
@@ -553,7 +552,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b);
 	scc_ErrorCode ec4b = iscc_make_nng_from_search_object(nn_search_object4b,
 	                                                    100, NULL, NULL,
-                                                        1, false, 0.0, true, 100, &out_nng4b);
+                                                        1, false, 0.0, 100, &out_nng4b);
 	iscc_close_nn_search_object(&nn_search_object4b);
 	assert_int_equal(ec4b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng4b, &ref_nng4b);
@@ -577,7 +576,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a);
 	scc_ErrorCode ec5a = iscc_make_nng_from_search_object(nn_search_object5a,
 	                                                    100, query5a, NULL,
-                                                        5, false, 0.0, true, 5, &out_nng5a);
+                                                        5, false, 0.0, 5, &out_nng5a);
 	iscc_close_nn_search_object(&nn_search_object5a);
 	assert_int_equal(ec5a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5a, &ref_nng5a);
@@ -601,7 +600,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b);
 	scc_ErrorCode ec5b = iscc_make_nng_from_search_object(nn_search_object5b,
 	                                                    100, query5b, NULL,
-                                                        4, false, 0.0, false, 50, &out_nng5b);
+                                                        4, false, 0.0, 50, &out_nng5b);
 	iscc_close_nn_search_object(&nn_search_object5b);
 	assert_int_equal(ec5b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5b, &ref_nng5b);
@@ -625,7 +624,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c);
 	scc_ErrorCode ec5c = iscc_make_nng_from_search_object(nn_search_object5c,
 	                                                    100, query5c, NULL,
-                                                        3, false, 0.0, true, 6, &out_nng5c);
+                                                        3, false, 0.0, 6, &out_nng5c);
 	iscc_close_nn_search_object(&nn_search_object5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
@@ -642,7 +641,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a);
 	scc_ErrorCode ec6a = iscc_make_nng_from_search_object(nn_search_object6a,
 	                                                    15, NULL, NULL,
-                                                        2, false, 0.0, false, 30, &out_nng6a);
+                                                        2, false, 0.0, 30, &out_nng6a);
 	iscc_close_nn_search_object(&nn_search_object6a);
 	assert_int_equal(ec6a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6a, &ref_nng6a);
@@ -659,7 +658,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c);
 	scc_ErrorCode ec6c = iscc_make_nng_from_search_object(nn_search_object6c,
 	                                                    15, NULL, NULL,
-                                                        2, false, 0.0, false, 100, &out_nng6c);
+                                                        2, false, 0.0, 100, &out_nng6c);
 	iscc_close_nn_search_object(&nn_search_object6c);
 	assert_int_equal(ec6c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6c, &ref_nng6c);
@@ -676,7 +675,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d);
 	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d,
 	                                                    10, NULL, NULL,
-                                                        2, false, 0.0, true, 20, &out_nng6d);
+                                                        2, false, 0.0, 20, &out_nng6d);
 	iscc_close_nn_search_object(&nn_search_object6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);
@@ -709,7 +708,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_Digraph out_nng1b;
 	scc_ErrorCode ec1b = iscc_make_nng_from_search_object(nn_search_object1,
 	                                                    100, query1b, NULL,
-                                                        3, true, 50.0, false, 21, &out_nng1b);
+                                                        3, true, 50.0, 21, &out_nng1b);
 	assert_int_equal(ec1b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1b, &ref_nng1b);
 	iscc_free_digraph(&out_nng1b);
@@ -740,7 +739,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_Digraph out_nng1c;
 	scc_ErrorCode ec1c = iscc_make_nng_from_search_object(nn_search_object1,
 	                                                    100, query1c, out_indicators1c,
-                                                        2, true, 40.0, true, 10, &out_nng1c);
+                                                        2, true, 40.0, 10, &out_nng1c);
 	assert_int_equal(ec1c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng1c, &ref_nng1c);
 	assert_memory_equal(out_indicators1c, ref_indicators1c, 100 * sizeof(bool));
@@ -757,11 +756,12 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true };
-	const bool ref_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-	                                     true, true, true, true };
+	const bool ref_indicators4b[100] = { false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false,
+	                                     false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false,
+	                                     false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false,
+	                                     true, false, true, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true,
+	                                     false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false,
+	                                     false, false, false, false };
 	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
 	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
@@ -772,7 +772,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 2, search4b, &nn_search_object4b);
 	scc_ErrorCode ec4b = iscc_make_nng_from_search_object(nn_search_object4b,
 	                                                    100, NULL, out_indicators4b,
-                                                        1, true, 20.0, true, 14, &out_nng4b);
+                                                        1, true, 20.0, 14, &out_nng4b);
 	iscc_close_nn_search_object(&nn_search_object4b);
 	assert_int_equal(ec4b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng4b, &ref_nng4b);
@@ -787,22 +787,19 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false,
+	const bool ref_indicators5a[100] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-	const iscc_Dpid ref_nn_indices5a[3] = { 15, 50, 96 };
 	iscc_Digraph ref_nng5a;
-	iscc_digraph_from_pieces(100, 3, ref_nn_ref5a, ref_nn_indices5a, &ref_nng5a);
+	iscc_empty_digraph(100, 0, &ref_nng5a);
 	iscc_Digraph out_nng5a;
 	iscc_NNSearchObject* nn_search_object5a;
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5a);
 	scc_ErrorCode ec5a = iscc_make_nng_from_search_object(nn_search_object5a,
 	                                                    100, query5a, query5a,
-                                                        5, true, 20.0, true, 5, &out_nng5a);
+                                                        5, true, 20.0, 5, &out_nng5a);
 	iscc_close_nn_search_object(&nn_search_object5a);
 	assert_int_equal(ec5a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5a, &ref_nng5a);
@@ -832,7 +829,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5b);
 	scc_ErrorCode ec5b = iscc_make_nng_from_search_object(nn_search_object5b,
 	                                                    100, query5b, query5b,
-                                                        4, true, 20.5, false, 10, &out_nng5b);
+                                                        4, true, 20.5, 10, &out_nng5b);
 	iscc_close_nn_search_object(&nn_search_object5b);
 	assert_int_equal(ec5b, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5b, &ref_nng5b);
@@ -848,16 +845,16 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
 	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-	const iscc_Dpid ref_nn_indices5c[4] = { 15, 1, 42, 8 };
+	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+	const iscc_Dpid ref_nn_indices5c[3] = { 15, 1, 42 };
 	iscc_Digraph ref_nng5c;
-	iscc_digraph_from_pieces(100, 4, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
+	iscc_digraph_from_pieces(100, 3, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
 	iscc_NNSearchObject* nn_search_object5c;
 	iscc_init_nn_search_object(scc_ut_test_data_large, 50, NULL, &nn_search_object5c);
 	scc_ErrorCode ec5c = iscc_make_nng_from_search_object(nn_search_object5c,
 	                                                    100, query5c, NULL,
-                                                        3, true, 30.0, true, 8, &out_nng5c);
+                                                        3, true, 30.0, 8, &out_nng5c);
 	iscc_close_nn_search_object(&nn_search_object5c);
 	assert_int_equal(ec5c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng5c, &ref_nng5c);
@@ -886,7 +883,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5d);
 	scc_ErrorCode ec5d = iscc_make_nng_from_search_object(nn_search_object5d,
 	                                                    100, query5d, NULL,
-                                                        3, true, 0.1, false, 10, &out_nng5d);
+                                                        3, true, 0.1, 10, &out_nng5d);
 	iscc_close_nn_search_object(&nn_search_object5d);
 	assert_int_equal(ec5d, SCC_ER_OK);
 	assert_int_equal(out_nng5d.vertices, 100);
@@ -924,7 +921,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_large, 100, NULL, &nn_search_object5e);
 	scc_ErrorCode ec5e = iscc_make_nng_from_search_object(nn_search_object5e,
 	                                                    100, query5e, query5e,
-                                                        3, true, 0.1, false, 10, &out_nng5e);
+                                                        3, true, 0.1, 10, &out_nng5e);
 	iscc_close_nn_search_object(&nn_search_object5e);
 	assert_int_equal(ec5e, SCC_ER_OK);
 	assert_int_equal(out_nng5e.vertices, 100);
@@ -947,7 +944,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 15, NULL, &nn_search_object6a);
 	scc_ErrorCode ec6a = iscc_make_nng_from_search_object(nn_search_object6a,
 	                                                    15, NULL, out_indicators6a,
-                                                        2, true, 0.2, false, 20, &out_nng6a);
+                                                        2, true, 0.2, 20, &out_nng6a);
 	iscc_close_nn_search_object(&nn_search_object6a);
 	assert_int_equal(ec6a, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6a, &ref_nng6a);
@@ -967,7 +964,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6c);
 	scc_ErrorCode ec6c = iscc_make_nng_from_search_object(nn_search_object6c,
 	                                                    15, NULL, out_indicators6c,
-                                                        2, true, 0.3, false, 14, &out_nng6c);
+                                                        2, true, 0.3, 14, &out_nng6c);
 	iscc_close_nn_search_object(&nn_search_object6c);
 	assert_int_equal(ec6c, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6c, &ref_nng6c);
@@ -977,17 +974,17 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 
 
 	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
-	const bool ref_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14 };
-	const iscc_Dpid ref_nn_indices6d[14] = { 0, 8, 1, 7, 2, 3, 4, 5, 6, 7, 1, 8, 0, 9 };
+	const bool ref_indicators6d[10] = { true, true, false, false, false, false, false, true, true, false };
+	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
+	const iscc_Dpid ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
 	iscc_Digraph ref_nng6d;
-	iscc_digraph_from_pieces(10, 14, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
+	iscc_digraph_from_pieces(10, 8, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
 	iscc_NNSearchObject* nn_search_object6d;
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d);
 	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d,
 	                                                    10, NULL, out_indicators6d,
-                                                        2, true, 0.2, true, 16, &out_nng6d);
+                                                        2, true, 0.2, 16, &out_nng6d);
 	iscc_close_nn_search_object(&nn_search_object6d);
 	assert_int_equal(ec6d, SCC_ER_OK);
 	assert_equal_digraph(&out_nng6d, &ref_nng6d);
