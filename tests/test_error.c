@@ -27,38 +27,6 @@
 #include <stdint.h>
 
 
-void scc_ut_get_compiled_version(void** state)
-{
-	(void) state;
-
-	uint32_t major, minor, patch;
-
-	major = minor = patch = 123456;
-	scc_get_compiled_version(&major, &minor, &patch);
-	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
-	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
-	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
-
-	major = minor = patch = 123456;
-	scc_get_compiled_version(NULL, &minor, &patch);
-	assert_int_equal(major, 123456);
-	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
-	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
-
-	major = minor = patch = 123456;
-	scc_get_compiled_version(&major, NULL, &patch);
-	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
-	assert_int_equal(minor, 123456);
-	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
-
-	major = minor = patch = 123456;
-	scc_get_compiled_version(&major, &minor, NULL);
-	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
-	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
-	assert_int_equal(patch, 123456);
-}
-
-
 void scc_ut_get_error_message(void** state)
 {
 	(void) state;
@@ -82,13 +50,13 @@ void scc_ut_get_error_message(void** state)
 	bool err_res4 = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res4);
 	assert_int_equal(ec4, SCC_ER_INVALID_INPUT);
-	assert_string_equal(text_buffer, "(scclust:test_error.c:81) Function parameters are invalid.");
+	assert_string_equal(text_buffer, "(scclust:test_error.c:49) Function parameters are invalid.");
 
 	scc_ErrorCode ec4b = iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Test message 12345.");
 	bool err_res4b = scc_get_latest_error(buffer_size, text_buffer);
 	assert_true(err_res4b);
 	assert_int_equal(ec4b, SCC_ER_INVALID_INPUT);
-	assert_string_equal(text_buffer, "(scclust:test_error.c:87) Test message 12345.");
+	assert_string_equal(text_buffer, "(scclust:test_error.c:55) Test message 12345.");
 
 	iscc_reset_error();
 	bool err_res5 = scc_get_latest_error(buffer_size, text_buffer);
@@ -148,7 +116,6 @@ void scc_ut_get_error_message(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
-		cmocka_unit_test(scc_ut_get_compiled_version),
 		cmocka_unit_test(scc_ut_get_error_message),
 	};
 

@@ -31,6 +31,38 @@
 #include <stdlib.h>
 
 
+void scc_ut_get_compiled_version(void** state)
+{
+	(void) state;
+
+	uint32_t major, minor, patch;
+
+	major = minor = patch = 123456;
+	scc_get_compiled_version(&major, &minor, &patch);
+	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
+	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
+	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
+
+	major = minor = patch = 123456;
+	scc_get_compiled_version(NULL, &minor, &patch);
+	assert_int_equal(major, 123456);
+	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
+	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
+
+	major = minor = patch = 123456;
+	scc_get_compiled_version(&major, NULL, &patch);
+	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
+	assert_int_equal(minor, 123456);
+	assert_int_equal(patch, SCC_SCCLUST_PATCH_VERSION);
+
+	major = minor = patch = 123456;
+	scc_get_compiled_version(&major, &minor, NULL);
+	assert_int_equal(major, SCC_SCCLUST_MAJOR_VERSION);
+	assert_int_equal(minor, SCC_SCCLUST_MINOR_VERSION);
+	assert_int_equal(patch, 123456);
+}
+
+
 void scc_ut_free_clustering(void** state)
 {
 	(void) state;
@@ -681,6 +713,7 @@ void scc_ut_get_clustering_stats(void** state)
 int main(void)
 {
 	const struct CMUnitTest test_cases[] = {
+		cmocka_unit_test(scc_ut_get_compiled_version),
 		cmocka_unit_test(scc_ut_free_clustering),
 		cmocka_unit_test(scc_ut_init_empty_clustering),
 		cmocka_unit_test(scc_ut_init_existing_clustering),
