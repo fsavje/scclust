@@ -232,7 +232,7 @@ scc_ErrorCode scc_copy_clustering(const scc_Clustering* const in_clustering,
 scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
                                    const uint32_t size_constraint,
                                    const uintmax_t num_types,
-                                   const uint32_t type_size_constraints[const],
+                                   const uint32_t type_constraints[const],
                                    const size_t len_type_labels,
                                    const scc_TypeLabel type_labels[const],
                                    bool* const out_is_OK)
@@ -249,7 +249,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 	}
 
 	if (num_types < 2) {
-		if (type_size_constraints != NULL) {
+		if (type_constraints != NULL) {
 			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
 		}
 		if (len_type_labels != 0) {
@@ -265,7 +265,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 		if (num_types > UINT_FAST16_MAX) {
 			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
 		}
-		if (type_size_constraints == NULL) {
+		if (type_constraints == NULL) {
 			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
 		}
 		if (len_type_labels < clustering->num_data_points) {
@@ -320,7 +320,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 			size_t tmp_total_size = 0;
 			for (size_t t = 0; t < num_types; ++t) {
 				tmp_total_size += cluster_type_sizes[(i * num_types) + t];
-				if (cluster_type_sizes[(i * num_types) + t] < type_size_constraints[t]) {
+				if (cluster_type_sizes[(i * num_types) + t] < type_constraints[t]) {
 					free(cluster_type_sizes);
 					return iscc_no_error(); // Error found, return. (`out_is_OK` is set to false)
 				}

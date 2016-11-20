@@ -297,12 +297,12 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	                                       false, false, false, false, false,
 	                                       true,  true,  true,  true,  true };
 
-	const uint32_t type_size_constraints_two[2] = { 1, 1 };
+	const uint32_t type_constraints_two[2] = { 1, 1 };
 	const scc_TypeLabel type_labels_two[15] = { 0, 1, 0, 0, 1,
 	                                            0, 0, 1, 1, 1,
 	                                            1, 0, 0, 0, 1 };
 
-	const uint32_t type_size_constraints_three[3] = { 2, 0, 1 };
+	const uint32_t type_constraints_three[3] = { 2, 0, 1 };
 	const scc_TypeLabel type_labels_three[15] = { 0, 1, 2, 2, 2,
 	                                              0, 0, 1, 1, 1,
 	                                              2, 2, 0, 0, 1 };
@@ -310,7 +310,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng1;
 	scc_ErrorCode ec1 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, false, 0.0, &out_nng1);
 	iscc_Digraph ref_nng1;
 	iscc_digraph_from_string("..... ...#. ...../"
@@ -339,7 +339,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng2;
 	scc_ErrorCode ec2 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, true, 0.3, &out_nng2);
 	iscc_Digraph ref_nng2;
 	iscc_digraph_from_string("..... ...#. ...../"
@@ -368,7 +368,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng3;
 	scc_ErrorCode ec3 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      primary_data_points, false, 0.0, &out_nng3);
 	iscc_Digraph ref_nng3;
 	iscc_digraph_from_string("..... ...#. ...../"
@@ -397,7 +397,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng4;
 	scc_ErrorCode ec4 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      primary_data_points, true, 0.3, &out_nng4);
 	iscc_Digraph ref_nng4;
 	iscc_digraph_from_string("..... ...#. ...../"
@@ -426,7 +426,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng5;
 	scc_ErrorCode ec5 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, false, 0.0, &out_nng5);
 	iscc_Digraph ref_nng5;
 	iscc_digraph_from_string("..... ..##. ...../"
@@ -455,7 +455,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng6;
 	scc_ErrorCode ec6 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, true, 0.3, &out_nng6);
 	iscc_Digraph ref_nng6;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -484,7 +484,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng7;
 	scc_ErrorCode ec7 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      primary_data_points, false, 0.0, &out_nng7);
 	iscc_Digraph ref_nng7;
 	iscc_digraph_from_string("..... ..##. ...../"
@@ -513,7 +513,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng8;
 	scc_ErrorCode ec8 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      primary_data_points, true, 0.3, &out_nng8);
 	iscc_Digraph ref_nng8;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -542,7 +542,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng9;
 	scc_ErrorCode ec9 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      3, type_size_constraints_three, type_labels_three,
+	                                                      3, type_constraints_three, type_labels_three,
 	                                                      NULL, false, 0.0, &out_nng9);
 	iscc_Digraph ref_nng9;
 	iscc_digraph_from_string("....# ..... ...#./"
@@ -571,7 +571,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng10;
 	scc_ErrorCode ec10 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      3, type_size_constraints_three, type_labels_three,
+	                                                      3, type_constraints_three, type_labels_three,
 	                                                      NULL, true, 0.5, &out_nng10);
 	iscc_Digraph ref_nng10;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -600,7 +600,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng11;
 	scc_ErrorCode ec11 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      3, type_size_constraints_three, type_labels_three,
+	                                                      3, type_constraints_three, type_labels_three,
 	                                                      primary_data_points, false, 0.0, &out_nng11);
 	iscc_Digraph ref_nng11;
 	iscc_digraph_from_string("....# ..... ...#./"
@@ -629,7 +629,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng12;
 	scc_ErrorCode ec12 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      3, type_size_constraints_three, type_labels_three,
+	                                                      3, type_constraints_three, type_labels_three,
 	                                                      primary_data_points, true, 0.5, &out_nng12);
 	iscc_Digraph ref_nng12;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -658,7 +658,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng13;
 	scc_ErrorCode ec13 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
-	                                                       3, type_size_constraints_three, type_labels_three,
+	                                                       3, type_constraints_three, type_labels_three,
 	                                                       NULL, false, 0.0, &out_nng13);
 	iscc_Digraph ref_nng13;
 	iscc_digraph_from_string("....# ...#. ...#./"
@@ -687,7 +687,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng14;
 	scc_ErrorCode ec14 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
-	                                                       3, type_size_constraints_three, type_labels_three,
+	                                                       3, type_constraints_three, type_labels_three,
 	                                                       NULL, true, 0.5, &out_nng14);
 	iscc_Digraph ref_nng14;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -716,7 +716,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng15;
 	scc_ErrorCode ec15 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
-	                                                       3, type_size_constraints_three, type_labels_three,
+	                                                       3, type_constraints_three, type_labels_three,
 	                                                       primary_data_points, false, 0.0, &out_nng15);
 	iscc_Digraph ref_nng15;
 	iscc_digraph_from_string("....# ...#. ...#./"
@@ -745,7 +745,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng16;
 	scc_ErrorCode ec16 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
-	                                                       3, type_size_constraints_three, type_labels_three,
+	                                                       3, type_constraints_three, type_labels_three,
 	                                                       primary_data_points, true, 0.5, &out_nng16);
 	iscc_Digraph ref_nng16;
 	iscc_digraph_from_string("..... ..... ...../"
@@ -774,7 +774,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng17;
 	scc_ErrorCode ec17 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, true, 1.0, &out_nng17);
 	assert_int_equal(ec17, SCC_ER_OK);
 	iscc_free_digraph(&out_nng17);
@@ -782,12 +782,12 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng18;
 	scc_ErrorCode ec18 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two, type_labels_two,
+	                                                      2, type_constraints_two, type_labels_two,
 	                                                      NULL, true, 0.01, &out_nng18);
 	assert_int_equal(ec18, SCC_ER_NO_SOLUTION);
 
 
-	const uint32_t type_size_constraints_two_mod[2] = { 1, 0 };
+	const uint32_t type_constraints_two_mod[2] = { 1, 0 };
 	const bool primary_data_points_mod[15] = { false, true, false, false, true,
 	                                           false, false, true, true, true,
 	                                           true, false, false, false, true };
@@ -795,7 +795,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng19;
 	scc_ErrorCode ec19 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two_mod, type_labels_two,
+	                                                      2, type_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.04, &out_nng19);
 	assert_int_equal(ec19, SCC_ER_OK);
 	iscc_free_digraph(&out_nng19);
@@ -803,21 +803,21 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	iscc_Digraph out_nng20;
 	scc_ErrorCode ec20 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
-	                                                      2, type_size_constraints_two_mod, type_labels_two,
+	                                                      2, type_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.03, &out_nng20);
 	assert_int_equal(ec20, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng21;
 	scc_ErrorCode ec21 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two_mod, type_labels_two,
+	                                                      2, type_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.04, &out_nng21);
 	assert_int_equal(ec21, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng22;
 	scc_ErrorCode ec22 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
-	                                                      2, type_size_constraints_two_mod, type_labels_two,
+	                                                      2, type_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.06, &out_nng22);
 	assert_int_equal(ec22, SCC_ER_OK);
 	iscc_free_digraph(&out_nng22);

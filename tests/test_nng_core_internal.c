@@ -1083,7 +1083,7 @@ void scc_ut_type_count(void** state)
 	const size_t num_data_points1 = 20;
 	const uint32_t size_constraint1 = 8;
 	const uint_fast16_t num_types1 = 4;
-	const uint32_t type_size_constraints1[4] = { 2, 3, 1, 0 };
+	const uint32_t type_constraints1[4] = { 2, 3, 1, 0 };
 	const scc_TypeLabel type_labels1[20] = { 0, 2, 2, 3, 1,
 	                                         2, 1, 0, 0, 1,
 	                                         3, 3, 2, 1, 0,
@@ -1093,7 +1093,7 @@ void scc_ut_type_count(void** state)
 	scc_ErrorCode ec1 = iscc_type_count(num_data_points1,
 	                                    size_constraint1,
 	                                    num_types1,
-	                                    type_size_constraints1,
+	                                    type_constraints1,
 	                                    type_labels1,
 	                                    &tc1);
 	assert_int_equal(ec1, SCC_ER_OK);
@@ -1126,12 +1126,12 @@ void scc_ut_type_count(void** state)
 	free(tc1.type_groups);
 
 
-	const uint32_t type_size_constraints2[4] = { 2, 10, 1, 0 };
+	const uint32_t type_constraints2[4] = { 2, 10, 1, 0 };
 	iscc_TypeCount tc2;
 	scc_ErrorCode ec2 = iscc_type_count(num_data_points1,
 	                                    size_constraint1,
 	                                    num_types1,
-	                                    type_size_constraints2,
+	                                    type_constraints2,
 	                                    type_labels1,
 	                                    &tc2);
 	assert_int_equal(ec2, SCC_ER_NO_SOLUTION);
@@ -1142,7 +1142,7 @@ void scc_ut_type_count(void** state)
 	scc_ErrorCode ec3 = iscc_type_count(num_data_points1,
 	                                    size_constraint3,
 	                                    num_types1,
-	                                    type_size_constraints1,
+	                                    type_constraints1,
 	                                    type_labels1,
 	                                    &tc3);
 	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);

@@ -86,7 +86,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* nng,
 static scc_ErrorCode iscc_type_count(size_t num_data_points,
                                      uint32_t size_constraint,
                                      uint_fast16_t num_types,
-                                     const uint32_t type_size_constraints[static num_types],
+                                     const uint32_t type_constraints[static num_types],
                                      const scc_TypeLabel type_labels[static num_data_points],
                                      iscc_TypeCount* out_type_result);
 
@@ -184,7 +184,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
                                                 const size_t num_data_points,
                                                 const uint32_t size_constraint,
                                                 const uint_fast16_t num_types,
-                                                const uint32_t type_size_constraints[const static num_types],
+                                                const uint32_t type_constraints[const static num_types],
                                                 const scc_TypeLabel type_labels[const static num_data_points],
                                                 const bool primary_data_points[const],
                                                 const bool radius_constraint,
@@ -197,7 +197,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	assert(size_constraint >= 2);
 	assert(num_types >= 2);
 	assert(num_types <= ISCC_TYPELABEL_MAX);
-	assert(type_size_constraints != NULL);
+	assert(type_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(!radius_constraint || (radius > 0.0));
 	assert(out_nng != NULL);
@@ -244,7 +244,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	if ((ec = iscc_type_count(num_data_points,
 	                          size_constraint,
 	                          num_types,
-	                          type_size_constraints,
+	                          type_constraints,
 	                          type_labels,
 	                          &tc)) != SCC_ER_OK) {
 		free(seedable);
@@ -254,18 +254,18 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 
 	uint_fast16_t num_non_zero_type_constraints = 0;
 	for (uint_fast16_t i = 0; i < num_types; ++i) {
-		if (type_size_constraints[i] > 0) {
+		if (type_constraints[i] > 0) {
 			if ((ec = iscc_make_nng(data_set,
 			                        tc.type_group_size[i],
 			                        tc.type_groups[i],
 			                        num_data_points,
 			                        seedable_const,
 			                        seedable,
-			                        type_size_constraints[i],
+			                        type_constraints[i],
 			                        radius_constraint,
 			                        radius,
 			                        false,
-			                        (type_size_constraints[i] * num_queries),
+			                        (type_constraints[i] * num_queries),
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
@@ -833,7 +833,7 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 static scc_ErrorCode iscc_type_count(const size_t num_data_points,
                                      const uint32_t size_constraint,
                                      const uint_fast16_t num_types,
-                                     const uint32_t type_size_constraints[const static num_types],
+                                     const uint32_t type_constraints[const static num_types],
                                      const scc_TypeLabel type_labels[const static num_data_points],
                                      iscc_TypeCount* const out_type_result)
 {
@@ -841,7 +841,7 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	assert(size_constraint >= 2);
 	assert(num_types >= 2);
 	assert(num_types <= ISCC_TYPELABEL_MAX);
-	assert(type_size_constraints != NULL);
+	assert(type_constraints != NULL);
 	assert(type_labels != NULL);
 	assert(out_type_result != NULL);
 
@@ -865,13 +865,13 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	}
 
 	for (uint_fast16_t i = 0; i < num_types; ++i) {
-		if (out_type_result->type_group_size[i] < type_size_constraints[i]) {
+		if (out_type_result->type_group_size[i] < type_constraints[i]) {
 			free(out_type_result->type_group_size);
 			free(out_type_result->point_store);
 			free(out_type_result->type_groups);
 			return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than type size constraint.");
 		}
-		out_type_result->sum_type_constraints += type_size_constraints[i];
+		out_type_result->sum_type_constraints += type_constraints[i];
 	}
 
 	if (out_type_result->sum_type_constraints > size_constraint) {
