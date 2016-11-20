@@ -286,7 +286,7 @@ void scc_ut_get_nng_with_size_constraint_stable(void** state)
 	iscc_Digraph out_nng9;
 	scc_ErrorCode ec9 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3, NULL, true, 0.01, &out_nng9);
-	assert_int_equal(ec9, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	assert_int_equal(ec9, SCC_ER_NO_SOLUTION);
 }
 
 
@@ -784,7 +784,7 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	                                                      15, 2,
 	                                                      2, type_size_constraints_two, type_labels_two,
 	                                                      NULL, true, 0.01, &out_nng18);
-	assert_int_equal(ec18, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	assert_int_equal(ec18, SCC_ER_NO_SOLUTION);
 
 
 	const uint32_t type_size_constraints_two_mod[2] = { 1, 0 };
@@ -805,14 +805,14 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 	                                                      15, 2,
 	                                                      2, type_size_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.03, &out_nng20);
-	assert_int_equal(ec20, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	assert_int_equal(ec20, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng21;
 	scc_ErrorCode ec21 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_size_constraints_two_mod, type_labels_two,
 	                                                      primary_data_points_mod, true, 0.04, &out_nng21);
-	assert_int_equal(ec21, SCC_ER_NO_CLUST_EXIST_RADIUS);
+	assert_int_equal(ec21, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng22;
 	scc_ErrorCode ec22 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,

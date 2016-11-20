@@ -28,7 +28,9 @@
 // Macros
 // =============================================================================
 
-#define iscc_make_error(ec) iscc_make_error_func(ec, __FILE__, __LINE__)
+#define iscc_make_error(ec) iscc_make_error__(ec, NULL, __FILE__, __LINE__)
+
+#define iscc_make_error_msg(ec, msg) iscc_make_error__(ec, msg, __FILE__, __LINE__)
 
 #define iscc_no_error() (SCC_ER_OK)
 
@@ -37,9 +39,10 @@
 // Function prototypes
 // =============================================================================
 
-scc_ErrorCode iscc_make_error_func(scc_ErrorCode ec,
-                                   const char* file,
-                                   int line);
+scc_ErrorCode iscc_make_error__(scc_ErrorCode ec,
+                                const char* msg,
+                                const char* file,
+                                int line);
 
 void iscc_reset_error(void);
 

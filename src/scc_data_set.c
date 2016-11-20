@@ -42,18 +42,34 @@ scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
                                 const bool deep_matrix_copy,
                                 scc_DataSet** const out_data_set)
 {
-	if (out_data_set == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_data_set == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	// Initialize to null, so subsequent functions detect invalid clustering
 	// if user doesn't check for errors.
 	*out_data_set = NULL;
 
-	if (num_data_points == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_dimensions == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_dimensions > UINT16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (len_data_matrix < num_data_points * num_dimensions) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (data_matrix == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (num_data_points == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Data set must have positive number of data points.");
+	}
+	if (num_data_points > ISCC_DPID_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `iscc_Dpid` type).");
+	}
+	if (num_data_points > SIZE_MAX - 1) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");
+	}
+	if (num_dimensions == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Data set must have positive number of dimensions.");
+	}
+	if (num_dimensions > UINT16_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data dimensions.");
+	}
+	if (len_data_matrix < num_data_points * num_dimensions) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data matrix.");
+	}
+	if (data_matrix == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data matrix.");
+	}
 
 	scc_DataSet* tmp_dso = malloc(sizeof(scc_DataSet));
 	if (tmp_dso == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);

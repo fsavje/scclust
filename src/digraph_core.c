@@ -89,7 +89,9 @@ scc_ErrorCode iscc_init_digraph(const size_t vertices,
 	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
-	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
+	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	}
 
 	*out_dg = (iscc_Digraph) {
 		.vertices = vertices,
@@ -121,7 +123,9 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
 	assert(vertices <= ISCC_DPID_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
-	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
+	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	}
 
 	*out_dg = (iscc_Digraph) {
 		.vertices = vertices,
@@ -150,7 +154,9 @@ scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
 {
 	assert(iscc_digraph_is_initialized(dg));
 	assert(dg->tail_ptr[dg->vertices] <= new_max_arcs);
-	if ((new_max_arcs > ISCC_ARCI_MAX) || (new_max_arcs > SIZE_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_DIGRAPH);
+	if ((new_max_arcs > ISCC_ARCI_MAX) || (new_max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	}
 	if (dg->max_arcs == new_max_arcs) return iscc_no_error();
 
 	if (new_max_arcs == 0) {

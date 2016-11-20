@@ -164,10 +164,18 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
                                           const uint32_t size_constraint,
                                           const bool batch_assign)
 {
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
-	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (size_constraint < 2) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");
+	}
+	if (clustering->num_data_points < size_constraint) {
+		return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than size constraint.");
+	}
 
 	scc_ErrorCode ec;
 	size_t size_largest_cluster = 0; // Initialize to avoid gcc warning
@@ -281,7 +289,9 @@ static scc_ErrorCode iscc_hi_init_cl_stack(const scc_Clustering* const in_cl,
 	assert(out_size_largest_cluster != NULL);
 
 	const uint64_t tmp_capacity = in_cl->num_clusters + 1 + ((uint64_t) (10 * log2((double) in_cl->num_data_points)));
-	if (tmp_capacity > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (tmp_capacity > SIZE_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters.");
+	}
 	*out_cl_stack = (iscc_hi_ClusterStack) {
 		.capacity = (size_t) tmp_capacity,
 		.items = in_cl->num_clusters,
@@ -349,7 +359,7 @@ static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* c
 		if (current_cluster->size < (2 * size_constraint)) {
 			if (current_cluster->size > 0) {
 				if (current_label == SCC_CLABEL_MAX) {
-					return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+					return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters (adjust the `scc_Clabel` type).");
 				}
 				for (size_t v = 0; v < current_cluster->size; ++v) {
 					cl->cluster_label[current_cluster->members[v]] = current_label;
@@ -391,7 +401,9 @@ static scc_ErrorCode iscc_hi_push_to_stack(iscc_hi_ClusterStack* const cl_stack,
 
 	if (cl_stack->items == cl_stack->capacity) {
 		const uintmax_t capacity_tmp = cl_stack->capacity + 16 + (cl_stack->capacity >> 4);
-		if ((capacity_tmp > SIZE_MAX) || (capacity_tmp < cl_stack->capacity)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+		if ((capacity_tmp > SIZE_MAX) || (capacity_tmp < cl_stack->capacity)) {
+			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters.");
+		}
 		iscc_hi_ClusterItem* const clusters_tmp = realloc(cl_stack->clusters, sizeof(iscc_hi_ClusterItem[(size_t) capacity_tmp]));
 		if (clusters_tmp == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		cl_stack->clusters = clusters_tmp;

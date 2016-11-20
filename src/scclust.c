@@ -51,14 +51,22 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
                                         scc_Clabel external_cluster_labels[const],
                                         scc_Clustering** const out_clustering)
 {
-	if (out_clustering == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_clustering == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	// Initialize to null, so subsequent functions detect invalid clustering
 	// if user doesn't check for errors.
 	*out_clustering = NULL;
 
-	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
+	if (num_data_points == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Clustering must have positive number of data points.");
+	}
+	if (num_data_points > ISCC_DPID_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the 'iscc_Dpid' type).");
+	}
+	if (num_data_points > SIZE_MAX - 1) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");
+	}
 
 	scc_Clustering* tmp_cl = malloc(sizeof(scc_Clustering));
 	if (tmp_cl == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -85,18 +93,34 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
                                            const bool deep_label_copy,
                                            scc_Clustering** const out_clustering)
 {
-	if (out_clustering == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_clustering == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	// Initialize to null, so subsequent functions detect invalid clustering
 	// if user doesn't check for errors.
 	*out_clustering = NULL;
 
-	if (num_data_points < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_data_points > ISCC_DPID_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_data_points > SIZE_MAX - 1) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_clusters == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (num_clusters > SIZE_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-	if (current_cluster_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (num_data_points == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Clustering must have positive number of data points.");
+	}
+	if (num_data_points > ISCC_DPID_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `iscc_Dpid` type).");
+	}
+	if (num_data_points > SIZE_MAX - 1) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");
+	}
+	if (num_clusters == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
+	}
+	if (num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters (adjust the `scc_Clabel` type).");
+	}
+	if (num_clusters > SIZE_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters.");
+	}
+	if (current_cluster_labels == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid cluster labels.");
+	}
 
 	const size_t num_data_points_st = (size_t) num_data_points;
 
@@ -156,12 +180,16 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 scc_ErrorCode scc_copy_clustering(const scc_Clustering* const in_clustering,
                                   scc_Clustering** const out_clustering)
 {
-	if (out_clustering == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_clustering == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	// Initialize to null, so subsequent functions detect invalid clustering
 	// if user doesn't check for errors.
 	*out_clustering = NULL;
 
-	if (!iscc_check_input_clustering(in_clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
+	if (!iscc_check_input_clustering(in_clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
 
 	scc_Clustering* tmp_cl = malloc(sizeof(scc_Clustering));
 	if (tmp_cl == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -199,21 +227,43 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
                                    const scc_TypeLabel type_labels[const],
                                    bool* const out_is_OK)
 {
-	if (out_is_OK == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_is_OK == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	*out_is_OK = false;
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
+	if (clustering->num_clusters == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
+	}
 
 	if (num_types < 2) {
-		if (type_size_constraints != NULL) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (len_type_labels != 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (type_labels != NULL) return iscc_make_error(SCC_ER_INVALID_INPUT);
+		if (type_size_constraints != NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
+		}
+		if (len_type_labels != 0) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+		if (type_labels != NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
 	} else {
-		if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-		if (num_types > UINT_FAST16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-		if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-		if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+		if (num_types > ISCC_TYPELABEL_MAX) {
+			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
+		}
+		if (num_types > UINT_FAST16_MAX) {
+			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
+		}
+		if (type_size_constraints == NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
+		}
+		if (len_type_labels < clustering->num_data_points) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+		if (type_labels == NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
 	}
 
 	assert(clustering->num_clusters <= ((uintmax_t) SCC_CLABEL_MAX));
@@ -284,7 +334,9 @@ scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
                                       uintmax_t* const out_num_data_points,
                                       uintmax_t* const out_num_clusters)
 {
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
 
 	if (out_num_data_points != NULL) *out_num_data_points = clustering->num_data_points;
 	if (out_num_clusters != NULL) *out_num_clusters = clustering->num_clusters;
@@ -297,10 +349,18 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* const clustering,
                                      const size_t len_out_label_buffer,
                                      scc_Clabel out_label_buffer[const])
 {
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
-	if (len_out_label_buffer == 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (out_label_buffer == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
+	if (clustering->num_clusters == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
+	}
+	if (len_out_label_buffer == 0) {
+		return iscc_make_error(SCC_ER_INVALID_INPUT);
+	}
+	if (out_label_buffer == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 
 	size_t write = 0;
 	for (; (write < len_out_label_buffer) && (write < clustering->num_data_points); ++write) {
@@ -318,11 +378,19 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
                                        void* const data_set,
                                        scc_ClusteringStats* const out_stats)
 {
-	if (out_stats == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (out_stats == NULL) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Output parameter may not be NULL.");
+	}
 	*out_stats = ISCC_NULL_CLUSTERING_STATS;
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (clustering->num_clusters == 0) return iscc_make_error(SCC_ER_EMPTY_CLUSTERING);
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
+	if (clustering->num_clusters == 0) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
+	}
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
 
 	size_t* const cluster_size = calloc(clustering->num_clusters, sizeof(size_t));
 	if (cluster_size == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);

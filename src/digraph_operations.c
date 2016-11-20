@@ -247,10 +247,6 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 	assert(in_dg_a->vertices == in_dg_b->vertices);
 	assert(out_dg != NULL);
 
-	if (iscc_digraph_is_empty(in_dg_a) || iscc_digraph_is_empty(in_dg_b)) {
-		return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
-	}
-
 	const size_t vertices = in_dg_a->vertices;
 
 	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[vertices]));

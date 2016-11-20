@@ -86,17 +86,12 @@ void scc_ut_init_empty_clustering(void** state)
 	scc_Clabel external_cluster_labels[10];
 
 	scc_ErrorCode ec1 = scc_init_empty_clustering(10, external_cluster_labels, NULL);
-	assert_int_equal(ec1, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 
 	scc_Clustering* cl2;
 	scc_ErrorCode ec2 = scc_init_empty_clustering(0, external_cluster_labels, &cl2);
 	assert_null(cl2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
-
-	scc_Clustering* cl3;
-	scc_ErrorCode ec3 = scc_init_empty_clustering(1, external_cluster_labels, &cl3);
-	assert_null(cl3);
-	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 
 	#if ISCC_DPID_MAX_MACRO < UINTMAX_MAX
 		scc_Clustering* cl4;
@@ -151,7 +146,7 @@ void scc_ut_init_existing_clustering(void** state)
 	const scc_Clabel ref_cluster_labels[10] = { 1, 4, 3, 0, 2, 2, 0, 1, 4, 4 };
 
 	scc_ErrorCode ec1 = scc_init_existing_clustering(10, 5, cluster_labels, true, NULL);
-	assert_int_equal(ec1, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 
 	scc_Clustering* cl2;
 	scc_ErrorCode ec2 = scc_init_existing_clustering(10, 0, cluster_labels, true, &cl2);
@@ -159,7 +154,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
 	scc_Clustering* cl3;
-	scc_ErrorCode ec3 = scc_init_existing_clustering(1, 5, cluster_labels, true, &cl3);
+	scc_ErrorCode ec3 = scc_init_existing_clustering(0, 5, cluster_labels, true, &cl3);
 	assert_null(cl3);
 	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 
@@ -180,7 +175,7 @@ void scc_ut_init_existing_clustering(void** state)
 	scc_Clustering* cl8;
 	scc_ErrorCode ec8 = scc_init_existing_clustering(10, 5, NULL, true, &cl8);
 	assert_null(cl8);
-	assert_int_equal(ec8, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec8, SCC_ER_INVALID_INPUT);
 
 	scc_Clustering* cl9;
 	scc_ErrorCode ec9 = scc_init_existing_clustering(10, 5, cluster_labels, false, &cl9);
@@ -361,7 +356,7 @@ void scc_ut_check_clustering(void** state)
 	scc_ErrorCode ec;
 
 	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, NULL);
-	assert_int_equal(ec, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 
 	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -377,7 +372,7 @@ void scc_ut_check_clustering(void** state)
 
 	cl1.num_clusters = 0;
 	ec = scc_check_clustering(&cl1, 2, 0, NULL, 0, NULL, &is_OK);
-	assert_int_equal(ec, SCC_ER_EMPTY_CLUSTERING);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	assert_false(is_OK);
 	cl1.num_clusters = 4;
 
@@ -440,7 +435,7 @@ void scc_ut_check_clustering_types(void** state)
 	scc_ErrorCode ec;
 
 	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, NULL);
-	assert_int_equal(ec, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 
 	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -452,7 +447,7 @@ void scc_ut_check_clustering_types(void** state)
 
 	cl1.num_clusters = 0;
 	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, type_labels, &is_OK);
-	assert_int_equal(ec, SCC_ER_EMPTY_CLUSTERING);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	assert_false(is_OK);
 	cl1.num_clusters = 4;
 
@@ -465,7 +460,7 @@ void scc_ut_check_clustering_types(void** state)
 	assert_false(is_OK);
 
 	ec = scc_check_clustering(&cl1, 2, 2, NULL, 15, type_labels, &is_OK);
-	assert_int_equal(ec, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	assert_false(is_OK);
 
 	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 14, type_labels, &is_OK);
@@ -473,7 +468,7 @@ void scc_ut_check_clustering_types(void** state)
 	assert_false(is_OK);
 
 	ec = scc_check_clustering(&cl1, 2, 2, type_size_constraints, 15, NULL, &is_OK);
-	assert_int_equal(ec, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	assert_false(is_OK);
 
 
@@ -562,14 +557,14 @@ void scc_ut_get_cluster_labels(void** state)
 	scc_Clabel out_cluster_labels_tmp[10];
 
 	scc_ErrorCode ec1 = scc_get_cluster_labels(&in_cl, 10, out_cluster_labels_tmp);
-	assert_int_equal(ec1, SCC_ER_EMPTY_CLUSTERING);
+	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 	in_cl.num_clusters = 5;
 
 	scc_ErrorCode ec2 = scc_get_cluster_labels(&in_cl, 0, out_cluster_labels_tmp);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
 	scc_ErrorCode ec3 = scc_get_cluster_labels(&in_cl, 10, NULL);
-	assert_int_equal(ec3, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 
 	scc_Clabel out_cluster_labels1[6];
 	out_cluster_labels1[5] = 123;
@@ -613,17 +608,17 @@ void scc_ut_get_clustering_stats(void** state)
 	};
 
 	scc_ErrorCode ec1 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, NULL);
-	assert_int_equal(ec1, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 
 	scc_ClusteringStats out_stats1;
 	cl1.num_clusters = 0;
 	scc_ErrorCode ec2 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, &out_stats1);
-	assert_int_equal(ec2, SCC_ER_EMPTY_CLUSTERING);
+	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 	assert_memory_equal(&out_stats1, &ISCC_NULL_CLUSTERING_STATS, sizeof(scc_ClusteringStats));
 	cl1.num_clusters = 4;
 
 	scc_ErrorCode ec3 = scc_get_clustering_stats(&cl1, NULL, &out_stats1);
-	assert_int_equal(ec3, SCC_ER_INVALID_DATA_OBJ);
+	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 	assert_memory_equal(&out_stats1, &ISCC_NULL_CLUSTERING_STATS, sizeof(scc_ClusteringStats));
 
 	scc_ErrorCode ec4 = scc_get_clustering_stats(&cl1, scc_ut_test_data_small, &out_stats1);

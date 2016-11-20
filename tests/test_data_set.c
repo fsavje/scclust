@@ -86,7 +86,7 @@ void scc_ut_get_data_set(void** state)
 	double ref_coord[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
 
 	scc_ErrorCode ec1 = scc_init_data_set(5, 2, 10, coord, false, NULL);
-	assert_int_equal(ec1, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 
 	scc_DataSet* dso2;
 	scc_ErrorCode ec2 = scc_init_data_set(0, 2, 10, coord, false, &dso2);
@@ -120,7 +120,7 @@ void scc_ut_get_data_set(void** state)
 	scc_DataSet* dso8;
 	scc_ErrorCode ec8 = scc_init_data_set(5, 2, 10, NULL, false, &dso8);
 	assert_null(dso8);
-	assert_int_equal(ec8, SCC_ER_NULL_INPUT);
+	assert_int_equal(ec8, SCC_ER_INVALID_INPUT);
 
 	scc_DataSet* dso9;
 	scc_ErrorCode ec9 = scc_init_data_set(5, 2, 10, coord, false, &dso9);

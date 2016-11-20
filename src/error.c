@@ -30,6 +30,7 @@
 // =============================================================================
 
 static scc_ErrorCode iscc_error_code = SCC_ER_OK;
+static const char* iscc_error_msg = NULL;
 static const char* iscc_error_file = "unknown file";
 static int iscc_error_line = -1;
 
@@ -48,13 +49,15 @@ void scc_get_compiled_version(uint32_t* const out_major,
 }
 
 
-scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
-                                   const char* const file,
-                                   const int line)
+scc_ErrorCode iscc_make_error__(const scc_ErrorCode ec,
+                                const char* const msg,
+                                const char* const file,
+                                const int line)
 {
 	assert((ec > SCC_ER_OK) && (ec <= SCC_ER_NOT_IMPLEMENTED));
 
 	iscc_error_code = ec;
+	iscc_error_msg = msg;
 	iscc_error_file = file;
 	iscc_error_line = line;
 
@@ -65,6 +68,7 @@ scc_ErrorCode iscc_make_error_func(const scc_ErrorCode ec,
 void iscc_reset_error(void)
 {
 	iscc_error_code = SCC_ER_OK;
+	iscc_error_msg = NULL;
 	iscc_error_file = "unknown file";
 	iscc_error_line = -1;
 }
@@ -83,46 +87,35 @@ bool scc_get_latest_error(const size_t len_error_message_buffer,
 	}
 
 	const char* error_message;
-	switch (iscc_error_code) {
-		case SCC_ER_NULL_INPUT:
-			error_message = "A required input pointer is NULL.";
-			break;
-		case SCC_ER_INVALID_INPUT:
-			error_message = "Inputted function parameters are invalid.";
-			break;
-		case SCC_ER_INVALID_CLUSTERING:
-			error_message = "Inputted clustering is invalid.";
-			break;
-		case SCC_ER_EMPTY_CLUSTERING:
-			error_message = "Empty clustering is inputted when non-empty is required.";
-			break;
-		case SCC_ER_INVALID_DATA_OBJ:
-			error_message = "Inputted data object is invalid.";
-			break;
-		case SCC_ER_NO_MEMORY:
-			error_message = "Cannot allocate required memory.";
-			break;
-		case SCC_ER_TOO_LARGE_PROBLEM:
-			error_message = "The clustering problem is too large under the current configuration (either too many clusters or data points).";
-			break;
-		case SCC_ER_TOO_LARGE_DIGRAPH:
-			error_message = "The clustering problem yields a digraph with too many arcs.";
-			break;
-		case SCC_ER_DIST_SEARCH_ERROR:
-			error_message = "Failed to calculate distances.";
-			break;
-		case SCC_ER_NO_CLUST_EXIST_CONSTRAINT:
-			error_message = "No clustering satisfying the specified constraints exists.";
-			break;
-		case SCC_ER_NO_CLUST_EXIST_RADIUS:
-			error_message = "No clustering satisfying the specified radius constraints exists.";
-			break;
-		case SCC_ER_NOT_IMPLEMENTED:
-			error_message = "Requested functionality is not yet implemented.";
-			break;
-		default:
-			error_message = "Unknown error code.";
-			break;
+	if (iscc_error_msg != NULL) {
+		error_message = iscc_error_msg;
+	} else {
+		switch (iscc_error_code) {
+			case SCC_ER_UNKNOWN_ERROR:
+				error_message = "Unkonwn error.";
+				break;
+			case SCC_ER_INVALID_INPUT:
+				error_message = "Function parameters are invalid.";
+				break;
+			case SCC_ER_NO_MEMORY:
+				error_message = "Cannot allocate required memory.";
+				break;
+			case SCC_ER_NO_SOLUTION:
+				error_message = "Clustering problem has no solution.";
+				break;
+			case SCC_ER_TOO_LARGE_PROBLEM:
+				error_message = "Clustering problem is too large.";
+				break;
+			case SCC_ER_DIST_SEARCH_ERROR:
+				error_message = "Failed to calculate distances.";
+				break;
+			case SCC_ER_NOT_IMPLEMENTED:
+				error_message = "Functionality not yet implemented.";
+				break;
+			default:
+				error_message = "Unknown error code.";
+				break;
+		}
 	}
 
 	if (snprintf(error_message_buffer, len_error_message_buffer, "(scclust:%s:%d) %s", iscc_error_file, iscc_error_line, error_message) < 0) {

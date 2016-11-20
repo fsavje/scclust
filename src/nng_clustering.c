@@ -81,33 +81,74 @@ scc_ErrorCode scc_make_clustering(scc_Clustering* const clustering,
                                   const bool secondary_radius_constraint,
                                   const double secondary_radius)
 {
-	if (!iscc_check_input_clustering(clustering)) return iscc_make_error(SCC_ER_INVALID_CLUSTERING);
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_DATA_OBJ);
-	if (size_constraint < 2) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (clustering->num_data_points < size_constraint) return iscc_make_error(SCC_ER_NO_CLUST_EXIST_CONSTRAINT);
-
-	if (num_types < 2) {
-		if (type_size_constraints != NULL) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (len_type_labels != 0) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (type_labels != NULL) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	} else {
-		if (num_types > ISCC_TYPELABEL_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-		if (num_types > UINT_FAST16_MAX) return iscc_make_error(SCC_ER_TOO_LARGE_PROBLEM);
-		if (type_size_constraints == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
-		if (len_type_labels < clustering->num_data_points) return iscc_make_error(SCC_ER_INVALID_INPUT);
-		if (type_labels == NULL) return iscc_make_error(SCC_ER_NULL_INPUT);
+	if (!iscc_check_input_clustering(clustering)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
+	}
+	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (size_constraint < 2) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");
+	}
+	if (clustering->num_data_points < size_constraint) {
+		return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than size constraint.");
 	}
 
-	if (seed_method > SCC_MAX_SEED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (radius_constraint && (radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if ((primary_data_points != NULL) && (len_primary_data_points < clustering->num_data_points)) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if ((primary_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (secondary_unassigned_method == SCC_UM_ANY_NEIGHBOR) return iscc_make_error(SCC_ER_INVALID_INPUT);
-	if (secondary_radius_constraint && (secondary_radius <= 0.0)) return iscc_make_error(SCC_ER_INVALID_INPUT);
+	if (num_types < 2) {
+		if (type_size_constraints != NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
+		}
+		if (len_type_labels != 0) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+		if (type_labels != NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+	} else {
+		if (num_types > ISCC_TYPELABEL_MAX) {
+			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
+		}
+		if (num_types > UINT_FAST16_MAX) {
+			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
+		}
+		if (type_size_constraints == NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
+		}
+		if (len_type_labels < clustering->num_data_points) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+		if (type_labels == NULL) {
+			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
+		}
+	}
 
-	if (clustering->num_clusters != 0) return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+	if (seed_method > SCC_MAX_SEED_METHOD) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown seed method.");
+	}
+	if (unassigned_method > SCC_MAX_UNASSIGNED_METHOD) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown unassigned method.");
+	}
+	if (radius_constraint && (radius <= 0.0)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius.");
+	}
+	if ((primary_data_points != NULL) && (len_primary_data_points < clustering->num_data_points)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
+	}
+	if ((primary_data_points == NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid unassigned method.");
+	}
+	if (secondary_unassigned_method > SCC_MAX_UNASSIGNED_METHOD) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown unassigned method.");
+	}
+	if (secondary_unassigned_method == SCC_UM_ANY_NEIGHBOR) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid unassigned method.");
+	}
+	if (secondary_radius_constraint && (secondary_radius <= 0.0)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius.");
+	}
+	if (clustering->num_clusters != 0) {
+		return iscc_make_error_msg(SCC_ER_NOT_IMPLEMENTED, "Cannot refine existing clusterings.");
+	}
 
 	scc_ErrorCode ec;
 	iscc_Digraph nng;
@@ -228,7 +269,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 				radius = avg_seed_dist;
 			} else {
 				free(seed_result.seeds);
-				return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+				return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Infeasible radius constraint.");
 			}
 		}
 
@@ -239,7 +280,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 				secondary_radius = avg_seed_dist;
 			} else {
 				free(seed_result.seeds);
-				return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
+				return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Infeasible radius constraint.");
 			}
 		}
 	}
