@@ -28,7 +28,7 @@
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "error.h"
-#include "scclust_internal.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

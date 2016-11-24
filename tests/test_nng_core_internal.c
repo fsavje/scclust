@@ -24,7 +24,7 @@
 
 #include "data_object_test.h"
 #include "../src/digraph_debug.h"
-#include "../src/scclust_internal.h"
+#include "../src/scclust_types.h"
 
 
 void scc_ut_make_nng(void** state)

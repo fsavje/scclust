@@ -28,7 +28,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "data_object_test.h"
-#include "../src/scclust_internal.h"
+#include "../src/clustering_struct.h"
+#include "../src/scclust_types.h"
 
 
 void scc_ut_hi_empty_cl_stack(void** state)

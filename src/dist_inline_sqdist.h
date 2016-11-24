@@ -24,7 +24,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include "../include/scclust.h"
-#include "scc_data_set_struct.h"
+#include "data_set_struct.h"
 
 
 // =============================================================================

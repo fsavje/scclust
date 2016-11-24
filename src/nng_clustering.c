@@ -25,12 +25,12 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "clustering_struct.h"
 #include "digraph_core.h"
 #include "dist_search.h"
 #include "error.h"
 #include "nng_core.h"
 #include "nng_findseeds.h"
-#include "scclust_internal.h"
 
 
 // =============================================================================

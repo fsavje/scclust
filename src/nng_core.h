@@ -27,7 +27,6 @@
 #include "../include/scclust.h"
 #include "digraph_core.h"
 #include "nng_findseeds.h"
-#include "scclust_internal.h"
 
 
 // =============================================================================

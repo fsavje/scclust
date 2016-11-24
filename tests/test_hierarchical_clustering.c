@@ -24,7 +24,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "../src/scclust_internal.h"
+#include "../src/clustering_struct.h"
+#include "../src/scclust_types.h"
 #include "data_object_test.h"
 
 /*

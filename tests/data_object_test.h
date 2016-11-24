@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "../include/scclust.h"
-#include "../src/scc_data_set_struct.h"
+#include "../src/data_set_struct.h"
 
 
 double coord1[300] = { 58.339591, 14.339080, 54.090796,

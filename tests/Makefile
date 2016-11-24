@@ -32,7 +32,7 @@ BUILDDIR = build
 OBJDIR = ../build
 OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o dist_search.o \
           error.o hierarchical_clustering.o nng_clustering.o nng_batch_clustering.o \
-          nng_core.o nng_findseeds.o scc_data_set.o scclust.o
+          nng_core.o nng_findseeds.o data_set.o scclust.o
 OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
 XTRA_OBJECTS =
 

@@ -27,6 +27,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "data_object_test.h"
+#include "../src/clustering_struct.h"
 #include "../src/digraph_debug.h"
 
 
