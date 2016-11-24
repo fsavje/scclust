@@ -18,87 +18,17 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-/** @file
- *
- *  Header with internal type definitions.
- */
+#ifndef SCC_CLUSTERING_STRUCT_HG
+#define SCC_CLUSTERING_STRUCT_HG
 
-#ifndef SCC_SCCLUST_INTERNAL_HG
-#define SCC_SCCLUST_INTERNAL_HG
-
-#ifdef __cplusplus
-// So g++ defines integer limits
-#define __STDC_LIMIT_MACROS
-#endif
-
-#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "../include/scclust.h"
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-
-// =============================================================================
-// Macros
-// =============================================================================
 
 /// Macro for internal clustering checks.
 #define iscc_check_input_clustering(cl) scc_is_initialized_clustering(cl)
-
-
-// =============================================================================
-// Structs, types and variables
-// =============================================================================
-
-/** Type used for data point IDs. May be unsigned or signed.
- *
- *  \note
- *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #iscc_Dpid. I.e.,
- *  possible data point IDs must be in the sequence `[0, 1, ..., ISCC_DPID_MAX - 1]`.
- *  Independent of `ISCC_DPID_MAX`, number of data points may not be greater than `SIZE_MAX - 1`.
- */
-#if defined(SCC_DPID_INT)
-	typedef int iscc_Dpid;
-	#define ISCC_DPID_MAX_MACRO INT_MAX
-	static const uintmax_t ISCC_DPID_MAX = INT_MAX;
-	static const iscc_Dpid ISCC_DPID_NA = INT_MAX;
-#elif defined(SCC_DPID_UINT64)
-	typedef uint64_t iscc_Dpid;
-	#define ISCC_DPID_MAX_MACRO UINT64_MAX
-	static const uintmax_t ISCC_DPID_MAX = UINT64_MAX;
-	static const iscc_Dpid ISCC_DPID_NA = UINT64_MAX;
-#else
-	typedef uint32_t iscc_Dpid;
-	#define ISCC_DPID_MAX_MACRO UINT32_MAX
-	static const uintmax_t ISCC_DPID_MAX = UINT32_MAX;
-	static const iscc_Dpid ISCC_DPID_NA = UINT32_MAX;
-#endif
-
-
-/** Type used for arc indices. Must be unsigned.
- *
- *  \note
- *  Number of arcs in any digraph must be less or equal to
- *  the maximum number that can be stored in #iscc_Arci.
- */
-#ifdef SCC_ARC64
-	typedef uint64_t iscc_Arci;
-	#define ISCC_ARCI_MAX_MACRO UINT64_MAX
-	static const uintmax_t ISCC_ARCI_MAX = UINT64_MAX;
-#else
-	typedef uint32_t iscc_Arci;
-	#define ISCC_ARCI_MAX_MACRO UINT32_MAX
-	static const uintmax_t ISCC_ARCI_MAX = UINT32_MAX;
-#endif
-
-
-/// Label given to unassigned vertices.
-static const uintmax_t ISCC_TYPELABEL_MAX = 65535;
 
 
 /** Clustering struct.
@@ -137,8 +67,4 @@ static const int32_t ISCC_CLUSTERING_STRUCT_VERSION = 722587001;
 static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, 0, NULL, false };
 
 
-#ifdef __cplusplus
-	}
-#endif
-
-#endif // ifndef SCC_SCCLUST_INTERNAL_HG
+#endif // ifndef SCC_CLUSTERING_STRUCT_HG

@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include "../include/scclust.h"
 #include "dist_inline_sqdist.h"
-#include "scc_data_set_struct.h"
-#include "scclust_internal.h"
+#include "data_set_struct.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

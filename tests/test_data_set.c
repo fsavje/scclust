@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "data_object_test.h"
-#include "../src/scc_data_set_struct.h"
-#include "../src/scclust_internal.h"
+#include "../src/data_set_struct.h"
+#include "../src/scclust_types.h"
 
 
 void scc_ut_free_data_set(void** state)

@@ -25,7 +25,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "data_object_test.h"
-#include "../src/scclust_internal.h"
+#include "../src/scclust_types.h"
 
 
 void scc_ut_check_data_set(void** state)

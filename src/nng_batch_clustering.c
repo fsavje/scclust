@@ -25,9 +25,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "clustering_struct.h"
 #include "dist_search.h"
 #include "error.h"
-#include "scclust_internal.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

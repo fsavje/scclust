@@ -24,6 +24,7 @@
 #include <stddef.h>
 #include "../include/scclust.h"
 #include "digraph_core.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

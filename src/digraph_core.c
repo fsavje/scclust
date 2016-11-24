@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include "../include/scclust.h"
 #include "error.h"
-#include "scclust_internal.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

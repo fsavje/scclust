@@ -28,8 +28,8 @@
 #include <cstddef>
 #include "../exlib/libANN/include/ANN/ANN.h"
 #include "../include/scclust.h"
-#include "scc_data_set_struct.h"
-#include "scclust_internal.h"
+#include "data_set_struct.h"
+#include "scclust_types.h"
 
 #ifdef SCC_ANN_BDTREE
 	#define ANNpointSetConstructor ANNbd_tree
