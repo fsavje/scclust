@@ -23,7 +23,8 @@
 #include "../include/scclust.h"
 #include "data_object_test.h"
 
-#include "../src/scclust_internal.h"
+#include "../src/clustering_struct.h"
+#include "../src/scclust_types.h"
 
 #include <stdbool.h>
 #include <stddef.h>

@@ -27,12 +27,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/scclust.h"
+#include "clustering_struct.h"
 #include "digraph_core.h"
 #include "digraph_operations.h"
 #include "dist_search.h"
 #include "error.h"
 #include "nng_findseeds.h"
-#include "scclust_internal.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

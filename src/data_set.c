@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "error.h"
-#include "scc_data_set_struct.h"
-#include "scclust_internal.h"
+#include "data_set_struct.h"
+#include "scclust_types.h"
 
 
 // =============================================================================

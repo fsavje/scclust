@@ -20,7 +20,8 @@
 
 #include "test_suite.h"
 #include "../include/scclust.h"
-#include "../src/scclust_internal.h"
+#include "../src/clustering_struct.h"
+#include "../src/scclust_types.h"
 
 #include "data_object_test.h"
 

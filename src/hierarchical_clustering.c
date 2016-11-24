@@ -27,8 +27,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "dist_search.h"
+#include "clustering_struct.h"
 #include "error.h"
-#include "scclust_internal.h"
+#include "scclust_types.h"
 
 // Maximum number of data points to check when finding centers.
 static const uint_fast16_t ISCC_HI_NUM_TO_CHECK = 100;

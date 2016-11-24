@@ -24,7 +24,7 @@
 
 #include <stddef.h>
 #include "../src/digraph_core.h"
-#include "../src/scclust_internal.h"
+#include "../src/scclust_types.h"
 
 
 void scc_ut_is_balanced_digraph(void** state)
