@@ -18,16 +18,15 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
-#include "../include/scclust.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <include/scclust.h>
+#include <src/data_set_struct.h>
+#include <src/scclust_types.h>
 #include "data_object_test.h"
-#include "../src/data_set_struct.h"
-#include "../src/scclust_types.h"
 
 
 void scc_ut_free_data_set(void** state)

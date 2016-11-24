@@ -18,16 +18,15 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
-#include "assert_digraph.h"
-#include "../src/digraph_operations.c"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../src/digraph_core.h"
-#include "../src/digraph_debug.h"
-#include "../src/scclust_types.h"
+#include <src/digraph_core.h>
+#include <src/digraph_debug.h>
+#include <src/digraph_operations.c>
+#include <src/scclust_types.h>
+#include "assert_digraph.h"
 
 
 void scc_ut_do_union_and_delete(void** state)

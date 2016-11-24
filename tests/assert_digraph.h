@@ -18,16 +18,14 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-
 #ifndef SCC_UT_ASSERT_DIGRAPH_HG
 #define SCC_UT_ASSERT_DIGRAPH_HG
 
-#include "test_suite.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "../src/digraph_core.h"
-#include "../src/digraph_debug.h"
+#include <src/digraph_core.h>
+#include <src/digraph_debug.h>
 
 #define assert_initialized_digraph(test_dg, vertices) _assert_initialized_digraph(test_dg, vertices, #test_dg, __FILE__, __LINE__)
 #define assert_free_digraph(test_dg) _assert_free_digraph(test_dg, #test_dg, __FILE__, __LINE__)

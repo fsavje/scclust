@@ -111,9 +111,9 @@ check_writable() {
 
 while [ "$1" != "" ]; do
 	case $1 in
-		--enable-debug )
+		--enable-assert )
 			OPT_DEBUG="true" ;;
-		--disable-debug )
+		--disable-assert )
 			OPT_DEBUG="false" ;;
 		--enable-digraph-debug )
 			OPT_DIGRAPH_DEBUG="true" ;;
@@ -158,7 +158,7 @@ while [ "$1" != "" ]; do
 		-q | --quiet )
 			RUN_QUIET="true" ;;
 		* )
-			[ "$RUN_QUIET" = "false" ] || usage
+			[ "$RUN_QUIET" = "true" ] || usage
 			exit 1
 			;;
 	esac
@@ -191,7 +191,7 @@ else
 fi
 
 if [ "$OPT_CMOCKA_HEADERS" = "true" ]; then
-	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -include cmocka_headers.h"
+	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -include src\\/cmocka_headers.h"
 fi
 
 if [ $OPT_DOCUMENTATION = "default" ]; then
@@ -299,7 +299,6 @@ SOURCE_FILES="
 	src/digraph_operations.c
 	src/digraph_operations.h
 	src/dist_inline_sqdist.h
-	src/dist_nnsearch_ANN.cpp
 	src/dist_nnsearch_c.c
 	src/dist_search.c
 	src/dist_search.h

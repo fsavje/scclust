@@ -18,18 +18,16 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#define SCC_DOUBLE_ASSERT
-#include "test_suite.h"
-#include "../include/scclust.h"
-#include "data_object_test.h"
-
-#include "../src/clustering_struct.h"
-#include "../src/scclust_types.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <include/scclust.h>
+#include <src/clustering_struct.h>
+#include <src/scclust_types.h>
+#include "data_object_test.h"
+#include "double_assert.h"
 
 
 void scc_ut_get_compiled_version(void** state)
