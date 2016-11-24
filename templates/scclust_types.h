@@ -55,6 +55,11 @@
 	#define ISCC_DPID_MAX_MACRO INT_MAX
 	static const uintmax_t ISCC_DPID_MAX = INT_MAX;
 	static const iscc_Dpid ISCC_DPID_NA = INT_MAX;
+#elif defined(SCC_DPID_INT_MNA)
+	typedef int iscc_Dpid;
+	#define ISCC_DPID_MAX_MACRO INT_MAX
+	static const uintmax_t ISCC_DPID_MAX = INT_MAX;
+	static const iscc_Dpid ISCC_DPID_NA = -1;
 #elif defined(SCC_DPID_UINT64)
 	typedef uint64_t iscc_Dpid;
 	#define ISCC_DPID_MAX_MACRO UINT64_MAX
