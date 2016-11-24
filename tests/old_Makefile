@@ -37,12 +37,4 @@ ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
 XTRA_FLAGS += -D$(ANN_TREE)
 endif
 
-# Dependencies
-
-$(OBJECTS):
-	cd .. && $(MAKE) library DEBUG=Y TESTH=Y DPID=$(DPID) ARC=$(ARC) ANN_SEARCH=$(ANN_SEARCH) ANN_TREE=$(ANN_TREE)
-
-../exlib/libANN/build/%.o:
-	cd ../exlib/libANN/ && $(MAKE)
-
 

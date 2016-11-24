@@ -179,6 +179,11 @@ SCCH_TYPELABEL_TYPE=""
 
 TYPEH_LIMITSH="false"
 TYPEH_CLABEL_MAX=""
+TYPEH_DPID_TYPE=""
+TYPEH_DPID_MAX=""
+TYPEH_DPID_NA=""
+TYPEH_ARC_TYPE=""
+TYPEH_ARC_MAX=""
 
 if [ "$OPT_DEBUG" = "false" ]; then
 	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DNDEBUG"
@@ -212,47 +217,100 @@ fi
 
 case $OPT_DPID_TYPE in
 	uint32_t )
+		TYPEH_DPID_TYPE="uint32_t"
+		TYPEH_DPID_MAX="UINT32_MAX"
+		TYPEH_DPID_NA="UINT32_MAX"
 		;;
 	uint64_t )
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_UINT64" ;;
+		TYPEH_DPID_TYPE="uint64_t"
+		TYPEH_DPID_MAX="UINT64_MAX"
+		TYPEH_DPID_NA="UINT64_MAX"
+		;;
 	int )
 		TYPEH_LIMITSH="true"
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_INT" ;;
+		TYPEH_DPID_TYPE="int"
+		TYPEH_DPID_NA="INT_MAX"
+		TYPEH_DPID_MAX="INT_MAX"
+		;;
 	int_mna )
 		TYPEH_LIMITSH="true"
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_INT_MNA" ;;
+		TYPEH_DPID_TYPE="int"
+		TYPEH_DPID_MAX="INT_MAX"
+		TYPEH_DPID_NA="-1"
+		;;
+	* )
+		conf_print "with-dpid=[uint32_t  uint64_t  int  int_mna]\n"
+		exit 1
+		;;
 esac
 
 case $OPT_ARC_TYPE in
 	uint32_t )
+		TYPEH_ARC_TYPE="uint32_t"
+		TYPEH_ARC_MAX="UINT32_MAX"
 		;;
 	uint64_t )
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_ARC64" ;;
+		TYPEH_ARC_TYPE="uint64_t"
+		TYPEH_ARC_MAX="UINT64_MAX"
+		;;
+	* )
+		conf_print "with-arc=[uint32_t  uint64_t]\n"
+		exit 1
+		;;
 esac
 
 case $OPT_CLABEL_TYPE in
 	uint32_t )
 		SCCH_CLABEL_TYPE="uint32_t"
-		SCCH_CLABEL_NA="UINT32_MAX"
 		TYPEH_CLABEL_MAX="UINT32_MAX"
 		;;
 	uint64_t )
 		SCCH_CLABEL_TYPE="uint64_t"
-		SCCH_CLABEL_NA="UINT64_MAX"
 		TYPEH_CLABEL_MAX="UINT64_MAX"
 		;;
 	int )
 		SCCH_CLABEL_TYPE="int"
-		if [ $OPT_CLABEL_NA = "default" ]; then
-			SCCH_LIMITSH="true"
-			SCCH_CLABEL_NA="INT_MAX"
-		elif [ $OPT_CLABEL_NA -lt 0 ]; then
-			SCCH_CLABEL_NA="$OPT_CLABEL_NA"
-		else
-			conf_print "illegal option"; exit 1
-		fi
 		TYPEH_LIMITSH="true"
 		TYPEH_CLABEL_MAX="INT_MAX"
+		;;
+	* )
+		conf_print "with-clabel=[uint32_t  uint64_t  int]\n"
+		exit 1
+		;;
+esac
+
+case $OPT_CLABEL_NA in
+	max | default )
+		case $SCCH_CLABEL_TYPE in
+			uint32_t )
+				SCCH_CLABEL_NA="UINT32_MAX" ;;
+			uint64_t )
+				SCCH_CLABEL_NA="UINT64_MAX" ;;
+			int )
+				SCCH_LIMITSH="true"
+				SCCH_CLABEL_NA="INT_MAX"
+				;;
+			* )
+				conf_print "error\n" ; exit 1 ;;
+		esac
+		;;
+	* )
+		case $SCCH_CLABEL_TYPE in
+			uint32_t | uint64_t )
+				conf_print "with-clabel-na=[default  max]\n"
+				exit 1
+				;;
+			int )
+				if [ $OPT_CLABEL_NA -lt 0 ]; then
+					SCCH_CLABEL_NA="$OPT_CLABEL_NA"
+				else
+					conf_print "with-clabel-na=[default  max  -1  -2  ...]\n"
+					exit 1
+				fi
+				;;
+			* )
+				conf_print "error\n" ; exit 1 ;;
+		esac
 		;;
 esac
 
@@ -261,6 +319,10 @@ case $OPT_TYPELABEL_TYPE in
 		SCCH_TYPELABEL_TYPE="uint_fast16_t" ;;
 	int )
 		SCCH_TYPELABEL_TYPE="int" ;;
+	* )
+		conf_print "with-typelabel=[uint_fast16_t  int]\n"
+		exit 1
+		;;
 esac
 
 if [ "$SCCH_LIMITSH" = "true" ]; then
@@ -411,10 +473,14 @@ $SCCH_LIMITSH
 q
 EOF
 
-
 ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
 $TYPEH_LIMITSH
 ,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
+,s/{% dpid_type %}/$TYPEH_DPID_TYPE/g
+,s/{% dpid_max %}/$TYPEH_DPID_MAX/g
+,s/{% dpid_na %}/$TYPEH_DPID_NA/g
+,s/{% arc_type %}/$TYPEH_ARC_TYPE/g
+,s/{% arc_max %}/$TYPEH_ARC_MAX/g
 ,p
 q
 EOF

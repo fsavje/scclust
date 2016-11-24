@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-REDCOLOR='\033[0;31m'
-NOCOLOR='\033[0m'
+REDCOLOR="\033[0;31m"
+NOCOLOR="\033[0m"
 
 run_test()
 {
