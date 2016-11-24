@@ -42,34 +42,6 @@ extern "C" {
 
 
 // =============================================================================
-// Library specific types, user-serviceable
-// =============================================================================
-
-/** Type used for cluster labels. May be unsigned or signed.
- *
- *  \note
- *  Number of clusters in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Clabel. I.e.,
- *  cluster labels must be in the sequence `[0, 1, ..., SCC_CLABEL_MAX - 1]`,
- *  and `SCC_CLABEL_NA` may not be in this sequence (but it may be `SCC_CLABEL_MAX`).
- */
-typedef {% clabel_type %} scc_Clabel;
-
-/// Maximum number that can be stored in #scc_Clabel. May not be greater than `SIZE_MAX`.
-static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
-
-/// Label given to unassigned vertices.
-static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
-
-/** Type used to indicate data point type (for the NNG method). May be unsigned or signed.
- *
- *  \note
- *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
- */
-typedef {% typelabel_type %} scc_TypeLabel;
-
-
-// =============================================================================
 // Version information
 // =============================================================================
 
@@ -125,6 +97,24 @@ bool scc_is_initialized_data_set(const scc_DataSet* data_set);
 // =============================================================================
 // Clustering object
 // =============================================================================
+
+/** Type used for cluster labels.
+ *
+ *  \note
+ *  Number of clusters in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_Clabel.
+ */
+typedef {% clabel_type %} scc_Clabel;
+
+/// Label given to unassigned vertices.
+static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
+
+/** Type used to indicate data point type.
+ *
+ *  \note
+ *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
+ */
+typedef {% typelabel_type %} scc_TypeLabel;
 
 /// Type used for clusterings
 typedef struct scc_Clustering scc_Clustering;

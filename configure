@@ -46,39 +46,6 @@ OPT_TYPELABEL_TYPE="uint_fast16_t"
 OPT_DPID_TYPE="uint32_t"
 OPT_ARC_TYPE="uint32_t"
 
-SOURCE_FILES="
-	clustering_struct.h
-	cmocka_headers.h
-	data_set_struct.h
-	data_set.c
-	digraph_core.c
-	digraph_core.h
-	digraph_debug.c
-	digraph_debug.h
-	digraph_operations.c
-	digraph_operations.h
-	dist_inline_sqdist.h
-	dist_nnsearch_ANN.cpp
-	dist_nnsearch_c.c
-	dist_search.c
-	dist_search.h
-	error.c
-	error.h
-	hierarchical_clustering.c
-	nng_batch_clustering.c
-	nng_clustering.c
-	nng_core.c
-	nng_core.h
-	nng_findseeds.c
-	nng_findseeds.h
-	scclust.c"
-
-TEMPLATE_FILES="
-	DoxyAPI
-	Makefile
-	scclust_types.h
-	scclust.h"
-
 
 # ==============================================================================
 # Functions
@@ -207,37 +174,25 @@ DOC_TARGETS="include"
 
 SCCH_LIMITSH="false"
 SCCH_CLABEL_TYPE=""
-SCCH_CLABEL_MAX=""
 SCCH_CLABEL_NA=""
 SCCH_TYPELABEL_TYPE=""
 
+TYPEH_LIMITSH="false"
+TYPEH_CLABEL_MAX=""
 
-case $OPT_DEBUG in
-	true )
-		;;
-	false )
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DNDEBUG" ;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
-esac
+if [ "$OPT_DEBUG" = "false" ]; then
+	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DNDEBUG"
+fi
 
-case $OPT_DIGRAPH_DEBUG in
-	true )
-		MF_DIGRAPH_DEBUG=",s/{% digraph_debug %}/digraph_debug.o/g" ;;
-	false )
-		MF_DIGRAPH_DEBUG=",g/{% digraph_debug %}/d" ;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
-esac
+if [ "$OPT_DIGRAPH_DEBUG" = "true" ]; then
+	MF_DIGRAPH_DEBUG=",s/{% digraph_debug %}/digraph_debug.o/g"
+else
+	MF_DIGRAPH_DEBUG=",g/{% digraph_debug %}/d"
+fi
 
-case $OPT_CMOCKA_HEADERS in
-	true )
-		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -include cmocka_headers.h" ;;
-	false )
-		;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
-esac
+if [ "$OPT_CMOCKA_HEADERS" = "true" ]; then
+	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -include cmocka_headers.h"
+fi
 
 if [ $OPT_DOCUMENTATION = "default" ]; then
 	if command -v doxygen >/dev/null 2>&1; then
@@ -247,14 +202,13 @@ if [ $OPT_DOCUMENTATION = "default" ]; then
 	fi
 fi
 
-case $OPT_DOCUMENTATION in
-	true )
-		MF_TARGETS="$MF_TARGETS docs" ;;
-	false )
-		;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
-esac
+if [ $OPT_DOCUMENTATION = "true" ]; then
+	MF_TARGETS="$MF_TARGETS docs"
+fi
+
+if [ $OPT_ALL_DOCUMENTATION = "true" ]; then
+	DOC_TARGETS="$DOC_TARGETS src"
+fi
 
 case $OPT_DPID_TYPE in
 	uint32_t )
@@ -262,11 +216,11 @@ case $OPT_DPID_TYPE in
 	uint64_t )
 		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_UINT64" ;;
 	int )
+		TYPEH_LIMITSH="true"
 		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_INT" ;;
 	int_mna )
+		TYPEH_LIMITSH="true"
 		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_DPID_INT_MNA" ;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
 esac
 
 case $OPT_ARC_TYPE in
@@ -274,44 +228,32 @@ case $OPT_ARC_TYPE in
 		;;
 	uint64_t )
 		MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DSCC_ARC64" ;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
-esac
-
-case $OPT_ALL_DOCUMENTATION in
-	true )
-		DOC_TARGETS="$DOC_TARGETS src" ;;
-	false )
-		;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
 esac
 
 case $OPT_CLABEL_TYPE in
 	uint32_t )
 		SCCH_CLABEL_TYPE="uint32_t"
-		SCCH_CLABEL_MAX="UINT32_MAX"
 		SCCH_CLABEL_NA="UINT32_MAX"
+		TYPEH_CLABEL_MAX="UINT32_MAX"
 		;;
 	uint64_t )
 		SCCH_CLABEL_TYPE="uint64_t"
-		SCCH_CLABEL_MAX="UINT64_MAX"
 		SCCH_CLABEL_NA="UINT64_MAX"
+		TYPEH_CLABEL_MAX="UINT64_MAX"
 		;;
 	int )
-		SCCH_LIMITSH="true"
 		SCCH_CLABEL_TYPE="int"
-		SCCH_CLABEL_MAX="INT_MAX"
 		if [ $OPT_CLABEL_NA = "default" ]; then
+			SCCH_LIMITSH="true"
 			SCCH_CLABEL_NA="INT_MAX"
 		elif [ $OPT_CLABEL_NA -lt 0 ]; then
 			SCCH_CLABEL_NA="$OPT_CLABEL_NA"
 		else
 			conf_print "illegal option"; exit 1
 		fi
+		TYPEH_LIMITSH="true"
+		TYPEH_CLABEL_MAX="INT_MAX"
 		;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
 esac
 
 case $OPT_TYPELABEL_TYPE in
@@ -319,37 +261,69 @@ case $OPT_TYPELABEL_TYPE in
 		SCCH_TYPELABEL_TYPE="uint_fast16_t" ;;
 	int )
 		SCCH_TYPELABEL_TYPE="int" ;;
-	* )
-		conf_print "unknown option"; exit 1 ;;
 esac
 
-case $SCCH_LIMITSH in
-	true )
-		SCCH_LIMITSH=",s/{% limits_include %}//g" ;;
-	false )
-		SCCH_LIMITSH=",g/{% limits_include %}/d" ;;
-esac
+if [ "$SCCH_LIMITSH" = "true" ]; then
+	SCCH_LIMITSH=",s/{% limits_include %}//g"
+else
+	SCCH_LIMITSH=",g/{% limits_include %}/d"
+fi
+
+if [ "$TYPEH_LIMITSH" = "true" ]; then
+	TYPEH_LIMITSH=",s/{% limits_include %}//g"
+else
+	TYPEH_LIMITSH=",g/{% limits_include %}/d"
+fi
+
+
+# ==============================================================================
+# Source files
+# ==============================================================================
+
+BUILD_FOLDERS="
+	src
+	include"
+
+SOURCE_FILES="
+	doxyrefs.bib
+	LICENSE
+	README.md
+	src/clustering_struct.h
+	src/cmocka_headers.h
+	src/data_set_struct.h
+	src/data_set.c
+	src/digraph_core.c
+	src/digraph_core.h
+	src/digraph_debug.c
+	src/digraph_debug.h
+	src/digraph_operations.c
+	src/digraph_operations.h
+	src/dist_inline_sqdist.h
+	src/dist_nnsearch_ANN.cpp
+	src/dist_nnsearch_c.c
+	src/dist_search.c
+	src/dist_search.h
+	src/error.c
+	src/error.h
+	src/hierarchical_clustering.c
+	src/nng_batch_clustering.c
+	src/nng_clustering.c
+	src/nng_core.c
+	src/nng_core.h
+	src/nng_findseeds.c
+	src/nng_findseeds.h
+	src/scclust.c"
+
+TEMPLATE_FILES="
+	DoxyAPI
+	Makefile
+	scclust_types.h
+	scclust.h"
 
 
 # ==============================================================================
 # Checking
 # ==============================================================================
-
-conf_print "checking whether source files exist..."
-for FILE in $SOURCE_FILES; do
-	if ! [ -e $SOURCE_DIR/src/$FILE ]; then
-		conf_print "fail : source file '$FILE' does not exists.\n"
-		exit 1
-	fi
-done
-
-for FILE in $TEMPLATE_FILES; do
-	if ! [ -e $SOURCE_DIR/templates/$FILE ]; then
-		conf_print "fail : template file '$FILE' does not exists.\n"
-		exit 1
-	fi
-done
-conf_print "ok\n"
 
 if [ $OPT_DOCUMENTATION = "true" ]; then
 	conf_print "checking whether doxygen exists..."
@@ -361,18 +335,43 @@ if [ $OPT_DOCUMENTATION = "true" ]; then
 	fi
 fi
 
+conf_print "checking whether source files exist..."
+for FILE in $SOURCE_FILES; do
+	if ! [ -e $SOURCE_DIR/$FILE ]; then
+		conf_print "fail : source file '$FILE' does not exists\n"
+		exit 1
+	fi
+done
+conf_print "ok\n"
+
+conf_print "checking whether template files exist..."
+for FILE in $TEMPLATE_FILES; do
+	if ! [ -e $SOURCE_DIR/templates/$FILE ]; then
+		conf_print "fail : template file 'templates/$FILE' does not exists\n"
+		exit 1
+	fi
+done
+conf_print "ok\n"
+
 conf_print "checking whether build directory is writable..."
 check_writable $BUILD_DIR
 
 conf_print "making directory structure..."
-mkdir -p $BUILD_DIR/src
-mkdir -p $BUILD_DIR/include
+for FOLDER in $BUILD_FOLDERS; do
+	if ! [ -d $BUILD_DIR/$FOLDER ]; then
+		mkdir $BUILD_DIR/$FOLDER
+	fi
+	if [ $? -ne 0 ]; then
+		conf_print "fail : could not mkdir '$FOLDER'\n"
+		exit 1
+	fi
+done
+conf_print "done\n"
 
-conf_print "checking whether src is writable..."
-check_writable $BUILD_DIR/src
-
-conf_print "checking whether include is writable..."
-check_writable $BUILD_DIR/include
+for FOLDER in $BUILD_FOLDERS; do
+	conf_print "checking whether $FOLDER is writable..."
+	check_writable $BUILD_DIR/$FOLDER
+done
 
 
 # ==============================================================================
@@ -381,7 +380,7 @@ check_writable $BUILD_DIR/include
 
 conf_print "copying source files..."
 for FILE in $SOURCE_FILES; do
-	[ -e $BUILD_DIR/src/$FILE ] || cp -n $SOURCE_DIR/src/$FILE $BUILD_DIR/src/$FILE
+	[ -e $BUILD_DIR/$FILE ] || cp -n $SOURCE_DIR/$FILE $BUILD_DIR/$FILE
 done
 conf_print "done\n"
 
@@ -404,7 +403,6 @@ EOF
 ed -s $SOURCE_DIR/templates/scclust.h > $BUILD_DIR/include/scclust.h <<EOF
 $SCCH_LIMITSH
 ,s/{% clabel_type %}/$SCCH_CLABEL_TYPE/g
-,s/{% clabel_max %}/$SCCH_CLABEL_MAX/g
 ,s/{% clabel_na %}/$SCCH_CLABEL_NA/g
 ,s/{% typelabel_type %}/$SCCH_TYPELABEL_TYPE/g
 ,s/{% scclust_major_version %}/$SCC_VERSION_MAJOR/g
@@ -414,6 +412,12 @@ $SCCH_LIMITSH
 q
 EOF
 
-cp -f $SOURCE_DIR/templates/scclust_types.h $BUILD_DIR/src/scclust_types.h
+
+ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
+$TYPEH_LIMITSH
+,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
+,p
+q
+EOF
 
 conf_print "done\n"

@@ -26,12 +26,12 @@
 #ifndef SCC_SCCLUST_INTERNAL_HG
 #define SCC_SCCLUST_INTERNAL_HG
 
-#ifdef __cplusplus
-// So g++ defines integer limits
-#define __STDC_LIMIT_MACROS
-#endif
-
-#include <limits.h>
+{% limits_include %}#ifdef __cplusplus
+{% limits_include %}// So g++ defines integer limits
+{% limits_include %}#define __STDC_LIMIT_MACROS
+{% limits_include %}#endif
+{% limits_include %}
+{% limits_include %}#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -40,6 +40,12 @@
 #ifdef __cplusplus
 	extern "C" {
 #endif
+
+
+/// Maximum number that can be stored in #scc_Clabel. May not be greater than `SIZE_MAX`.
+static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
+
+#define ISCC_CLABEL_MAX_MACRO {% clabel_max %}
 
 
 /** Type used for data point IDs. May be unsigned or signed.
