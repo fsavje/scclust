@@ -30,10 +30,8 @@ script:
   - cd build
   - ../configure --enable-documentation
   - make
-  - cd examples/simple
-  - make
-  - ./simple_example.out
-  - cd ../..
+  - cd examples/simple && make && ./simple_example.out && make clean && cd ../..
+  - cd examples/ann && make && ./ann_example.out && make clean && cd ../..
   - make clean
   - cd ..
   - ./configure --disable-documentation

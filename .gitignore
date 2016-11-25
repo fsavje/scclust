@@ -36,7 +36,6 @@ build/
 doc/
 include/
 lib/
-scc_build/
 
 # Build files
 /DoxyAPI
@@ -48,6 +47,7 @@ localmisc/
 
 # Test files
 tests/ann_1.1.2/
+tests/scc_build/
 tests/ann_1.1.2.zip
 
 # Example files

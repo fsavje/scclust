@@ -33,7 +33,7 @@
 
 #else
 
-	#define scc_ut_init_tests() (void)
+	#define scc_ut_init_tests() (true)
 
 #endif
 
