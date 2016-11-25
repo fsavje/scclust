@@ -17,7 +17,7 @@ The library can be used in several different ways, for different purposes. We re
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "../include/scclust.h"
+#include <scclust.h>
 
 int main(void) {
 	// Variable for error reporting
@@ -85,11 +85,11 @@ cd example && make
 This snippet downloads and compiles scclust:
 ```bash
 wget https://github.com/fsavje/scclust/archive/master.zip
-unzip master.zip 
+unzip master.zip
 cd scclust-master && make library
 ```
 
-scclust compiles into a static library by default. 
+scclust compiles into a static library by default.
 
 Calling `make` without the `library` target compiles the documentation as well (requires DoxyGen).
 
@@ -145,7 +145,7 @@ The data type used to store data point IDs. This choice restricts the maximum nu
 | SCC_DPID_UINT64 | `uint64_t` | $2^{64} − 1$    |
 | SCC_DPID_INT    | `int`      | $2^{31} − 1$    |
 
-The default is `SCC_DPID_UINT32`. 
+The default is `SCC_DPID_UINT32`.
 
 To change type when calling `make`:
 ```bash
@@ -167,7 +167,7 @@ The data type used to store arc references. This choice restricts the size of th
 | SCC_ARC32 | `uint32_t` | $2^{32} − 1$  |
 | SCC_ARC64 | `uint64_t` | $2^{64} − 1$  |
 
-The default is `SCC_ARC32`. 
+The default is `SCC_ARC32`.
 
 To change type when calling `make`:
 ```bash
@@ -189,7 +189,7 @@ To turn on when calling `make`:
 make library ANN_SEARCH=Y
 ```
 
-When using the ANN library, it is recommended to compile with `SCC_DPID_INT`. This avoids costly type translations between the libraries. 
+When using the ANN library, it is recommended to compile with `SCC_DPID_INT`. This avoids costly type translations between the libraries.
 
 
 ### Tree data structure used by ANN
