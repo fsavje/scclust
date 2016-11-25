@@ -30,11 +30,13 @@ script:
   - make
   - make clean
   - cd ..
-  - ./configure
+  - ./configure --disable-documentation
   - make
   - cd example/simple
   - make
   - ./simple_example.out
-  - cd ../../tests
+  - cd ../..
+  - ./clean.sh
+  - cd tests
   - ./run_tests.sh
   - ./complete_test.sh
