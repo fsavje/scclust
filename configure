@@ -177,12 +177,14 @@ SCCH_CLABEL_TYPE=""
 SCCH_CLABEL_NA=""
 SCCH_TYPELABEL_TYPE=""
 
+SPIH_LIMITSH="false"
+SPIH_DPID_TYPE=""
+SPIH_DPID_NA=""
+SPIH_ARC_TYPE=""
+
 TYPEH_LIMITSH="false"
 TYPEH_CLABEL_MAX=""
-TYPEH_DPID_TYPE=""
 TYPEH_DPID_MAX=""
-TYPEH_DPID_NA=""
-TYPEH_ARC_TYPE=""
 TYPEH_ARC_MAX=""
 
 if [ "$OPT_DEBUG" = "false" ]; then
@@ -217,26 +219,27 @@ fi
 
 case $OPT_DPID_TYPE in
 	uint32_t )
-		TYPEH_DPID_TYPE="uint32_t"
+		SPIH_DPID_TYPE="uint32_t"
+		SPIH_DPID_NA="UINT32_MAX"
 		TYPEH_DPID_MAX="UINT32_MAX"
-		TYPEH_DPID_NA="UINT32_MAX"
 		;;
 	uint64_t )
-		TYPEH_DPID_TYPE="uint64_t"
+		SPIH_DPID_TYPE="uint64_t"
+		SPIH_DPID_NA="UINT64_MAX"
 		TYPEH_DPID_MAX="UINT64_MAX"
-		TYPEH_DPID_NA="UINT64_MAX"
 		;;
 	int )
+		SPIH_DPID_TYPE="int"
+		SPIH_LIMITSH="true"
+		SPIH_DPID_NA="INT_MAX"
 		TYPEH_LIMITSH="true"
-		TYPEH_DPID_TYPE="int"
-		TYPEH_DPID_NA="INT_MAX"
 		TYPEH_DPID_MAX="INT_MAX"
 		;;
 	int_mna )
+		SPIH_DPID_TYPE="int"
+		SPIH_DPID_NA="-1"
 		TYPEH_LIMITSH="true"
-		TYPEH_DPID_TYPE="int"
 		TYPEH_DPID_MAX="INT_MAX"
-		TYPEH_DPID_NA="-1"
 		;;
 	* )
 		conf_print "with-dpid=[uint32_t  uint64_t  int  int_mna]\n"
@@ -246,11 +249,11 @@ esac
 
 case $OPT_ARC_TYPE in
 	uint32_t )
-		TYPEH_ARC_TYPE="uint32_t"
+		SPIH_ARC_TYPE="uint32_t"
 		TYPEH_ARC_MAX="UINT32_MAX"
 		;;
 	uint64_t )
-		TYPEH_ARC_TYPE="uint64_t"
+		SPIH_ARC_TYPE="uint64_t"
 		TYPEH_ARC_MAX="UINT64_MAX"
 		;;
 	* )
@@ -331,6 +334,12 @@ else
 	SCCH_LIMITSH=",g/{% limits_include %}/d"
 fi
 
+if [ "$SPIH_LIMITSH" = "true" ]; then
+	SPIH_LIMITSH=",s/{% limits_include %}//g"
+else
+	SPIH_LIMITSH=",g/{% limits_include %}/d"
+fi
+
 if [ "$TYPEH_LIMITSH" = "true" ]; then
 	TYPEH_LIMITSH=",s/{% limits_include %}//g"
 else
@@ -366,9 +375,8 @@ SOURCE_FILES="
 	src/digraph_debug.h
 	src/digraph_operations.c
 	src/digraph_operations.h
-	src/dist_inline_sqdist.h
-	src/dist_nnsearch_c.c
-	src/dist_search.c
+	src/dist_search_imp.c
+	src/dist_search_imp.h
 	src/dist_search.h
 	src/error.c
 	src/error.h
@@ -379,11 +387,13 @@ SOURCE_FILES="
 	src/nng_core.h
 	src/nng_findseeds.c
 	src/nng_findseeds.h
+	src/scclust_spi.c
 	src/scclust.c"
 
 TEMPLATE_FILES="
 	DoxyAPI
 	Makefile
+	scclust_spi.h
 	scclust_types.h
 	scclust.h"
 
@@ -479,13 +489,19 @@ $SCCH_LIMITSH
 q
 EOF
 
+ed -s $SOURCE_DIR/templates/scclust_spi.h > $BUILD_DIR/include/scclust_spi.h <<EOF
+$SPIH_LIMITSH
+,s/{% dpid_type %}/$SPIH_DPID_TYPE/g
+,s/{% dpid_na %}/$SPIH_DPID_NA/g
+,s/{% arc_type %}/$SPIH_ARC_TYPE/g
+,p
+q
+EOF
+
 ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
 $TYPEH_LIMITSH
 ,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
-,s/{% dpid_type %}/$TYPEH_DPID_TYPE/g
 ,s/{% dpid_max %}/$TYPEH_DPID_MAX/g
-,s/{% dpid_na %}/$TYPEH_DPID_NA/g
-,s/{% arc_type %}/$TYPEH_ARC_TYPE/g
 ,s/{% arc_max %}/$TYPEH_ARC_MAX/g
 ,p
 q

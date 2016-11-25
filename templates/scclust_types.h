@@ -36,45 +36,19 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../include/scclust.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "../include/scclust_spi.h"
 
 
-/// Maximum number that can be stored in #scc_Clabel. May not be greater than `SIZE_MAX`.
 static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
 #define ISCC_CLABEL_MAX_MACRO {% clabel_max %}
 
-
-/** Type used for data point IDs. May be unsigned or signed.
- *
- *  \note
- *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #iscc_Dpid. I.e.,
- *  possible data point IDs must be in the sequence `[0, 1, ..., ISCC_DPID_MAX - 1]`.
- *  Independent of `ISCC_DPID_MAX`, number of data points may not be greater than `SIZE_MAX - 1`.
- */
-typedef {% dpid_type %} iscc_Dpid;
 #define ISCC_DPID_MAX_MACRO {% dpid_max %}
 static const uintmax_t ISCC_DPID_MAX = {% dpid_max %};
-static const iscc_Dpid ISCC_DPID_NA = {% dpid_na %};
 
-/** Type used for arc indices. Must be unsigned.
- *
- *  \note
- *  Number of arcs in any digraph must be less or equal to
- *  the maximum number that can be stored in #iscc_Arci.
- */
-typedef {% arc_type %} iscc_Arci;
 #define ISCC_ARCI_MAX_MACRO {% arc_max %}
 static const uintmax_t ISCC_ARCI_MAX = {% arc_max %};
 
-/// Label given to unassigned vertices.
 static const uintmax_t ISCC_TYPELABEL_MAX = 65535;
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif // ifndef SCC_SCCLUST_INTERNAL_HG

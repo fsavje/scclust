@@ -23,14 +23,14 @@ SCC_OBJECTS = \
 	digraph_core.o \
 	digraph_debug.o \
 	digraph_operations.o \
-	dist_nnsearch_c.o \
-	dist_search.o \
+	dist_search_imp.o \
 	error.o \
 	hierarchical_clustering.o \
-	nng_clustering.o \
 	nng_batch_clustering.o \
+	nng_clustering.o \
 	nng_core.o \
 	nng_findseeds.o \
+	scclust_spi.o \
 	scclust.o
 
 SCC_DIR = scc_build
