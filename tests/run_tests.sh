@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REDCOLOR='\033[0;31m'
-NOCOLOR='\033[0m'
+REDCOLOR="\033[0;31m"
+NOCOLOR="\033[0m"
 
 run_test()
 {
@@ -13,12 +13,8 @@ run_test()
 }
 
 STRESS=false
-while getopts ":c:s" opt; do
+while getopts ":s" opt; do
 	case $opt in
-		c)
-			COMPOPT=$OPTARG
-			printf "${REDCOLOR}Compiling with: $OPTARG${NOCOLOR}\n"
-			;;
 		s)
 			STRESS=true
 			printf "${REDCOLOR}Running stress tests.${NOCOLOR}\n"
@@ -31,7 +27,7 @@ while getopts ":c:s" opt; do
 done
 
 make clean
-make all $COMPOPT
+make all
 
 run_test test_data_set
 run_test test_digraph_core
@@ -42,6 +38,7 @@ run_test test_dist_search
 run_test test_error
 run_test test_hierarchical_clustering_internal
 run_test test_hierarchical_clustering
+run_test test_nng_clustering_batches
 run_test test_nng_clustering_internal
 run_test test_nng_clustering
 run_test test_nng_core_internal

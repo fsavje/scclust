@@ -18,15 +18,14 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
-#include "assert_digraph.h"
-#include "../src/digraph_operations.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../src/digraph_core.h"
-#include "../src/digraph_debug.h"
+#include <src/digraph_core.h>
+#include <src/digraph_debug.h>
+#include <src/digraph_operations.h>
+#include "assert_digraph.h"
 
 
 void scc_ut_delete_loops(void** state)

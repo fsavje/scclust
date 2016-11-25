@@ -1,0 +1,494 @@
+#!/bin/sh
+# ==============================================================================
+# scclust -- A C library for size constrained clustering
+# https://github.com/fsavje/scclust
+#
+# Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library. If not, see http://www.gnu.org/licenses/
+# ==============================================================================
+
+
+# ==============================================================================
+# Settings
+# ==============================================================================
+
+# Version (script and library)
+SCC_VERSION_MAJOR=0
+SCC_VERSION_MINOR=1
+SCC_VERSION_PATCH=1
+
+# Script settings
+RUN_QUIET="false"
+BUILD_DIR=$(pwd)
+SOURCE_DIR=$(dirname "$0")
+
+# Default options
+OPT_DEBUG="false"
+OPT_DIGRAPH_DEBUG="false"
+OPT_CMOCKA_HEADERS="false"
+OPT_DOCUMENTATION="default"
+OPT_ALL_DOCUMENTATION="false"
+OPT_CLABEL_TYPE="uint32_t"
+OPT_CLABEL_NA="default"
+OPT_TYPELABEL_TYPE="uint_fast16_t"
+OPT_DPID_TYPE="uint32_t"
+OPT_ARC_TYPE="uint32_t"
+
+
+# ==============================================================================
+# Functions
+# ==============================================================================
+
+usage() {
+	echo "This script configures the scclust library for compilation."
+	echo ""
+	echo "Usage: ./configure [OPTIONS]..."
+	echo ""
+	echo "  -h, --help                display this help and exit"
+	echo "  --version                 display version information and exit"
+	echo "  -q, --quiet               do not print messages"
+	echo ""
+	echo "  --enable-FEATURE          include FEATURE"
+	echo "  --disable-FEATURE         do not include FEATURE "
+	echo ""
+	echo "  --enable-assert           enable ASSERT checking [default=off]"
+	echo "  --enable-digraph-debug    enable debug functions for digraphs [default=off]"
+	echo "  --enable-cmocka-headers   use cmocka allocation functions [default=off]"
+	echo "  --enable-documentation    make documentation [default=on if docygen exits]"
+	echo "  --enable-all-docs         make documentation for internal methods [default=off]"
+	echo ""
+	echo "  --with-clabel=[ARG]       cluster label type [default=uint32_t]"
+	echo "  --with-clabel-na=[ARG]    cluster label NA value [default=default]"
+	echo "  --with-typelabel=[ARG]    type label type [default=uint_fast16_t]"
+	echo "  --with-dpid=[ARG]         data point ID type [default=uint32_t]"
+	echo "  --with-arc=[ARG]          digraph arc type [default=uint32_t]"
+}
+
+conf_print () {
+	[ "$RUN_QUIET" = "true" ] || printf "$1"
+}
+
+check_writable() {
+	if ! [ -d $1 ]; then
+		conf_print "fail : $1 is not a directory\n"
+		exit 1
+	fi
+	TEST_WRITE_FILE="scc_test_file$(date +%s)"
+	if [ -e $1/$TEST_WRITE_FILE ]; then
+		conf_print "fail : test file exists\n"
+		exit 1
+	fi
+	echo "This is a test write." > $1/$TEST_WRITE_FILE
+	if [ $? -ne 0 ]; then
+		conf_print "fail : directory not writable\n"
+		exit 1
+	fi
+	if [ "$(cat $1/$TEST_WRITE_FILE)" != "This is a test write." ]; then
+		conf_print "fail : write failed\n"
+		exit 1
+	fi
+	rm $1/$TEST_WRITE_FILE
+	conf_print "ok\n"
+}
+
+
+
+# ==============================================================================
+# Parse arguments
+# ==============================================================================
+
+while [ "$1" != "" ]; do
+	case $1 in
+		--enable-assert )
+			OPT_DEBUG="true" ;;
+		--disable-assert )
+			OPT_DEBUG="false" ;;
+		--enable-digraph-debug )
+			OPT_DIGRAPH_DEBUG="true" ;;
+		--disable-digraph-debug )
+			OPT_DIGRAPH_DEBUG="false" ;;
+		--enable-cmocka-headers )
+			OPT_CMOCKA_HEADERS="true" ;;
+		--disable-cmocka-headers )
+			OPT_CMOCKA_HEADERS="false" ;;
+		--enable-documentation )
+			OPT_DOCUMENTATION="true" ;;
+		--disable-documentation )
+			OPT_DOCUMENTATION="false" ;;
+		--enable-all-docs )
+			OPT_ALL_DOCUMENTATION="true" ;;
+		--disable-all-docs )
+			OPT_ALL_DOCUMENTATION="false" ;;
+		--with-* )
+			WITH_PART=$(echo "$1" | cut -f1 -d=)
+			VALUE_PART=$(echo "$1" | cut -f2 -d=)
+			case $WITH_PART in
+				--with-clabel )
+					OPT_CLABEL_TYPE="$VALUE_PART" ;;
+				--with-clabel-na )
+					OPT_CLABEL_NA="$VALUE_PART" ;;
+				--with-typelabel )
+					OPT_TYPELABEL_TYPE="$VALUE_PART" ;;
+				--with-dpid )
+					OPT_DPID_TYPE="$VALUE_PART" ;;
+				--with-arc )
+					OPT_ARC_TYPE="$VALUE_PART" ;;
+				* )
+					conf_print "unknown --with"; exit 1 ;;
+			esac
+			;;
+		-h | --help )
+			usage; exit ;;
+		--version )
+			echo "scclust configure $SCC_VERSION_MAJOR.$SCC_VERSION_MINOR.$SCC_VERSION_PATCH"
+			exit
+			;;
+		-q | --quiet )
+			RUN_QUIET="true" ;;
+		* )
+			[ "$RUN_QUIET" = "true" ] || usage
+			exit 1
+			;;
+	esac
+	shift
+done
+
+
+MF_XTRA_FLAGS=""
+MF_DIGRAPH_DEBUG=""
+MF_TARGETS="library"
+
+DOC_TARGETS="include"
+
+SCCH_LIMITSH="false"
+SCCH_CLABEL_TYPE=""
+SCCH_CLABEL_NA=""
+SCCH_TYPELABEL_TYPE=""
+
+TYPEH_LIMITSH="false"
+TYPEH_CLABEL_MAX=""
+TYPEH_DPID_TYPE=""
+TYPEH_DPID_MAX=""
+TYPEH_DPID_NA=""
+TYPEH_ARC_TYPE=""
+TYPEH_ARC_MAX=""
+
+if [ "$OPT_DEBUG" = "false" ]; then
+	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -DNDEBUG"
+fi
+
+if [ "$OPT_DIGRAPH_DEBUG" = "true" ]; then
+	MF_DIGRAPH_DEBUG=",s/{% digraph_debug %}/digraph_debug.o/g"
+else
+	MF_DIGRAPH_DEBUG=",g/{% digraph_debug %}/d"
+fi
+
+if [ "$OPT_CMOCKA_HEADERS" = "true" ]; then
+	MF_XTRA_FLAGS="$MF_XTRA_FLAGS -include src\\/cmocka_headers.h"
+fi
+
+if [ $OPT_DOCUMENTATION = "default" ]; then
+	if command -v doxygen >/dev/null 2>&1; then
+		OPT_DOCUMENTATION="true"
+	else
+		OPT_DOCUMENTATION="false"
+	fi
+fi
+
+if [ $OPT_DOCUMENTATION = "true" ]; then
+	MF_TARGETS="$MF_TARGETS docs"
+fi
+
+if [ $OPT_ALL_DOCUMENTATION = "true" ]; then
+	DOC_TARGETS="$DOC_TARGETS src"
+fi
+
+case $OPT_DPID_TYPE in
+	uint32_t )
+		TYPEH_DPID_TYPE="uint32_t"
+		TYPEH_DPID_MAX="UINT32_MAX"
+		TYPEH_DPID_NA="UINT32_MAX"
+		;;
+	uint64_t )
+		TYPEH_DPID_TYPE="uint64_t"
+		TYPEH_DPID_MAX="UINT64_MAX"
+		TYPEH_DPID_NA="UINT64_MAX"
+		;;
+	int )
+		TYPEH_LIMITSH="true"
+		TYPEH_DPID_TYPE="int"
+		TYPEH_DPID_NA="INT_MAX"
+		TYPEH_DPID_MAX="INT_MAX"
+		;;
+	int_mna )
+		TYPEH_LIMITSH="true"
+		TYPEH_DPID_TYPE="int"
+		TYPEH_DPID_MAX="INT_MAX"
+		TYPEH_DPID_NA="-1"
+		;;
+	* )
+		conf_print "with-dpid=[uint32_t  uint64_t  int  int_mna]\n"
+		exit 1
+		;;
+esac
+
+case $OPT_ARC_TYPE in
+	uint32_t )
+		TYPEH_ARC_TYPE="uint32_t"
+		TYPEH_ARC_MAX="UINT32_MAX"
+		;;
+	uint64_t )
+		TYPEH_ARC_TYPE="uint64_t"
+		TYPEH_ARC_MAX="UINT64_MAX"
+		;;
+	* )
+		conf_print "with-arc=[uint32_t  uint64_t]\n"
+		exit 1
+		;;
+esac
+
+case $OPT_CLABEL_TYPE in
+	uint32_t )
+		SCCH_CLABEL_TYPE="uint32_t"
+		TYPEH_CLABEL_MAX="UINT32_MAX"
+		;;
+	uint64_t )
+		SCCH_CLABEL_TYPE="uint64_t"
+		TYPEH_CLABEL_MAX="UINT64_MAX"
+		;;
+	int )
+		SCCH_CLABEL_TYPE="int"
+		TYPEH_LIMITSH="true"
+		TYPEH_CLABEL_MAX="INT_MAX"
+		;;
+	* )
+		conf_print "with-clabel=[uint32_t  uint64_t  int]\n"
+		exit 1
+		;;
+esac
+
+case $OPT_CLABEL_NA in
+	max | default )
+		case $SCCH_CLABEL_TYPE in
+			uint32_t )
+				SCCH_CLABEL_NA="UINT32_MAX" ;;
+			uint64_t )
+				SCCH_CLABEL_NA="UINT64_MAX" ;;
+			int )
+				SCCH_LIMITSH="true"
+				SCCH_CLABEL_NA="INT_MAX"
+				;;
+			* )
+				conf_print "error\n" ; exit 1 ;;
+		esac
+		;;
+	* )
+		case $SCCH_CLABEL_TYPE in
+			uint32_t | uint64_t )
+				conf_print "with-clabel-na=[default  max]\n"
+				exit 1
+				;;
+			int )
+				if [ $OPT_CLABEL_NA -lt 0 ]; then
+					SCCH_CLABEL_NA="$OPT_CLABEL_NA"
+				else
+					conf_print "with-clabel-na=[default  max  -1  -2  ...]\n"
+					exit 1
+				fi
+				;;
+			* )
+				conf_print "error\n" ; exit 1 ;;
+		esac
+		;;
+esac
+
+case $OPT_TYPELABEL_TYPE in
+	uint_fast16_t )
+		SCCH_TYPELABEL_TYPE="uint_fast16_t" ;;
+	int )
+		SCCH_TYPELABEL_TYPE="int" ;;
+	* )
+		conf_print "with-typelabel=[uint_fast16_t  int]\n"
+		exit 1
+		;;
+esac
+
+if [ "$SCCH_LIMITSH" = "true" ]; then
+	SCCH_LIMITSH=",s/{% limits_include %}//g"
+else
+	SCCH_LIMITSH=",g/{% limits_include %}/d"
+fi
+
+if [ "$TYPEH_LIMITSH" = "true" ]; then
+	TYPEH_LIMITSH=",s/{% limits_include %}//g"
+else
+	TYPEH_LIMITSH=",g/{% limits_include %}/d"
+fi
+
+
+# ==============================================================================
+# Source files
+# ==============================================================================
+
+BUILD_FOLDERS="
+	examples
+	examples/ann
+	examples/simple
+	src
+	include"
+
+SOURCE_FILES="
+	doxyrefs.bib
+	LICENSE
+	README.md
+	examples/ann/make_ann.sh
+	examples/simple/Makefile
+	examples/simple/simple_example.c
+	src/clustering_struct.h
+	src/cmocka_headers.h
+	src/data_set_struct.h
+	src/data_set.c
+	src/digraph_core.c
+	src/digraph_core.h
+	src/digraph_debug.c
+	src/digraph_debug.h
+	src/digraph_operations.c
+	src/digraph_operations.h
+	src/dist_inline_sqdist.h
+	src/dist_nnsearch_c.c
+	src/dist_search.c
+	src/dist_search.h
+	src/error.c
+	src/error.h
+	src/hierarchical_clustering.c
+	src/nng_batch_clustering.c
+	src/nng_clustering.c
+	src/nng_core.c
+	src/nng_core.h
+	src/nng_findseeds.c
+	src/nng_findseeds.h
+	src/scclust.c"
+
+TEMPLATE_FILES="
+	DoxyAPI
+	Makefile
+	scclust_types.h
+	scclust.h"
+
+
+# ==============================================================================
+# Checking
+# ==============================================================================
+
+if [ $OPT_DOCUMENTATION = "true" ]; then
+	conf_print "checking whether doxygen exists..."
+	if command -v doxygen >/dev/null 2>&1; then
+		conf_print "ok\n"
+	else
+		conf_print "fail\n"
+		exit 1
+	fi
+fi
+
+conf_print "checking whether source files exist..."
+for FILE in $SOURCE_FILES; do
+	if ! [ -e $SOURCE_DIR/$FILE ]; then
+		conf_print "fail : source file '$FILE' does not exists\n"
+		exit 1
+	fi
+done
+conf_print "ok\n"
+
+conf_print "checking whether template files exist..."
+for FILE in $TEMPLATE_FILES; do
+	if ! [ -e $SOURCE_DIR/templates/$FILE ]; then
+		conf_print "fail : template file 'templates/$FILE' does not exists\n"
+		exit 1
+	fi
+done
+conf_print "ok\n"
+
+conf_print "checking whether build directory is writable..."
+check_writable $BUILD_DIR
+
+conf_print "making directory structure..."
+for FOLDER in $BUILD_FOLDERS; do
+	if ! [ -d $BUILD_DIR/$FOLDER ]; then
+		mkdir $BUILD_DIR/$FOLDER
+	fi
+	if [ $? -ne 0 ]; then
+		conf_print "fail : could not mkdir '$FOLDER'\n"
+		exit 1
+	fi
+done
+conf_print "done\n"
+
+for FOLDER in $BUILD_FOLDERS; do
+	conf_print "checking whether $FOLDER is writable..."
+	check_writable $BUILD_DIR/$FOLDER
+done
+
+
+# ==============================================================================
+# Copy and make files
+# ==============================================================================
+
+conf_print "copying source files..."
+for FILE in $SOURCE_FILES; do
+	[ -e $BUILD_DIR/$FILE ] || cp -n $SOURCE_DIR/$FILE $BUILD_DIR/$FILE
+done
+conf_print "done\n"
+
+conf_print "making files from templates..."
+ed -s $SOURCE_DIR/templates/Makefile > $BUILD_DIR/Makefile <<EOF
+$MF_DIGRAPH_DEBUG
+,s/{% xtra_flags %}/$MF_XTRA_FLAGS/g
+,s/{% all_targets %}/$MF_TARGETS/g
+,p
+q
+EOF
+
+ed -s $SOURCE_DIR/templates/DoxyAPI > $BUILD_DIR/DoxyAPI <<EOF
+,s/{% version %}/$SCC_VERSION_MAJOR.$SCC_VERSION_MINOR.$SCC_VERSION_PATCH/g
+,s/{% input %}/$DOC_TARGETS/g
+,p
+q
+EOF
+
+ed -s $SOURCE_DIR/templates/scclust.h > $BUILD_DIR/include/scclust.h <<EOF
+$SCCH_LIMITSH
+,s/{% clabel_type %}/$SCCH_CLABEL_TYPE/g
+,s/{% clabel_na %}/$SCCH_CLABEL_NA/g
+,s/{% typelabel_type %}/$SCCH_TYPELABEL_TYPE/g
+,s/{% scclust_major_version %}/$SCC_VERSION_MAJOR/g
+,s/{% scclust_minor_version %}/$SCC_VERSION_MINOR/g
+,s/{% scclust_patch_version %}/$SCC_VERSION_PATCH/g
+,p
+q
+EOF
+
+ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
+$TYPEH_LIMITSH
+,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
+,s/{% dpid_type %}/$TYPEH_DPID_TYPE/g
+,s/{% dpid_max %}/$TYPEH_DPID_MAX/g
+,s/{% dpid_na %}/$TYPEH_DPID_NA/g
+,s/{% arc_type %}/$TYPEH_ARC_TYPE/g
+,s/{% arc_max %}/$TYPEH_ARC_MAX/g
+,p
+q
+EOF
+
+conf_print "done\n"

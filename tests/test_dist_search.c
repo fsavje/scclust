@@ -18,14 +18,13 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#define SCC_DOUBLE_ASSERT
-#include "test_suite.h"
-#include "../src/dist_search.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <src/dist_search.h>
+#include <src/scclust_types.h>
 #include "data_object_test.h"
-#include "../src/scclust_types.h"
+#include "double_assert.h"
 
 
 void scc_ut_check_data_set(void** state)

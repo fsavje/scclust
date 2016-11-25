@@ -18,12 +18,11 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
-#include "../include/scclust.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <include/scclust.h>
 #include "data_object_test.h"
 #include "rand.h"
 

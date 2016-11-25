@@ -1,0 +1,40 @@
+# ==============================================================================
+# scclust -- A C library for size constrained clustering
+# https://github.com/fsavje/scclust
+#
+# Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library. If not, see http://www.gnu.org/licenses/
+# ==============================================================================
+
+ANN_SEARCH = N
+ANN_TREE = SCC_ANN_KDTREE
+
+XTRA_OBJECTS =
+
+# Parse options
+
+ifeq ($(ANN_SEARCH), Y)
+OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
+LINKER = $(CXX)
+XTRA_OBJECTS += $(addprefix ../exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
+                                                   kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
+                                                   bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
+endif
+
+ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
+XTRA_FLAGS += -D$(ANN_TREE)
+endif
+
+

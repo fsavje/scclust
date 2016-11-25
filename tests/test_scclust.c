@@ -18,18 +18,16 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#define SCC_DOUBLE_ASSERT
-#include "test_suite.h"
-#include "../include/scclust.h"
-#include "data_object_test.h"
-
-#include "../src/clustering_struct.h"
-#include "../src/scclust_types.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <include/scclust.h>
+#include <src/clustering_struct.h>
+#include <src/scclust_types.h>
+#include "data_object_test.h"
+#include "double_assert.h"
 
 
 void scc_ut_get_compiled_version(void** state)
@@ -191,7 +189,7 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_null(cl3);
 	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 
-	#ifdef SCC_RUN_CLABEL_TYPE_TESTS
+	#if ISCC_CLABEL_MAX_MACRO < UINTMAX_MAX
 		scc_Clustering* cl4;
 		scc_ErrorCode ec4 = scc_init_existing_clustering(10, ((uintmax_t) SCC_CLABEL_MAX) + 1, cluster_labels, true, &cl4);
 		assert_null(cl4);
@@ -348,7 +346,7 @@ void scc_ut_is_initialized_clustering(void** state)
 		assert_true(scc_is_initialized_clustering(&in_cl));
 	#endif
 
-	#ifdef SCC_RUN_CLABEL_TYPE_TESTS
+	#if ISCC_CLABEL_MAX_MACRO < SIZE_MAX
 		in_cl.num_clusters = ((size_t) SCC_CLABEL_MAX) + 1;
 		assert_false(scc_is_initialized_clustering(&in_cl));
 		in_cl.num_clusters = 5;

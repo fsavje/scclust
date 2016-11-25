@@ -20,15 +20,14 @@
 
 #define SCC_STABLE_NNG
 
-#include "test_suite.h"
-#include "assert_digraph.h"
-#include "../src/nng_core.c"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <src/digraph_debug.h>
+#include <src/nng_core.c>
+#include "assert_digraph.h"
 #include "data_object_test.h"
-#include "../src/digraph_debug.h"
 
 
 void scc_ut_sort_nng(void** state)

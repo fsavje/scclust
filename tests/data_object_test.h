@@ -21,10 +21,11 @@
 #ifndef SCC_UT_DATA_OBJ_HG
 #define SCC_UT_DATA_OBJ_HG
 
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "../include/scclust.h"
-#include "../src/data_set_struct.h"
+#include <include/scclust.h>
+#include <src/data_set_struct.h>
 
 
 double coord1[300] = { 58.339591, 14.339080, 54.090796,

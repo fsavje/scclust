@@ -20,13 +20,12 @@
 
 #define SCC_STABLE_FINDSEED
 
-#include "test_suite.h"
-#include "../src/nng_findseeds.c"
-
-#include "../include/scclust.h"
-#include "../src/digraph_core.h"
-#include "../src/digraph_debug.h"
-#include "../src/scclust_types.h"
+#include <src/cmocka_headers.h>
+#include <include/scclust.h>
+#include <src/digraph_core.h>
+#include <src/digraph_debug.h>
+#include <src/nng_findseeds.c>
+#include <src/scclust_types.h>
 
 
 void scc_ut_fs_debug_bucket_sort(void** state)

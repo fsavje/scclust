@@ -34,9 +34,16 @@
 # Build folders
 build/
 doc/
+include/
 lib/
+scc_build/
+
+# Build files
+/DoxyAPI
+/Makefile
+/src/scclust_types.h
 
 # Local miscellaneous
 localmisc/
 
-exlib/ann_1.1.2.zip
+examples/ann/ann_1.1.2.zip

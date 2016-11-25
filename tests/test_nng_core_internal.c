@@ -18,13 +18,12 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
+#include <src/cmocka_headers.h>
+#include <src/nng_core.c>
+#include <src/digraph_debug.h>
+#include <src/scclust_types.h>
 #include "assert_digraph.h"
-#include "../src/nng_core.c"
-
 #include "data_object_test.h"
-#include "../src/digraph_debug.h"
-#include "../src/scclust_types.h"
 
 
 void scc_ut_make_nng(void** state)

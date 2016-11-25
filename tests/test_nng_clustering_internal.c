@@ -18,10 +18,9 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
+#include <src/cmocka_headers.h>
+#include <src/nng_clustering.c>
 #include "assert_digraph.h"
-#include "../src/nng_clustering.c"
-
 #include "data_object_test.h"
 
 

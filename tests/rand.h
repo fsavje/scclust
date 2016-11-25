@@ -22,6 +22,7 @@
 #ifndef SCC_UT_RAND_HG
 #define SCC_UT_RAND_HG
 
+#include <src/cmocka_headers.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>

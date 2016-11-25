@@ -18,26 +18,49 @@
 # License along with this library. If not, see http://www.gnu.org/licenses/
 # ==============================================================================
 
-# Set up
-
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-EXAMPLES = batch_example simple_example
+XTRA_FLAGS ={% xtra_flags %}
 
+LIBDIR = lib
+DOCSDIR = doc
 
-# Main targets
+OBJECTS = \
+	data_set.o \
+	digraph_core.o \
+	{% digraph_debug %} \
+	digraph_operations.o \
+	dist_nnsearch_c.o \
+	dist_search.o \
+	error.o \
+	hierarchical_clustering.o \
+	nng_clustering.o \
+	nng_batch_clustering.o \
+	nng_core.o \
+	nng_findseeds.o \
+	scclust.o
 
-.PHONY: all clean $(EXAMPLES)
+.PHONY: all clean docs library
 
-all: $(EXAMPLES)
+all: {% all_targets %}
+
+library: $(LIBDIR)/libscclust.a
+
+docs: $(DOCSDIR)
+	doxygen DoxyAPI
 
 clean:
-	$(RM) *.out
+	$(RM) -R $(DOCSDIR) $(LIBDIR) src/*.o
 
-$(EXAMPLES): ../lib/libscc.a
-	$(CC) $(CFLAGS) $@.c $^ -lm -o $@.out
+$(LIBDIR)/libscclust.a: $(addprefix src/,$(OBJECTS))
+	$(AR) rcs $(LIBDIR)/libscclust.a $^
 
+$(LIBDIR)/libscclust.a: | $(LIBDIR)
 
-# Dependencies
+%.o: %.c
+	$(CC) -c $(CFLAGS) $(XTRA_FLAGS) $< -o $@
 
-../lib/libscc.a:
-	cd .. && $(MAKE) library
+$(DOCSDIR):
+	mkdir -p $(DOCSDIR)
+
+$(LIBDIR):
+	mkdir -p $(LIBDIR)

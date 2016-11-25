@@ -18,14 +18,13 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "test_suite.h"
-#include "../src/digraph_core.h"
-
+#include <src/cmocka_headers.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/scclust.h"
-#include "../src/scclust_types.h"
+#include <include/scclust.h>
+#include <src/digraph_core.h>
+#include <src/scclust_types.h>
 
 
 void scc_ut_free_digraph(void** state)

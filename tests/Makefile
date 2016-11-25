@@ -18,106 +18,104 @@
 # License along with this library. If not, see http://www.gnu.org/licenses/
 # ==============================================================================
 
-DPID = SCC_DPID_UINT32
-ARC = SCC_ARC32
-ANN_SEARCH = N
-ANN_TREE = SCC_ANN_KDTREE
+SCC_OBJECTS = \
+	data_set.o \
+	digraph_core.o \
+	digraph_debug.o \
+	digraph_operations.o \
+	dist_nnsearch_c.o \
+	dist_search.o \
+	error.o \
+	hierarchical_clustering.o \
+	nng_clustering.o \
+	nng_batch_clustering.o \
+	nng_core.o \
+	nng_findseeds.o \
+	scclust.o
 
-LINKER = $(CC)
+SCC_DIR = scc_build
+SCC_OBJECTS := $(addprefix $(SCC_DIR)/src/,$(SCC_OBJECTS))
+
+STDTESTS = \
+	stress_hierarchical_clustering.out \
+	stress_nng_clustering.out \
+	test_data_set.out \
+	test_digraph_core.out \
+	test_digraph_debug.out \
+	test_digraph_operations.out \
+	test_dist_search.out \
+	test_error.out \
+	test_hierarchical_clustering.out \
+	test_nng_clustering_batches.out \
+	test_nng_clustering.out \
+	test_nng_core.out \
+	test_nng_findseeds.out \
+	test_scclust.out
+
+SPECTESTS = \
+	test_digraph_operations_internal.out \
+	test_hierarchical_clustering_internal.out \
+	test_nng_clustering_internal.out \
+	test_nng_core_internal.out \
+	test_nng_core_stable.out \
+	test_nng_findseeds_internal.out \
+	test_nng_findseeds_stable.out
+
+BUILD_DIR = build
+ALLTESTS = $(addprefix $(BUILD_DIR)/,$(STDTESTS) $(SPECTESTS))
+$(ALLTESTS): | $(BUILD_DIR)
+
 CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-XTRA_FLAGS =
+XTRA_FLAGS = -I$(SCC_DIR)
 XTRA_LIBS = -lcmocka -lm
-
-BUILDDIR = build
-OBJDIR = ../build
-OBJECTS = digraph_core.o digraph_debug.o digraph_operations.o dist_nnsearch_c.o dist_search.o \
-          error.o hierarchical_clustering.o nng_clustering.o nng_batch_clustering.o \
-          nng_core.o nng_findseeds.o data_set.o scclust.o
-OBJECTS := $(addprefix $(OBJDIR)/,$(OBJECTS))
-XTRA_OBJECTS =
-
-STDTESTS = test_data_set test_digraph_core test_digraph_debug test_digraph_operations \
-           test_dist_search test_error test_hierarchical_clustering test_nng_clustering \
-           test_nng_clustering_batches test_nng_core test_nng_findseeds test_scclust \
-           stress_hierarchical_clustering stress_nng_clustering
-SPECTESTS = test_digraph_operations_internal test_hierarchical_clustering_internal test_nng_clustering_internal \
-            test_nng_core_internal test_nng_core_stable test_nng_findseeds_internal test_nng_findseeds_stable
-
-ALLTESTS = $(addprefix $(BUILDDIR)/,$(addsuffix .out,$(STDTESTS) $(SPECTESTS)))
+LINKER = $(CC)
+CONFIG_FLAGS = \
+	--enable-assert \
+	--enable-digraph-debug \
+	--enable-cmocka-headers \
+	--disable-documentation
 
 
-# Parse options
-
-ifneq ($(DPID), SCC_DPID_UINT32)
-XTRA_FLAGS += -D$(DPID)
-endif
-
-ifneq ($(ARC), SCC_ARC32)
-XTRA_FLAGS += -D$(ARC)
-endif
-
-ifeq ($(ANN_SEARCH), Y)
-OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
-LINKER = $(CXX)
-XTRA_OBJECTS += $(addprefix ../exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
-                                                   kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
-                                                   bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
-endif
-
-ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
-XTRA_FLAGS += -D$(ANN_TREE)
-endif
-
-
-# Main targets
-
-.PHONY: all clean
+.PHONY: all
 
 all: $(ALLTESTS)
 
 clean:
-	cd .. && $(MAKE) clean
-	$(RM) -R $(BUILDDIR)
+	$(RM) -R $(BUILD_DIR)
 
-$(BUILDDIR)/%.out: $(BUILDDIR)/%.o $(OBJECTS) $(XTRA_OBJECTS)
+$(BUILD_DIR)/%.out: $(BUILD_DIR)/%.o $(SCC_OBJECTS)
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_digraph_operations_internal.out: $(BUILDDIR)/test_digraph_operations_internal.o $(filter-out $(OBJDIR)/digraph_operations.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_digraph_operations_internal.out: $(BUILD_DIR)/test_digraph_operations_internal.o $(filter-out $(SCC_DIR)/src/digraph_operations.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_hierarchical_clustering_internal.out: $(BUILDDIR)/test_hierarchical_clustering_internal.o $(filter-out $(OBJDIR)/hierarchical_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_hierarchical_clustering_internal.out: $(BUILD_DIR)/test_hierarchical_clustering_internal.o $(filter-out $(SCC_DIR)/src/hierarchical_clustering.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_nng_clustering_internal.out: $(BUILDDIR)/test_nng_clustering_internal.o $(filter-out $(OBJDIR)/nng_clustering.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_nng_clustering_internal.out: $(BUILD_DIR)/test_nng_clustering_internal.o $(filter-out $(SCC_DIR)/src/nng_clustering.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_nng_core_internal.out: $(BUILDDIR)/test_nng_core_internal.o $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_nng_core_internal.out: $(BUILD_DIR)/test_nng_core_internal.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_nng_core_stable.out: $(BUILDDIR)/test_nng_core_stable.o $(filter-out $(OBJDIR)/nng_core.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_nng_core_stable.out: $(BUILD_DIR)/test_nng_core_stable.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_nng_findseeds_internal.out: $(BUILDDIR)/test_nng_findseeds_internal.o $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_nng_findseeds_internal.out: $(BUILD_DIR)/test_nng_findseeds_internal.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILDDIR)/test_nng_findseeds_stable.out: $(BUILDDIR)/test_nng_findseeds_stable.o $(filter-out $(OBJDIR)/nng_findseeds.o,$(OBJECTS)) $(XTRA_OBJECTS)
+$(BUILD_DIR)/test_nng_findseeds_stable.out: $(BUILD_DIR)/test_nng_findseeds_stable.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS))
 	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-
-# Dependencies
-
-$(BUILDDIR)/%.o: %.c $(BUILDDIR)
+$(BUILD_DIR)/%.o: %.c $(BUILD_DIR) $(SCC_DIR)/include/scclust.h
 	$(CC) -c $(CFLAGS) $(XTRA_FLAGS) $< -o $@
 
-$(OBJECTS):
-	cd .. && $(MAKE) library DEBUG=Y TESTH=Y DPID=$(DPID) ARC=$(ARC) ANN_SEARCH=$(ANN_SEARCH) ANN_TREE=$(ANN_TREE)
+$(SCC_DIR)/include/scclust.h:
+	mkdir -p $(SCC_DIR)
+	cd $(SCC_DIR) && ../../configure $(CONFIG_FLAGS)
 
-../exlib/libANN/build/%.o:
-	cd ../exlib/libANN/ && $(MAKE)
+$(SCC_DIR)/src/%.o: $(SCC_DIR)/include/scclust.h
+	cd $(SCC_DIR) && $(MAKE)
 
-
-# Build folders
-
-$(ALLTESTS): | $(BUILDDIR)
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)

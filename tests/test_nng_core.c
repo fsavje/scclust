@@ -18,17 +18,16 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#define SCC_DOUBLE_ASSERT
-#include "test_suite.h"
-#include "assert_digraph.h"
-#include "../src/nng_core.h"
-
+#include <src/cmocka_headers.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <src/clustering_struct.h>
+#include <src/digraph_debug.h>
+#include <src/nng_core.h>
+#include "assert_digraph.h"
 #include "data_object_test.h"
-#include "../src/clustering_struct.h"
-#include "../src/digraph_debug.h"
+#include "double_assert.h"
 
 
 void scc_ut_get_nng_with_size_constraint(void** state)
