@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "../include/scclust.h"
+#include <scclust.h>
 
 int main(void) {
 	// Variable for error reporting
