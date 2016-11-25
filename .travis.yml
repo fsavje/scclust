@@ -26,13 +26,13 @@ install:
 script:
   - mkdir build
   - cd build
-  - ../configure
+  - ../configure --enable-documentation
   - make
   - make clean
   - cd ..
   - ./configure --disable-documentation
   - make
-  - cd example/simple
+  - cd examples/simple
   - make
   - ./simple_example.out
   - cd ../..
