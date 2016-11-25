@@ -21,10 +21,8 @@
 #include "../include/scclust_spi.h"
 
 #include <stddef.h>
-#include "../include/scclust.h"
 #include "dist_search.h"
 #include "dist_search_imp.h"
-#include "error.h"
 
 
 iscc_dist_functions_struct iscc_dist_functions = {
@@ -41,16 +39,16 @@ iscc_dist_functions_struct iscc_dist_functions = {
 };
 
 
-scc_ErrorCode scc_set_dist_functions(scc_check_data_set check_data_set,
-                                     scc_get_dist_matrix get_dist_matrix,
-                                     scc_get_dist_rows get_dist_rows,
-                                     scc_init_max_dist_object init_max_dist_object,
-                                     scc_get_max_dist get_max_dist,
-                                     scc_close_max_dist_object close_max_dist_object,
-                                     scc_init_nn_search_object init_nn_search_object,
-                                     scc_nearest_neighbor_search_digraph nearest_neighbor_search_digraph,
-                                     scc_nearest_neighbor_search_index nearest_neighbor_search_index,
-                                     scc_close_nn_search_object close_nn_search_object)
+bool scc_set_dist_functions(scc_check_data_set check_data_set,
+                            scc_get_dist_matrix get_dist_matrix,
+                            scc_get_dist_rows get_dist_rows,
+                            scc_init_max_dist_object init_max_dist_object,
+                            scc_get_max_dist get_max_dist,
+                            scc_close_max_dist_object close_max_dist_object,
+                            scc_init_nn_search_object init_nn_search_object,
+                            scc_nearest_neighbor_search_digraph nearest_neighbor_search_digraph,
+                            scc_nearest_neighbor_search_index nearest_neighbor_search_index,
+                            scc_close_nn_search_object close_nn_search_object)
 {
 	if (check_data_set != NULL) {
 		iscc_dist_functions.check_data_set = check_data_set;
@@ -73,7 +71,7 @@ scc_ErrorCode scc_set_dist_functions(scc_check_data_set check_data_set,
 	} else if (init_max_dist_object != NULL ||
 			get_max_dist != NULL ||
 			close_max_dist_object != NULL) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Must set all max dist functions.");
+		return false;
 	}
 
 	if (init_nn_search_object != NULL &&
@@ -88,8 +86,8 @@ scc_ErrorCode scc_set_dist_functions(scc_check_data_set check_data_set,
 			nearest_neighbor_search_digraph != NULL ||
 			nearest_neighbor_search_index != NULL ||
 			close_nn_search_object != NULL) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Must set all nn search functions.");
+		return false;
 	}
 
-	return iscc_no_error();
+	return true;
 }

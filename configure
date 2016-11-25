@@ -66,7 +66,7 @@ usage() {
 	echo "  --enable-assert           enable ASSERT checking [default=off]"
 	echo "  --enable-digraph-debug    enable debug functions for digraphs [default=off]"
 	echo "  --enable-cmocka-headers   use cmocka allocation functions [default=off]"
-	echo "  --enable-documentation    make documentation [default=on if docygen exits]"
+	echo "  --enable-documentation    make documentation [default=off]"
 	echo "  --enable-all-docs         make documentation for internal methods [default=off]"
 	echo ""
 	echo "  --with-clabel=[ARG]       cluster label type [default=uint32_t]"
@@ -202,11 +202,11 @@ if [ "$OPT_CMOCKA_HEADERS" = "true" ]; then
 fi
 
 if [ $OPT_DOCUMENTATION = "default" ]; then
-	if command -v doxygen >/dev/null 2>&1; then
-		OPT_DOCUMENTATION="true"
-	else
+	#if command -v doxygen >/dev/null 2>&1; then
+	#	OPT_DOCUMENTATION="true"
+	#else
 		OPT_DOCUMENTATION="false"
-	fi
+	#fi
 fi
 
 if [ $OPT_DOCUMENTATION = "true" ]; then
@@ -362,7 +362,11 @@ SOURCE_FILES="
 	doxyrefs.bib
 	LICENSE
 	README.md
-	examples/ann/make_ann.sh
+	examples/ann/ann_example.c
+	examples/ann/ann_wrapper.cpp
+	examples/ann/ann_wrapper.h
+	examples/ann/download_ann.sh
+	examples/ann/Makefile
 	examples/simple/Makefile
 	examples/simple/simple_example.c
 	src/clustering_struct.h

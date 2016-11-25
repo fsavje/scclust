@@ -35,7 +35,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "scclust.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,6 +66,10 @@ typedef {% arc_type %} iscc_Arci;
 typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
 typedef struct iscc_NNSearchObject iscc_NNSearchObject;
+
+#define ISCC_M_DPID_TYPE_{% dpid_type %}
+#define ISCC_M_DPID_NA {% dpid_na %}
+#define ISCC_M_ARCI_TYPE_{% arc_type %}
 
 
 // =============================================================================
@@ -131,16 +134,16 @@ typedef bool (*scc_close_nn_search_object) (iscc_NNSearchObject**);
 // SPI functions
 // =============================================================================
 
-scc_ErrorCode scc_set_dist_functions(scc_check_data_set,
-                                     scc_get_dist_matrix,
-                                     scc_get_dist_rows,
-                                     scc_init_max_dist_object,
-                                     scc_get_max_dist,
-                                     scc_close_max_dist_object,
-                                     scc_init_nn_search_object,
-                                     scc_nearest_neighbor_search_digraph,
-                                     scc_nearest_neighbor_search_index,
-                                     scc_close_nn_search_object);
+bool scc_set_dist_functions(scc_check_data_set,
+                            scc_get_dist_matrix,
+                            scc_get_dist_rows,
+                            scc_init_max_dist_object,
+                            scc_get_max_dist,
+                            scc_close_max_dist_object,
+                            scc_init_nn_search_object,
+                            scc_nearest_neighbor_search_digraph,
+                            scc_nearest_neighbor_search_index,
+                            scc_close_nn_search_object);
 
 
 #ifdef __cplusplus

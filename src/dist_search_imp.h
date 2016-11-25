@@ -24,7 +24,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "scclust_types.h"
+#include "../include/scclust_spi.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 // =============================================================================
@@ -100,5 +104,9 @@ bool iscc_imp_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_objec
 
 bool iscc_imp_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ifndef SCC_DIST_SEARCH_IMP_HG
