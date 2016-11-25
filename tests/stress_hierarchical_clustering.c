@@ -46,7 +46,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 		scc_rand_double_array(0, 100, DATA_DIMENSION * SAMPLE_SIZE, data_matrix);
 
 		scc_DataSet* data_set;
-		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, false, &data_set);
+		ec = scc_init_data_set(SAMPLE_SIZE, DATA_DIMENSION, DATA_DIMENSION * SAMPLE_SIZE, data_matrix, &data_set);
 		assert_int_equal(ec, SCC_ER_OK);
 
 		const uint32_t size_constraint = scc_rand_uint(2, 10);

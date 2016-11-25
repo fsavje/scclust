@@ -41,7 +41,7 @@ int main(void) {
 
 	// Construct scclust data set object
 	scc_DataSet* data_set;
-	ec = scc_init_data_set(10, 2, 20, raw_data, false, &data_set);
+	ec = scc_init_data_set(10, 2, 20, raw_data, &data_set);
 	if(ec != SCC_ER_OK) return 1; // Check error
 
 	// Make empty clustering object

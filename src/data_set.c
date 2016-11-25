@@ -38,8 +38,7 @@
 scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
                                 const uintmax_t num_dimensions,
                                 const size_t len_data_matrix,
-                                double data_matrix[const],
-                                const bool deep_matrix_copy,
+                                const double data_matrix[const],
                                 scc_DataSet** const out_data_set)
 {
 	if (out_data_set == NULL) {
@@ -78,22 +77,8 @@ scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
 		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 		.num_data_points = (size_t) num_data_points,
 		.num_dimensions = (uint_fast16_t) num_dimensions,
-		.data_matrix = NULL,
-		.external_matrix = !deep_matrix_copy,
+		.data_matrix = data_matrix,
 	};
-
-	if (deep_matrix_copy) {
-		tmp_dso->data_matrix = malloc(sizeof(double[tmp_dso->num_data_points * tmp_dso->num_dimensions]));
-		if (tmp_dso->data_matrix == NULL) {
-			free(tmp_dso);
-			return iscc_make_error(SCC_ER_NO_MEMORY);
-		}
-		memcpy(tmp_dso->data_matrix, data_matrix, tmp_dso->num_data_points * tmp_dso->num_dimensions * sizeof(double));
-	} else {
-		tmp_dso->data_matrix = data_matrix;
-	}
-
-	assert(tmp_dso->data_matrix != NULL);
 
 	*out_data_set = tmp_dso;
 
@@ -104,7 +89,6 @@ scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
 void scc_free_data_set(scc_DataSet** const data_set)
 {
 	if ((data_set != NULL) && (*data_set != NULL)) {
-		if (!((*data_set)->external_matrix)) free((void*) (*data_set)->data_matrix);
 		free(*data_set);
 		*data_set = NULL;
 	}

@@ -59,7 +59,6 @@ int main(void) {
 	                       DATA_DIMENSION,
 	                       DATA_SIZE,
 	                       raw_data,
-	                       false,
 	                       &data_set);
 	if(ec != SCC_ER_OK) {
 		free(raw_data);

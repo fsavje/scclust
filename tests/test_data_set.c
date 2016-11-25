@@ -42,7 +42,6 @@ void scc_ut_free_data_set(void** state)
 		.num_data_points = 123,
 		.num_dimensions = 3,
 		.data_matrix = NULL,
-		.external_matrix = false,
 		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
@@ -51,7 +50,6 @@ void scc_ut_free_data_set(void** state)
 		.num_data_points = 123,
 		.num_dimensions = 3,
 		.data_matrix = coord1,
-		.external_matrix = false,
 		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
@@ -60,7 +58,6 @@ void scc_ut_free_data_set(void** state)
 		.num_data_points = 123,
 		.num_dimensions = 3,
 		.data_matrix = coord2,
-		.external_matrix = true,
 		.data_set_version = ISCC_DATASET_STRUCT_VERSION,
 	};
 
@@ -74,6 +71,8 @@ void scc_ut_free_data_set(void** state)
 	assert_null(dso1);
 	assert_null(dso2);
 	assert_null(dso3);
+
+	free(coord1);
 }
 
 
@@ -84,95 +83,67 @@ void scc_ut_get_data_set(void** state)
 	double coord[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
 	double ref_coord[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
 
-	scc_ErrorCode ec1 = scc_init_data_set(5, 2, 10, coord, false, NULL);
+	scc_ErrorCode ec1 = scc_init_data_set(5, 2, 10, coord, NULL);
 	assert_int_equal(ec1, SCC_ER_INVALID_INPUT);
 
 	scc_DataSet* dso2;
-	scc_ErrorCode ec2 = scc_init_data_set(0, 2, 10, coord, false, &dso2);
+	scc_ErrorCode ec2 = scc_init_data_set(0, 2, 10, coord, &dso2);
 	assert_null(dso2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
 	#if ISCC_M_POINTINDEX_MAX < UINTMAX_MAX
 		scc_DataSet* dso3;
-		scc_ErrorCode ec3 = scc_init_data_set(((uintmax_t) ISCC_POINTINDEX_MAX) + 1, 2, 10, coord, false, &dso3);
+		scc_ErrorCode ec3 = scc_init_data_set(((uintmax_t) ISCC_POINTINDEX_MAX) + 1, 2, 10, coord, &dso3);
 		assert_null(dso3);
 		assert_int_equal(ec3, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
 	scc_DataSet* dso5;
-	scc_ErrorCode ec5 = scc_init_data_set(5, 0, 10, coord, false, &dso5);
+	scc_ErrorCode ec5 = scc_init_data_set(5, 0, 10, coord, &dso5);
 	assert_null(dso5);
 	assert_int_equal(ec5, SCC_ER_INVALID_INPUT);
 
 	#if UINT16_MAX < UINTMAX_MAX
 		scc_DataSet* dso6;
-		scc_ErrorCode ec6 = scc_init_data_set(5, ((uint64_t) UINT16_MAX) + 1, 10, coord, false, &dso6);
+		scc_ErrorCode ec6 = scc_init_data_set(5, ((uint64_t) UINT16_MAX) + 1, 10, coord, &dso6);
 		assert_null(dso6);
 		assert_int_equal(ec6, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
 	scc_DataSet* dso7;
-	scc_ErrorCode ec7 = scc_init_data_set(5, 2, 8, coord, false, &dso7);
+	scc_ErrorCode ec7 = scc_init_data_set(5, 2, 8, coord, &dso7);
 	assert_null(dso7);
 	assert_int_equal(ec7, SCC_ER_INVALID_INPUT);
 
 	scc_DataSet* dso8;
-	scc_ErrorCode ec8 = scc_init_data_set(5, 2, 10, NULL, false, &dso8);
+	scc_ErrorCode ec8 = scc_init_data_set(5, 2, 10, NULL, &dso8);
 	assert_null(dso8);
 	assert_int_equal(ec8, SCC_ER_INVALID_INPUT);
 
 	scc_DataSet* dso9;
-	scc_ErrorCode ec9 = scc_init_data_set(5, 2, 10, coord, false, &dso9);
+	scc_ErrorCode ec9 = scc_init_data_set(5, 2, 10, coord, &dso9);
 	assert_non_null(dso9);
 	assert_int_equal(dso9->num_data_points, 5);
 	assert_int_equal(dso9->num_dimensions, 2);
 	assert_non_null(dso9->data_matrix);
 	assert_ptr_equal(dso9->data_matrix, coord);
 	assert_memory_equal(dso9->data_matrix, ref_coord, 10 * sizeof(double));
-	assert_true(dso9->external_matrix);
 	assert_int_equal(dso9->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec9, SCC_ER_OK);
 
-	scc_DataSet* dso10;
-	scc_ErrorCode ec10 = scc_init_data_set(5, 2, 10, coord, true, &dso10);
-	assert_non_null(dso10);
-	assert_int_equal(dso10->num_data_points, 5);
-	assert_int_equal(dso10->num_dimensions, 2);
-	assert_non_null(dso10->data_matrix);
-	assert_ptr_not_equal(dso10->data_matrix, coord);
-	assert_memory_equal(dso10->data_matrix, ref_coord, 10 * sizeof(double));
-	assert_false(dso10->external_matrix);
-	assert_int_equal(dso10->data_set_version, ISCC_DATASET_STRUCT_VERSION);
-	assert_int_equal(ec10, SCC_ER_OK);
-
 	scc_DataSet* dso11;
-	scc_ErrorCode ec11 = scc_init_data_set(3, 1, 10, coord, false, &dso11);
+	scc_ErrorCode ec11 = scc_init_data_set(3, 1, 10, coord, &dso11);
 	assert_non_null(dso11);
 	assert_int_equal(dso11->num_data_points, 3);
 	assert_int_equal(dso11->num_dimensions, 1);
 	assert_non_null(dso11->data_matrix);
 	assert_ptr_equal(dso11->data_matrix, coord);
 	assert_memory_equal(dso11->data_matrix, ref_coord, 3 * sizeof(double));
-	assert_true(dso11->external_matrix);
 	assert_int_equal(dso11->data_set_version, ISCC_DATASET_STRUCT_VERSION);
 	assert_int_equal(ec11, SCC_ER_OK);
 
-	scc_DataSet* dso12;
-	scc_ErrorCode ec12 = scc_init_data_set(3, 1, 10, coord, true, &dso12);
-	assert_non_null(dso12);
-	assert_int_equal(dso12->num_data_points, 3);
-	assert_int_equal(dso12->num_dimensions, 1);
-	assert_non_null(dso12->data_matrix);
-	assert_ptr_not_equal(dso12->data_matrix, coord);
-	assert_memory_equal(dso12->data_matrix, ref_coord, 3 * sizeof(double));
-	assert_false(dso12->external_matrix);
-	assert_int_equal(dso12->data_set_version, ISCC_DATASET_STRUCT_VERSION);
-	assert_int_equal(ec12, SCC_ER_OK);
-
 	scc_free_data_set(&dso9);
-	scc_free_data_set(&dso10);
 	scc_free_data_set(&dso11);
-	scc_free_data_set(&dso12);
 }
 
 

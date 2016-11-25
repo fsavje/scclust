@@ -85,8 +85,7 @@ typedef struct scc_DataSet scc_DataSet;
 scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
                                 uintmax_t num_dimensions,
                                 size_t len_data_matrix,
-                                double data_matrix[],
-                                bool deep_matrix_copy,
+                                const double data_matrix[],
                                 scc_DataSet** out_data_set);
 
 void scc_free_data_set(scc_DataSet** data_set);

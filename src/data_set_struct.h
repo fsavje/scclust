@@ -39,8 +39,7 @@ struct scc_DataSet {
 	int32_t data_set_version;
 	size_t num_data_points;
 	uint_fast16_t num_dimensions;
-	double* data_matrix;
-	bool external_matrix;
+	const double* data_matrix;
 };
 
 static const int32_t ISCC_DATASET_STRUCT_VERSION = 722328001;

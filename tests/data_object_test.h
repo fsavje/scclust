@@ -144,7 +144,6 @@ scc_DataSet scc_ut_test_data_large_struct = {
 	.num_data_points = 100,
 	.num_dimensions = 3,
 	.data_matrix = coord1,
-	.external_matrix = true,
 	.data_set_version = 722328001, // ISCC_DATASET_STRUCT_VERSION: gcc error if not set by value
 };
 
@@ -152,7 +151,6 @@ scc_DataSet scc_ut_test_data_small_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = coord2,
-	.external_matrix = true,
 	.data_set_version = 722328001, // ISCC_DATASET_STRUCT_VERSION: gcc error if not set by value
 };
 
@@ -169,7 +167,6 @@ scc_DataSet scc_ut_test_data_invalid1_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 0,
 	.data_matrix = coord2,
-	.external_matrix = true,
 	.data_set_version = 722328001, // ISCC_DATASET_STRUCT_VERSION: gcc error if not set by value
 };
 
@@ -177,7 +174,6 @@ scc_DataSet scc_ut_test_data_invalid2_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = NULL,
-	.external_matrix = true,
 	.data_set_version = 722328001, // ISCC_DATASET_STRUCT_VERSION: gcc error if not set by value
 };
 
@@ -185,7 +181,6 @@ scc_DataSet scc_ut_test_data_invalid3_struct = {
 	.num_data_points = 15,
 	.num_dimensions = 1,
 	.data_matrix = coord2,
-	.external_matrix = true,
 	.data_set_version = 0,
 };
 
