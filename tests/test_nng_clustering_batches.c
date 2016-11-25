@@ -803,7 +803,7 @@ void scc_ut_nng_clustering_batches_nonval(void** state)
 
 int main(void)
 {
-	scc_ut_init_tests();
+	if(!scc_ut_init_tests()) return 1;
 
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_nng_clustering_batches),

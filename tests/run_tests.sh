@@ -38,7 +38,7 @@ done
 
 make clean
 if [ "$KEEP_SCC_BUILD" = "false" ]; then
-	rm -R scc_build
+	rm -rf scc_build
 fi
 make all ANN_SEARCH=$ANN
 

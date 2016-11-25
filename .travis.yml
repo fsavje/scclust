@@ -26,8 +26,7 @@ install:
     - rm -rf cmocka-1.0.1
 
 script:
-  - mkdir build
-  - cd build
+  - mkdir build && cd build
   - ../configure --enable-documentation
   - make
   - cd examples/simple && make && ./simple_example.out && make clean && cd ../..

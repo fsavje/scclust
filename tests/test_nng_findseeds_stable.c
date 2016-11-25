@@ -307,7 +307,7 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 
 int main(void)
 {
-	scc_ut_init_tests();
+	if(!scc_ut_init_tests()) return 1;
 
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_fs_debug_bucket_sort),

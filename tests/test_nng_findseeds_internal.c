@@ -1836,7 +1836,7 @@ void scc_ut_fs_decrease_v_in_sort(void** state)
 
 int main(void)
 {
-	scc_ut_init_tests();
+	if(!scc_ut_init_tests()) return 1;
 
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_findseeds_lexical),
