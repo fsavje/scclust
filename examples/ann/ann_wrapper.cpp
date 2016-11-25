@@ -21,15 +21,17 @@
 // So g++ defines integer limits
 #define __STDC_LIMIT_MACROS
 
-#include "dist_search.h"
+#include "ann_wrapper.h"
 
 #include <cassert>
 #include <climits>
 #include <cstddef>
-#include "../exlib/libANN/include/ANN/ANN.h"
-#include "../include/scclust.h"
-#include "data_set_struct.h"
-#include "scclust_types.h"
+#include <include/ANN/ANN.h>
+#include <include/scclust.h>
+#include <include/scclust_spi.h>
+#include <src/data_set_struct.h>
+#include <src/dist_search_imp.h>
+
 
 #ifdef SCC_ANN_BDTREE
 	#define ANNpointSetConstructor ANNbd_tree
@@ -41,13 +43,51 @@
 	#define SCC_ANN_EPS 0.0
 #endif
 
+
+// =============================================================================
+// Internal functions
+// =============================================================================
+
+extern "C" {
+
+	bool iscc_ann_init_nn_search_object(void* data_set,
+	                                    size_t len_search_indices,
+	                                    const iscc_Dpid search_indices[],
+	                                    iscc_NNSearchObject** out_nn_search_object);
+
+	bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* nn_search_object,
+	                                              size_t len_query_indicators,
+	                                              const bool query_indicators[],
+	                                              bool out_query_indicators[],
+	                                              uint32_t k,
+	                                              bool radius_search,
+	                                              double radius,
+	                                              iscc_Arci out_nn_ref[],
+	                                              iscc_Dpid out_nn_indices[]);
+
+	bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_object,
+	                                            size_t len_query_indices,
+	                                            const iscc_Dpid query_indices[],
+	                                            uint32_t k,
+	                                            bool radius_search,
+	                                            double radius,
+	                                            iscc_Dpid out_nn_indices[]);
+
+	bool iscc_ann_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
+
+}
+
+
 // =============================================================================
 // Internal structs and variables
 // =============================================================================
 
-static int iscc_open_search_objects = 0;
+static int iscc_ann_open_search_objects = 0;
+
+static const int32_t ISCC_ANN_NN_SEARCH_STRUCT_VERSION = 155294001;
 
 struct iscc_NNSearchObject {
+	int32_t nn_search_version;
 	scc_DataSet* data_set;
 	size_t len_search_indices;
 	const iscc_Dpid* search_indices;
@@ -60,15 +100,29 @@ struct iscc_NNSearchObject {
 // External function implementations
 // =============================================================================
 
-bool iscc_init_nn_search_object(void* const data_set,
-                                const size_t len_search_indices,
-                                const iscc_Dpid* const search_indices,
-                                iscc_NNSearchObject** const out_nn_search_object)
+bool scc_set_ann_dist_search()
 {
-	assert(iscc_open_search_objects >= 0);
+	return scc_set_dist_functions(NULL, NULL, NULL, NULL, NULL, NULL,
+	                              iscc_ann_init_nn_search_object,
+	                              iscc_ann_nearest_neighbor_search_digraph,
+	                              iscc_ann_nearest_neighbor_search_index,
+	                              iscc_ann_close_nn_search_object);
+}
+
+
+// =============================================================================
+// Internal function implementations
+// =============================================================================
+
+bool iscc_ann_init_nn_search_object(void* const data_set,
+                                    const size_t len_search_indices,
+                                    const iscc_Dpid* const search_indices,
+                                    iscc_NNSearchObject** const out_nn_search_object)
+{
+	assert(iscc_ann_open_search_objects >= 0);
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
-	assert(iscc_check_data_set(data_set, len_search_indices));
+	assert(iscc_imp_check_data_set(data_set, len_search_indices));
 
 	if (len_search_indices > INT_MAX) return false;
 
@@ -107,28 +161,30 @@ bool iscc_init_nn_search_object(void* const data_set,
 		return false;
 	}
 
+	(*out_nn_search_object)->nn_search_version = ISCC_ANN_NN_SEARCH_STRUCT_VERSION;
 	(*out_nn_search_object)->data_set = data_set_cast;
 	(*out_nn_search_object)->len_search_indices = len_search_indices;
 	(*out_nn_search_object)->search_indices = search_indices;
 	(*out_nn_search_object)->search_points = search_points;
 	(*out_nn_search_object)->search_tree = search_tree;
 
-	++iscc_open_search_objects;
+	++iscc_ann_open_search_objects;
 	return true;
 }
 
 
-bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_object,
-                                          const size_t len_query_indicators,
-                                          const bool* const query_indicators,
-                                          bool* const out_query_indicators,
-                                          const uint32_t k,
-                                          const bool radius_search,
-                                          const double radius,
-                                          iscc_Arci* const out_nn_ref,
-                                          iscc_Dpid* const out_nn_indices)
+bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_object,
+                                              const size_t len_query_indicators,
+                                              const bool* const query_indicators,
+                                              bool* const out_query_indicators,
+                                              const uint32_t k,
+                                              const bool radius_search,
+                                              const double radius,
+                                              iscc_Arci* const out_nn_ref,
+                                              iscc_Dpid* const out_nn_indices)
 {
 	assert(nn_search_object != NULL);
+	assert(nn_search_object->nn_search_version == ISCC_ANN_NN_SEARCH_STRUCT_VERSION);
 	scc_DataSet* const data_set = nn_search_object->data_set;
 	#ifndef NDEBUG
 		const size_t len_search_indices = nn_search_object->len_search_indices;
@@ -137,8 +193,8 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
-	assert(iscc_open_search_objects > 0);
-	assert(iscc_check_data_set(data_set, len_query_indicators));
+	assert(iscc_ann_open_search_objects > 0);
+	assert(iscc_imp_check_data_set(data_set, len_query_indicators));
 	assert(len_search_indices > 0);
 	assert(search_tree != NULL);
 	assert(len_query_indicators > 0);
@@ -153,7 +209,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 
 	out_nn_ref[0] = 0;
 
-	#if defined(SCC_DPID_INT) || defined(SCC_ANN_INT_OVERRIDE)
+	#ifdef ISCC_M_DPID_TYPE_int
 
 		if (search_indices == NULL) {
 
@@ -210,7 +266,7 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 			return true;
 		}
 
-	#endif // #if defined(SCC_DPID_INT) || defined(SCC_ANN_INT_OVERRIDE)
+	#endif // #ifdef ISCC_M_DPID_TYPE_int
 
 	ANNidx* idx_scratch;
 	ANNdist* dist_scratch;
@@ -291,15 +347,16 @@ bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_search_o
 }
 
 
-bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_object,
-                                        const size_t len_query_indices,
-                                        const iscc_Dpid* const query_indices,
-                                        const uint32_t k,
-                                        const bool radius_search,
-                                        const double radius,
-                                        iscc_Dpid* const out_nn_indices)
+bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_object,
+                                            const size_t len_query_indices,
+                                            const iscc_Dpid* const query_indices,
+                                            const uint32_t k,
+                                            const bool radius_search,
+                                            const double radius,
+                                            iscc_Dpid* const out_nn_indices)
 {
 	assert(nn_search_object != NULL);
+	assert(nn_search_object->nn_search_version == ISCC_ANN_NN_SEARCH_STRUCT_VERSION);
 	scc_DataSet* const data_set = nn_search_object->data_set;
 	#ifndef NDEBUG
 		const size_t len_search_indices = nn_search_object->len_search_indices;
@@ -308,8 +365,8 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
-	assert(iscc_open_search_objects > 0);
-	assert(iscc_check_data_set(data_set, 0));
+	assert(iscc_ann_open_search_objects > 0);
+	assert(iscc_imp_check_data_set(data_set, 0));
 	assert(len_search_indices > 0);
 	assert(search_tree != NULL);
 	assert(len_query_indices > 0);
@@ -322,7 +379,7 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 	if (k > INT_MAX) return false;
 	const int k_int = static_cast<int>(k);
 
-	#if defined(SCC_DPID_INT) || defined(SCC_ANN_INT_OVERRIDE)
+	#ifdef ISCC_M_DPID_TYPE_int
 
 		if (search_indices == NULL) {
 
@@ -374,7 +431,7 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 			return true;
 		}
 
-	#endif // #if defined(SCC_DPID_INT) || defined(SCC_ANN_INT_OVERRIDE)
+	#endif // #ifdef ISCC_M_DPID_TYPE_int
 
 	ANNidx* idx_scratch;
 	ANNdist* dist_scratch;
@@ -449,24 +506,27 @@ bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_obj
 }
 
 
-bool iscc_close_nn_search_object(iscc_NNSearchObject** const nn_search_object)
+bool iscc_ann_close_nn_search_object(iscc_NNSearchObject** const nn_search_object)
 {
-	assert(iscc_open_search_objects >= 0);
+	assert(iscc_ann_open_search_objects >= 0);
 
-	if (nn_search_object != NULL) {
+	if (nn_search_object != NULL && *nn_search_object != NULL) {
+		assert((*nn_search_object)->nn_search_version == ISCC_ANN_NN_SEARCH_STRUCT_VERSION);
 		delete (*nn_search_object)->search_tree;
 		delete[] (*nn_search_object)->search_points;
 		delete *nn_search_object;
 		*nn_search_object = NULL;
 	}
 
-	if (iscc_open_search_objects <= 0) {
+	if (iscc_ann_open_search_objects <= 0) {
 		annClose();
 		return false;
 	}
 
-	--iscc_open_search_objects;
-	if (iscc_open_search_objects == 0) annClose();
+	--iscc_ann_open_search_objects;
+	if (iscc_ann_open_search_objects == 0) {
+		annClose();
+	}
 
 	return true;
 }

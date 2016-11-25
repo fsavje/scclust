@@ -18,19 +18,21 @@
 # License along with this library. If not, see http://www.gnu.org/licenses/
 # ==============================================================================
 
+ANN_SEARCH = N
+
 SCC_OBJECTS = \
 	data_set.o \
 	digraph_core.o \
 	digraph_debug.o \
 	digraph_operations.o \
-	dist_nnsearch_c.o \
-	dist_search.o \
+	dist_search_imp.o \
 	error.o \
 	hierarchical_clustering.o \
-	nng_clustering.o \
 	nng_batch_clustering.o \
+	nng_clustering.o \
 	nng_core.o \
 	nng_findseeds.o \
+	scclust_spi.o \
 	scclust.o
 
 SCC_DIR = scc_build
@@ -65,57 +67,90 @@ BUILD_DIR = build
 ALLTESTS = $(addprefix $(BUILD_DIR)/,$(STDTESTS) $(SPECTESTS))
 $(ALLTESTS): | $(BUILD_DIR)
 
-CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
-XTRA_FLAGS = -I$(SCC_DIR)
-XTRA_LIBS = -lcmocka -lm
 LINKER = $(CC)
+LIBS = -lcmocka -lm
+INCLUDES = $(SCC_DIR)/include/scclust.h
+CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
+CXXFLAGS = -std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
+XTRA_FLAGS = -I$(SCC_DIR)
+XTRA_OBJECTS =
 CONFIG_FLAGS = \
 	--enable-assert \
 	--enable-digraph-debug \
 	--enable-cmocka-headers \
 	--disable-documentation
 
+ifeq ($(ANN_SEARCH), Y)
+LINKER = $(CXX)
+INCLUDES += $(SCC_DIR)/ann_wrapper.h
+XTRA_FLAGS += -DSCC_UT_ANN
+XTRA_OBJECTS += $(SCC_DIR)/ann_wrapper.o ann_1.1.2/lib/libANN.a
+endif
 
-.PHONY: all
+
+.PHONY: all clean
 
 all: $(ALLTESTS)
 
 clean:
 	$(RM) -R $(BUILD_DIR)
 
-$(BUILD_DIR)/%.out: $(BUILD_DIR)/%.o $(SCC_OBJECTS)
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
 
-$(BUILD_DIR)/test_digraph_operations_internal.out: $(BUILD_DIR)/test_digraph_operations_internal.o $(filter-out $(SCC_DIR)/src/digraph_operations.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/%.out: $(BUILD_DIR)/%.o $(SCC_OBJECTS) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_hierarchical_clustering_internal.out: $(BUILD_DIR)/test_hierarchical_clustering_internal.o $(filter-out $(SCC_DIR)/src/hierarchical_clustering.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_digraph_operations_internal.out: $(BUILD_DIR)/test_digraph_operations_internal.o $(filter-out $(SCC_DIR)/src/digraph_operations.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_nng_clustering_internal.out: $(BUILD_DIR)/test_nng_clustering_internal.o $(filter-out $(SCC_DIR)/src/nng_clustering.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_hierarchical_clustering_internal.out: $(BUILD_DIR)/test_hierarchical_clustering_internal.o $(filter-out $(SCC_DIR)/src/hierarchical_clustering.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_nng_core_internal.out: $(BUILD_DIR)/test_nng_core_internal.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_nng_clustering_internal.out: $(BUILD_DIR)/test_nng_clustering_internal.o $(filter-out $(SCC_DIR)/src/nng_clustering.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_nng_core_stable.out: $(BUILD_DIR)/test_nng_core_stable.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_nng_core_internal.out: $(BUILD_DIR)/test_nng_core_internal.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_nng_findseeds_internal.out: $(BUILD_DIR)/test_nng_findseeds_internal.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_nng_core_stable.out: $(BUILD_DIR)/test_nng_core_stable.o $(filter-out $(SCC_DIR)/src/nng_core.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/test_nng_findseeds_stable.out: $(BUILD_DIR)/test_nng_findseeds_stable.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS))
-	$(LINKER) $^ $(XTRA_LIBS) -o $@
+$(BUILD_DIR)/test_nng_findseeds_internal.out: $(BUILD_DIR)/test_nng_findseeds_internal.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/%.o: %.c $(BUILD_DIR) $(SCC_DIR)/include/scclust.h
+$(BUILD_DIR)/test_nng_findseeds_stable.out: $(BUILD_DIR)/test_nng_findseeds_stable.o $(filter-out $(SCC_DIR)/src/nng_findseeds.o,$(SCC_OBJECTS)) $(XTRA_OBJECTS)
+	$(LINKER) $^ $(LIBS) -o $@
+
+
+$(BUILD_DIR)/%.o: %.c $(BUILD_DIR) $(INCLUDES)
 	$(CC) -c $(CFLAGS) $(XTRA_FLAGS) $< -o $@
 
-$(SCC_DIR)/include/scclust.h:
-	mkdir -p $(SCC_DIR)
+
+$(SCC_DIR)/include/scclust.h: $(SCC_DIR)
 	cd $(SCC_DIR) && ../../configure $(CONFIG_FLAGS)
 
 $(SCC_DIR)/src/%.o: $(SCC_DIR)/include/scclust.h
 	cd $(SCC_DIR) && $(MAKE)
 
+
+$(SCC_DIR)/ann_wrapper.h: $(SCC_DIR)/include/scclust.h
+	cp -f $(SCC_DIR)/examples/ann/ann_wrapper.h $(SCC_DIR)/ann_wrapper.h
+
+$(SCC_DIR)/ann_wrapper.cpp: $(SCC_DIR)/include/scclust.h
+	cp -f $(SCC_DIR)/examples/ann/ann_wrapper.cpp $(SCC_DIR)/ann_wrapper.cpp
+
+$(SCC_DIR)/ann_wrapper.o: $(SCC_DIR)/ann_wrapper.cpp $(INCLUDES) ann_1.1.2
+	$(CXX) -c $(CXXFLAGS) -I$(SCC_DIR) -Iann_1.1.2 $< -o $@
+
+
+ann_1.1.2:
+	./download_ann.sh
+
+ann_1.1.2/lib/libANN.a: ann_1.1.2
+	cd ann_1.1.2/src && $(MAKE) linux-g++
+
+
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+
+$(SCC_DIR):
+	mkdir -p $(SCC_DIR)

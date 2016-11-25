@@ -116,6 +116,11 @@ static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
  */
 typedef {% typelabel_type %} scc_TypeLabel;
 
+/// Type Macros
+#define SCC_M_CLABEL_TYPE_{% clabel_type %}
+#define SCC_M_CLABEL_NA {% clabel_na %}
+#define SCC_M_TYPELABEL_TYPE_{% typelabel_type %}
+
 /// Type used for clusterings
 typedef struct scc_Clustering scc_Clustering;
 

@@ -18,23 +18,32 @@
 # License along with this library. If not, see http://www.gnu.org/licenses/
 # ==============================================================================
 
-ANN_SEARCH = N
-ANN_TREE = SCC_ANN_KDTREE
 
-XTRA_OBJECTS =
-
-# Parse options
-
-ifeq ($(ANN_SEARCH), Y)
-OBJECTS := $(filter-out $(OBJDIR)/dist_nnsearch_c.o,$(OBJECTS)) $(OBJDIR)/dist_nnsearch_ANN.o
-LINKER = $(CXX)
-XTRA_OBJECTS += $(addprefix ../exlib/libANN/build/,ANN.o brute.o kd_tree.o kd_util.o kd_split.o kd_dump.o \
-                                                   kd_search.o kd_pr_search.o kd_fix_rad_search.o bd_tree.o \
-                                                   bd_search.o bd_pr_search.o bd_fix_rad_search.o perf.o)
-endif
-
-ifneq ($(ANN_TREE), SCC_ANN_KDTREE)
-XTRA_FLAGS += -D$(ANN_TREE)
-endif
+CFLAGS = -std=c99 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
+CXXFLAGS = -std=c++11 -O2 -pedantic -Wall -Wextra -Wconversion -Wfloat-equal -Werror
+WRAPPER_PATHS = -I../.. -Iann_1.1.2
+SCC_PATHS = -I../../include
+LIB_PATHS = -L../../lib -Lann_1.1.2/lib
 
 
+.PHONY: all clean
+
+all: ann_example.out
+
+clean:
+	$(RM) *.out *.o
+
+ann_example.out: ann_example.o ann_wrapper.o ann_1.1.2/lib/libANN.a
+	$(CXX) $^ $(LIB_PATHS) -lscclust -lANN -o $@
+
+ann_example.o: ann_example.c
+	$(CC) -c $(CFLAGS) $(SCC_PATHS) $< -o $@
+
+ann_wrapper.o: ann_wrapper.cpp ann_1.1.2
+	$(CXX) -c $(CXXFLAGS) $(WRAPPER_PATHS) $< -o $@
+
+ann_1.1.2:
+	./download_ann.sh
+
+ann_1.1.2/lib/libANN.a: ann_1.1.2
+	cd ann_1.1.2/src && $(MAKE) linux-g++

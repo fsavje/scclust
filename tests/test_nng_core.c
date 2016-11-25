@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -2816,6 +2816,8 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 
 int main(void)
 {
+	if(!scc_ut_init_tests()) return 1;
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_get_nng_with_size_constraint),
 		cmocka_unit_test(scc_ut_get_nng_with_type_constraint),

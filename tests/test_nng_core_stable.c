@@ -20,7 +20,7 @@
 
 #define SCC_STABLE_NNG
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -825,6 +825,8 @@ void scc_ut_get_nng_with_type_constraint_stable(void** state)
 
 int main(void)
 {
+	if(!scc_ut_init_tests()) return 1;
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_sort_nng),
 		cmocka_unit_test(scc_ut_get_nng_with_size_constraint_stable),

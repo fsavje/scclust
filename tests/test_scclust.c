@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -124,7 +124,7 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_null(cl2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
-	#if ISCC_DPID_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_DPID_MAX < UINTMAX_MAX
 		scc_Clustering* cl4;
 		scc_ErrorCode ec4 = scc_init_empty_clustering(((uintmax_t) ISCC_DPID_MAX) + 1, external_cluster_labels, &cl4);
 		assert_null(cl4);
@@ -189,14 +189,14 @@ void scc_ut_init_existing_clustering(void** state)
 	assert_null(cl3);
 	assert_int_equal(ec3, SCC_ER_INVALID_INPUT);
 
-	#if ISCC_CLABEL_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_CLABEL_MAX < UINTMAX_MAX
 		scc_Clustering* cl4;
 		scc_ErrorCode ec4 = scc_init_existing_clustering(10, ((uintmax_t) SCC_CLABEL_MAX) + 1, cluster_labels, true, &cl4);
 		assert_null(cl4);
 		assert_int_equal(ec4, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
-	#if ISCC_DPID_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_DPID_MAX < UINTMAX_MAX
 		scc_Clustering* cl6;
 		scc_ErrorCode ec6 = scc_init_existing_clustering(((uintmax_t) ISCC_DPID_MAX) + 1, 5, cluster_labels, true, &cl6);
 		assert_null(cl6);
@@ -339,14 +339,14 @@ void scc_ut_is_initialized_clustering(void** state)
 	in_cl.num_data_points = 10;
 	assert_true(scc_is_initialized_clustering(&in_cl));
 
-	#if ISCC_DPID_MAX_MACRO < SIZE_MAX
+	#if ISCC_M_DPID_MAX < SIZE_MAX
 		in_cl.num_data_points = ((size_t) ISCC_DPID_MAX) + 1;
 		assert_false(scc_is_initialized_clustering(&in_cl));
 		in_cl.num_data_points = 10;
 		assert_true(scc_is_initialized_clustering(&in_cl));
 	#endif
 
-	#if ISCC_CLABEL_MAX_MACRO < SIZE_MAX
+	#if ISCC_M_CLABEL_MAX < SIZE_MAX
 		in_cl.num_clusters = ((size_t) SCC_CLABEL_MAX) + 1;
 		assert_false(scc_is_initialized_clustering(&in_cl));
 		in_cl.num_clusters = 5;
@@ -711,6 +711,8 @@ void scc_ut_get_clustering_stats(void** state)
 
 int main(void)
 {
+	if(!scc_ut_init_tests()) return 1;
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_get_compiled_version),
 		cmocka_unit_test(scc_ut_free_clustering),

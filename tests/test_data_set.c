@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -92,7 +92,7 @@ void scc_ut_get_data_set(void** state)
 	assert_null(dso2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
-	#if ISCC_DPID_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_DPID_MAX < UINTMAX_MAX
 		scc_DataSet* dso3;
 		scc_ErrorCode ec3 = scc_init_data_set(((uintmax_t) ISCC_DPID_MAX) + 1, 2, 10, coord, false, &dso3);
 		assert_null(dso3);
@@ -192,6 +192,8 @@ void scc_ut_is_initialized_data_set(void** state)
 
 int main(void)
 {
+	if(!scc_ut_init_tests()) return 1;
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_free_data_set),
 		cmocka_unit_test(scc_ut_get_data_set),

@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -110,13 +110,13 @@ void scc_ut_digraph_is_initialized(void** state)
 	assert_false(iscc_digraph_is_initialized(&dg));
 	dg.tail_ptr = tails;
 
-	#if ISCC_DPID_MAX_MACRO < SIZE_MAX
+	#if ISCC_M_DPID_MAX < SIZE_MAX
 		dg.vertices = ((size_t) ISCC_DPID_MAX) + 1;
 		assert_false(iscc_digraph_is_initialized(&dg));
 		dg.vertices = 10;
 	#endif
 
-	#if ISCC_ARCI_MAX_MACRO < SIZE_MAX
+	#if ISCC_M_ARCI_MAX < SIZE_MAX
 		dg.max_arcs = ((size_t) ISCC_ARCI_MAX) + 1;
 		assert_false(iscc_digraph_is_initialized(&dg));
 		dg.max_arcs = 100;
@@ -227,7 +227,7 @@ void scc_ut_init_digraph(void** state)
 {
 	(void) state;
 
-	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
 		iscc_Digraph dg1;
 		scc_ErrorCode ec1 = iscc_init_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
 		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
@@ -260,7 +260,7 @@ void scc_ut_empty_digraph(void** state)
 {
 	(void) state;
 
-	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
 		iscc_Digraph dg1;
 		scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
 		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
@@ -311,7 +311,7 @@ void scc_ut_change_arc_storage(void** state)
 		.tail_ptr = tails,
 	};
 
-	#if ISCC_ARCI_MAX_MACRO < UINTMAX_MAX
+	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
 		assert_true(iscc_digraph_is_initialized(&dg));
 		scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uintmax_t) ISCC_ARCI_MAX) + 1);
 		assert_int_equal(dg.vertices, 5);
@@ -385,6 +385,8 @@ void scc_ut_change_arc_storage(void** state)
 
 int main(void)
 {
+	if(!scc_ut_init_tests()) return 1;
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_free_digraph),
 		cmocka_unit_test(scc_ut_digraph_is_initialized),

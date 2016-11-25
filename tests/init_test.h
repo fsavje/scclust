@@ -18,39 +18,23 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-/** @file
- *
- *  Header with internal type definitions.
- */
 
-#ifndef SCC_SCCLUST_INTERNAL_HG
-#define SCC_SCCLUST_INTERNAL_HG
+#ifndef SCC_UT_INIT_TEST_HG
+#define SCC_UT_INIT_TEST_HG
 
-{% limits_include %}#ifdef __cplusplus
-{% limits_include %}// So g++ defines integer limits
-{% limits_include %}#define __STDC_LIMIT_MACROS
-{% limits_include %}#endif
-{% limits_include %}
-{% limits_include %}#include <limits.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include "../include/scclust.h"
-#include "../include/scclust_spi.h"
+#include <src/cmocka_headers.h>
 
+#ifdef SCC_UT_ANN
+	#include <ann_wrapper.h>
 
-static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
+	static bool scc_ut_init_tests() {
+		return scc_set_ann_dist_search();
+	}
 
-static const uintmax_t ISCC_DPID_MAX = {% dpid_max %};
+#else
 
-static const uintmax_t ISCC_ARCI_MAX = {% arc_max %};
+	#define scc_ut_init_tests() (true)
 
-static const uintmax_t ISCC_TYPELABEL_MAX = 65535;
+#endif
 
-#define ISCC_M_CLABEL_MAX {% clabel_max %}
-#define ISCC_M_DPID_MAX {% dpid_max %}
-#define ISCC_M_ARCI_MAX {% arc_max %}
-#define ISCC_M_TYPELABEL_MAX 65535
-
-
-#endif // ifndef SCC_SCCLUST_INTERNAL_HG
+#endif // SCC_UT_INIT_TEST_HG
