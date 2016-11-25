@@ -21,7 +21,7 @@ install:
     - make
     - sudo make install
     - cd ../..
-    - rm -r cmocka-1.0.1
+    - rm -rf cmocka-1.0.1
 
 script:
   - mkdir build
