@@ -92,9 +92,9 @@ void scc_ut_get_data_set(void** state)
 	assert_null(dso2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
-	#if ISCC_M_DPID_MAX < UINTMAX_MAX
+	#if ISCC_M_POINTINDEX_MAX < UINTMAX_MAX
 		scc_DataSet* dso3;
-		scc_ErrorCode ec3 = scc_init_data_set(((uintmax_t) ISCC_DPID_MAX) + 1, 2, 10, coord, false, &dso3);
+		scc_ErrorCode ec3 = scc_init_data_set(((uintmax_t) ISCC_POINTINDEX_MAX) + 1, 2, 10, coord, false, &dso3);
 		assert_null(dso3);
 		assert_int_equal(ec3, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif

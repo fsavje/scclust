@@ -52,7 +52,7 @@ extern "C" {
 
 	bool iscc_ann_init_nn_search_object(void* data_set,
 	                                    size_t len_search_indices,
-	                                    const iscc_Dpid search_indices[],
+	                                    const scc_PointIndex search_indices[],
 	                                    iscc_NNSearchObject** out_nn_search_object);
 
 	bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* nn_search_object,
@@ -62,16 +62,16 @@ extern "C" {
 	                                              uint32_t k,
 	                                              bool radius_search,
 	                                              double radius,
-	                                              iscc_Arci out_nn_ref[],
-	                                              iscc_Dpid out_nn_indices[]);
+	                                              iscc_ArcIndex out_nn_ref[],
+	                                              scc_PointIndex out_nn_indices[]);
 
 	bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_object,
 	                                            size_t len_query_indices,
-	                                            const iscc_Dpid query_indices[],
+	                                            const scc_PointIndex query_indices[],
 	                                            uint32_t k,
 	                                            bool radius_search,
 	                                            double radius,
-	                                            iscc_Dpid out_nn_indices[]);
+	                                            scc_PointIndex out_nn_indices[]);
 
 	bool iscc_ann_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 
@@ -90,7 +90,7 @@ struct iscc_NNSearchObject {
 	int32_t nn_search_version;
 	scc_DataSet* data_set;
 	size_t len_search_indices;
-	const iscc_Dpid* search_indices;
+	const scc_PointIndex* search_indices;
 	ANNpoint* search_points;
 	ANNpointSet* search_tree;
 };
@@ -116,7 +116,7 @@ bool scc_set_ann_dist_search()
 
 bool iscc_ann_init_nn_search_object(void* const data_set,
                                     const size_t len_search_indices,
-                                    const iscc_Dpid* const search_indices,
+                                    const scc_PointIndex* const search_indices,
                                     iscc_NNSearchObject** const out_nn_search_object)
 {
 	assert(iscc_ann_open_search_objects >= 0);
@@ -180,8 +180,8 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
                                               const uint32_t k,
                                               const bool radius_search,
                                               const double radius,
-                                              iscc_Arci* const out_nn_ref,
-                                              iscc_Dpid* const out_nn_indices)
+                                              iscc_ArcIndex* const out_nn_ref,
+                                              scc_PointIndex* const out_nn_indices)
 {
 	assert(nn_search_object != NULL);
 	assert(nn_search_object->nn_search_version == ISCC_ANN_NN_SEARCH_STRUCT_VERSION);
@@ -190,7 +190,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 		const size_t len_search_indices = nn_search_object->len_search_indices;
 		assert(len_search_indices <= INT_MAX);
 	#endif
-	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
+	const scc_PointIndex* const search_indices = nn_search_object->search_indices;
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_ann_open_search_objects > 0);
@@ -209,11 +209,11 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 
 	out_nn_ref[0] = 0;
 
-	#ifdef ISCC_M_DPID_TYPE_int
+	#ifdef SCC_M_POINTINDEX_TYPE_int
 
 		if (search_indices == NULL) {
 
-			// If `iscc_Dpid` is `int` we can send `out_nn_indices` directly to ANN.
+			// If `scc_PointIndex` is `int` we can send `out_nn_indices` directly to ANN.
 			// When searching on sequential indices (i.e., `search_indices == NULL`),
 			// ANN produces the desired result and we do not need to do translating and/or casting
 
@@ -266,7 +266,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 			return true;
 		}
 
-	#endif // #ifdef ISCC_M_DPID_TYPE_int
+	#endif // #ifdef SCC_M_POINTINDEX_TYPE_int
 
 	ANNidx* idx_scratch;
 	ANNdist* dist_scratch;
@@ -278,7 +278,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 	}
 
 	if (!radius_search) {
-		iscc_Dpid* write_nnidx = out_nn_indices;
+		scc_PointIndex* write_nnidx = out_nn_indices;
 		const ANNidx* const idx_stop = idx_scratch + k;
 		for (size_t q = 0; q < len_query_indicators; ++q) {
 			out_nn_ref[q + 1] = out_nn_ref[q];
@@ -292,7 +292,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 				if (search_indices == NULL) {
 					// Sequential indices, just do casting
 					for (const ANNidx* idx_tmp = idx_scratch; idx_tmp != idx_stop; ++idx_tmp, ++write_nnidx) {
-						*write_nnidx = static_cast<iscc_Dpid>(*idx_tmp);
+						*write_nnidx = static_cast<scc_PointIndex>(*idx_tmp);
 					}
 				} else {
 					// Not sequential indices, translate to original indices
@@ -306,7 +306,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 
 	} else { // radius_search
 		const double radius_sq = radius * radius;
-		iscc_Dpid* write_nnidx = out_nn_indices;
+		scc_PointIndex* write_nnidx = out_nn_indices;
 		for (size_t q = 0; q < len_query_indicators; ++q) {
 			out_nn_ref[q + 1] = out_nn_ref[q];
 			if ((query_indicators == NULL) || query_indicators[q]) {
@@ -324,7 +324,7 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 					if (search_indices == NULL) {
 						// Sequential indices, just do casting
 						for (const ANNidx* idx_tmp = idx_scratch; idx_tmp != idx_stop; ++idx_tmp, ++write_nnidx) {
-							*write_nnidx = static_cast<iscc_Dpid>(*idx_tmp);
+							*write_nnidx = static_cast<scc_PointIndex>(*idx_tmp);
 						}
 					} else {
 						// Not sequential indices, translate to original indices
@@ -349,11 +349,11 @@ bool iscc_ann_nearest_neighbor_search_digraph(iscc_NNSearchObject* const nn_sear
 
 bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search_object,
                                             const size_t len_query_indices,
-                                            const iscc_Dpid* const query_indices,
+                                            const scc_PointIndex* const query_indices,
                                             const uint32_t k,
                                             const bool radius_search,
                                             const double radius,
-                                            iscc_Dpid* const out_nn_indices)
+                                            scc_PointIndex* const out_nn_indices)
 {
 	assert(nn_search_object != NULL);
 	assert(nn_search_object->nn_search_version == ISCC_ANN_NN_SEARCH_STRUCT_VERSION);
@@ -362,7 +362,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 		const size_t len_search_indices = nn_search_object->len_search_indices;
 		assert(len_search_indices <= INT_MAX);
 	#endif
-	const iscc_Dpid* const search_indices = nn_search_object->search_indices;
+	const scc_PointIndex* const search_indices = nn_search_object->search_indices;
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_ann_open_search_objects > 0);
@@ -379,13 +379,13 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 	if (k > INT_MAX) return false;
 	const int k_int = static_cast<int>(k);
 
-	#ifdef ISCC_M_DPID_TYPE_int
+	#ifdef SCC_M_POINTINDEX_TYPE_int
 
 		if (search_indices == NULL) {
 
-			iscc_Dpid* write_nnidx = out_nn_indices;
+			scc_PointIndex* write_nnidx = out_nn_indices;
 
-			// If `iscc_Dpid` is `int` we can send `out_nn_indices` directly to ANN.
+			// If `scc_PointIndex` is `int` we can send `out_nn_indices` directly to ANN.
 			// When searching on sequential indices (i.e., `search_indices == NULL`),
 			// ANN produces the desired result and we do not need to do translating and/or casting
 
@@ -420,7 +420,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 					                                          SCC_ANN_EPS);    // error margin
 					assert(num_found >= 0);
 					for (; num_found < k_int; ++num_found) {
-						write_nnidx[num_found] = ISCC_DPID_NA;
+						write_nnidx[num_found] = SCC_POINTINDEX_NA;
 					}
 					write_nnidx += k;
 				}
@@ -431,7 +431,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 			return true;
 		}
 
-	#endif // #ifdef ISCC_M_DPID_TYPE_int
+	#endif // #ifdef SCC_M_POINTINDEX_TYPE_int
 
 	ANNidx* idx_scratch;
 	ANNdist* dist_scratch;
@@ -443,7 +443,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 	}
 
 	if (!radius_search) {
-		iscc_Dpid* write_nnidx = out_nn_indices;
+		scc_PointIndex* write_nnidx = out_nn_indices;
 		const ANNidx* const idx_stop = idx_scratch + k;
 		for (size_t q = 0; q < len_query_indices; ++q) {
 			const ANNpoint query_point = data_set->data_matrix + query_indices[q] * data_set->num_dimensions;
@@ -455,7 +455,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 			if (search_indices == NULL) {
 				// Sequential indices, just do casting
 				for (const ANNidx* idx_tmp = idx_scratch; idx_tmp != idx_stop; ++idx_tmp, ++write_nnidx) {
-					*write_nnidx = static_cast<iscc_Dpid>(*idx_tmp);
+					*write_nnidx = static_cast<scc_PointIndex>(*idx_tmp);
 				}
 			} else {
 				// Not sequential indices, translate to original indices
@@ -467,7 +467,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 
 	} else { // radius_search
 		const double radius_sq = radius * radius;
-		iscc_Dpid* write_nnidx = out_nn_indices;
+		scc_PointIndex* write_nnidx = out_nn_indices;
 		const ANNidx* const idx_stop = idx_scratch + k;
 		for (size_t q = 0; q < len_query_indices; ++q) {
 			const ANNpoint query_point = data_set->data_matrix + query_indices[q] * data_set->num_dimensions;
@@ -485,7 +485,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 			if (search_indices == NULL) {
 				// Sequential indices, just do casting
 				for (; idx_tmp != idx_found_stop; ++idx_tmp, ++write_nnidx) {
-					*write_nnidx = static_cast<iscc_Dpid>(*idx_tmp);
+					*write_nnidx = static_cast<scc_PointIndex>(*idx_tmp);
 				}
 			} else {
 				// Not sequential indices, translate to original indices
@@ -494,7 +494,7 @@ bool iscc_ann_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 				}
 			}
 			for (; idx_tmp != idx_stop; ++idx_tmp, ++write_nnidx) {
-				*write_nnidx = ISCC_DPID_NA;
+				*write_nnidx = SCC_POINTINDEX_NA;
 			}
 		}
 	}

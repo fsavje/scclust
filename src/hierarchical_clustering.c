@@ -41,7 +41,7 @@ static const uint_fast16_t ISCC_HI_NUM_TO_CHECK = 100;
 
 typedef struct iscc_hi_DistanceEdge iscc_hi_DistanceEdge;
 struct iscc_hi_DistanceEdge {
-	iscc_Dpid head;
+	scc_PointIndex head;
 	double distance;
 	iscc_hi_DistanceEdge* next_dist;
 };
@@ -50,7 +50,7 @@ typedef struct iscc_hi_ClusterItem iscc_hi_ClusterItem;
 struct iscc_hi_ClusterItem {
 	size_t size;
 	uint_fast16_t marker;
-	iscc_Dpid* members;
+	scc_PointIndex* members;
 };
 
 typedef struct iscc_hi_ClusterStack iscc_hi_ClusterStack;
@@ -58,13 +58,13 @@ struct iscc_hi_ClusterStack {
 	size_t capacity;
 	size_t items;
 	iscc_hi_ClusterItem* clusters;
-	iscc_Dpid* dpid_store;
+	scc_PointIndex* pointindex_store;
 };
 
 typedef struct iscc_hi_WorkArea iscc_hi_WorkArea;
 struct iscc_hi_WorkArea {
-	iscc_Dpid* const dpid_array1;
-	iscc_Dpid* const dpid_array2;
+	scc_PointIndex* const pointindex_array1;
+	scc_PointIndex* const pointindex_array2;
 	double* const dist_array;
 	uint_fast16_t* const vertex_markers;
 	iscc_hi_DistanceEdge* const edge_store1;
@@ -107,30 +107,30 @@ static inline iscc_hi_DistanceEdge* iscc_hi_get_next_k_nn(iscc_hi_DistanceEdge* 
                                                           uint32_t k,
                                                           const uint_fast16_t vertex_markers[],
                                                           uint_fast16_t curr_marker,
-                                                          iscc_Dpid out_dist_array[static k]);
+                                                          scc_PointIndex out_dist_array[static k]);
 
 static inline iscc_hi_DistanceEdge* iscc_hi_get_next_dist(iscc_hi_DistanceEdge* prev_dist,
                                                           const uint_fast16_t vertex_markers[],
                                                           uint_fast16_t curr_marker);
 
-static inline void iscc_hi_move_point_to_cluster1(iscc_Dpid id,
+static inline void iscc_hi_move_point_to_cluster1(scc_PointIndex id,
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
 
-static inline void iscc_hi_move_point_to_cluster2(iscc_Dpid id,
+static inline void iscc_hi_move_point_to_cluster2(scc_PointIndex id,
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
 
 static inline void iscc_hi_move_array_to_cluster1(uint32_t len_ids,
-                                                  const iscc_Dpid ids[static len_ids],
+                                                  const scc_PointIndex ids[static len_ids],
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
 
 static inline void iscc_hi_move_array_to_cluster2(uint32_t len_ids,
-                                                  const iscc_Dpid ids[static len_ids],
+                                                  const scc_PointIndex ids[static len_ids],
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
@@ -138,17 +138,17 @@ static inline void iscc_hi_move_array_to_cluster2(uint32_t len_ids,
 static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* cl,
                                           void* data_set,
                                           iscc_hi_WorkArea* work_area,
-                                          iscc_Dpid* out_center1,
-                                          iscc_Dpid* out_center2);
+                                          scc_PointIndex* out_center1,
+                                          scc_PointIndex* out_center2);
 
 static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cl,
                                                  void* data_set,
-                                                 iscc_Dpid center1,
-                                                 iscc_Dpid center2,
+                                                 scc_PointIndex center1,
+                                                 scc_PointIndex center2,
                                                  iscc_hi_WorkArea* work_area);
 
 static inline void iscc_hi_sort_edge_list(const iscc_hi_ClusterItem* cl,
-                                          iscc_Dpid center,
+                                          scc_PointIndex center,
                                           const double row_dists[static cl->size],
                                           iscc_hi_DistanceEdge edge_store[static cl->size]);
 
@@ -200,20 +200,20 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
 
 	assert(cl_stack.items > 0);
 	assert(cl_stack.clusters != NULL);
-	assert(cl_stack.dpid_store != NULL);
+	assert(cl_stack.pointindex_store != NULL);
 
-	const size_t size_dpid_array = (size_constraint > ISCC_HI_NUM_TO_CHECK) ? size_constraint : ISCC_HI_NUM_TO_CHECK;
+	const size_t size_pointindex_array = (size_constraint > ISCC_HI_NUM_TO_CHECK) ? size_constraint : ISCC_HI_NUM_TO_CHECK;
 	const size_t size_dist_array = ((2 * size_largest_cluster) > ISCC_HI_NUM_TO_CHECK) ? (2 * size_largest_cluster) : ISCC_HI_NUM_TO_CHECK;
 	iscc_hi_WorkArea work_area = {
-		.dpid_array1 = malloc(sizeof(iscc_Dpid[size_dpid_array])),
-		.dpid_array2 = malloc(sizeof(iscc_Dpid[size_dpid_array])),
+		.pointindex_array1 = malloc(sizeof(scc_PointIndex[size_pointindex_array])),
+		.pointindex_array2 = malloc(sizeof(scc_PointIndex[size_pointindex_array])),
 		.dist_array = malloc(sizeof(double[size_dist_array])),
 		.vertex_markers = calloc(clustering->num_data_points, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[size_largest_cluster])),
 		.edge_store2 = malloc(sizeof(iscc_hi_DistanceEdge[size_largest_cluster])),
 	};
 
-	if ((work_area.dpid_array1 == NULL) || (work_area.dpid_array2 == NULL) ||
+	if ((work_area.pointindex_array1 == NULL) || (work_area.pointindex_array2 == NULL) ||
 	        (work_area.dist_array == NULL) || (work_area.vertex_markers == NULL) ||
 	        (work_area.edge_store1 == NULL) || (work_area.edge_store2 == NULL)) {
 		ec = iscc_make_error(SCC_ER_NO_MEMORY);
@@ -228,14 +228,14 @@ scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
 		                                         batch_assign);
 	}
 
-	free(work_area.dpid_array1);
-	free(work_area.dpid_array2);
+	free(work_area.pointindex_array1);
+	free(work_area.pointindex_array2);
 	free(work_area.dist_array);
 	free(work_area.vertex_markers);
 	free(work_area.edge_store1);
 	free(work_area.edge_store2);
 	free(cl_stack.clusters);
-	free(cl_stack.dpid_store);
+	free(cl_stack.pointindex_store);
 
 	return ec;
 }
@@ -256,24 +256,24 @@ static scc_ErrorCode iscc_hi_empty_cl_stack(const size_t num_data_points,
 		.capacity = tmp_capacity,
 		.items = 1,
 		.clusters = malloc(sizeof(iscc_hi_ClusterItem[tmp_capacity])),
-		.dpid_store = malloc(sizeof(iscc_Dpid[num_data_points])),
+		.pointindex_store = malloc(sizeof(scc_PointIndex[num_data_points])),
 	};
-	if ((out_cl_stack->clusters == NULL) || (out_cl_stack->dpid_store == NULL)) {
+	if ((out_cl_stack->clusters == NULL) || (out_cl_stack->pointindex_store == NULL)) {
 		free(out_cl_stack->clusters);
-		free(out_cl_stack->dpid_store);
+		free(out_cl_stack->pointindex_store);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	assert(num_data_points <= ISCC_DPID_MAX);
-	const iscc_Dpid num_data_points_dpid = (iscc_Dpid) num_data_points; // If `iscc_Dpid` is signed
-	for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
-		out_cl_stack->dpid_store[i] = i;
+	assert(num_data_points <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex num_data_points_pi = (scc_PointIndex) num_data_points; // If `scc_PointIndex` is signed
+	for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
+		out_cl_stack->pointindex_store[i] = i;
 	}
 
 	out_cl_stack->clusters[0] = (iscc_hi_ClusterItem) {
 		.size = num_data_points,
 		.marker = 0,
-		.members = out_cl_stack->dpid_store,
+		.members = out_cl_stack->pointindex_store,
 	};
 
 	return iscc_no_error();
@@ -297,11 +297,11 @@ static scc_ErrorCode iscc_hi_init_cl_stack(const scc_Clustering* const in_cl,
 		.capacity = (size_t) tmp_capacity,
 		.items = in_cl->num_clusters,
 		.clusters = calloc((size_t) tmp_capacity, sizeof(iscc_hi_ClusterItem)),
-		.dpid_store = malloc(sizeof(iscc_Dpid[in_cl->num_data_points])),
+		.pointindex_store = malloc(sizeof(scc_PointIndex[in_cl->num_data_points])),
 	};
-	if ((out_cl_stack->clusters == NULL) || (out_cl_stack->dpid_store == NULL)) {
+	if ((out_cl_stack->clusters == NULL) || (out_cl_stack->pointindex_store == NULL)) {
 		free(out_cl_stack->clusters);
-		free(out_cl_stack->dpid_store);
+		free(out_cl_stack->pointindex_store);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
@@ -315,16 +315,16 @@ static scc_ErrorCode iscc_hi_init_cl_stack(const scc_Clustering* const in_cl,
 	}
 
 	size_t size_largest_cluster = 0;
-	clusters[0].members = out_cl_stack->dpid_store + clusters[0].size;
+	clusters[0].members = out_cl_stack->pointindex_store + clusters[0].size;
 	for (size_t c = 1; c < in_cl->num_clusters; ++c) {
 		clusters[c].members = clusters[c - 1].members + clusters[c].size;
 		size_largest_cluster = (clusters[c].size > size_largest_cluster) ? clusters[c].size : size_largest_cluster;
 	}
 	*out_size_largest_cluster = size_largest_cluster;
 
-	assert(in_cl->num_data_points <= ISCC_DPID_MAX);
-	const iscc_Dpid num_data_points = (iscc_Dpid) in_cl->num_data_points; // If `iscc_Dpid` is signed
-	for (iscc_Dpid i = 0; i < num_data_points; ++i) {
+	assert(in_cl->num_data_points <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex num_data_points = (scc_PointIndex) in_cl->num_data_points; // If `scc_PointIndex` is signed
+	for (scc_PointIndex i = 0; i < num_data_points; ++i) {
 		if (cluster_label[i] != SCC_CLABEL_NA) {
 			--clusters[cluster_label[i]].members;
 			*(clusters[cluster_label[i]].members) = i;
@@ -346,7 +346,7 @@ static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* c
 	assert(cl_stack->items > 0);
 	assert(cl_stack->items <= cl_stack->capacity);
 	assert(cl_stack->clusters != NULL);
-	assert(cl_stack->dpid_store != NULL);
+	assert(cl_stack->pointindex_store != NULL);
 	assert(iscc_check_input_clustering(cl));
 	assert(iscc_check_data_set(data_set, cl->num_data_points));
 	assert(work_area != NULL);
@@ -430,8 +430,8 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	assert(cluster_to_break->members != NULL);
 	assert(iscc_check_data_set(data_set, 0));
 	assert(work_area != NULL);
-	assert(work_area->dpid_array1 != NULL);
-	assert(work_area->dpid_array2 != NULL);
+	assert(work_area->pointindex_array1 != NULL);
+	assert(work_area->pointindex_array2 != NULL);
 	assert(work_area->vertex_markers != NULL);
 	assert(work_area->edge_store1 != NULL);
 	assert(work_area->edge_store2 != NULL);
@@ -439,7 +439,7 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	assert(out_new_cluster != NULL);
 
 	scc_ErrorCode ec;
-	iscc_Dpid center1 = ISCC_DPID_NA, center2 = ISCC_DPID_NA; // Initialize these to avoid gcc warning
+	scc_PointIndex center1 = SCC_POINTINDEX_NA, center2 = SCC_POINTINDEX_NA; // Initialize these to avoid gcc warning
 	// `iscc_hi_find_centers` must be before `iscc_hi_get_next_marker`
 	// since the marker becomes invalid after `iscc_hi_find_centers`
 	if ((ec = iscc_hi_find_centers(cluster_to_break,
@@ -458,8 +458,8 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 		return ec;
 	}
 
-	iscc_Dpid* const k_nn_array1 = work_area->dpid_array1;
-	iscc_Dpid* const k_nn_array2 = work_area->dpid_array2;
+	scc_PointIndex* const k_nn_array1 = work_area->pointindex_array1;
+	scc_PointIndex* const k_nn_array2 = work_area->pointindex_array2;
 	uint_fast16_t* const vertex_markers = work_area->vertex_markers;
 
 	// `edge_store1` and `edge_store2` have been populated by `iscc_hi_populate_edge_lists`
@@ -572,7 +572,7 @@ static inline iscc_hi_DistanceEdge* iscc_hi_get_next_k_nn(iscc_hi_DistanceEdge* 
                                                           const uint32_t k,
                                                           const uint_fast16_t vertex_markers[const],
                                                           const uint_fast16_t curr_marker,
-                                                          iscc_Dpid out_dist_array[const static k])
+                                                          scc_PointIndex out_dist_array[const static k])
 {
 	assert(prev_dist != NULL);
 	assert(prev_dist->next_dist != NULL); // We should never reach the end!
@@ -607,7 +607,7 @@ static inline iscc_hi_DistanceEdge* iscc_hi_get_next_dist(iscc_hi_DistanceEdge* 
 }
 
 
-static inline void iscc_hi_move_point_to_cluster1(const iscc_Dpid id,
+static inline void iscc_hi_move_point_to_cluster1(const scc_PointIndex id,
                                                   iscc_hi_ClusterItem* const cl,
                                                   uint_fast16_t vertex_markers[const],
                                                   const uint_fast16_t curr_marker)
@@ -624,7 +624,7 @@ static inline void iscc_hi_move_point_to_cluster1(const iscc_Dpid id,
 }
 
 
-static inline void iscc_hi_move_point_to_cluster2(const iscc_Dpid id,
+static inline void iscc_hi_move_point_to_cluster2(const scc_PointIndex id,
                                                   iscc_hi_ClusterItem* const cl,
                                                   uint_fast16_t vertex_markers[const],
                                                   const uint_fast16_t curr_marker)
@@ -643,7 +643,7 @@ static inline void iscc_hi_move_point_to_cluster2(const iscc_Dpid id,
 
 
 static inline void iscc_hi_move_array_to_cluster1(const uint32_t len_ids,
-                                                  const iscc_Dpid ids[static len_ids],
+                                                  const scc_PointIndex ids[static len_ids],
                                                   iscc_hi_ClusterItem* const cl,
                                                   uint_fast16_t vertex_markers[const],
                                                   const uint_fast16_t curr_marker)
@@ -655,8 +655,8 @@ static inline void iscc_hi_move_array_to_cluster1(const uint32_t len_ids,
 	assert(vertex_markers != NULL);
 	assert(cl->marker == curr_marker);
 
-	const iscc_Dpid* const ids_stop = ids + len_ids;
-	iscc_Dpid* cl_mem = cl->members + cl->size;
+	const scc_PointIndex* const ids_stop = ids + len_ids;
+	scc_PointIndex* cl_mem = cl->members + cl->size;
 	for (; ids != ids_stop; ++ids, ++cl_mem) {
 		assert(vertex_markers[*ids] != curr_marker);
 		vertex_markers[*ids] = curr_marker;
@@ -668,7 +668,7 @@ static inline void iscc_hi_move_array_to_cluster1(const uint32_t len_ids,
 
 
 static inline void iscc_hi_move_array_to_cluster2(const uint32_t len_ids,
-                                                  const iscc_Dpid ids[static len_ids],
+                                                  const scc_PointIndex ids[static len_ids],
                                                   iscc_hi_ClusterItem* const cl,
                                                   uint_fast16_t vertex_markers[const],
                                                   const uint_fast16_t curr_marker)
@@ -680,7 +680,7 @@ static inline void iscc_hi_move_array_to_cluster2(const uint32_t len_ids,
 	assert(vertex_markers != NULL);
 	assert(cl->marker == curr_marker);
 
-	const iscc_Dpid* const ids_stop = ids + len_ids;
+	const scc_PointIndex* const ids_stop = ids + len_ids;
 	for (; ids != ids_stop; ++ids) {
 		assert(vertex_markers[*ids] != curr_marker);
 		--(cl->members);
@@ -695,23 +695,23 @@ static inline void iscc_hi_move_array_to_cluster2(const uint32_t len_ids,
 static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* const cl,
                                           void* const data_set,
                                           iscc_hi_WorkArea* const work_area,
-                                          iscc_Dpid* const out_center1,
-                                          iscc_Dpid* const out_center2)
+                                          scc_PointIndex* const out_center1,
+                                          scc_PointIndex* const out_center2)
 {
 	assert(cl != NULL);
 	assert(cl->size >= 4);
 	assert(cl->members != NULL);
 	assert(iscc_check_data_set(data_set, 0));
 	assert(work_area != NULL);
-	assert(work_area->dpid_array1 != NULL);
-	assert(work_area->dpid_array2 != NULL);
+	assert(work_area->pointindex_array1 != NULL);
+	assert(work_area->pointindex_array2 != NULL);
 	assert(work_area->dist_array != NULL);
 	assert(work_area->vertex_markers != NULL);
 	assert(out_center1 != NULL);
 	assert(out_center2 != NULL);
 
-	iscc_Dpid* const to_check = work_area->dpid_array1;
-	iscc_Dpid* const max_indices = work_area->dpid_array2;
+	scc_PointIndex* const to_check = work_area->pointindex_array1;
+	scc_PointIndex* const max_indices = work_area->pointindex_array2;
 	double* const max_dists = work_area->dist_array;
 	uint_fast16_t* const vertex_markers = work_area->vertex_markers;
 
@@ -769,8 +769,8 @@ static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* const cl,
 
 static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* const cl,
                                                  void* const data_set,
-                                                 const iscc_Dpid center1,
-                                                 const iscc_Dpid center2,
+                                                 const scc_PointIndex center1,
+                                                 const scc_PointIndex center2,
                                                  iscc_hi_WorkArea* const work_area)
 {
 	assert(cl != NULL);
@@ -784,7 +784,7 @@ static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cons
 	assert(work_area->edge_store2 != NULL);
 
 	double* const row_dists = work_area->dist_array;
-	const iscc_Dpid query_indices[2] = { center1, center2 };
+	const scc_PointIndex query_indices[2] = { center1, center2 };
 
 	if (!iscc_get_dist_rows(data_set,
 	                        2,
@@ -803,7 +803,7 @@ static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cons
 
 
 static inline void iscc_hi_sort_edge_list(const iscc_hi_ClusterItem* const cl,
-                                          const iscc_Dpid center,
+                                          const scc_PointIndex center,
                                           const double row_dists[const static cl->size],
                                           iscc_hi_DistanceEdge edge_store[const static cl->size])
 {

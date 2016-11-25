@@ -72,8 +72,8 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
 	if (num_data_points == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Clustering must have positive number of data points.");
 	}
-	if (num_data_points > ISCC_DPID_MAX) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the 'iscc_Dpid' type).");
+	if (num_data_points > ISCC_POINTINDEX_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the 'scc_PointIndex' type).");
 	}
 	if (num_data_points > SIZE_MAX - 1) {
 		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");
@@ -114,8 +114,8 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
 	if (num_data_points == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Clustering must have positive number of data points.");
 	}
-	if (num_data_points > ISCC_DPID_MAX) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `iscc_Dpid` type).");
+	if (num_data_points > ISCC_POINTINDEX_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `scc_PointIndex` type).");
 	}
 	if (num_data_points > SIZE_MAX - 1) {
 		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");
@@ -180,7 +180,7 @@ bool scc_is_initialized_clustering(const scc_Clustering* const clustering)
 	if (clustering == NULL) return false;
 	if (clustering->clustering_version != ISCC_CLUSTERING_STRUCT_VERSION) return false;
 	if (clustering->num_data_points == 0) return false;
-	if (clustering->num_data_points > ISCC_DPID_MAX) return false;
+	if (clustering->num_data_points > ISCC_POINTINDEX_MAX) return false;
 	if (clustering->num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) return false;
 	if ((clustering->num_clusters > 0) && (clustering->cluster_label == NULL)) return false;
 
@@ -448,8 +448,8 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 	}
 
 	const size_t largest_dist_matrix = (tmp_stats.max_cluster_size * (tmp_stats.max_cluster_size - 1)) / 2;
-	iscc_Dpid* const id_store = malloc(sizeof(iscc_Dpid[tmp_stats.num_assigned]));
-	iscc_Dpid** const cl_members = malloc(sizeof(iscc_Dpid*[clustering->num_clusters]));
+	scc_PointIndex* const id_store = malloc(sizeof(scc_PointIndex[tmp_stats.num_assigned]));
+	scc_PointIndex** const cl_members = malloc(sizeof(scc_PointIndex*[clustering->num_clusters]));
 	double* const dist_scratch = malloc(sizeof(double[largest_dist_matrix]));
 	if ((id_store == NULL) || (cl_members == NULL) || (dist_scratch == NULL)) {
 		free(cluster_size);
@@ -464,9 +464,9 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 		cl_members[c] = cl_members[c - 1] + cluster_size[c];
 	}
 
-	assert(clustering->num_data_points <= ISCC_DPID_MAX);
-	const iscc_Dpid num_data_points = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed
-	for (iscc_Dpid i = 0; i < num_data_points; ++i) {
+	assert(clustering->num_data_points <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex num_data_points = (scc_PointIndex) clustering->num_data_points; // If `scc_PointIndex` is signed
+	for (scc_PointIndex i = 0; i < num_data_points; ++i) {
 		if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
 			--cl_members[clustering->cluster_label[i]];
 			*(cl_members[clustering->cluster_label[i]]) = i;

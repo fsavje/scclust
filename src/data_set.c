@@ -52,8 +52,8 @@ scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
 	if (num_data_points == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Data set must have positive number of data points.");
 	}
-	if (num_data_points > ISCC_DPID_MAX) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `iscc_Dpid` type).");
+	if (num_data_points > ISCC_POINTINDEX_MAX) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points (adjust the `scc_PointIndex` type).");
 	}
 	if (num_data_points > SIZE_MAX - 1) {
 		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data points.");

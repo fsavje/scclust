@@ -33,49 +33,49 @@ void scc_ut_fs_debug_bucket_sort(void** state)
 	(void) state;
 
 
-	iscc_Dpid buckets1[7] = {1, 4, 3, 5, 6, 2, 0};
-	iscc_Dpid inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* vertex_index1[7];
-	for (iscc_Dpid* b = buckets1; b != buckets1 + 7; ++b) vertex_index1[*b] = b;
+	scc_PointIndex buckets1[7] = {1, 4, 3, 5, 6, 2, 0};
+	scc_PointIndex inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* vertex_index1[7];
+	for (scc_PointIndex* b = buckets1; b != buckets1 + 7; ++b) vertex_index1[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets1 + 2, buckets1 + 5, inwards_count1, vertex_index1);
 
-	iscc_Dpid ref_buckets1[7] = {1, 4, 2, 3, 5, 6, 0};
-	iscc_Dpid ref_inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* ref_vertex_index1[7];
-	for (iscc_Dpid* b = ref_buckets1; b != ref_buckets1 + 7; ++b) ref_vertex_index1[*b] = b - ref_buckets1 + buckets1;
-	assert_memory_equal(buckets1, ref_buckets1, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(inwards_count1, ref_inwards_count1, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(vertex_index1, ref_vertex_index1, 7 * sizeof(iscc_Dpid*));
+	scc_PointIndex ref_buckets1[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_PointIndex ref_inwards_count1[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* ref_vertex_index1[7];
+	for (scc_PointIndex* b = ref_buckets1; b != ref_buckets1 + 7; ++b) ref_vertex_index1[*b] = b - ref_buckets1 + buckets1;
+	assert_memory_equal(buckets1, ref_buckets1, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(inwards_count1, ref_inwards_count1, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(vertex_index1, ref_vertex_index1, 7 * sizeof(scc_PointIndex*));
 
 
-	iscc_Dpid buckets2[7] = {1, 4, 2, 5, 6, 3, 0};
-	iscc_Dpid inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* vertex_index2[7];
-	for (iscc_Dpid* b = buckets2; b != buckets2 + 7; ++b) vertex_index2[*b] = b;
+	scc_PointIndex buckets2[7] = {1, 4, 2, 5, 6, 3, 0};
+	scc_PointIndex inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* vertex_index2[7];
+	for (scc_PointIndex* b = buckets2; b != buckets2 + 7; ++b) vertex_index2[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets2 + 2, buckets2 + 5, inwards_count2, vertex_index2);
 
-	iscc_Dpid ref_buckets2[7] = {1, 4, 2, 3, 5, 6, 0};
-	iscc_Dpid ref_inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* ref_vertex_index2[7];
-	for (iscc_Dpid* b = ref_buckets2; b != ref_buckets2 + 7; ++b) ref_vertex_index2[*b] = b - ref_buckets2 + buckets2;
-	assert_memory_equal(buckets2, ref_buckets2, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(inwards_count2, ref_inwards_count2, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(vertex_index2, ref_vertex_index2, 7 * sizeof(iscc_Dpid*));
+	scc_PointIndex ref_buckets2[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_PointIndex ref_inwards_count2[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* ref_vertex_index2[7];
+	for (scc_PointIndex* b = ref_buckets2; b != ref_buckets2 + 7; ++b) ref_vertex_index2[*b] = b - ref_buckets2 + buckets2;
+	assert_memory_equal(buckets2, ref_buckets2, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(inwards_count2, ref_inwards_count2, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(vertex_index2, ref_vertex_index2, 7 * sizeof(scc_PointIndex*));
 
 
-	iscc_Dpid buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
-	iscc_Dpid inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* vertex_index3[7];
-	for (iscc_Dpid* b = buckets3; b != buckets3 + 7; ++b) vertex_index3[*b] = b;
+	scc_PointIndex buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_PointIndex inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* vertex_index3[7];
+	for (scc_PointIndex* b = buckets3; b != buckets3 + 7; ++b) vertex_index3[*b] = b;
 	iscc_fs_debug_bucket_sort(buckets3 + 6, buckets3 + 6, inwards_count3, vertex_index3);
 
-	iscc_Dpid ref_buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
-	iscc_Dpid ref_inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
-	iscc_Dpid* ref_vertex_index3[7];
-	for (iscc_Dpid* b = ref_buckets3; b != ref_buckets3 + 7; ++b) ref_vertex_index3[*b] = b - ref_buckets3 + buckets3;
-	assert_memory_equal(buckets3, ref_buckets3, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(inwards_count3, ref_inwards_count3, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(vertex_index3, ref_vertex_index3, 7 * sizeof(iscc_Dpid*));
+	scc_PointIndex ref_buckets3[7] = {1, 4, 2, 3, 5, 6, 0};
+	scc_PointIndex ref_inwards_count3[7] = {3, 1, 2, 2, 1, 2, 2};
+	scc_PointIndex* ref_vertex_index3[7];
+	for (scc_PointIndex* b = ref_buckets3; b != ref_buckets3 + 7; ++b) ref_vertex_index3[*b] = b - ref_buckets3 + buckets3;
+	assert_memory_equal(buckets3, ref_buckets3, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(inwards_count3, ref_inwards_count3, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(vertex_index3, ref_vertex_index3, 7 * sizeof(scc_PointIndex*));
 }
 
 
@@ -104,7 +104,7 @@ void scc_ut_find_seeds_stable(void** state)
 	                         "..............#.#./",
 	                         &nng);
 
-	iscc_Dpid fp_seeds1[5] = {0, 5, 6, 10, 12};
+	scc_PointIndex fp_seeds1[5] = {0, 5, 6, 10, 12};
 	iscc_SeedResult sr1 = {
 		.capacity = 1,
 		.count = 0,
@@ -115,9 +115,9 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr1.count, 5);
 	assert_int_equal(sr1.capacity, sr1.count);
 	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds2[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds2[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr2 = {
 		.capacity = 1,
 		.count = 0,
@@ -128,9 +128,9 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr2.count, 5);
 	assert_int_equal(sr2.capacity, sr2.count);
 	assert_non_null(sr2.seeds);
-	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3 = {
 		.capacity = 1,
 		.count = 0,
@@ -141,9 +141,9 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr3.count, 5);
 	assert_int_equal(sr3.capacity, sr3.count);
 	assert_non_null(sr3.seeds);
-	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3alt[5] = {2, 6, 8, 12, 13};
+	scc_PointIndex fp_seeds3alt[5] = {2, 6, 8, 12, 13};
 	iscc_SeedResult sr3alt = {
 		.capacity = 1,
 		.count = 0,
@@ -154,9 +154,9 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);
 	assert_non_null(sr3alt.seeds);
-	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
+	scc_PointIndex fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
 		.count = 0,
@@ -167,9 +167,9 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr4.count, 4);
 	assert_int_equal(sr4.capacity, sr4.count);
 	assert_non_null(sr4.seeds);
-	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds5[5] = {8, 15, 17, 10, 0};
+	scc_PointIndex fp_seeds5[5] = {8, 15, 17, 10, 0};
 	iscc_SeedResult sr5 = {
 		.capacity = 1,
 		.count = 0,
@@ -180,7 +180,7 @@ void scc_ut_find_seeds_stable(void** state)
 	assert_int_equal(sr5.count, 5);
 	assert_int_equal(sr5.capacity, sr5.count);
 	assert_non_null(sr5.seeds);
-	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(scc_PointIndex));
 
 	free(sr1.seeds);
 	free(sr2.seeds);
@@ -217,7 +217,7 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	                         "..............#.##/",
 	                         &nng);
 
-	iscc_Dpid fp_seeds1[5] = {0, 5, 6, 10, 12};
+	scc_PointIndex fp_seeds1[5] = {0, 5, 6, 10, 12};
 	iscc_SeedResult sr1 = {
 		.capacity = 1,
 		.count = 0,
@@ -228,9 +228,9 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr1.count, 5);
 	assert_int_equal(sr1.capacity, sr1.count);
 	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds2[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds2[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr2 = {
 		.capacity = 1,
 		.count = 0,
@@ -241,9 +241,9 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr2.count, 5);
 	assert_int_equal(sr2.capacity, sr2.count);
 	assert_non_null(sr2.seeds);
-	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3 = {
 		.capacity = 1,
 		.count = 0,
@@ -254,9 +254,9 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr3.count, 5);
 	assert_int_equal(sr3.capacity, sr3.count);
 	assert_non_null(sr3.seeds);
-	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3alt[5] = {2, 6, 8, 12, 13};
+	scc_PointIndex fp_seeds3alt[5] = {2, 6, 8, 12, 13};
 	iscc_SeedResult sr3alt = {
 		.capacity = 1,
 		.count = 0,
@@ -267,9 +267,9 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);
 	assert_non_null(sr3alt.seeds);
-	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
+	scc_PointIndex fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
 		.count = 0,
@@ -280,9 +280,9 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr4.count, 4);
 	assert_int_equal(sr4.capacity, sr4.count);
 	assert_non_null(sr4.seeds);
-	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds5[5] = {8, 15, 17, 10, 0};
+	scc_PointIndex fp_seeds5[5] = {8, 15, 17, 10, 0};
 	iscc_SeedResult sr5 = {
 		.capacity = 1,
 		.count = 0,
@@ -293,7 +293,7 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 	assert_int_equal(sr5.count, 5);
 	assert_int_equal(sr5.capacity, sr5.count);
 	assert_non_null(sr5.seeds);
-	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(scc_PointIndex));
 
 	free(sr1.seeds);
 	free(sr2.seeds);

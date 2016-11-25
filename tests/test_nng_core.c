@@ -799,7 +799,7 @@ void scc_ut_estimate_avg_seed_dist(void** state)
 {
 	(void) state;
 
-	iscc_Dpid fp_seeds[4] = {0, 4, 7, 12};
+	scc_PointIndex fp_seeds[4] = {0, 4, 7, 12};
 	iscc_SeedResult sr = {
 		.capacity = 10,
 		.count = 4,
@@ -897,7 +897,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..#.. .#... .#.../"
 	                         "...#. ..#.. ...#./"
 	                         ".#... ...#. ..#../", &nng1);
-	iscc_Dpid fp_seeds1[5] = {0, 1, 2, 3, 4};
+	scc_PointIndex fp_seeds1[5] = {0, 1, 2, 3, 4};
 	iscc_SeedResult sr1 = {
 		.capacity = 5,
 		.count = 5,
@@ -941,7 +941,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..#.. .#... .#.../"
 	                         "...#. ..#.. ...#./"
 	                         ".#... ...#. ..#../", &nng2);
-	iscc_Dpid fp_seeds2[4] = {0, 2, 3, 4};
+	scc_PointIndex fp_seeds2[4] = {0, 2, 3, 4};
 	iscc_SeedResult sr2 = {
 		.capacity = 4,
 		.count = 4,
@@ -985,7 +985,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng3);
-	iscc_Dpid fp_seeds3[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds3[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr3 = {
 		.capacity = 4,
 		.count = 4,
@@ -1029,7 +1029,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "....# ..#.. ...../", &nng3a);
-	iscc_Dpid fp_seeds3a[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds3a[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr3a = {
 		.capacity = 4,
 		.count = 4,
@@ -1073,7 +1073,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng4);
-	iscc_Dpid fp_seeds4[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds4[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr4 = {
 		.capacity = 4,
 		.count = 4,
@@ -1117,7 +1117,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng4a);
-	iscc_Dpid fp_seeds4a[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds4a[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr4a = {
 		.capacity = 4,
 		.count = 4,
@@ -1161,7 +1161,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng5);
-	iscc_Dpid fp_seeds5[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds5[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr5 = {
 		.capacity = 4,
 		.count = 4,
@@ -1205,7 +1205,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng5a);
-	iscc_Dpid fp_seeds5a[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds5a[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr5a = {
 		.capacity = 4,
 		.count = 4,
@@ -1249,7 +1249,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng6);
-	iscc_Dpid fp_seeds6[4] = {2, 5, 3, 8};
+	scc_PointIndex fp_seeds6[4] = {2, 5, 3, 8};
 	iscc_SeedResult sr6 = {
 		.capacity = 4,
 		.count = 4,
@@ -1293,7 +1293,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng7);
-	iscc_Dpid fp_seeds7[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds7[4] = {11, 0, 4};
 	iscc_SeedResult sr7 = {
 		.capacity = 3,
 		.count = 3,
@@ -1337,7 +1337,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng7a);
-	iscc_Dpid fp_seeds7a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds7a[4] = {11, 0, 4};
 	iscc_SeedResult sr7a = {
 		.capacity = 3,
 		.count = 3,
@@ -1381,7 +1381,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng7b);
-	iscc_Dpid fp_seeds7b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds7b[4] = {11, 0, 4};
 	iscc_SeedResult sr7b = {
 		.capacity = 3,
 		.count = 3,
@@ -1425,7 +1425,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng7c);
-	iscc_Dpid fp_seeds7c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds7c[4] = {11, 0, 4};
 	iscc_SeedResult sr7c = {
 		.capacity = 3,
 		.count = 3,
@@ -1469,7 +1469,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng7d);
-	iscc_Dpid fp_seeds7d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds7d[4] = {11, 0, 4};
 	iscc_SeedResult sr7d = {
 		.capacity = 3,
 		.count = 3,
@@ -1513,7 +1513,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng8);
-	iscc_Dpid fp_seeds8[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds8[4] = {11, 0, 4};
 	iscc_SeedResult sr8 = {
 		.capacity = 3,
 		.count = 3,
@@ -1557,7 +1557,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng8a);
-	iscc_Dpid fp_seeds8a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds8a[4] = {11, 0, 4};
 	iscc_SeedResult sr8a = {
 		.capacity = 3,
 		.count = 3,
@@ -1601,7 +1601,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng8b);
-	iscc_Dpid fp_seeds8b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds8b[4] = {11, 0, 4};
 	iscc_SeedResult sr8b = {
 		.capacity = 3,
 		.count = 3,
@@ -1645,7 +1645,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng8c);
-	iscc_Dpid fp_seeds8c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds8c[4] = {11, 0, 4};
 	iscc_SeedResult sr8c = {
 		.capacity = 3,
 		.count = 3,
@@ -1689,7 +1689,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng8d);
-	iscc_Dpid fp_seeds8d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds8d[4] = {11, 0, 4};
 	iscc_SeedResult sr8d = {
 		.capacity = 3,
 		.count = 3,
@@ -1733,7 +1733,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng9);
-	iscc_Dpid fp_seeds9[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds9[4] = {11, 0, 4};
 	iscc_SeedResult sr9 = {
 		.capacity = 3,
 		.count = 3,
@@ -1777,7 +1777,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng9a);
-	iscc_Dpid fp_seeds9a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds9a[4] = {11, 0, 4};
 	iscc_SeedResult sr9a = {
 		.capacity = 3,
 		.count = 3,
@@ -1821,7 +1821,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng9b);
-	iscc_Dpid fp_seeds9b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds9b[4] = {11, 0, 4};
 	iscc_SeedResult sr9b = {
 		.capacity = 3,
 		.count = 3,
@@ -1865,7 +1865,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng9c);
-	iscc_Dpid fp_seeds9c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds9c[4] = {11, 0, 4};
 	iscc_SeedResult sr9c = {
 		.capacity = 3,
 		.count = 3,
@@ -1909,7 +1909,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng9d);
-	iscc_Dpid fp_seeds9d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds9d[4] = {11, 0, 4};
 	iscc_SeedResult sr9d = {
 		.capacity = 3,
 		.count = 3,
@@ -1953,7 +1953,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng10);
-	iscc_Dpid fp_seeds10[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds10[4] = {11, 0, 4};
 	iscc_SeedResult sr10 = {
 		.capacity = 3,
 		.count = 3,
@@ -1997,7 +1997,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng10a);
-	iscc_Dpid fp_seeds10a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds10a[4] = {11, 0, 4};
 	iscc_SeedResult sr10a = {
 		.capacity = 3,
 		.count = 3,
@@ -2041,7 +2041,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng10b);
-	iscc_Dpid fp_seeds10b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds10b[4] = {11, 0, 4};
 	iscc_SeedResult sr10b = {
 		.capacity = 3,
 		.count = 3,
@@ -2085,7 +2085,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng10c);
-	iscc_Dpid fp_seeds10c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds10c[4] = {11, 0, 4};
 	iscc_SeedResult sr10c = {
 		.capacity = 3,
 		.count = 3,
@@ -2129,7 +2129,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng10d);
-	iscc_Dpid fp_seeds10d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds10d[4] = {11, 0, 4};
 	iscc_SeedResult sr10d = {
 		.capacity = 3,
 		.count = 3,
@@ -2173,7 +2173,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng11);
-	iscc_Dpid fp_seeds11[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds11[4] = {11, 0, 4};
 	iscc_SeedResult sr11 = {
 		.capacity = 3,
 		.count = 3,
@@ -2217,7 +2217,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng11a);
-	iscc_Dpid fp_seeds11a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds11a[4] = {11, 0, 4};
 	iscc_SeedResult sr11a = {
 		.capacity = 3,
 		.count = 3,
@@ -2261,7 +2261,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng11b);
-	iscc_Dpid fp_seeds11b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds11b[4] = {11, 0, 4};
 	iscc_SeedResult sr11b = {
 		.capacity = 3,
 		.count = 3,
@@ -2305,7 +2305,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng11c);
-	iscc_Dpid fp_seeds11c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds11c[4] = {11, 0, 4};
 	iscc_SeedResult sr11c = {
 		.capacity = 3,
 		.count = 3,
@@ -2349,7 +2349,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng11d);
-	iscc_Dpid fp_seeds11d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds11d[4] = {11, 0, 4};
 	iscc_SeedResult sr11d = {
 		.capacity = 3,
 		.count = 3,
@@ -2393,7 +2393,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng12);
-	iscc_Dpid fp_seeds12[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds12[4] = {11, 0, 4};
 	iscc_SeedResult sr12 = {
 		.capacity = 3,
 		.count = 3,
@@ -2437,7 +2437,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng12a);
-	iscc_Dpid fp_seeds12a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds12a[4] = {11, 0, 4};
 	iscc_SeedResult sr12a = {
 		.capacity = 3,
 		.count = 3,
@@ -2481,7 +2481,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng12b);
-	iscc_Dpid fp_seeds12b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds12b[4] = {11, 0, 4};
 	iscc_SeedResult sr12b = {
 		.capacity = 3,
 		.count = 3,
@@ -2525,7 +2525,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng12c);
-	iscc_Dpid fp_seeds12c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds12c[4] = {11, 0, 4};
 	iscc_SeedResult sr12c = {
 		.capacity = 3,
 		.count = 3,
@@ -2569,7 +2569,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng12d);
-	iscc_Dpid fp_seeds12d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds12d[4] = {11, 0, 4};
 	iscc_SeedResult sr12d = {
 		.capacity = 3,
 		.count = 3,
@@ -2613,7 +2613,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng13);
-	iscc_Dpid fp_seeds13[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds13[4] = {11, 0, 4};
 	iscc_SeedResult sr13 = {
 		.capacity = 3,
 		.count = 3,
@@ -2657,7 +2657,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng13a);
-	iscc_Dpid fp_seeds13a[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds13a[4] = {11, 0, 4};
 	iscc_SeedResult sr13a = {
 		.capacity = 3,
 		.count = 3,
@@ -2701,7 +2701,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng13b);
-	iscc_Dpid fp_seeds13b[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds13b[4] = {11, 0, 4};
 	iscc_SeedResult sr13b = {
 		.capacity = 3,
 		.count = 3,
@@ -2745,7 +2745,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng13c);
-	iscc_Dpid fp_seeds13c[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds13c[4] = {11, 0, 4};
 	iscc_SeedResult sr13c = {
 		.capacity = 3,
 		.count = 3,
@@ -2789,7 +2789,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                         "..... ..#.. #..../"
 	                         "....# ..#.. ...../"
 	                         "..... #.... .#.../", &nng13d);
-	iscc_Dpid fp_seeds13d[4] = {11, 0, 4};
+	scc_PointIndex fp_seeds13d[4] = {11, 0, 4};
 	iscc_SeedResult sr13d = {
 		.capacity = 3,
 		.count = 3,

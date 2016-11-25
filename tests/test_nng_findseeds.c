@@ -56,7 +56,7 @@ void scc_ut_find_seeds(void** state)
 	                         "..............#.#./",
 	                         &nng);
 
-	iscc_Dpid fp_seeds1[5] = {0, 5, 6, 10, 12};
+	scc_PointIndex fp_seeds1[5] = {0, 5, 6, 10, 12};
 	iscc_SeedResult sr1 = {
 		.capacity = 1,
 		.count = 0,
@@ -67,9 +67,9 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr1.count, 5);
 	assert_int_equal(sr1.capacity, sr1.count);
 	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds2[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds2[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr2 = {
 		.capacity = 1,
 		.count = 0,
@@ -80,9 +80,9 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr2.count, 5);
 	assert_int_equal(sr2.capacity, sr2.count);
 	assert_non_null(sr2.seeds);
-	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3 = {
 		.capacity = 1,
 		.count = 0,
@@ -93,9 +93,9 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr3.count, 5);
 	assert_int_equal(sr3.capacity, sr3.count);
 	assert_non_null(sr3.seeds);
-	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3alt[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3alt[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3alt = {
 		.capacity = 1,
 		.count = 0,
@@ -106,9 +106,9 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);
 	assert_non_null(sr3alt.seeds);
-	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
+	scc_PointIndex fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
 		.count = 0,
@@ -119,9 +119,9 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr4.count, 4);
 	assert_int_equal(sr4.capacity, sr4.count);
 	assert_non_null(sr4.seeds);
-	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds5[5] = {8, 15, 17, 10, 4};
+	scc_PointIndex fp_seeds5[5] = {8, 15, 17, 10, 4};
 	iscc_SeedResult sr5 = {
 		.capacity = 1,
 		.count = 0,
@@ -132,7 +132,7 @@ void scc_ut_find_seeds(void** state)
 	assert_int_equal(sr5.count, 5);
 	assert_int_equal(sr5.capacity, sr5.count);
 	assert_non_null(sr5.seeds);
-	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(scc_PointIndex));
 
 	free(sr1.seeds);
 	free(sr2.seeds);
@@ -169,7 +169,7 @@ void scc_ut_find_seeds_withdiag(void** state)
 	                         "..............#.##/",
 	                         &nng);
 
-	iscc_Dpid fp_seeds1[5] = {0, 5, 6, 10, 12};
+	scc_PointIndex fp_seeds1[5] = {0, 5, 6, 10, 12};
 	iscc_SeedResult sr1 = {
 		.capacity = 1,
 		.count = 0,
@@ -180,9 +180,9 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr1.count, 5);
 	assert_int_equal(sr1.capacity, sr1.count);
 	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr1.seeds, fp_seeds1, sr1.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds2[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds2[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr2 = {
 		.capacity = 1,
 		.count = 0,
@@ -193,9 +193,9 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr2.count, 5);
 	assert_int_equal(sr2.capacity, sr2.count);
 	assert_non_null(sr2.seeds);
-	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr2.seeds, fp_seeds2, sr2.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3 = {
 		.capacity = 1,
 		.count = 0,
@@ -206,9 +206,9 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr3.count, 5);
 	assert_int_equal(sr3.capacity, sr3.count);
 	assert_non_null(sr3.seeds);
-	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3.seeds, fp_seeds3, sr3.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds3alt[5] = {2, 6, 11, 12, 13};
+	scc_PointIndex fp_seeds3alt[5] = {2, 6, 11, 12, 13};
 	iscc_SeedResult sr3alt = {
 		.capacity = 1,
 		.count = 0,
@@ -219,9 +219,9 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);
 	assert_non_null(sr3alt.seeds);
-	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr3alt.seeds, fp_seeds3alt, sr3alt.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds4[4] = {8, 15, 0, 13};
+	scc_PointIndex fp_seeds4[4] = {8, 15, 0, 13};
 	iscc_SeedResult sr4 = {
 		.capacity = 1,
 		.count = 0,
@@ -232,9 +232,9 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr4.count, 4);
 	assert_int_equal(sr4.capacity, sr4.count);
 	assert_non_null(sr4.seeds);
-	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr4.seeds, fp_seeds4, sr4.count * sizeof(scc_PointIndex));
 
-	iscc_Dpid fp_seeds5[5] = {8, 15, 17, 10, 4};
+	scc_PointIndex fp_seeds5[5] = {8, 15, 17, 10, 4};
 	iscc_SeedResult sr5 = {
 		.capacity = 1,
 		.count = 0,
@@ -245,7 +245,7 @@ void scc_ut_find_seeds_withdiag(void** state)
 	assert_int_equal(sr5.count, 5);
 	assert_int_equal(sr5.capacity, sr5.count);
 	assert_non_null(sr5.seeds);
-	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(iscc_Dpid));
+	assert_memory_equal(sr5.seeds, fp_seeds5, sr5.count * sizeof(scc_PointIndex));
 
 	free(sr1.seeds);
 	free(sr2.seeds);

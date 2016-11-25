@@ -80,8 +80,8 @@ void scc_ut_delete_loops(void** state)
 	assert_int_equal(dg6.max_arcs, 0);
 	assert_null(dg6.head);
 	assert_non_null(dg6.tail_ptr);
-	const iscc_Arci ref_tail_ptr[6] = { 0, 0, 0, 0, 0, 0 };
-	assert_memory_equal(dg6.tail_ptr, ref_tail_ptr, 6 * sizeof(iscc_Arci));
+	const iscc_ArcIndex ref_tail_ptr[6] = { 0, 0, 0, 0, 0, 0 };
+	assert_memory_equal(dg6.tail_ptr, ref_tail_ptr, 6 * sizeof(iscc_ArcIndex));
 
 	assert_free_digraph(&dg1);
 	assert_free_digraph(&dg2);
@@ -951,8 +951,8 @@ void scc_ut_digraph_difference(void** state)
 	assert_int_equal(minuend_dg8.max_arcs, 0);
 	assert_null(minuend_dg8.head);
 	assert_non_null(minuend_dg8.tail_ptr);
-	const iscc_Arci ref_tail_ptr[6] = { 0, 0, 0, 0, 0, 0 };
-	assert_memory_equal(minuend_dg8.tail_ptr, ref_tail_ptr, 6 * sizeof(iscc_Arci));
+	const iscc_ArcIndex ref_tail_ptr[6] = { 0, 0, 0, 0, 0, 0 };
+	assert_memory_equal(minuend_dg8.tail_ptr, ref_tail_ptr, 6 * sizeof(iscc_ArcIndex));
 	assert_free_digraph(&minuend_dg8);
 	assert_free_digraph(&subtrahend_dg8);
 
@@ -1031,8 +1031,8 @@ void scc_ut_digraph_difference(void** state)
 	assert_int_equal(minuend_dg13.max_arcs, 0);
 	assert_null(minuend_dg13.head);
 	assert_non_null(minuend_dg13.tail_ptr);
-	const iscc_Arci ref_tail_ptr13[6] = { 0, 0, 0, 0, 0, 0 };
-	assert_memory_equal(minuend_dg13.tail_ptr, ref_tail_ptr13, 6 * sizeof(iscc_Arci));
+	const iscc_ArcIndex ref_tail_ptr13[6] = { 0, 0, 0, 0, 0, 0 };
+	assert_memory_equal(minuend_dg13.tail_ptr, ref_tail_ptr13, 6 * sizeof(iscc_ArcIndex));
 	assert_free_digraph(&minuend_dg13);
 	assert_free_digraph(&subtrahend_dg13);
 
@@ -1046,8 +1046,8 @@ void scc_ut_digraph_difference(void** state)
 	assert_int_equal(minuend_dg14.max_arcs, 0);
 	assert_null(minuend_dg14.head);
 	assert_non_null(minuend_dg14.tail_ptr);
-	const iscc_Arci ref_tail_ptr14[6] = { 0, 0, 0, 0, 0, 0 };
-	assert_memory_equal(minuend_dg14.tail_ptr, ref_tail_ptr14, 6 * sizeof(iscc_Arci));
+	const iscc_ArcIndex ref_tail_ptr14[6] = { 0, 0, 0, 0, 0, 0 };
+	assert_memory_equal(minuend_dg14.tail_ptr, ref_tail_ptr14, 6 * sizeof(iscc_ArcIndex));
 	assert_free_digraph(&minuend_dg14);
 	assert_free_digraph(&subtrahend_dg14);
 }

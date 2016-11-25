@@ -35,7 +35,7 @@ typedef struct iscc_SeedResult iscc_SeedResult;
 struct iscc_SeedResult {
 	size_t capacity;
 	size_t count;
-	iscc_Dpid* seeds;
+	scc_PointIndex* seeds;
 };
 
 

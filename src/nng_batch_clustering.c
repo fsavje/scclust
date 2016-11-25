@@ -37,7 +37,7 @@
 
 #ifdef SCC_STABLE_NNG
 
-static int iscc_compare_Dpid(const void* a, const void* b);
+static int iscc_compare_PointIndex(const void* a, const void* b);
 
 #endif // ifdef SCC_STABLE_NNG
 
@@ -49,8 +49,8 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* clustering,
                                    double radius,
                                    const bool primary_data_points[],
                                    uint32_t batch_size,
-                                   iscc_Dpid* batch_indices,
-                                   iscc_Dpid* out_indices,
+                                   scc_PointIndex* batch_indices,
+                                   scc_PointIndex* out_indices,
                                    bool* assigned);
 
 
@@ -106,8 +106,8 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* const clustering,
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
 
-	iscc_Dpid* const batch_indices = malloc(sizeof(iscc_Dpid[batch_size]));
-	iscc_Dpid* const out_indices = malloc(sizeof(iscc_Dpid[size_constraint * batch_size]));
+	scc_PointIndex* const batch_indices = malloc(sizeof(scc_PointIndex[batch_size]));
+	scc_PointIndex* const out_indices = malloc(sizeof(scc_PointIndex[size_constraint * batch_size]));
 	bool* const assigned = calloc(clustering->num_data_points, sizeof(bool));
 	if ((batch_indices == NULL) || (out_indices == NULL) || (assigned == NULL)) {
 		free(batch_indices);
@@ -157,10 +157,10 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* const clustering,
 
 #ifdef SCC_STABLE_NNG
 
-static int iscc_compare_Dpid(const void* const a, const void* const b)
+static int iscc_compare_PointIndex(const void* const a, const void* const b)
 {
-    const iscc_Dpid arg1 = *(const iscc_Dpid* const)a;
-    const iscc_Dpid arg2 = *(const iscc_Dpid* const)b;
+    const scc_PointIndex arg1 = *(const scc_PointIndex* const)a;
+    const scc_PointIndex arg2 = *(const scc_PointIndex* const)b;
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
@@ -175,8 +175,8 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
                                    const double radius,
                                    const bool primary_data_points[const],
                                    const uint32_t batch_size,
-                                   iscc_Dpid* const batch_indices,
-                                   iscc_Dpid* const out_indices,
+                                   scc_PointIndex* const batch_indices,
+                                   scc_PointIndex* const out_indices,
                                    bool* const assigned)
 {
 	assert(iscc_check_input_clustering(clustering));
@@ -193,10 +193,10 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 
 	bool search_done = false;
 	scc_Clabel next_cluster_label = 0;
-	assert(clustering->num_data_points <= ISCC_DPID_MAX);
-	const iscc_Dpid num_data_points = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed
+	assert(clustering->num_data_points <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex num_data_points = (scc_PointIndex) clustering->num_data_points; // If `scc_PointIndex` is signed
 
-	for (iscc_Dpid curr_point = 0; curr_point < num_data_points; ) {
+	for (scc_PointIndex curr_point = 0; curr_point < num_data_points; ) {
 
 		size_t in_batch = 0;
 		if (primary_data_points == NULL) {
@@ -238,17 +238,17 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 
 		#ifdef SCC_STABLE_NNG
 		for (size_t i = 0; i < in_batch; ++i) {
-			if (out_indices[(i + 1) * size_constraint - 1] != ISCC_DPID_NA) {
-				qsort(out_indices + i * size_constraint, size_constraint, sizeof(iscc_Dpid), iscc_compare_Dpid);
+			if (out_indices[(i + 1) * size_constraint - 1] != SCC_POINTINDEX_NA) {
+				qsort(out_indices + i * size_constraint, size_constraint, sizeof(scc_PointIndex), iscc_compare_PointIndex);
 			}
 		}
 		#endif // ifdef SCC_STABLE_NNG
 
-		const iscc_Dpid* check_indices = out_indices;
+		const scc_PointIndex* check_indices = out_indices;
 		for (size_t i = 0; i < in_batch; ++i) {
-			const iscc_Dpid* const stop_check_indices = check_indices + size_constraint;
+			const scc_PointIndex* const stop_check_indices = check_indices + size_constraint;
 			if (!assigned[batch_indices[i]]) {
-				if (stop_check_indices[-1] == ISCC_DPID_NA) {
+				if (stop_check_indices[-1] == SCC_POINTINDEX_NA) {
 					// Radius constraint binding
 					assert(!assigned[batch_indices[i]]);
 					clustering->cluster_label[batch_indices[i]] = SCC_CLABEL_NA;
@@ -261,7 +261,7 @@ scc_ErrorCode iscc_run_nng_batches(scc_Clustering* const clustering,
 						}
 
 						assert(!assigned[batch_indices[i]]);
-						const iscc_Dpid* const stop_assign_indices = stop_check_indices - 1;
+						const scc_PointIndex* const stop_assign_indices = stop_check_indices - 1;
 						for (check_indices -= size_constraint; check_indices != stop_assign_indices; ++check_indices) {
 							assert(!assigned[*check_indices]);
 							assigned[*check_indices] = true;

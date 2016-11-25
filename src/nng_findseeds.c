@@ -37,10 +37,10 @@
 
 typedef struct iscc_fs_SortResult iscc_fs_SortResult;
 struct iscc_fs_SortResult {
-	iscc_Dpid* inwards_count;
-	iscc_Dpid* sorted_vertices;
-	iscc_Dpid** vertex_index;
-	iscc_Dpid** bucket_index;
+	scc_PointIndex* inwards_count;
+	scc_PointIndex* sorted_vertices;
+	scc_PointIndex** vertex_index;
+	scc_PointIndex** bucket_index;
 };
 
 
@@ -72,14 +72,14 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* nng,
                                              const bool* not_excluded,
                                              iscc_Digraph* out_dg);
 
-static inline scc_ErrorCode iscc_fs_add_seed(iscc_Dpid s,
+static inline scc_ErrorCode iscc_fs_add_seed(scc_PointIndex s,
                                              iscc_SeedResult* seed_result);
 
-static inline bool iscc_fs_check_neighbors_marks(iscc_Dpid v,
+static inline bool iscc_fs_check_neighbors_marks(scc_PointIndex v,
                                                  const iscc_Digraph*  nng,
                                                  const bool marks[static nng->vertices]);
 
-static inline void iscc_fs_mark_seed_neighbors(iscc_Dpid s,
+static inline void iscc_fs_mark_seed_neighbors(scc_PointIndex s,
                                                const iscc_Digraph* nng,
                                                bool marks[static nng->vertices]);
 
@@ -89,26 +89,26 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* nng,
                                              bool make_indices,
                                              iscc_fs_SortResult* out_sort);
 
-static inline void iscc_fs_decrease_v_in_sort(iscc_Dpid v_to_decrease,
-                                              iscc_Dpid inwards_count[restrict],
-                                              iscc_Dpid* vertex_index[restrict],
-                                              iscc_Dpid* bucket_index[restrict],
-                                              iscc_Dpid* current_pos);
+static inline void iscc_fs_decrease_v_in_sort(scc_PointIndex v_to_decrease,
+                                              scc_PointIndex inwards_count[restrict],
+                                              scc_PointIndex* vertex_index[restrict],
+                                              scc_PointIndex* bucket_index[restrict],
+                                              scc_PointIndex* current_pos);
 
 #ifdef SCC_STABLE_FINDSEED
 
-static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* bucket_start,
-                                             iscc_Dpid* pos,
-                                             const iscc_Dpid inwards_count[],
-                                             iscc_Dpid* vertex_index[]);
+static inline void iscc_fs_debug_bucket_sort(const scc_PointIndex* bucket_start,
+                                             scc_PointIndex* pos,
+                                             const scc_PointIndex inwards_count[],
+                                             scc_PointIndex* vertex_index[]);
 
 #endif // ifdef SCC_STABLE_FINDSEED
 
 #if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
 
-static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
-                                            const iscc_Dpid* last_pos,
-                                            const iscc_Dpid inwards_count[]);
+static inline void iscc_fs_debug_check_sort(const scc_PointIndex* current_pos,
+                                            const scc_PointIndex* last_pos,
+                                            const scc_PointIndex inwards_count[]);
 
 #endif // if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
 
@@ -164,7 +164,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 	if (ec == SCC_ER_OK) {
 		assert(out_seeds->seeds != NULL);
 		if ((out_seeds->count < out_seeds->capacity) && (out_seeds->count > 0)) {
-			iscc_Dpid* const tmp_seed_ptr = realloc(out_seeds->seeds, sizeof(iscc_Dpid[out_seeds->count]));
+			scc_PointIndex* const tmp_seed_ptr = realloc(out_seeds->seeds, sizeof(scc_PointIndex[out_seeds->count]));
 			if (tmp_seed_ptr != NULL) {
 				out_seeds->seeds = tmp_seed_ptr;
 				out_seeds->capacity = out_seeds->count;
@@ -192,7 +192,7 @@ static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,
 	assert(out_seeds->seeds == NULL);
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
-	out_seeds->seeds = malloc(sizeof(iscc_Dpid[out_seeds->capacity]));
+	out_seeds->seeds = malloc(sizeof(scc_PointIndex[out_seeds->capacity]));
 	if ((marks == NULL) || (out_seeds->seeds == NULL)) {
 		free(marks);
 		free(out_seeds->seeds);
@@ -200,9 +200,9 @@ static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,
 	}
 
 	scc_ErrorCode ec;
-	assert(nng->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) nng->vertices; // If `iscc_Dpid` is signed
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
+	assert(nng->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) nng->vertices; // If `scc_PointIndex` is signed
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
 		if (iscc_fs_check_neighbors_marks(v, nng, marks)) {
 			assert(nng->tail_ptr[v] != nng->tail_ptr[v + 1]);
 
@@ -239,7 +239,7 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 	if ((ec = iscc_fs_sort_by_inwards(nng, updating, &sort)) != SCC_ER_OK) return ec;
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
-	out_seeds->seeds = malloc(sizeof(iscc_Dpid[out_seeds->capacity]));
+	out_seeds->seeds = malloc(sizeof(scc_PointIndex[out_seeds->capacity]));
 	if ((marks == NULL) || (out_seeds->seeds == NULL)) {
 		iscc_fs_free_sort_result(&sort);
 		free(marks);
@@ -247,8 +247,8 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	const iscc_Dpid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
-	for (iscc_Dpid* sorted_v = sort.sorted_vertices;
+	const scc_PointIndex* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
+	for (scc_PointIndex* sorted_v = sort.sorted_vertices;
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
@@ -268,11 +268,11 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 			iscc_fs_mark_seed_neighbors(*sorted_v, nng, marks);
 
 			if (updating) {
-				const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
-				for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
+				const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
+				for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
 				        v_arc != v_arc_stop; ++v_arc) {
-					const iscc_Dpid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
-					for (iscc_Dpid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
+					const scc_PointIndex* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
+					for (scc_PointIndex* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
 						// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
 						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
@@ -308,7 +308,7 @@ static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* const nng,
 	if ((ec = iscc_fs_sort_by_inwards(nng, true, &sort)) != SCC_ER_OK) return ec;
 
 	bool* const marks = calloc(nng->vertices, sizeof(bool));
-	out_seeds->seeds = malloc(sizeof(iscc_Dpid[out_seeds->capacity]));
+	out_seeds->seeds = malloc(sizeof(scc_PointIndex[out_seeds->capacity]));
 	if ((marks == NULL) || (out_seeds->seeds == NULL)) {
 		iscc_fs_free_sort_result(&sort);
 		free(marks);
@@ -316,8 +316,8 @@ static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* const nng,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	const iscc_Dpid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
-	for (iscc_Dpid* sorted_v = sort.sorted_vertices;
+	const scc_PointIndex* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
+	for (scc_PointIndex* sorted_v = sort.sorted_vertices;
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
@@ -336,12 +336,12 @@ static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* const nng,
 
 			iscc_fs_mark_seed_neighbors(*sorted_v, nng, marks);
 
-			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
-			for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
+			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
+			for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
 			        v_arc != v_arc_stop; ++v_arc) {
 				if (sorted_v < sort.vertex_index[*v_arc]) {
-					const iscc_Dpid* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
-					for (iscc_Dpid* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
+					const scc_PointIndex* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
+					for (scc_PointIndex* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
 					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
 						// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
 						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
@@ -351,8 +351,8 @@ static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* const nng,
 				}
 			}
 		} else if (!marks[*sorted_v]) {
-			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
-			for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[*sorted_v];
+			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
+			for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
 			        v_arc != v_arc_stop; ++v_arc) {
 				// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
 				if (!marks[*v_arc] && (sorted_v < sort.vertex_index[*v_arc]) && (nng->tail_ptr[*v_arc] != nng->tail_ptr[*v_arc + 1])) {
@@ -402,7 +402,7 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 		return ec;
 	}
 
-	out_seeds->seeds = malloc(sizeof(iscc_Dpid[out_seeds->capacity]));
+	out_seeds->seeds = malloc(sizeof(scc_PointIndex[out_seeds->capacity]));
 	if (out_seeds->seeds == NULL) {
 		free(not_excluded);
 		iscc_free_digraph(&exclusion_graph);
@@ -410,8 +410,8 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	const iscc_Dpid* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
-	for (iscc_Dpid* sorted_v = sort.sorted_vertices;
+	const scc_PointIndex* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
+	for (scc_PointIndex* sorted_v = sort.sorted_vertices;
 	        sorted_v != sorted_v_stop; ++sorted_v) {
 
 		#if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
@@ -432,8 +432,8 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 			not_excluded[*sorted_v] = false;
 
 			if (!updating) {
-				const iscc_Dpid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
-				const iscc_Dpid* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
+				const scc_PointIndex* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
+				const scc_PointIndex* ex_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
 				for (; ex_arc != ex_arc_stop; ++ex_arc) {
 					not_excluded[*ex_arc] = false;
 				}
@@ -445,10 +445,10 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 				// to make two passes over the neighbors: one to exclude all neighbors that is not already excluded (and record them),
 				// and another to decrease the count on non-excluded neighbors' neighbors. As we never will return to the seed's edges,
 				// we use that as a scratch area.
-				iscc_Dpid* const ex_arc_start = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
-				const iscc_Dpid* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
-				const iscc_Dpid* ex_arc = ex_arc_start;
-				iscc_Dpid* write_arc = ex_arc_start;
+				scc_PointIndex* const ex_arc_start = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v];
+				const scc_PointIndex* const ex_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*sorted_v + 1];
+				const scc_PointIndex* ex_arc = ex_arc_start;
+				scc_PointIndex* write_arc = ex_arc_start;
 
 				for (; ex_arc != ex_arc_stop; ++ex_arc) {
 					if (not_excluded[*ex_arc]) {
@@ -460,8 +460,8 @@ static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* const nng,
 
 				ex_arc = ex_arc_start;
 				for (; ex_arc != write_arc; ++ex_arc) {
-					const iscc_Dpid* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
-					for (iscc_Dpid* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
+					const scc_PointIndex* const ex_arc_arc_stop = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc + 1];
+					for (scc_PointIndex* ex_arc_arc = exclusion_graph.head + exclusion_graph.tail_ptr[*ex_arc];
 					        ex_arc_arc != ex_arc_arc_stop; ++ex_arc_arc) {
 						if (not_excluded[*ex_arc_arc]) {
 							iscc_fs_decrease_v_in_sort(*ex_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
@@ -534,7 +534,7 @@ static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* const nng,
 }
 
 
-static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
+static inline scc_ErrorCode iscc_fs_add_seed(const scc_PointIndex s,
                                              iscc_SeedResult* const seed_result)
 {
 	assert(seed_result != NULL);
@@ -549,7 +549,7 @@ static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
 	if (seed_result->count == seed_result->capacity) {
 		seed_result->capacity = seed_result->capacity + (seed_result->capacity >> 3) + 1024;
 		if (seed_result->capacity > ((uintmax_t) SCC_CLABEL_MAX)) seed_result->capacity = ((size_t) SCC_CLABEL_MAX);
-		iscc_Dpid* const seeds_tmp_ptr = realloc(seed_result->seeds, sizeof(iscc_Dpid[seed_result->capacity]));
+		scc_PointIndex* const seeds_tmp_ptr = realloc(seed_result->seeds, sizeof(scc_PointIndex[seed_result->capacity]));
 		if (seeds_tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		seed_result->seeds = seeds_tmp_ptr;
 	}
@@ -561,14 +561,14 @@ static inline scc_ErrorCode iscc_fs_add_seed(const iscc_Dpid s,
 }
 
 
-static inline bool iscc_fs_check_neighbors_marks(const iscc_Dpid v,
+static inline bool iscc_fs_check_neighbors_marks(const scc_PointIndex v,
                                                  const iscc_Digraph* const nng,
                                                  const bool marks[const static nng->vertices])
 {
 	if (marks[v]) return false;
 
-	const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[v];
-	const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[v + 1];
+	const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[v];
+	const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[v + 1];
 	if (v_arc == v_arc_stop) return false;
 
 	for (; v_arc != v_arc_stop; ++v_arc) {
@@ -579,14 +579,14 @@ static inline bool iscc_fs_check_neighbors_marks(const iscc_Dpid v,
 }
 
 
-static inline void iscc_fs_mark_seed_neighbors(const iscc_Dpid s,
+static inline void iscc_fs_mark_seed_neighbors(const scc_PointIndex s,
                                                const iscc_Digraph* const nng,
                                                bool marks[const static nng->vertices])
 {
 	assert(!marks[s]);
 
-	const iscc_Dpid* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
-	for (const iscc_Dpid* s_arc = nng->head + nng->tail_ptr[s];
+	const scc_PointIndex* const s_arc_stop = nng->head + nng->tail_ptr[s + 1];
+	for (const scc_PointIndex* s_arc = nng->head + nng->tail_ptr[s];
 	        s_arc != s_arc_stop; ++s_arc) {
 		assert(!marks[*s_arc]);
 		marks[*s_arc] = true;
@@ -619,8 +619,8 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 	const size_t vertices = nng->vertices;
 
 	*out_sort = (iscc_fs_SortResult) {
-		.inwards_count = calloc(vertices, sizeof(iscc_Dpid)),
-		.sorted_vertices = malloc(sizeof(iscc_Dpid[vertices])),
+		.inwards_count = calloc(vertices, sizeof(scc_PointIndex)),
+		.sorted_vertices = malloc(sizeof(scc_PointIndex[vertices])),
 		.vertex_index = NULL,
 		.bucket_index = NULL,
 	};
@@ -630,21 +630,21 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
-	const iscc_Dpid* const arc_stop = nng->head + nng->tail_ptr[vertices];
-	for (const iscc_Dpid* arc = nng->head; arc != arc_stop; ++arc) {
+	const scc_PointIndex* const arc_stop = nng->head + nng->tail_ptr[vertices];
+	for (const scc_PointIndex* arc = nng->head; arc != arc_stop; ++arc) {
 		++out_sort->inwards_count[*arc];
 	}
 
 	// Dynamic alloc is slightly faster but more error-prone
 	// Add if turns out to be bottleneck
-	iscc_Dpid max_inwards_tmp = 0;
+	scc_PointIndex max_inwards_tmp = 0;
 	for (size_t v = 0; v < vertices; ++v) {
 		if (max_inwards_tmp < out_sort->inwards_count[v]) max_inwards_tmp = out_sort->inwards_count[v];
 	}
-	const size_t max_inwards = (size_t) max_inwards_tmp; // If `iscc_Dpid` is signed
+	const size_t max_inwards = (size_t) max_inwards_tmp; // If `scc_PointIndex` is signed
 
 	size_t* bucket_count = calloc(max_inwards + 1, sizeof(size_t));
-	out_sort->bucket_index = malloc(sizeof(iscc_Dpid*[max_inwards + 1]));
+	out_sort->bucket_index = malloc(sizeof(scc_PointIndex*[max_inwards + 1]));
 	if ((bucket_count == NULL) || (out_sort->bucket_index == NULL)) {
 		free(bucket_count);
 		iscc_fs_free_sort_result(out_sort);
@@ -661,21 +661,21 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 	}
 	free(bucket_count);
 
-	assert(vertices <= ISCC_DPID_MAX);
+	assert(vertices <= ISCC_POINTINDEX_MAX);
 	if (make_indices) {
-		out_sort->vertex_index = malloc(sizeof(iscc_Dpid*[vertices]));
+		out_sort->vertex_index = malloc(sizeof(scc_PointIndex*[vertices]));
 		if (out_sort->vertex_index == NULL) {
 			iscc_fs_free_sort_result(out_sort);
 			return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
-		for (iscc_Dpid v = (iscc_Dpid) vertices; v > 0; ) {
+		for (scc_PointIndex v = (scc_PointIndex) vertices; v > 0; ) {
 			--v;
 			--(out_sort->bucket_index[out_sort->inwards_count[v]]);
 			*out_sort->bucket_index[out_sort->inwards_count[v]] = v;
 			out_sort->vertex_index[v] = out_sort->bucket_index[out_sort->inwards_count[v]];
 		}
 	} else {
-		for (iscc_Dpid v = (iscc_Dpid) vertices; v > 0; ) {
+		for (scc_PointIndex v = (scc_PointIndex) vertices; v > 0; ) {
 			--v;
 			--(out_sort->bucket_index[out_sort->inwards_count[v]]);
 			*out_sort->bucket_index[out_sort->inwards_count[v]] = v;
@@ -691,18 +691,18 @@ static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* const nng,
 }
 
 
-static inline void iscc_fs_decrease_v_in_sort(const iscc_Dpid v_to_decrease,
-                                              iscc_Dpid inwards_count[restrict const],
-                                              iscc_Dpid* vertex_index[restrict const],
-                                              iscc_Dpid* bucket_index[restrict const],
-                                              iscc_Dpid* const current_pos)
+static inline void iscc_fs_decrease_v_in_sort(const scc_PointIndex v_to_decrease,
+                                              scc_PointIndex inwards_count[restrict const],
+                                              scc_PointIndex* vertex_index[restrict const],
+                                              scc_PointIndex* bucket_index[restrict const],
+                                              scc_PointIndex* const current_pos)
 {
 	// Assert that vertex index is correct
 	assert(v_to_decrease == *vertex_index[v_to_decrease]);
 
 	// Find vertices to move
-	iscc_Dpid* const move_from = vertex_index[v_to_decrease];
-	iscc_Dpid* move_to = bucket_index[inwards_count[v_to_decrease]];
+	scc_PointIndex* const move_from = vertex_index[v_to_decrease];
+	scc_PointIndex* move_to = bucket_index[inwards_count[v_to_decrease]];
 	if (move_to <= current_pos) {
 		move_to = current_pos + 1;
 		bucket_index[inwards_count[v_to_decrease] - 1] = move_to;
@@ -746,12 +746,12 @@ static inline void iscc_fs_decrease_v_in_sort(const iscc_Dpid v_to_decrease,
 
 #ifdef SCC_STABLE_FINDSEED
 
-static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* const bucket_start,
-                                             iscc_Dpid* pos,
-                                             const iscc_Dpid inwards_count[const],
-                                             iscc_Dpid* vertex_index[const])
+static inline void iscc_fs_debug_bucket_sort(const scc_PointIndex* const bucket_start,
+                                             scc_PointIndex* pos,
+                                             const scc_PointIndex inwards_count[const],
+                                             scc_PointIndex* vertex_index[const])
 {
-	iscc_Dpid tmp_v = *pos;
+	scc_PointIndex tmp_v = *pos;
 	for (; pos != bucket_start; --pos) {
 		assert(inwards_count[tmp_v] == inwards_count[*(pos - 1)]);
 		if (tmp_v >= *(pos - 1)) break;
@@ -767,9 +767,9 @@ static inline void iscc_fs_debug_bucket_sort(const iscc_Dpid* const bucket_start
 
 #if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
 
-static inline void iscc_fs_debug_check_sort(const iscc_Dpid* current_pos,
-                                            const iscc_Dpid* const last_pos,
-                                            const iscc_Dpid inwards_count[const])
+static inline void iscc_fs_debug_check_sort(const scc_PointIndex* current_pos,
+                                            const scc_PointIndex* const last_pos,
+                                            const scc_PointIndex inwards_count[const])
 {
 	for (; current_pos != last_pos; ++current_pos) {
 		assert(inwards_count[*(current_pos)] <= inwards_count[*(current_pos + 1)]);

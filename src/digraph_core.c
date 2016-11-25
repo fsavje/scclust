@@ -47,7 +47,7 @@ void iscc_free_digraph(iscc_Digraph* const dg)
 bool iscc_digraph_is_initialized(const iscc_Digraph* const dg)
 {
 	if ((dg == NULL) || (dg->tail_ptr == NULL)) return false;
-	if ((dg->vertices > ISCC_DPID_MAX) || (dg->max_arcs > ISCC_ARCI_MAX)) return false;
+	if ((dg->vertices > ISCC_POINTINDEX_MAX) || (dg->max_arcs > ISCC_ARCINDEX_MAX)) return false;
 	if ((dg->max_arcs == 0) && (dg->head != NULL)) return false;
 	if ((dg->max_arcs > 0) && (dg->head == NULL)) return false;
 	return true;
@@ -63,10 +63,10 @@ bool iscc_digraph_is_valid(const iscc_Digraph* const dg)
 		if (dg->tail_ptr[i] > dg->tail_ptr[i + 1]) return false;
 	}
 	if (dg->tail_ptr[dg->vertices] > 0) {
-		assert(dg->vertices <= ISCC_DPID_MAX);
-		iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed.
-		const iscc_Dpid* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
-		for (const iscc_Dpid* arc = dg->head; arc != arc_stop; ++arc) {
+		assert(dg->vertices <= ISCC_POINTINDEX_MAX);
+		scc_PointIndex vertices = (scc_PointIndex) dg->vertices; // If `scc_PointIndex` is signed.
+		const scc_PointIndex* const arc_stop = dg->head + dg->tail_ptr[dg->vertices];
+		for (const scc_PointIndex* arc = dg->head; arc != arc_stop; ++arc) {
 			if (*arc >= vertices) return false;
 		}
 	}
@@ -86,23 +86,23 @@ scc_ErrorCode iscc_init_digraph(const size_t vertices,
                                 iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ISCC_DPID_MAX);
+	assert(vertices <= ISCC_POINTINDEX_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
-	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	if ((max_arcs > ISCC_ARCINDEX_MAX) || (max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_ArcIndex` type).");
 	}
 
 	*out_dg = (iscc_Digraph) {
 		.vertices = vertices,
 		.max_arcs = (size_t) max_arcs,
 		.head = NULL,
-		.tail_ptr = malloc(sizeof(iscc_Arci[vertices + 1])),
+		.tail_ptr = malloc(sizeof(iscc_ArcIndex[vertices + 1])),
 	};
 	if (out_dg->tail_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	if (max_arcs > 0) {
-		out_dg->head = malloc(sizeof(iscc_Dpid[max_arcs]));
+		out_dg->head = malloc(sizeof(scc_PointIndex[max_arcs]));
 		if (out_dg->head == NULL) {
 			iscc_free_digraph(out_dg);
 			return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -120,23 +120,23 @@ scc_ErrorCode iscc_empty_digraph(const size_t vertices,
                                  iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ISCC_DPID_MAX);
+	assert(vertices <= ISCC_POINTINDEX_MAX);
 	assert(vertices < SIZE_MAX);
 	assert(out_dg != NULL);
-	if ((max_arcs > ISCC_ARCI_MAX) || (max_arcs > SIZE_MAX)) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	if ((max_arcs > ISCC_ARCINDEX_MAX) || (max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_ArcIndex` type).");
 	}
 
 	*out_dg = (iscc_Digraph) {
 		.vertices = vertices,
 		.max_arcs = (size_t) max_arcs,
 		.head = NULL,
-		.tail_ptr = calloc(vertices + 1, sizeof(iscc_Arci)),
+		.tail_ptr = calloc(vertices + 1, sizeof(iscc_ArcIndex)),
 	};
 	if (out_dg->tail_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	if (max_arcs > 0) {
-		out_dg->head = malloc(sizeof(iscc_Dpid[max_arcs]));
+		out_dg->head = malloc(sizeof(scc_PointIndex[max_arcs]));
 		if (out_dg->head == NULL) {
 			iscc_free_digraph(out_dg);
 			return iscc_make_error(SCC_ER_NO_MEMORY);
@@ -154,8 +154,8 @@ scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
 {
 	assert(iscc_digraph_is_initialized(dg));
 	assert(dg->tail_ptr[dg->vertices] <= new_max_arcs);
-	if ((new_max_arcs > ISCC_ARCI_MAX) || (new_max_arcs > SIZE_MAX)) {
-		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_Arci` type).");
+	if ((new_max_arcs > ISCC_ARCINDEX_MAX) || (new_max_arcs > SIZE_MAX)) {
+		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many arcs in graph (adjust the `iscc_ArcIndex` type).");
 	}
 	if (dg->max_arcs == new_max_arcs) return iscc_no_error();
 
@@ -164,7 +164,7 @@ scc_ErrorCode iscc_change_arc_storage(iscc_Digraph* const dg,
 		dg->head = NULL;
 		dg->max_arcs = 0;
 	} else {
-		iscc_Dpid* const tmp_ptr = realloc(dg->head, sizeof(iscc_Dpid[new_max_arcs]));
+		scc_PointIndex* const tmp_ptr = realloc(dg->head, sizeof(scc_PointIndex[new_max_arcs]));
 		if (tmp_ptr == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		dg->head = tmp_ptr;
 		dg->max_arcs = (size_t) new_max_arcs;

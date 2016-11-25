@@ -37,7 +37,7 @@
 // =============================================================================
 
 bool iscc_is_balanced_digraph(const iscc_Digraph* const dg,
-                              const iscc_Arci arcs_per_vertex)
+                              const iscc_ArcIndex arcs_per_vertex)
 {
 	if (!iscc_digraph_is_valid(dg)) return false;
 
@@ -60,14 +60,14 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 	int_fast8_t* const single_row = calloc(dg_a->vertices, sizeof(int_fast8_t));
 
 	for (size_t v = 0; v < dg_a->vertices; ++v) {
-		const iscc_Dpid* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
-		for (const iscc_Dpid* arc_a = dg_a->head + dg_a->tail_ptr[v];
+		const scc_PointIndex* const arc_a_stop = dg_a->head + dg_a->tail_ptr[v + 1];
+		for (const scc_PointIndex* arc_a = dg_a->head + dg_a->tail_ptr[v];
 		        arc_a != arc_a_stop; ++arc_a) {
 			single_row[*arc_a] = 1;
 		}
 
-		const iscc_Dpid* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
-		for (const iscc_Dpid* arc_b = dg_b->head + dg_b->tail_ptr[v];
+		const scc_PointIndex* const arc_b_stop = dg_b->head + dg_b->tail_ptr[v + 1];
+		for (const scc_PointIndex* arc_b = dg_b->head + dg_b->tail_ptr[v];
 		        arc_b != arc_b_stop; ++arc_b) {
 			if (single_row[*arc_b] == 0) {
 				free(single_row);
@@ -93,14 +93,14 @@ bool iscc_digraphs_equal(const iscc_Digraph* const dg_a,
 
 scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
                                        const uintmax_t max_arcs,
-                                       const iscc_Arci tail_ptr[const static vertices + 1],
-                                       const iscc_Dpid head[const static max_arcs],
+                                       const iscc_ArcIndex tail_ptr[const static vertices + 1],
+                                       const scc_PointIndex head[const static max_arcs],
                                        iscc_Digraph* const out_dg)
 {
 	assert(vertices > 0);
-	assert(vertices <= ISCC_DPID_MAX);
+	assert(vertices <= ISCC_POINTINDEX_MAX);
 	assert(max_arcs > 0);
-	assert(max_arcs <= ISCC_ARCI_MAX);
+	assert(max_arcs <= ISCC_ARCINDEX_MAX);
 	assert(max_arcs <= SIZE_MAX);
 	assert(tail_ptr != NULL);
 	assert(head != NULL);
@@ -109,8 +109,8 @@ scc_ErrorCode iscc_digraph_from_pieces(const size_t vertices,
 	scc_ErrorCode ec;
 	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	memcpy(out_dg->tail_ptr, tail_ptr, (vertices + 1) * sizeof(iscc_Arci));
-	memcpy(out_dg->head, head, max_arcs * sizeof(iscc_Dpid));
+	memcpy(out_dg->tail_ptr, tail_ptr, (vertices + 1) * sizeof(iscc_ArcIndex));
+	memcpy(out_dg->head, head, max_arcs * sizeof(scc_PointIndex));
 
 	return iscc_no_error();
 }
@@ -138,9 +138,9 @@ scc_ErrorCode iscc_digraph_from_string(const char dg_str[const],
 	scc_ErrorCode ec;
 	if ((ec = iscc_init_digraph(vertices, max_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	iscc_Arci curr_array_pos = 0;
+	iscc_ArcIndex curr_array_pos = 0;
 	size_t curr_row = 0;
-	iscc_Dpid curr_col = 0;
+	scc_PointIndex curr_col = 0;
 	out_dg->tail_ptr[0] = 0;
 
 	for (size_t c = 0; dg_str[c] != '\0'; ++c) {
@@ -176,9 +176,9 @@ scc_ErrorCode iscc_copy_digraph(const iscc_Digraph* const in_dg,
 
 	if ((ec = iscc_init_digraph(num_vertices, num_arcs, out_dg)) != SCC_ER_OK) return ec;
 
-	memcpy(out_dg->tail_ptr, in_dg->tail_ptr, (num_vertices + 1) * sizeof(iscc_Arci));
+	memcpy(out_dg->tail_ptr, in_dg->tail_ptr, (num_vertices + 1) * sizeof(iscc_ArcIndex));
 	if (num_arcs > 0) {
-		memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(iscc_Dpid));
+		memcpy(out_dg->head, in_dg->head, num_arcs * sizeof(scc_PointIndex));
 	}
 
 	return iscc_no_error();
@@ -201,8 +201,8 @@ void iscc_print_digraph(const iscc_Digraph* const dg)
 	}
 
 	for (size_t v = 0; v < dg->vertices; ++v) {
-		const iscc_Dpid* const a_stop = dg->head + dg->tail_ptr[v + 1];
-		for (const iscc_Dpid* a = dg->head + dg->tail_ptr[v];
+		const scc_PointIndex* const a_stop = dg->head + dg->tail_ptr[v + 1];
+		for (const scc_PointIndex* a = dg->head + dg->tail_ptr[v];
 		        a != a_stop; ++a) {
 			single_row[*a] = true;
 		}

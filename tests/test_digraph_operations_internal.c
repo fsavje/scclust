@@ -33,7 +33,7 @@ void scc_ut_do_union_and_delete(void** state)
 {
 	(void) state;
 
-	iscc_Dpid row_markers[4];
+	scc_PointIndex row_markers[4];
 
 	iscc_Digraph ut_dg1;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg1);
@@ -51,175 +51,175 @@ void scc_ut_do_union_and_delete(void** state)
 
 	const uint64_t ut_count_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_12, 6);
-	iscc_Arci out_tail_ptr_12[5];
-	iscc_Dpid out_head_12[6];
+	iscc_ArcIndex out_tail_ptr_12[5];
+	scc_PointIndex out_head_12[6];
 	const uint64_t ut_count_do_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, false, true, out_tail_ptr_12, out_head_12);
 	assert_int_equal(ut_count_do_12, ut_count_12);
-	iscc_Arci ref_tail_ptr_12[5] = { 0, 1, 3, 5, 6 };
-	iscc_Dpid ref_head_12[6] = { 3, 3, 2, 3, 1, 0 };
-	assert_memory_equal(out_tail_ptr_12, ref_tail_ptr_12, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_12, ref_head_12, ut_count_12 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_12[5] = { 0, 1, 3, 5, 6 };
+	scc_PointIndex ref_head_12[6] = { 3, 3, 2, 3, 1, 0 };
+	assert_memory_equal(out_tail_ptr_12, ref_tail_ptr_12, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_12, ref_head_12, ut_count_12 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_12_ttk = iscc_do_union_and_delete(2, sum_12, row_markers, tails_to_keep1, false, false, NULL, NULL);
 	assert_int_equal(ut_count_12_ttk, 3);
-	iscc_Arci out_tail_ptr_12_ttk[5];
-	iscc_Dpid out_head_12_ttk[3];
+	iscc_ArcIndex out_tail_ptr_12_ttk[5];
+	scc_PointIndex out_head_12_ttk[3];
 	const uint64_t ut_count_do_12_ttk = iscc_do_union_and_delete(2, sum_12, row_markers, tails_to_keep1, false, true, out_tail_ptr_12_ttk, out_head_12_ttk);
 	assert_int_equal(ut_count_do_12_ttk, ut_count_12_ttk);
-	iscc_Arci ref_tail_ptr_12_ttk[5] = { 0, 1, 3, 3, 3 };
-	iscc_Dpid ref_head_12_ttk[3] = { 3, 3, 2 };
-	assert_memory_equal(out_tail_ptr_12_ttk, ref_tail_ptr_12_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_12_ttk, ref_head_12_ttk, ut_count_12_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_12_ttk[5] = { 0, 1, 3, 3, 3 };
+	scc_PointIndex ref_head_12_ttk[3] = { 3, 3, 2 };
+	assert_memory_equal(out_tail_ptr_12_ttk, ref_tail_ptr_12_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_12_ttk, ref_head_12_ttk, ut_count_12_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 
 	const uint64_t ut_count_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_13, 6);
-	iscc_Arci out_tail_ptr_13[5];
-	iscc_Dpid out_head_13[6];
+	iscc_ArcIndex out_tail_ptr_13[5];
+	scc_PointIndex out_head_13[6];
 	const uint64_t ut_count_do_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, false, true, out_tail_ptr_13, out_head_13);
 	assert_int_equal(ut_count_do_13, ut_count_13);
-	iscc_Arci ref_tail_ptr_13[5] = { 0, 1, 3, 5, 6 };
-	iscc_Dpid ref_head_13[6] = { 3, 3, 0, 3, 0, 0 };
-	assert_memory_equal(out_tail_ptr_13, ref_tail_ptr_13, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_13, ref_head_13, ut_count_13 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_13[5] = { 0, 1, 3, 5, 6 };
+	scc_PointIndex ref_head_13[6] = { 3, 3, 0, 3, 0, 0 };
+	assert_memory_equal(out_tail_ptr_13, ref_tail_ptr_13, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_13, ref_head_13, ut_count_13 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_13_ttk = iscc_do_union_and_delete(2, sum_13, row_markers, tails_to_keep2, false, false, NULL, NULL);
 	assert_int_equal(ut_count_13_ttk, 3);
-	iscc_Arci out_tail_ptr_13_ttk[5];
-	iscc_Dpid out_head_13_ttk[3];
+	iscc_ArcIndex out_tail_ptr_13_ttk[5];
+	scc_PointIndex out_head_13_ttk[3];
 	const uint64_t ut_count_do_13_ttk = iscc_do_union_and_delete(2, sum_13, row_markers, tails_to_keep2, false, true, out_tail_ptr_13_ttk, out_head_13_ttk);
 	assert_int_equal(ut_count_do_13_ttk, ut_count_13_ttk);
-	iscc_Arci ref_tail_ptr_13_ttk[5] = { 0, 1, 1, 3, 3 };
-	iscc_Dpid ref_head_13_ttk[3] = { 3, 3, 0 };
-	assert_memory_equal(out_tail_ptr_13_ttk, ref_tail_ptr_13_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_13_ttk, ref_head_13_ttk, ut_count_13_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_13_ttk[5] = { 0, 1, 1, 3, 3 };
+	scc_PointIndex ref_head_13_ttk[3] = { 3, 3, 0 };
+	assert_memory_equal(out_tail_ptr_13_ttk, ref_tail_ptr_13_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_13_ttk, ref_head_13_ttk, ut_count_13_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 
 	const uint64_t ut_count_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_31, 6);
-	iscc_Arci out_tail_ptr_31[5];
-	iscc_Dpid out_head_31[6];
+	iscc_ArcIndex out_tail_ptr_31[5];
+	scc_PointIndex out_head_31[6];
 	const uint64_t ut_count_do_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, false, true, out_tail_ptr_31, out_head_31);
 	assert_int_equal(ut_count_do_31, ut_count_31);
-	iscc_Arci ref_tail_ptr_31[5] = { 0, 1, 3, 5, 6 };
-	iscc_Dpid ref_head_31[6] = { 3, 0, 3, 0, 3, 0 };
-	assert_memory_equal(out_tail_ptr_31, ref_tail_ptr_31, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_31, ref_head_31, ut_count_31 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_31[5] = { 0, 1, 3, 5, 6 };
+	scc_PointIndex ref_head_31[6] = { 3, 0, 3, 0, 3, 0 };
+	assert_memory_equal(out_tail_ptr_31, ref_tail_ptr_31, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_31, ref_head_31, ut_count_31 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_31_ttk = iscc_do_union_and_delete(2, sum_31, row_markers, tails_to_keep3, false, false, NULL, NULL);
 	assert_int_equal(ut_count_31_ttk, 3);
-	iscc_Arci out_tail_ptr_31_ttk[5];
-	iscc_Dpid out_head_31_ttk[3];
+	iscc_ArcIndex out_tail_ptr_31_ttk[5];
+	scc_PointIndex out_head_31_ttk[3];
 	const uint64_t ut_count_do_31_ttk = iscc_do_union_and_delete(2, sum_31, row_markers, tails_to_keep3, false, true, out_tail_ptr_31_ttk, out_head_31_ttk);
 	assert_int_equal(ut_count_do_31_ttk, ut_count_31_ttk);
-	iscc_Arci ref_tail_ptr_31_ttk[5] = { 0, 0, 0, 2, 3 };
-	iscc_Dpid ref_head_31_ttk[3] = { 0, 3, 0 };
-	assert_memory_equal(out_tail_ptr_31_ttk, ref_tail_ptr_31_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_31_ttk, ref_head_31_ttk, ut_count_31_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_31_ttk[5] = { 0, 0, 0, 2, 3 };
+	scc_PointIndex ref_head_31_ttk[3] = { 0, 3, 0 };
+	assert_memory_equal(out_tail_ptr_31_ttk, ref_tail_ptr_31_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_31_ttk, ref_head_31_ttk, ut_count_31_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 
 	const uint64_t ut_count_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_123, 8);
-	iscc_Arci out_tail_ptr_123[5];
-	iscc_Dpid out_head_123[8];
+	iscc_ArcIndex out_tail_ptr_123[5];
+	scc_PointIndex out_head_123[8];
 	const uint64_t ut_count_do_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, false, true, out_tail_ptr_123, out_head_123);
 	assert_int_equal(ut_count_do_123, ut_count_123);
-	iscc_Arci ref_tail_ptr_123[5] = { 0, 1, 4, 7, 8 };
-	iscc_Dpid ref_head_123[8] = { 3, 3, 2, 0, 3, 1, 0, 0 };
-	assert_memory_equal(out_tail_ptr_123, ref_tail_ptr_123, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_123, ref_head_123, ut_count_123 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_123[5] = { 0, 1, 4, 7, 8 };
+	scc_PointIndex ref_head_123[8] = { 3, 3, 2, 0, 3, 1, 0, 0 };
+	assert_memory_equal(out_tail_ptr_123, ref_tail_ptr_123, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_123, ref_head_123, ut_count_123 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_123_ttk = iscc_do_union_and_delete(3, sum_123, row_markers, tails_to_keep1, false, false, NULL, NULL);
 	assert_int_equal(ut_count_123_ttk, 4);
-	iscc_Arci out_tail_ptr_123_ttk[5];
-	iscc_Dpid out_head_123_ttk[4];
+	iscc_ArcIndex out_tail_ptr_123_ttk[5];
+	scc_PointIndex out_head_123_ttk[4];
 	const uint64_t ut_count_do_123_ttk = iscc_do_union_and_delete(3, sum_123, row_markers, tails_to_keep1, false, true, out_tail_ptr_123_ttk, out_head_123_ttk);
 	assert_int_equal(ut_count_do_123_ttk, ut_count_123_ttk);
-	iscc_Arci ref_tail_ptr_123_ttk[5] = { 0, 1, 4, 4, 4 };
-	iscc_Dpid ref_head_123_ttk[4] = { 3, 3, 2, 0 };
-	assert_memory_equal(out_tail_ptr_123_ttk, ref_tail_ptr_123_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_123_ttk, ref_head_123_ttk, ut_count_123_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_123_ttk[5] = { 0, 1, 4, 4, 4 };
+	scc_PointIndex ref_head_123_ttk[4] = { 3, 3, 2, 0 };
+	assert_memory_equal(out_tail_ptr_123_ttk, ref_tail_ptr_123_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_123_ttk, ref_head_123_ttk, ut_count_123_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 
 	const uint64_t ut_count_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_132, 8);
-	iscc_Arci out_tail_ptr_132[5];
-	iscc_Dpid out_head_132[8];
+	iscc_ArcIndex out_tail_ptr_132[5];
+	scc_PointIndex out_head_132[8];
 	const uint64_t ut_count_do_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, false, true, out_tail_ptr_132, out_head_132);
 	assert_int_equal(ut_count_do_132, ut_count_132);
-	iscc_Arci ref_tail_ptr_132[5] = { 0, 1, 4, 7, 8 };
-	iscc_Dpid ref_head_132[8] = { 3, 3, 0, 2, 3, 0, 1, 0 };
-	assert_memory_equal(out_tail_ptr_132, ref_tail_ptr_132, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_132, ref_head_132, ut_count_132 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_132[5] = { 0, 1, 4, 7, 8 };
+	scc_PointIndex ref_head_132[8] = { 3, 3, 0, 2, 3, 0, 1, 0 };
+	assert_memory_equal(out_tail_ptr_132, ref_tail_ptr_132, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_132, ref_head_132, ut_count_132 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_132_ttk = iscc_do_union_and_delete(3, sum_132, row_markers, tails_to_keep2, false, false, NULL, NULL);
 	assert_int_equal(ut_count_132_ttk, 4);
-	iscc_Arci out_tail_ptr_132_ttk[5];
-	iscc_Dpid out_head_132_ttk[4];
+	iscc_ArcIndex out_tail_ptr_132_ttk[5];
+	scc_PointIndex out_head_132_ttk[4];
 	const uint64_t ut_count_do_132_ttk = iscc_do_union_and_delete(3, sum_132, row_markers, tails_to_keep2, false, true, out_tail_ptr_132_ttk, out_head_132_ttk);
 	assert_int_equal(ut_count_do_132_ttk, ut_count_132_ttk);
-	iscc_Arci ref_tail_ptr_132_ttk[5] = { 0, 1, 1, 4, 4 };
-	iscc_Dpid ref_head_132_ttk[4] = { 3, 3, 0, 1 };
-	assert_memory_equal(out_tail_ptr_132_ttk, ref_tail_ptr_132_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_132_ttk, ref_head_132_ttk, ut_count_132_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_132_ttk[5] = { 0, 1, 1, 4, 4 };
+	scc_PointIndex ref_head_132_ttk[4] = { 3, 3, 0, 1 };
+	assert_memory_equal(out_tail_ptr_132_ttk, ref_tail_ptr_132_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_132_ttk, ref_head_132_ttk, ut_count_132_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 
 	const uint64_t ut_count_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_213, 8);
-	iscc_Arci out_tail_ptr_213[5];
-	iscc_Dpid out_head_213[8];
+	iscc_ArcIndex out_tail_ptr_213[5];
+	scc_PointIndex out_head_213[8];
 	const uint64_t ut_count_do_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, false, true, out_tail_ptr_213, out_head_213);
 	assert_int_equal(ut_count_do_213, ut_count_213);
-	iscc_Arci ref_tail_ptr_213[5] = { 0, 1, 4, 7, 8 };
-	iscc_Dpid ref_head_213[8] = { 3, 2, 3, 0, 1, 3, 0, 0 };
-	assert_memory_equal(out_tail_ptr_213, ref_tail_ptr_213, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_213, ref_head_213, ut_count_213 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_213[5] = { 0, 1, 4, 7, 8 };
+	scc_PointIndex ref_head_213[8] = { 3, 2, 3, 0, 1, 3, 0, 0 };
+	assert_memory_equal(out_tail_ptr_213, ref_tail_ptr_213, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_213, ref_head_213, ut_count_213 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_213_ttk = iscc_do_union_and_delete(3, sum_213, row_markers, tails_to_keep3, false, false, NULL, NULL);
 	assert_int_equal(ut_count_213_ttk, 4);
-	iscc_Arci out_tail_ptr_213_ttk[5];
-	iscc_Dpid out_head_213_ttk[4];
+	iscc_ArcIndex out_tail_ptr_213_ttk[5];
+	scc_PointIndex out_head_213_ttk[4];
 	const uint64_t ut_count_do_213_ttk = iscc_do_union_and_delete(3, sum_213, row_markers, tails_to_keep3, false, true, out_tail_ptr_213_ttk, out_head_213_ttk);
 	assert_int_equal(ut_count_do_213_ttk, ut_count_213_ttk);
-	iscc_Arci ref_tail_ptr_213_ttk[5] = { 0, 0, 0, 3, 4 };
-	iscc_Dpid ref_head_213_ttk[4] = { 1, 3, 0, 0 };
-	assert_memory_equal(out_tail_ptr_213_ttk, ref_tail_ptr_213_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_213_ttk, ref_head_213_ttk, ut_count_213_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_213_ttk[5] = { 0, 0, 0, 3, 4 };
+	scc_PointIndex ref_head_213_ttk[4] = { 1, 3, 0, 0 };
+	assert_memory_equal(out_tail_ptr_213_ttk, ref_tail_ptr_213_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_213_ttk, ref_head_213_ttk, ut_count_213_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 
 	const uint64_t ut_count_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_321, 8);
-	iscc_Arci out_tail_ptr_321[5];
-	iscc_Dpid out_head_321[8];
+	iscc_ArcIndex out_tail_ptr_321[5];
+	scc_PointIndex out_head_321[8];
 	const uint64_t ut_count_do_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, false, true, out_tail_ptr_321, out_head_321);
 	assert_int_equal(ut_count_do_321, ut_count_321);
-	iscc_Arci ref_tail_ptr_321[5] = { 0, 1, 4, 7, 8 };
-	iscc_Dpid ref_head_321[8] = { 3, 0, 2, 3, 0, 1, 3, 0 };
-	assert_memory_equal(out_tail_ptr_321, ref_tail_ptr_321, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_321, ref_head_321, ut_count_321 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_321[5] = { 0, 1, 4, 7, 8 };
+	scc_PointIndex ref_head_321[8] = { 3, 0, 2, 3, 0, 1, 3, 0 };
+	assert_memory_equal(out_tail_ptr_321, ref_tail_ptr_321, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_321, ref_head_321, ut_count_321 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_321_ttk = iscc_do_union_and_delete(3, sum_321, row_markers, tails_to_keep1, false, false, NULL, NULL);
 	assert_int_equal(ut_count_321_ttk, 4);
-	iscc_Arci out_tail_ptr_321_ttk[5];
-	iscc_Dpid out_head_321_ttk[4];
+	iscc_ArcIndex out_tail_ptr_321_ttk[5];
+	scc_PointIndex out_head_321_ttk[4];
 	const uint64_t ut_count_do_321_ttk = iscc_do_union_and_delete(3, sum_321, row_markers, tails_to_keep1, false, true, out_tail_ptr_321_ttk, out_head_321_ttk);
 	assert_int_equal(ut_count_do_321_ttk, ut_count_321_ttk);
-	iscc_Arci ref_tail_ptr_321_ttk[5] = { 0, 1, 4, 4, 4 };
-	iscc_Dpid ref_head_321_ttk[4] = { 3, 0, 2, 3 };
-	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_321_ttk[5] = { 0, 1, 4, 4, 4 };
+	scc_PointIndex ref_head_321_ttk[4] = { 3, 0, 2, 3 };
+	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(scc_PointIndex));
 
 
 	iscc_free_digraph(&ut_dg1);
@@ -239,122 +239,122 @@ void scc_ut_do_union_and_delete(void** state)
 
 	const uint64_t ut_count_45 = iscc_do_union_and_delete(2, sum_45, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_45, 3);
-	iscc_Arci out_tail_ptr_45[5];
-	iscc_Dpid out_head_45[3];
+	iscc_ArcIndex out_tail_ptr_45[5];
+	scc_PointIndex out_head_45[3];
 	const uint64_t ut_count_do_45 = iscc_do_union_and_delete(2, sum_45, row_markers, NULL, false, true, out_tail_ptr_45, out_head_45);
 	assert_int_equal(ut_count_do_45, ut_count_45);
-	iscc_Arci ref_tail_ptr_45[5] = { 0, 1, 2, 3, 3 };
-	iscc_Dpid ref_head_45[3] = { 3, 3, 3 };
-	assert_memory_equal(out_tail_ptr_45, ref_tail_ptr_45, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_45, ref_head_45, ut_count_45 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_45[5] = { 0, 1, 2, 3, 3 };
+	scc_PointIndex ref_head_45[3] = { 3, 3, 3 };
+	assert_memory_equal(out_tail_ptr_45, ref_tail_ptr_45, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_45, ref_head_45, ut_count_45 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_45_ttk = iscc_do_union_and_delete(2, sum_45, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_45_ttk, 2);
-	iscc_Arci out_tail_ptr_45_ttk[5];
-	iscc_Dpid out_head_45_ttk[2];
+	iscc_ArcIndex out_tail_ptr_45_ttk[5];
+	scc_PointIndex out_head_45_ttk[2];
 	const uint64_t ut_count_do_45_ttk = iscc_do_union_and_delete(2, sum_45, row_markers, tails_to_keep4, false, true, out_tail_ptr_45_ttk, out_head_45_ttk);
 	assert_int_equal(ut_count_do_45_ttk, ut_count_45_ttk);
-	iscc_Arci ref_tail_ptr_45_ttk[5] = { 0, 1, 2, 2, 2 };
-	iscc_Dpid ref_head_45_ttk[2] = { 3, 3 };
-	assert_memory_equal(out_tail_ptr_45_ttk, ref_tail_ptr_45_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_45_ttk, ref_head_45_ttk, ut_count_45_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_45_ttk[5] = { 0, 1, 2, 2, 2 };
+	scc_PointIndex ref_head_45_ttk[2] = { 3, 3 };
+	assert_memory_equal(out_tail_ptr_45_ttk, ref_tail_ptr_45_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_45_ttk, ref_head_45_ttk, ut_count_45_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_46[2] = {ut_dg4, ut_dg6};
 
 	const uint64_t ut_count_46 = iscc_do_union_and_delete(2, sum_46, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_46, 3);
-	iscc_Arci out_tail_ptr_46[5];
-	iscc_Dpid out_head_46[3];
+	iscc_ArcIndex out_tail_ptr_46[5];
+	scc_PointIndex out_head_46[3];
 	const uint64_t ut_count_do_46 = iscc_do_union_and_delete(2, sum_46, row_markers, NULL, false, true, out_tail_ptr_46, out_head_46);
 	assert_int_equal(ut_count_do_46, ut_count_46);
-	iscc_Arci ref_tail_ptr_46[5] = { 0, 1, 2, 3, 3 };
-	iscc_Dpid ref_head_46[3] = { 3, 3, 3 };
-	assert_memory_equal(out_tail_ptr_46, ref_tail_ptr_46, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_46, ref_head_46, ut_count_46 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_46[5] = { 0, 1, 2, 3, 3 };
+	scc_PointIndex ref_head_46[3] = { 3, 3, 3 };
+	assert_memory_equal(out_tail_ptr_46, ref_tail_ptr_46, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_46, ref_head_46, ut_count_46 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_46_ttk = iscc_do_union_and_delete(2, sum_46, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_46_ttk, 2);
-	iscc_Arci out_tail_ptr_46_ttk[5];
-	iscc_Dpid out_head_46_ttk[2];
+	iscc_ArcIndex out_tail_ptr_46_ttk[5];
+	scc_PointIndex out_head_46_ttk[2];
 	const uint64_t ut_count_do_46_ttk = iscc_do_union_and_delete(2, sum_46, row_markers, tails_to_keep4, false, true, out_tail_ptr_46_ttk, out_head_46_ttk);
 	assert_int_equal(ut_count_do_46_ttk, ut_count_46_ttk);
-	iscc_Arci ref_tail_ptr_46_ttk[5] = { 0, 1, 2, 2, 2 };
-	iscc_Dpid ref_head_46_ttk[2] = { 3, 3 };
-	assert_memory_equal(out_tail_ptr_46_ttk, ref_tail_ptr_46_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_46_ttk, ref_head_46_ttk, ut_count_46_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_46_ttk[5] = { 0, 1, 2, 2, 2 };
+	scc_PointIndex ref_head_46_ttk[2] = { 3, 3 };
+	assert_memory_equal(out_tail_ptr_46_ttk, ref_tail_ptr_46_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_46_ttk, ref_head_46_ttk, ut_count_46_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_54[2] = {ut_dg5, ut_dg4};
 
 	const uint64_t ut_count_54 = iscc_do_union_and_delete(2, sum_54, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_54, 3);
-	iscc_Arci out_tail_ptr_54[5];
-	iscc_Dpid out_head_54[3];
+	iscc_ArcIndex out_tail_ptr_54[5];
+	scc_PointIndex out_head_54[3];
 	const uint64_t ut_count_do_54 = iscc_do_union_and_delete(2, sum_54, row_markers, NULL, false, true, out_tail_ptr_54, out_head_54);
 	assert_int_equal(ut_count_do_54, ut_count_54);
-	iscc_Arci ref_tail_ptr_54[5] = { 0, 1, 2, 3, 3 };
-	iscc_Dpid ref_head_54[3] = { 3, 3, 3 };
-	assert_memory_equal(out_tail_ptr_54, ref_tail_ptr_54, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_54, ref_head_54, ut_count_54 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_54[5] = { 0, 1, 2, 3, 3 };
+	scc_PointIndex ref_head_54[3] = { 3, 3, 3 };
+	assert_memory_equal(out_tail_ptr_54, ref_tail_ptr_54, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_54, ref_head_54, ut_count_54 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_54_ttk = iscc_do_union_and_delete(2, sum_54, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_54_ttk, 2);
-	iscc_Arci out_tail_ptr_54_ttk[5];
-	iscc_Dpid out_head_54_ttk[2];
+	iscc_ArcIndex out_tail_ptr_54_ttk[5];
+	scc_PointIndex out_head_54_ttk[2];
 	const uint64_t ut_count_do_54_ttk = iscc_do_union_and_delete(2, sum_54, row_markers, tails_to_keep4, false, true, out_tail_ptr_54_ttk, out_head_54_ttk);
 	assert_int_equal(ut_count_do_54_ttk, ut_count_54_ttk);
-	iscc_Arci ref_tail_ptr_54_ttk[5] = { 0, 1, 2, 2, 2 };
-	iscc_Dpid ref_head_54_ttk[2] = { 3, 3 };
-	assert_memory_equal(out_tail_ptr_54_ttk, ref_tail_ptr_54_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_54_ttk, ref_head_54_ttk, ut_count_54_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_54_ttk[5] = { 0, 1, 2, 2, 2 };
+	scc_PointIndex ref_head_54_ttk[2] = { 3, 3 };
+	assert_memory_equal(out_tail_ptr_54_ttk, ref_tail_ptr_54_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_54_ttk, ref_head_54_ttk, ut_count_54_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_64[2] = {ut_dg6, ut_dg4};
 
 	const uint64_t ut_count_64 = iscc_do_union_and_delete(2, sum_64, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_64, 3);
-	iscc_Arci out_tail_ptr_64[5];
-	iscc_Dpid out_head_64[3];
+	iscc_ArcIndex out_tail_ptr_64[5];
+	scc_PointIndex out_head_64[3];
 	const uint64_t ut_count_do_64 = iscc_do_union_and_delete(2, sum_64, row_markers, NULL, false, true, out_tail_ptr_64, out_head_64);
 	assert_int_equal(ut_count_do_64, ut_count_64);
-	iscc_Arci ref_tail_ptr_64[5] = { 0, 1, 2, 3, 3 };
-	iscc_Dpid ref_head_64[3] = { 3, 3, 3 };
-	assert_memory_equal(out_tail_ptr_64, ref_tail_ptr_64, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_64, ref_head_64, ut_count_64 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_64[5] = { 0, 1, 2, 3, 3 };
+	scc_PointIndex ref_head_64[3] = { 3, 3, 3 };
+	assert_memory_equal(out_tail_ptr_64, ref_tail_ptr_64, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_64, ref_head_64, ut_count_64 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_64_ttk = iscc_do_union_and_delete(2, sum_64, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_64_ttk, 2);
-	iscc_Arci out_tail_ptr_64_ttk[5];
-	iscc_Dpid out_head_64_ttk[2];
+	iscc_ArcIndex out_tail_ptr_64_ttk[5];
+	scc_PointIndex out_head_64_ttk[2];
 	const uint64_t ut_count_do_64_ttk = iscc_do_union_and_delete(2, sum_64, row_markers, tails_to_keep4, false, true, out_tail_ptr_64_ttk, out_head_64_ttk);
 	assert_int_equal(ut_count_do_64_ttk, ut_count_64_ttk);
-	iscc_Arci ref_tail_ptr_64_ttk[5] = { 0, 1, 2, 2, 2 };
-	iscc_Dpid ref_head_64_ttk[2] = { 3, 3 };
-	assert_memory_equal(out_tail_ptr_64_ttk, ref_tail_ptr_64_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_64_ttk, ref_head_64_ttk, ut_count_64_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_64_ttk[5] = { 0, 1, 2, 2, 2 };
+	scc_PointIndex ref_head_64_ttk[2] = { 3, 3 };
+	assert_memory_equal(out_tail_ptr_64_ttk, ref_tail_ptr_64_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_64_ttk, ref_head_64_ttk, ut_count_64_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_56[2] = {ut_dg5, ut_dg6};
 
 	const uint64_t ut_count_56 = iscc_do_union_and_delete(2, sum_56, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_56, 0);
-	iscc_Arci out_tail_ptr_56[5];
-	iscc_Dpid* out_head_56 = NULL;
+	iscc_ArcIndex out_tail_ptr_56[5];
+	scc_PointIndex* out_head_56 = NULL;
 	const uint64_t ut_count_do_56 = iscc_do_union_and_delete(2, sum_56, row_markers, NULL, false, true, out_tail_ptr_56, out_head_56);
 	assert_int_equal(ut_count_do_56, ut_count_56);
-	iscc_Arci ref_tail_ptr_56[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_56, ref_tail_ptr_56, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_56[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_56, ref_tail_ptr_56, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_56);
 
 	const uint64_t ut_count_56_ttk = iscc_do_union_and_delete(2, sum_56, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_56_ttk, 0);
-	iscc_Arci out_tail_ptr_56_ttk[5];
-	iscc_Dpid* out_head_56_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_56_ttk[5];
+	scc_PointIndex* out_head_56_ttk = NULL;
 	const uint64_t ut_count_do_56_ttk = iscc_do_union_and_delete(2, sum_56, row_markers, tails_to_keep4, false, true, out_tail_ptr_56_ttk, out_head_56_ttk);
 	assert_int_equal(ut_count_do_56_ttk, ut_count_56_ttk);
-	iscc_Arci ref_tail_ptr_56_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_56_ttk, ref_tail_ptr_56_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_56_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_56_ttk, ref_tail_ptr_56_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_56_ttk);
 
 
@@ -362,22 +362,22 @@ void scc_ut_do_union_and_delete(void** state)
 
 	const uint64_t ut_count_65 = iscc_do_union_and_delete(2, sum_65, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_65, 0);
-	iscc_Arci out_tail_ptr_65[5];
-	iscc_Dpid* out_head_65 = NULL;
+	iscc_ArcIndex out_tail_ptr_65[5];
+	scc_PointIndex* out_head_65 = NULL;
 	const uint64_t ut_count_do_65 = iscc_do_union_and_delete(2, sum_65, row_markers, NULL, false, true, out_tail_ptr_65, out_head_65);
 	assert_int_equal(ut_count_do_65, ut_count_65);
-	iscc_Arci ref_tail_ptr_65[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_65, ref_tail_ptr_65, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_65[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_65, ref_tail_ptr_65, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_65);
 
 	const uint64_t ut_count_65_ttk = iscc_do_union_and_delete(2, sum_65, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_65_ttk, 0);
-	iscc_Arci out_tail_ptr_65_ttk[5];
-	iscc_Dpid* out_head_65_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_65_ttk[5];
+	scc_PointIndex* out_head_65_ttk = NULL;
 	const uint64_t ut_count_do_65_ttk = iscc_do_union_and_delete(2, sum_65, row_markers, tails_to_keep4, false, true, out_tail_ptr_65_ttk, out_head_65_ttk);
 	assert_int_equal(ut_count_do_65_ttk, ut_count_65_ttk);
-	iscc_Arci ref_tail_ptr_65_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_65_ttk, ref_tail_ptr_65_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_65_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_65_ttk, ref_tail_ptr_65_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_65_ttk);
 
 
@@ -385,22 +385,22 @@ void scc_ut_do_union_and_delete(void** state)
 
 	const uint64_t ut_count_55 = iscc_do_union_and_delete(2, sum_55, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_55, 0);
-	iscc_Arci out_tail_ptr_55[5];
-	iscc_Dpid* out_head_55 = NULL;
+	iscc_ArcIndex out_tail_ptr_55[5];
+	scc_PointIndex* out_head_55 = NULL;
 	const uint64_t ut_count_do_55 = iscc_do_union_and_delete(2, sum_55, row_markers, NULL, false, true, out_tail_ptr_55, out_head_55);
 	assert_int_equal(ut_count_do_55, ut_count_55);
-	iscc_Arci ref_tail_ptr_55[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_55, ref_tail_ptr_55, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_55[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_55, ref_tail_ptr_55, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_55);
 
 	const uint64_t ut_count_55_ttk = iscc_do_union_and_delete(2, sum_55, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_55_ttk, 0);
-	iscc_Arci out_tail_ptr_55_ttk[5];
-	iscc_Dpid* out_head_55_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_55_ttk[5];
+	scc_PointIndex* out_head_55_ttk = NULL;
 	const uint64_t ut_count_do_55_ttk = iscc_do_union_and_delete(2, sum_55, row_markers, tails_to_keep4, false, true, out_tail_ptr_55_ttk, out_head_55_ttk);
 	assert_int_equal(ut_count_do_55_ttk, ut_count_55_ttk);
-	iscc_Arci ref_tail_ptr_55_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_55_ttk, ref_tail_ptr_55_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_55_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_55_ttk, ref_tail_ptr_55_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_55_ttk);;
 
 
@@ -408,22 +408,22 @@ void scc_ut_do_union_and_delete(void** state)
 
 	const uint64_t ut_count_66 = iscc_do_union_and_delete(2, sum_66, row_markers, NULL, false, false, NULL, NULL);
 	assert_int_equal(ut_count_66, 0);
-	iscc_Arci out_tail_ptr_66[5];
-	iscc_Dpid* out_head_66 = NULL;
+	iscc_ArcIndex out_tail_ptr_66[5];
+	scc_PointIndex* out_head_66 = NULL;
 	const uint64_t ut_count_do_66 = iscc_do_union_and_delete(2, sum_66, row_markers, NULL, false, true, out_tail_ptr_66, out_head_66);
 	assert_int_equal(ut_count_do_66, ut_count_66);
-	iscc_Arci ref_tail_ptr_66[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_66, ref_tail_ptr_66, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_66[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_66, ref_tail_ptr_66, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_66);
 
 	const uint64_t ut_count_66_ttk = iscc_do_union_and_delete(2, sum_66, row_markers, tails_to_keep4, false, false, NULL, NULL);
 	assert_int_equal(ut_count_66_ttk, 0);
-	iscc_Arci out_tail_ptr_66_ttk[5];
-	iscc_Dpid* out_head_66_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_66_ttk[5];
+	scc_PointIndex* out_head_66_ttk = NULL;
 	const uint64_t ut_count_do_66_ttk = iscc_do_union_and_delete(2, sum_66, row_markers, tails_to_keep4, false, true, out_tail_ptr_66_ttk, out_head_66_ttk);
 	assert_int_equal(ut_count_do_66_ttk, ut_count_66_ttk);
-	iscc_Arci ref_tail_ptr_66_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_66_ttk, ref_tail_ptr_66_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_66_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_66_ttk, ref_tail_ptr_66_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_66_ttk);
 
 
@@ -437,7 +437,7 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 {
 	(void) state;
 
-	iscc_Dpid row_markers[4];
+	scc_PointIndex row_markers[4];
 
 	iscc_Digraph ut_dg1;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg1);
@@ -455,175 +455,175 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 	const uint64_t ut_count_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_12, 10);
-	iscc_Arci out_tail_ptr_12[5];
-	iscc_Dpid out_head_12[10];
+	iscc_ArcIndex out_tail_ptr_12[5];
+	scc_PointIndex out_head_12[10];
 	const uint64_t ut_count_do_12 = iscc_do_union_and_delete(2, sum_12, row_markers, NULL, true, true, out_tail_ptr_12, out_head_12);
 	assert_int_equal(ut_count_do_12, ut_count_12);
-	iscc_Arci ref_tail_ptr_12[5] = { 0, 2, 5, 8, 10 };
-	iscc_Dpid ref_head_12[10] = { 0, 3, 1, 3, 2, 2, 3, 1, 3, 0 };
-	assert_memory_equal(out_tail_ptr_12, ref_tail_ptr_12, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_12, ref_head_12, ut_count_12 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_12[5] = { 0, 2, 5, 8, 10 };
+	scc_PointIndex ref_head_12[10] = { 0, 3, 1, 3, 2, 2, 3, 1, 3, 0 };
+	assert_memory_equal(out_tail_ptr_12, ref_tail_ptr_12, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_12, ref_head_12, ut_count_12 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_12_ttk = iscc_do_union_and_delete(2, sum_12, row_markers, tails_to_keep1, true, false, NULL, NULL);
 	assert_int_equal(ut_count_12_ttk, 5);
-	iscc_Arci out_tail_ptr_12_ttk[5];
-	iscc_Dpid out_head_12_ttk[5];
+	iscc_ArcIndex out_tail_ptr_12_ttk[5];
+	scc_PointIndex out_head_12_ttk[5];
 	const uint64_t ut_count_do_12_ttk = iscc_do_union_and_delete(2, sum_12, row_markers, tails_to_keep1, true, true, out_tail_ptr_12_ttk, out_head_12_ttk);
 	assert_int_equal(ut_count_do_12_ttk, ut_count_12_ttk);
-	iscc_Arci ref_tail_ptr_12_ttk[5] = { 0, 2, 5, 5, 5 };
-	iscc_Dpid ref_head_12_ttk[5] = { 0, 3, 1, 3, 2 };
-	assert_memory_equal(out_tail_ptr_12_ttk, ref_tail_ptr_12_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_12_ttk, ref_head_12_ttk, ut_count_12_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_12_ttk[5] = { 0, 2, 5, 5, 5 };
+	scc_PointIndex ref_head_12_ttk[5] = { 0, 3, 1, 3, 2 };
+	assert_memory_equal(out_tail_ptr_12_ttk, ref_tail_ptr_12_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_12_ttk, ref_head_12_ttk, ut_count_12_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 
 	const uint64_t ut_count_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_13, 10);
-	iscc_Arci out_tail_ptr_13[5];
-	iscc_Dpid out_head_13[10];
+	iscc_ArcIndex out_tail_ptr_13[5];
+	scc_PointIndex out_head_13[10];
 	const uint64_t ut_count_do_13 = iscc_do_union_and_delete(2, sum_13, row_markers, NULL, true, true, out_tail_ptr_13, out_head_13);
 	assert_int_equal(ut_count_do_13, ut_count_13);
-	iscc_Arci ref_tail_ptr_13[5] = { 0, 2, 5, 8, 10 };
-	iscc_Dpid ref_head_13[10] = { 0, 3, 1, 3, 0, 2, 3, 0, 3, 0 };
-	assert_memory_equal(out_tail_ptr_13, ref_tail_ptr_13, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_13, ref_head_13, ut_count_13 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_13[5] = { 0, 2, 5, 8, 10 };
+	scc_PointIndex ref_head_13[10] = { 0, 3, 1, 3, 0, 2, 3, 0, 3, 0 };
+	assert_memory_equal(out_tail_ptr_13, ref_tail_ptr_13, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_13, ref_head_13, ut_count_13 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_13_ttk = iscc_do_union_and_delete(2, sum_13, row_markers, tails_to_keep2, true, false, NULL, NULL);
 	assert_int_equal(ut_count_13_ttk, 5);
-	iscc_Arci out_tail_ptr_13_ttk[5];
-	iscc_Dpid out_head_13_ttk[5];
+	iscc_ArcIndex out_tail_ptr_13_ttk[5];
+	scc_PointIndex out_head_13_ttk[5];
 	const uint64_t ut_count_do_13_ttk = iscc_do_union_and_delete(2, sum_13, row_markers, tails_to_keep2, true, true, out_tail_ptr_13_ttk, out_head_13_ttk);
 	assert_int_equal(ut_count_do_13_ttk, ut_count_13_ttk);
-	iscc_Arci ref_tail_ptr_13_ttk[5] = { 0, 2, 2, 5, 5 };
-	iscc_Dpid ref_head_13_ttk[5] = { 0, 3, 2, 3, 0 };
-	assert_memory_equal(out_tail_ptr_13_ttk, ref_tail_ptr_13_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_13_ttk, ref_head_13_ttk, ut_count_13_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_13_ttk[5] = { 0, 2, 2, 5, 5 };
+	scc_PointIndex ref_head_13_ttk[5] = { 0, 3, 2, 3, 0 };
+	assert_memory_equal(out_tail_ptr_13_ttk, ref_tail_ptr_13_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_13_ttk, ref_head_13_ttk, ut_count_13_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 
 	const uint64_t ut_count_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_31, 10);
-	iscc_Arci out_tail_ptr_31[5];
-	iscc_Dpid out_head_31[10];
+	iscc_ArcIndex out_tail_ptr_31[5];
+	scc_PointIndex out_head_31[10];
 	const uint64_t ut_count_do_31 = iscc_do_union_and_delete(2, sum_31, row_markers, NULL, true, true, out_tail_ptr_31, out_head_31);
 	assert_int_equal(ut_count_do_31, ut_count_31);
-	iscc_Arci ref_tail_ptr_31[5] = { 0, 2, 5, 8, 10 };
-	iscc_Dpid ref_head_31[10] = { 0, 3, 0, 1, 3, 0, 2, 3, 0, 3 };
-	assert_memory_equal(out_tail_ptr_31, ref_tail_ptr_31, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_31, ref_head_31, ut_count_31 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_31[5] = { 0, 2, 5, 8, 10 };
+	scc_PointIndex ref_head_31[10] = { 0, 3, 0, 1, 3, 0, 2, 3, 0, 3 };
+	assert_memory_equal(out_tail_ptr_31, ref_tail_ptr_31, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_31, ref_head_31, ut_count_31 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_31_ttk = iscc_do_union_and_delete(2, sum_31, row_markers, tails_to_keep3, true, false, NULL, NULL);
 	assert_int_equal(ut_count_31_ttk, 5);
-	iscc_Arci out_tail_ptr_31_ttk[5];
-	iscc_Dpid out_head_31_ttk[5];
+	iscc_ArcIndex out_tail_ptr_31_ttk[5];
+	scc_PointIndex out_head_31_ttk[5];
 	const uint64_t ut_count_do_31_ttk = iscc_do_union_and_delete(2, sum_31, row_markers, tails_to_keep3, true, true, out_tail_ptr_31_ttk, out_head_31_ttk);
 	assert_int_equal(ut_count_do_31_ttk, ut_count_31_ttk);
-	iscc_Arci ref_tail_ptr_31_ttk[5] = { 0, 0, 0, 3, 5 };
-	iscc_Dpid ref_head_31_ttk[5] = { 0, 2, 3, 0, 3 };
-	assert_memory_equal(out_tail_ptr_31_ttk, ref_tail_ptr_31_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_31_ttk, ref_head_31_ttk, ut_count_31_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_31_ttk[5] = { 0, 0, 0, 3, 5 };
+	scc_PointIndex ref_head_31_ttk[5] = { 0, 2, 3, 0, 3 };
+	assert_memory_equal(out_tail_ptr_31_ttk, ref_tail_ptr_31_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_31_ttk, ref_head_31_ttk, ut_count_31_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 
 	const uint64_t ut_count_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_123, 12);
-	iscc_Arci out_tail_ptr_123[5];
-	iscc_Dpid out_head_123[12];
+	iscc_ArcIndex out_tail_ptr_123[5];
+	scc_PointIndex out_head_123[12];
 	const uint64_t ut_count_do_123 = iscc_do_union_and_delete(3, sum_123, row_markers, NULL, true, true, out_tail_ptr_123, out_head_123);
 	assert_int_equal(ut_count_do_123, ut_count_123);
-	iscc_Arci ref_tail_ptr_123[5] = { 0, 2, 6, 10, 12 };
-	iscc_Dpid ref_head_123[12] = { 0, 3, 1, 3, 2, 0, 2, 3, 1, 0, 3, 0 };
-	assert_memory_equal(out_tail_ptr_123, ref_tail_ptr_123, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_123, ref_head_123, ut_count_123 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_123[5] = { 0, 2, 6, 10, 12 };
+	scc_PointIndex ref_head_123[12] = { 0, 3, 1, 3, 2, 0, 2, 3, 1, 0, 3, 0 };
+	assert_memory_equal(out_tail_ptr_123, ref_tail_ptr_123, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_123, ref_head_123, ut_count_123 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_123_ttk = iscc_do_union_and_delete(3, sum_123, row_markers, tails_to_keep1, true, false, NULL, NULL);
 	assert_int_equal(ut_count_123_ttk, 6);
-	iscc_Arci out_tail_ptr_123_ttk[5];
-	iscc_Dpid out_head_123_ttk[6];
+	iscc_ArcIndex out_tail_ptr_123_ttk[5];
+	scc_PointIndex out_head_123_ttk[6];
 	const uint64_t ut_count_do_123_ttk = iscc_do_union_and_delete(3, sum_123, row_markers, tails_to_keep1, true, true, out_tail_ptr_123_ttk, out_head_123_ttk);
 	assert_int_equal(ut_count_do_123_ttk, ut_count_123_ttk);
-	iscc_Arci ref_tail_ptr_123_ttk[5] = { 0, 2, 6, 6, 6 };
-	iscc_Dpid ref_head_123_ttk[6] = { 0, 3, 1, 3, 2, 0 };
-	assert_memory_equal(out_tail_ptr_123_ttk, ref_tail_ptr_123_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_123_ttk, ref_head_123_ttk, ut_count_123_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_123_ttk[5] = { 0, 2, 6, 6, 6 };
+	scc_PointIndex ref_head_123_ttk[6] = { 0, 3, 1, 3, 2, 0 };
+	assert_memory_equal(out_tail_ptr_123_ttk, ref_tail_ptr_123_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_123_ttk, ref_head_123_ttk, ut_count_123_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 
 	const uint64_t ut_count_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_132, 12);
-	iscc_Arci out_tail_ptr_132[5];
-	iscc_Dpid out_head_132[12];
+	iscc_ArcIndex out_tail_ptr_132[5];
+	scc_PointIndex out_head_132[12];
 	const uint64_t ut_count_do_132 = iscc_do_union_and_delete(3, sum_132, row_markers, NULL, true, true, out_tail_ptr_132, out_head_132);
 	assert_int_equal(ut_count_do_132, ut_count_132);
-	iscc_Arci ref_tail_ptr_132[5] = { 0, 2, 6, 10, 12 };
-	iscc_Dpid ref_head_132[12] = { 0, 3, 1, 3, 0, 2, 2, 3, 0, 1, 3, 0 };
-	assert_memory_equal(out_tail_ptr_132, ref_tail_ptr_132, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_132, ref_head_132, ut_count_132 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_132[5] = { 0, 2, 6, 10, 12 };
+	scc_PointIndex ref_head_132[12] = { 0, 3, 1, 3, 0, 2, 2, 3, 0, 1, 3, 0 };
+	assert_memory_equal(out_tail_ptr_132, ref_tail_ptr_132, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_132, ref_head_132, ut_count_132 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_132_ttk = iscc_do_union_and_delete(3, sum_132, row_markers, tails_to_keep2, true, false, NULL, NULL);
 	assert_int_equal(ut_count_132_ttk, 6);
-	iscc_Arci out_tail_ptr_132_ttk[5];
-	iscc_Dpid out_head_132_ttk[6];
+	iscc_ArcIndex out_tail_ptr_132_ttk[5];
+	scc_PointIndex out_head_132_ttk[6];
 	const uint64_t ut_count_do_132_ttk = iscc_do_union_and_delete(3, sum_132, row_markers, tails_to_keep2, true, true, out_tail_ptr_132_ttk, out_head_132_ttk);
 	assert_int_equal(ut_count_do_132_ttk, ut_count_132_ttk);
-	iscc_Arci ref_tail_ptr_132_ttk[5] = { 0, 2, 2, 6, 6 };
-	iscc_Dpid ref_head_132_ttk[6] = { 0, 3, 2, 3, 0, 1 };
-	assert_memory_equal(out_tail_ptr_132_ttk, ref_tail_ptr_132_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_132_ttk, ref_head_132_ttk, ut_count_132_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_132_ttk[5] = { 0, 2, 2, 6, 6 };
+	scc_PointIndex ref_head_132_ttk[6] = { 0, 3, 2, 3, 0, 1 };
+	assert_memory_equal(out_tail_ptr_132_ttk, ref_tail_ptr_132_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_132_ttk, ref_head_132_ttk, ut_count_132_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 
 	const uint64_t ut_count_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_213, 12);
-	iscc_Arci out_tail_ptr_213[5];
-	iscc_Dpid out_head_213[12];
+	iscc_ArcIndex out_tail_ptr_213[5];
+	scc_PointIndex out_head_213[12];
 	const uint64_t ut_count_do_213 = iscc_do_union_and_delete(3, sum_213, row_markers, NULL, true, true, out_tail_ptr_213, out_head_213);
 	assert_int_equal(ut_count_do_213, ut_count_213);
-	iscc_Arci ref_tail_ptr_213[5] = { 0, 2, 6, 10, 12 };
-	iscc_Dpid ref_head_213[12] = { 3, 0, 2, 1, 3, 0, 1, 2, 3, 0, 0, 3 };
-	assert_memory_equal(out_tail_ptr_213, ref_tail_ptr_213, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_213, ref_head_213, ut_count_213 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_213[5] = { 0, 2, 6, 10, 12 };
+	scc_PointIndex ref_head_213[12] = { 3, 0, 2, 1, 3, 0, 1, 2, 3, 0, 0, 3 };
+	assert_memory_equal(out_tail_ptr_213, ref_tail_ptr_213, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_213, ref_head_213, ut_count_213 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_213_ttk = iscc_do_union_and_delete(3, sum_213, row_markers, tails_to_keep3, true, false, NULL, NULL);
 	assert_int_equal(ut_count_213_ttk, 6);
-	iscc_Arci out_tail_ptr_213_ttk[5];
-	iscc_Dpid out_head_213_ttk[6];
+	iscc_ArcIndex out_tail_ptr_213_ttk[5];
+	scc_PointIndex out_head_213_ttk[6];
 	const uint64_t ut_count_do_213_ttk = iscc_do_union_and_delete(3, sum_213, row_markers, tails_to_keep3, true, true, out_tail_ptr_213_ttk, out_head_213_ttk);
 	assert_int_equal(ut_count_do_213_ttk, ut_count_213_ttk);
-	iscc_Arci ref_tail_ptr_213_ttk[5] = { 0, 0, 0, 4, 6 };
-	iscc_Dpid ref_head_213_ttk[6] = { 1, 2, 3, 0, 0, 3 };
-	assert_memory_equal(out_tail_ptr_213_ttk, ref_tail_ptr_213_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_213_ttk, ref_head_213_ttk, ut_count_213_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_213_ttk[5] = { 0, 0, 0, 4, 6 };
+	scc_PointIndex ref_head_213_ttk[6] = { 1, 2, 3, 0, 0, 3 };
+	assert_memory_equal(out_tail_ptr_213_ttk, ref_tail_ptr_213_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_213_ttk, ref_head_213_ttk, ut_count_213_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 
 	const uint64_t ut_count_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_321, 12);
-	iscc_Arci out_tail_ptr_321[5];
-	iscc_Dpid out_head_321[12];
+	iscc_ArcIndex out_tail_ptr_321[5];
+	scc_PointIndex out_head_321[12];
 	const uint64_t ut_count_do_321 = iscc_do_union_and_delete(3, sum_321, row_markers, NULL, true, true, out_tail_ptr_321, out_head_321);
 	assert_int_equal(ut_count_do_321, ut_count_321);
-	iscc_Arci ref_tail_ptr_321[5] = { 0, 2, 6, 10, 12 };
-	iscc_Dpid ref_head_321[12] = { 0, 3, 0, 2, 1, 3, 0, 1, 2, 3, 0, 3 };
-	assert_memory_equal(out_tail_ptr_321, ref_tail_ptr_321, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_321, ref_head_321, ut_count_321 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_321[5] = { 0, 2, 6, 10, 12 };
+	scc_PointIndex ref_head_321[12] = { 0, 3, 0, 2, 1, 3, 0, 1, 2, 3, 0, 3 };
+	assert_memory_equal(out_tail_ptr_321, ref_tail_ptr_321, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_321, ref_head_321, ut_count_321 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_321_ttk = iscc_do_union_and_delete(3, sum_321, row_markers, tails_to_keep1, true, false, NULL, NULL);
 	assert_int_equal(ut_count_321_ttk, 6);
-	iscc_Arci out_tail_ptr_321_ttk[5];
-	iscc_Dpid out_head_321_ttk[6];
+	iscc_ArcIndex out_tail_ptr_321_ttk[5];
+	scc_PointIndex out_head_321_ttk[6];
 	const uint64_t ut_count_do_321_ttk = iscc_do_union_and_delete(3, sum_321, row_markers, tails_to_keep1, true, true, out_tail_ptr_321_ttk, out_head_321_ttk);
 	assert_int_equal(ut_count_do_321_ttk, ut_count_321_ttk);
-	iscc_Arci ref_tail_ptr_321_ttk[5] = { 0, 2, 6, 6, 6 };
-	iscc_Dpid ref_head_321_ttk[6] = { 0, 3, 0, 2, 1, 3 };
-	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_321_ttk[5] = { 0, 2, 6, 6, 6 };
+	scc_PointIndex ref_head_321_ttk[6] = { 0, 3, 0, 2, 1, 3 };
+	assert_memory_equal(out_tail_ptr_321_ttk, ref_tail_ptr_321_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_321_ttk, ref_head_321_ttk, ut_count_321_ttk * sizeof(scc_PointIndex));
 
 
 	iscc_free_digraph(&ut_dg1);
@@ -643,122 +643,122 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 	const uint64_t ut_count_45 = iscc_do_union_and_delete(2, sum_45, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_45, 7);
-	iscc_Arci out_tail_ptr_45[5];
-	iscc_Dpid out_head_45[7];
+	iscc_ArcIndex out_tail_ptr_45[5];
+	scc_PointIndex out_head_45[7];
 	const uint64_t ut_count_do_45 = iscc_do_union_and_delete(2, sum_45, row_markers, NULL, true, true, out_tail_ptr_45, out_head_45);
 	assert_int_equal(ut_count_do_45, ut_count_45);
-	iscc_Arci ref_tail_ptr_45[5] = { 0, 2, 4, 6, 7 };
-	iscc_Dpid ref_head_45[7] = { 0, 3, 1, 3, 2, 3, 3 };
-	assert_memory_equal(out_tail_ptr_45, ref_tail_ptr_45, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_45, ref_head_45, ut_count_45 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_45[5] = { 0, 2, 4, 6, 7 };
+	scc_PointIndex ref_head_45[7] = { 0, 3, 1, 3, 2, 3, 3 };
+	assert_memory_equal(out_tail_ptr_45, ref_tail_ptr_45, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_45, ref_head_45, ut_count_45 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_45_ttk = iscc_do_union_and_delete(2, sum_45, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_45_ttk, 4);
-	iscc_Arci out_tail_ptr_45_ttk[5];
-	iscc_Dpid out_head_45_ttk[4];
+	iscc_ArcIndex out_tail_ptr_45_ttk[5];
+	scc_PointIndex out_head_45_ttk[4];
 	const uint64_t ut_count_do_45_ttk = iscc_do_union_and_delete(2, sum_45, row_markers, tails_to_keep4, true, true, out_tail_ptr_45_ttk, out_head_45_ttk);
 	assert_int_equal(ut_count_do_45_ttk, ut_count_45_ttk);
-	iscc_Arci ref_tail_ptr_45_ttk[5] = { 0, 2, 4, 4, 4 };
-	iscc_Dpid ref_head_45_ttk[4] = { 0, 3, 1, 3 };
-	assert_memory_equal(out_tail_ptr_45_ttk, ref_tail_ptr_45_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_45_ttk, ref_head_45_ttk, ut_count_45_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_45_ttk[5] = { 0, 2, 4, 4, 4 };
+	scc_PointIndex ref_head_45_ttk[4] = { 0, 3, 1, 3 };
+	assert_memory_equal(out_tail_ptr_45_ttk, ref_tail_ptr_45_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_45_ttk, ref_head_45_ttk, ut_count_45_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_46[2] = {ut_dg4, ut_dg6};
 
 	const uint64_t ut_count_46 = iscc_do_union_and_delete(2, sum_46, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_46, 7);
-	iscc_Arci out_tail_ptr_46[5];
-	iscc_Dpid out_head_46[7];
+	iscc_ArcIndex out_tail_ptr_46[5];
+	scc_PointIndex out_head_46[7];
 	const uint64_t ut_count_do_46 = iscc_do_union_and_delete(2, sum_46, row_markers, NULL, true, true, out_tail_ptr_46, out_head_46);
 	assert_int_equal(ut_count_do_46, ut_count_46);
-	iscc_Arci ref_tail_ptr_46[5] = { 0, 2, 4, 6, 7 };
-	iscc_Dpid ref_head_46[7] = { 0, 3, 1, 3, 2, 3, 3 };
-	assert_memory_equal(out_tail_ptr_46, ref_tail_ptr_46, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_46, ref_head_46, ut_count_46 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_46[5] = { 0, 2, 4, 6, 7 };
+	scc_PointIndex ref_head_46[7] = { 0, 3, 1, 3, 2, 3, 3 };
+	assert_memory_equal(out_tail_ptr_46, ref_tail_ptr_46, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_46, ref_head_46, ut_count_46 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_46_ttk = iscc_do_union_and_delete(2, sum_46, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_46_ttk, 4);
-	iscc_Arci out_tail_ptr_46_ttk[5];
-	iscc_Dpid out_head_46_ttk[4];
+	iscc_ArcIndex out_tail_ptr_46_ttk[5];
+	scc_PointIndex out_head_46_ttk[4];
 	const uint64_t ut_count_do_46_ttk = iscc_do_union_and_delete(2, sum_46, row_markers, tails_to_keep4, true, true, out_tail_ptr_46_ttk, out_head_46_ttk);
 	assert_int_equal(ut_count_do_46_ttk, ut_count_46_ttk);
-	iscc_Arci ref_tail_ptr_46_ttk[5] = { 0, 2, 4, 4, 4 };
-	iscc_Dpid ref_head_46_ttk[4] = { 0, 3, 1, 3 };
-	assert_memory_equal(out_tail_ptr_46_ttk, ref_tail_ptr_46_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_46_ttk, ref_head_46_ttk, ut_count_46_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_46_ttk[5] = { 0, 2, 4, 4, 4 };
+	scc_PointIndex ref_head_46_ttk[4] = { 0, 3, 1, 3 };
+	assert_memory_equal(out_tail_ptr_46_ttk, ref_tail_ptr_46_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_46_ttk, ref_head_46_ttk, ut_count_46_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_54[2] = {ut_dg5, ut_dg4};
 
 	const uint64_t ut_count_54 = iscc_do_union_and_delete(2, sum_54, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_54, 7);
-	iscc_Arci out_tail_ptr_54[5];
-	iscc_Dpid out_head_54[7];
+	iscc_ArcIndex out_tail_ptr_54[5];
+	scc_PointIndex out_head_54[7];
 	const uint64_t ut_count_do_54 = iscc_do_union_and_delete(2, sum_54, row_markers, NULL, true, true, out_tail_ptr_54, out_head_54);
 	assert_int_equal(ut_count_do_54, ut_count_54);
-	iscc_Arci ref_tail_ptr_54[5] = { 0, 2, 4, 6, 7 };
-	iscc_Dpid ref_head_54[7] = { 0, 3, 1, 3, 2, 3, 3 };
-	assert_memory_equal(out_tail_ptr_54, ref_tail_ptr_54, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_54, ref_head_54, ut_count_54 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_54[5] = { 0, 2, 4, 6, 7 };
+	scc_PointIndex ref_head_54[7] = { 0, 3, 1, 3, 2, 3, 3 };
+	assert_memory_equal(out_tail_ptr_54, ref_tail_ptr_54, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_54, ref_head_54, ut_count_54 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_54_ttk = iscc_do_union_and_delete(2, sum_54, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_54_ttk, 4);
-	iscc_Arci out_tail_ptr_54_ttk[5];
-	iscc_Dpid out_head_54_ttk[4];
+	iscc_ArcIndex out_tail_ptr_54_ttk[5];
+	scc_PointIndex out_head_54_ttk[4];
 	const uint64_t ut_count_do_54_ttk = iscc_do_union_and_delete(2, sum_54, row_markers, tails_to_keep4, true, true, out_tail_ptr_54_ttk, out_head_54_ttk);
 	assert_int_equal(ut_count_do_54_ttk, ut_count_54_ttk);
-	iscc_Arci ref_tail_ptr_54_ttk[5] = { 0, 2, 4, 4, 4 };
-	iscc_Dpid ref_head_54_ttk[4] = { 0, 3, 1, 3 };
-	assert_memory_equal(out_tail_ptr_54_ttk, ref_tail_ptr_54_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_54_ttk, ref_head_54_ttk, ut_count_54_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_54_ttk[5] = { 0, 2, 4, 4, 4 };
+	scc_PointIndex ref_head_54_ttk[4] = { 0, 3, 1, 3 };
+	assert_memory_equal(out_tail_ptr_54_ttk, ref_tail_ptr_54_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_54_ttk, ref_head_54_ttk, ut_count_54_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_64[2] = {ut_dg6, ut_dg4};
 
 	const uint64_t ut_count_64 = iscc_do_union_and_delete(2, sum_64, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_64, 7);
-	iscc_Arci out_tail_ptr_64[5];
-	iscc_Dpid out_head_64[7];
+	iscc_ArcIndex out_tail_ptr_64[5];
+	scc_PointIndex out_head_64[7];
 	const uint64_t ut_count_do_64 = iscc_do_union_and_delete(2, sum_64, row_markers, NULL, true, true, out_tail_ptr_64, out_head_64);
 	assert_int_equal(ut_count_do_64, ut_count_64);
-	iscc_Arci ref_tail_ptr_64[5] = { 0, 2, 4, 6, 7 };
-	iscc_Dpid ref_head_64[7] = { 0, 3, 1, 3, 2, 3, 3 };
-	assert_memory_equal(out_tail_ptr_64, ref_tail_ptr_64, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_64, ref_head_64, ut_count_64 * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_64[5] = { 0, 2, 4, 6, 7 };
+	scc_PointIndex ref_head_64[7] = { 0, 3, 1, 3, 2, 3, 3 };
+	assert_memory_equal(out_tail_ptr_64, ref_tail_ptr_64, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_64, ref_head_64, ut_count_64 * sizeof(scc_PointIndex));
 
 	const uint64_t ut_count_64_ttk = iscc_do_union_and_delete(2, sum_64, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_64_ttk, 4);
-	iscc_Arci out_tail_ptr_64_ttk[5];
-	iscc_Dpid out_head_64_ttk[4];
+	iscc_ArcIndex out_tail_ptr_64_ttk[5];
+	scc_PointIndex out_head_64_ttk[4];
 	const uint64_t ut_count_do_64_ttk = iscc_do_union_and_delete(2, sum_64, row_markers, tails_to_keep4, true, true, out_tail_ptr_64_ttk, out_head_64_ttk);
 	assert_int_equal(ut_count_do_64_ttk, ut_count_64_ttk);
-	iscc_Arci ref_tail_ptr_64_ttk[5] = { 0, 2, 4, 4, 4 };
-	iscc_Dpid ref_head_64_ttk[4] = { 0, 3, 1, 3 };
-	assert_memory_equal(out_tail_ptr_64_ttk, ref_tail_ptr_64_ttk, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(out_head_64_ttk, ref_head_64_ttk, ut_count_64_ttk * sizeof(iscc_Dpid));
+	iscc_ArcIndex ref_tail_ptr_64_ttk[5] = { 0, 2, 4, 4, 4 };
+	scc_PointIndex ref_head_64_ttk[4] = { 0, 3, 1, 3 };
+	assert_memory_equal(out_tail_ptr_64_ttk, ref_tail_ptr_64_ttk, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(out_head_64_ttk, ref_head_64_ttk, ut_count_64_ttk * sizeof(scc_PointIndex));
 
 
 	const iscc_Digraph sum_56[2] = {ut_dg5, ut_dg6};
 
 	const uint64_t ut_count_56 = iscc_do_union_and_delete(2, sum_56, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_56, 0);
-	iscc_Arci out_tail_ptr_56[5];
-	iscc_Dpid* out_head_56 = NULL;
+	iscc_ArcIndex out_tail_ptr_56[5];
+	scc_PointIndex* out_head_56 = NULL;
 	const uint64_t ut_count_do_56 = iscc_do_union_and_delete(2, sum_56, row_markers, NULL, true, true, out_tail_ptr_56, out_head_56);
 	assert_int_equal(ut_count_do_56, ut_count_56);
-	iscc_Arci ref_tail_ptr_56[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_56, ref_tail_ptr_56, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_56[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_56, ref_tail_ptr_56, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_56);
 
 	const uint64_t ut_count_56_ttk = iscc_do_union_and_delete(2, sum_56, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_56_ttk, 0);
-	iscc_Arci out_tail_ptr_56_ttk[5];
-	iscc_Dpid* out_head_56_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_56_ttk[5];
+	scc_PointIndex* out_head_56_ttk = NULL;
 	const uint64_t ut_count_do_56_ttk = iscc_do_union_and_delete(2, sum_56, row_markers, tails_to_keep4, true, true, out_tail_ptr_56_ttk, out_head_56_ttk);
 	assert_int_equal(ut_count_do_56_ttk, ut_count_56_ttk);
-	iscc_Arci ref_tail_ptr_56_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_56_ttk, ref_tail_ptr_56_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_56_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_56_ttk, ref_tail_ptr_56_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_56_ttk);
 
 
@@ -766,22 +766,22 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 	const uint64_t ut_count_65 = iscc_do_union_and_delete(2, sum_65, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_65, 0);
-	iscc_Arci out_tail_ptr_65[5];
-	iscc_Dpid* out_head_65 = NULL;
+	iscc_ArcIndex out_tail_ptr_65[5];
+	scc_PointIndex* out_head_65 = NULL;
 	const uint64_t ut_count_do_65 = iscc_do_union_and_delete(2, sum_65, row_markers, NULL, true, true, out_tail_ptr_65, out_head_65);
 	assert_int_equal(ut_count_do_65, ut_count_65);
-	iscc_Arci ref_tail_ptr_65[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_65, ref_tail_ptr_65, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_65[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_65, ref_tail_ptr_65, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_65);
 
 	const uint64_t ut_count_65_ttk = iscc_do_union_and_delete(2, sum_65, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_65_ttk, 0);
-	iscc_Arci out_tail_ptr_65_ttk[5];
-	iscc_Dpid* out_head_65_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_65_ttk[5];
+	scc_PointIndex* out_head_65_ttk = NULL;
 	const uint64_t ut_count_do_65_ttk = iscc_do_union_and_delete(2, sum_65, row_markers, tails_to_keep4, true, true, out_tail_ptr_65_ttk, out_head_65_ttk);
 	assert_int_equal(ut_count_do_65_ttk, ut_count_65_ttk);
-	iscc_Arci ref_tail_ptr_65_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_65_ttk, ref_tail_ptr_65_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_65_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_65_ttk, ref_tail_ptr_65_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_65_ttk);
 
 
@@ -789,22 +789,22 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 	const uint64_t ut_count_55 = iscc_do_union_and_delete(2, sum_55, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_55, 0);
-	iscc_Arci out_tail_ptr_55[5];
-	iscc_Dpid* out_head_55 = NULL;
+	iscc_ArcIndex out_tail_ptr_55[5];
+	scc_PointIndex* out_head_55 = NULL;
 	const uint64_t ut_count_do_55 = iscc_do_union_and_delete(2, sum_55, row_markers, NULL, true, true, out_tail_ptr_55, out_head_55);
 	assert_int_equal(ut_count_do_55, ut_count_55);
-	iscc_Arci ref_tail_ptr_55[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_55, ref_tail_ptr_55, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_55[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_55, ref_tail_ptr_55, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_55);
 
 	const uint64_t ut_count_55_ttk = iscc_do_union_and_delete(2, sum_55, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_55_ttk, 0);
-	iscc_Arci out_tail_ptr_55_ttk[5];
-	iscc_Dpid* out_head_55_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_55_ttk[5];
+	scc_PointIndex* out_head_55_ttk = NULL;
 	const uint64_t ut_count_do_55_ttk = iscc_do_union_and_delete(2, sum_55, row_markers, tails_to_keep4, true, true, out_tail_ptr_55_ttk, out_head_55_ttk);
 	assert_int_equal(ut_count_do_55_ttk, ut_count_55_ttk);
-	iscc_Arci ref_tail_ptr_55_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_55_ttk, ref_tail_ptr_55_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_55_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_55_ttk, ref_tail_ptr_55_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_55_ttk);;
 
 
@@ -812,22 +812,22 @@ void scc_ut_do_union_and_delete_keep_loops(void** state)
 
 	const uint64_t ut_count_66 = iscc_do_union_and_delete(2, sum_66, row_markers, NULL, true, false, NULL, NULL);
 	assert_int_equal(ut_count_66, 0);
-	iscc_Arci out_tail_ptr_66[5];
-	iscc_Dpid* out_head_66 = NULL;
+	iscc_ArcIndex out_tail_ptr_66[5];
+	scc_PointIndex* out_head_66 = NULL;
 	const uint64_t ut_count_do_66 = iscc_do_union_and_delete(2, sum_66, row_markers, NULL, true, true, out_tail_ptr_66, out_head_66);
 	assert_int_equal(ut_count_do_66, ut_count_66);
-	iscc_Arci ref_tail_ptr_66[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_66, ref_tail_ptr_66, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_66[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_66, ref_tail_ptr_66, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_66);
 
 	const uint64_t ut_count_66_ttk = iscc_do_union_and_delete(2, sum_66, row_markers, tails_to_keep4, true, false, NULL, NULL);
 	assert_int_equal(ut_count_66_ttk, 0);
-	iscc_Arci out_tail_ptr_66_ttk[5];
-	iscc_Dpid* out_head_66_ttk = NULL;
+	iscc_ArcIndex out_tail_ptr_66_ttk[5];
+	scc_PointIndex* out_head_66_ttk = NULL;
 	const uint64_t ut_count_do_66_ttk = iscc_do_union_and_delete(2, sum_66, row_markers, tails_to_keep4, true, true, out_tail_ptr_66_ttk, out_head_66_ttk);
 	assert_int_equal(ut_count_do_66_ttk, ut_count_66_ttk);
-	iscc_Arci ref_tail_ptr_66_ttk[5] = { 0, 0, 0, 0, 0 };
-	assert_memory_equal(out_tail_ptr_66_ttk, ref_tail_ptr_66_ttk, 5 * sizeof(iscc_Arci));
+	iscc_ArcIndex ref_tail_ptr_66_ttk[5] = { 0, 0, 0, 0, 0 };
+	assert_memory_equal(out_tail_ptr_66_ttk, ref_tail_ptr_66_ttk, 5 * sizeof(iscc_ArcIndex));
 	assert_null(out_head_66_ttk);
 
 
@@ -841,7 +841,7 @@ void scc_ut_do_adjacency_product(void** state)
 {
 	(void) state;
 
-	iscc_Dpid row_markers[5];
+	scc_PointIndex row_markers[5];
 
 	iscc_Digraph dg1;
 	iscc_digraph_from_string("##.../...#./.#.../..#../...#./", &dg1);

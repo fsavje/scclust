@@ -49,27 +49,27 @@ extern "C" {
  *
  *  \note
  *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #iscc_Dpid.
+ *  than the maximum number that can be stored in #scc_PointIndex.
  */
-typedef {% dpid_type %} iscc_Dpid;
+typedef {% pointindex_type %} scc_PointIndex;
 
-static const iscc_Dpid ISCC_DPID_NA = {% dpid_na %};
+static const scc_PointIndex SCC_POINTINDEX_NA = {% pointindex_na %};
 
 /** Type used for arc indices. Must be unsigned.
  *
  *  \note
  *  Number of arcs in any digraph must be less or equal to
- *  the maximum number that can be stored in #iscc_Arci.
+ *  the maximum number that can be stored in #iscc_ArcIndex.
  */
-typedef {% arc_type %} iscc_Arci;
+typedef {% arcindex_type %} iscc_ArcIndex;
 
 typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
 typedef struct iscc_NNSearchObject iscc_NNSearchObject;
 
-#define ISCC_M_DPID_TYPE_{% dpid_type %}
-#define ISCC_M_DPID_NA {% dpid_na %}
-#define ISCC_M_ARCI_TYPE_{% arc_type %}
+#define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
+#define SCC_M_POINTINDEX_NA {% pointindex_na %}
+#define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
 
 
 // =============================================================================
@@ -81,32 +81,32 @@ typedef bool (*scc_check_data_set) (void*,
 
 typedef bool (*scc_get_dist_matrix) (void*,
                                      size_t,
-                                     const iscc_Dpid*,
+                                     const scc_PointIndex*,
                                      double*);
 
 typedef bool (*scc_get_dist_rows) (void*,
                                    size_t,
-                                   const iscc_Dpid*,
+                                   const scc_PointIndex*,
                                    size_t,
-                                   const iscc_Dpid*,
+                                   const scc_PointIndex*,
                                    double*);
 
 typedef bool (*scc_init_max_dist_object) (void*,
                                           size_t,
-                                          const iscc_Dpid*,
+                                          const scc_PointIndex*,
                                           iscc_MaxDistObject**);
 
 typedef bool (*scc_get_max_dist) (iscc_MaxDistObject*,
                                   size_t,
-                                  const iscc_Dpid*,
-                                  iscc_Dpid*,
+                                  const scc_PointIndex*,
+                                  scc_PointIndex*,
                                   double*);
 
 typedef bool (*scc_close_max_dist_object) (iscc_MaxDistObject**);
 
 typedef bool (*scc_init_nn_search_object) (void*,
                                            size_t,
-                                           const iscc_Dpid*,
+                                           const scc_PointIndex*,
                                            iscc_NNSearchObject**);
 
 typedef bool (*scc_nearest_neighbor_search_digraph) (iscc_NNSearchObject*,
@@ -116,16 +116,16 @@ typedef bool (*scc_nearest_neighbor_search_digraph) (iscc_NNSearchObject*,
                                                      uint32_t,
                                                      bool,
                                                      double,
-                                                     iscc_Arci*,
-                                                     iscc_Dpid*);
+                                                     iscc_ArcIndex*,
+                                                     scc_PointIndex*);
 
 typedef bool (*scc_nearest_neighbor_search_index) (iscc_NNSearchObject*,
                                                    size_t,
-                                                   const iscc_Dpid*,
+                                                   const scc_PointIndex*,
                                                    uint32_t,
                                                    bool,
                                                    double,
-                                                   iscc_Dpid*);
+                                                   scc_PointIndex*);
 
 typedef bool (*scc_close_nn_search_object) (iscc_NNSearchObject**);
 

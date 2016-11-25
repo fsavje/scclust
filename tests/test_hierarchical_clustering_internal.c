@@ -34,8 +34,8 @@ void scc_ut_hi_empty_cl_stack(void** state)
 {
 	(void) state;
 
-	const iscc_Dpid ref1_cl[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	const iscc_Dpid ref2_cl[20] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
+	const scc_PointIndex ref1_cl[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	const scc_PointIndex ref2_cl[20] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 
 	iscc_hi_ClusterStack cl_stack1;
 	scc_ErrorCode ec1 = iscc_hi_empty_cl_stack(10, &cl_stack1);
@@ -43,11 +43,11 @@ void scc_ut_hi_empty_cl_stack(void** state)
 	assert_int_equal(cl_stack1.capacity, 67);
 	assert_int_equal(cl_stack1.items, 1);
 	assert_non_null(cl_stack1.clusters);
-	assert_non_null(cl_stack1.dpid_store);
-	assert_memory_equal(cl_stack1.dpid_store, ref1_cl, 10 * sizeof(iscc_Dpid));
+	assert_non_null(cl_stack1.pointindex_store);
+	assert_memory_equal(cl_stack1.pointindex_store, ref1_cl, 10 * sizeof(scc_PointIndex));
 	assert_int_equal(cl_stack1.clusters[0].size, 10);
 	assert_int_equal(cl_stack1.clusters[0].marker, 0);
-	assert_ptr_equal(cl_stack1.clusters[0].members, cl_stack1.dpid_store);
+	assert_ptr_equal(cl_stack1.clusters[0].members, cl_stack1.pointindex_store);
 	cl_stack1.clusters[cl_stack1.capacity - 1].size = 0;
 
 	iscc_hi_ClusterStack cl_stack2;
@@ -56,17 +56,17 @@ void scc_ut_hi_empty_cl_stack(void** state)
 	assert_int_equal(cl_stack2.capacity, 87);
 	assert_int_equal(cl_stack2.items, 1);
 	assert_non_null(cl_stack2.clusters);
-	assert_non_null(cl_stack2.dpid_store);
-	assert_memory_equal(cl_stack2.dpid_store, ref2_cl, 20 * sizeof(iscc_Dpid));
+	assert_non_null(cl_stack2.pointindex_store);
+	assert_memory_equal(cl_stack2.pointindex_store, ref2_cl, 20 * sizeof(scc_PointIndex));
 	assert_int_equal(cl_stack2.clusters[0].size, 20);
 	assert_int_equal(cl_stack2.clusters[0].marker, 0);
-	assert_ptr_equal(cl_stack2.clusters[0].members, cl_stack2.dpid_store);
+	assert_ptr_equal(cl_stack2.clusters[0].members, cl_stack2.pointindex_store);
 	cl_stack2.clusters[cl_stack2.capacity - 1].size = 0;
 
 	free(cl_stack1.clusters);
-	free(cl_stack1.dpid_store);
+	free(cl_stack1.pointindex_store);
 	free(cl_stack2.clusters);
-	free(cl_stack2.dpid_store);
+	free(cl_stack2.pointindex_store);
 }
 
 
@@ -85,7 +85,7 @@ void scc_ut_hi_init_cl_stack(void** state)
 	                           5, 5, 2, 5, M,
 	                           6, M, 6, 6, 3  };
 
-	const iscc_Dpid ref1_cl[20] = { 16, 18, 8, 6, 4, 0, 11, 9, 5, 1, 15, 13, 10, 3, 17, 14, 2, 19, 12, 7 };
+	const scc_PointIndex ref1_cl[20] = { 16, 18, 8, 6, 4, 0, 11, 9, 5, 1, 15, 13, 10, 3, 17, 14, 2, 19, 12, 7 };
 
 	scc_Clustering* cl1;
 	iscc_hi_ClusterStack cl_stack1;
@@ -99,8 +99,8 @@ void scc_ut_hi_init_cl_stack(void** state)
 	assert_int_equal(cl_stack1.capacity, 50);
 	assert_int_equal(cl_stack1.items, 6);
 	assert_non_null(cl_stack1.clusters);
-	assert_non_null(cl_stack1.dpid_store);
-	assert_memory_equal(cl_stack1.dpid_store, ref1_cl, 20 * sizeof(iscc_Dpid));
+	assert_non_null(cl_stack1.pointindex_store);
+	assert_memory_equal(cl_stack1.pointindex_store, ref1_cl, 20 * sizeof(scc_PointIndex));
 	cl_stack1.clusters[cl_stack1.capacity - 1].size = 123;
 
 	assert_int_equal(cl_stack1.clusters[0].size, 1);
@@ -117,14 +117,14 @@ void scc_ut_hi_init_cl_stack(void** state)
 	assert_int_equal(cl_stack1.clusters[4].marker, 0);
 	assert_int_equal(cl_stack1.clusters[5].marker, 0);
 
-	assert_ptr_equal(cl_stack1.clusters[0].members, cl_stack1.dpid_store + 0);
-	assert_ptr_equal(cl_stack1.clusters[1].members, cl_stack1.dpid_store + 1);
-	assert_ptr_equal(cl_stack1.clusters[2].members, cl_stack1.dpid_store + 6);
-	assert_ptr_equal(cl_stack1.clusters[3].members, cl_stack1.dpid_store + 10);
-	assert_ptr_equal(cl_stack1.clusters[4].members, cl_stack1.dpid_store + 14);
-	assert_ptr_equal(cl_stack1.clusters[5].members, cl_stack1.dpid_store + 17);
+	assert_ptr_equal(cl_stack1.clusters[0].members, cl_stack1.pointindex_store + 0);
+	assert_ptr_equal(cl_stack1.clusters[1].members, cl_stack1.pointindex_store + 1);
+	assert_ptr_equal(cl_stack1.clusters[2].members, cl_stack1.pointindex_store + 6);
+	assert_ptr_equal(cl_stack1.clusters[3].members, cl_stack1.pointindex_store + 10);
+	assert_ptr_equal(cl_stack1.clusters[4].members, cl_stack1.pointindex_store + 14);
+	assert_ptr_equal(cl_stack1.clusters[5].members, cl_stack1.pointindex_store + 17);
 
-	const iscc_Dpid ref2_cl[20] = { 13, 7, 0, 17, 10, 24, 6, 4, 3, 12, 8, 18, 16, 15, 14, 5, 2, 23, 22, 20 };
+	const scc_PointIndex ref2_cl[20] = { 13, 7, 0, 17, 10, 24, 6, 4, 3, 12, 8, 18, 16, 15, 14, 5, 2, 23, 22, 20 };
 
 	scc_Clustering* cl2;
 	iscc_hi_ClusterStack cl_stack2;
@@ -138,8 +138,8 @@ void scc_ut_hi_init_cl_stack(void** state)
 	assert_int_equal(cl_stack2.capacity, 54);
 	assert_int_equal(cl_stack2.items, 7);
 	assert_non_null(cl_stack2.clusters);
-	assert_non_null(cl_stack2.dpid_store);
-	assert_memory_equal(cl_stack2.dpid_store, ref2_cl, 20 * sizeof(iscc_Dpid));
+	assert_non_null(cl_stack2.pointindex_store);
+	assert_memory_equal(cl_stack2.pointindex_store, ref2_cl, 20 * sizeof(scc_PointIndex));
 	cl_stack2.clusters[cl_stack2.capacity - 1].size = 123;
 
 	assert_int_equal(cl_stack2.clusters[0].size, 3);
@@ -158,20 +158,20 @@ void scc_ut_hi_init_cl_stack(void** state)
 	assert_int_equal(cl_stack2.clusters[5].marker, 0);
 	assert_int_equal(cl_stack2.clusters[6].marker, 0);
 
-	assert_ptr_equal(cl_stack2.clusters[0].members, cl_stack2.dpid_store + 0);
-	assert_ptr_equal(cl_stack2.clusters[1].members, cl_stack2.dpid_store + 3);
-	assert_ptr_equal(cl_stack2.clusters[2].members, cl_stack2.dpid_store + 3);
-	assert_ptr_equal(cl_stack2.clusters[3].members, cl_stack2.dpid_store + 5);
-	assert_ptr_equal(cl_stack2.clusters[4].members, cl_stack2.dpid_store + 9);
-	assert_ptr_equal(cl_stack2.clusters[5].members, cl_stack2.dpid_store + 11);
-	assert_ptr_equal(cl_stack2.clusters[6].members, cl_stack2.dpid_store + 17);
+	assert_ptr_equal(cl_stack2.clusters[0].members, cl_stack2.pointindex_store + 0);
+	assert_ptr_equal(cl_stack2.clusters[1].members, cl_stack2.pointindex_store + 3);
+	assert_ptr_equal(cl_stack2.clusters[2].members, cl_stack2.pointindex_store + 3);
+	assert_ptr_equal(cl_stack2.clusters[3].members, cl_stack2.pointindex_store + 5);
+	assert_ptr_equal(cl_stack2.clusters[4].members, cl_stack2.pointindex_store + 9);
+	assert_ptr_equal(cl_stack2.clusters[5].members, cl_stack2.pointindex_store + 11);
+	assert_ptr_equal(cl_stack2.clusters[6].members, cl_stack2.pointindex_store + 17);
 
 	scc_free_clustering(&cl1);
 	free(cl_stack1.clusters);
-	free(cl_stack1.dpid_store);
+	free(cl_stack1.pointindex_store);
 	scc_free_clustering(&cl2);
 	free(cl_stack2.clusters);
-	free(cl_stack2.dpid_store);
+	free(cl_stack2.pointindex_store);
 }
 
 
@@ -180,8 +180,8 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 	(void) state;
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = malloc(sizeof(iscc_Dpid[100])),
-		.dpid_array2 = malloc(sizeof(iscc_Dpid[100])),
+		.pointindex_array1 = malloc(sizeof(scc_PointIndex[100])),
+		.pointindex_array2 = malloc(sizeof(scc_PointIndex[100])),
 		.dist_array = malloc(sizeof(double[200])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[100])),
@@ -211,7 +211,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 	assert_memory_equal(cl1.cluster_label, ref_label1, 100 * sizeof(scc_Clabel));
 	free(cl1.cluster_label);
 	free(cl_stack1.clusters);
-	free(cl_stack1.dpid_store);
+	free(cl_stack1.pointindex_store);
 
 	for (size_t i = 0; i < 100; ++i) {
 		wa.vertex_markers[i] = 0;
@@ -238,7 +238,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 	assert_memory_equal(cl2.cluster_label, ref_label2, 100 * sizeof(scc_Clabel));
 	free(cl2.cluster_label);
 	free(cl_stack2.clusters);
-	free(cl_stack2.dpid_store);
+	free(cl_stack2.pointindex_store);
 
 	for (size_t i = 0; i < 100; ++i) {
 		wa.vertex_markers[i] = 0;
@@ -273,7 +273,7 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 	assert_false(cl3.external_labels);
 	assert_memory_equal(cl3.cluster_label, ref_label3, 100 * sizeof(scc_Clabel));
 	free(cl_stack3.clusters);
-	free(cl_stack3.dpid_store);
+	free(cl_stack3.pointindex_store);
 
 	for (size_t i = 0; i < 100; ++i) {
 		wa.vertex_markers[i] = 0;
@@ -308,10 +308,10 @@ void scc_ut_hi_run_hierarchical_clustering(void** state)
 	assert_false(cl4.external_labels);
 	assert_memory_equal(cl4.cluster_label, ref_label4, 100 * sizeof(scc_Clabel));
 	free(cl_stack4.clusters);
-	free(cl_stack4.dpid_store);
+	free(cl_stack4.pointindex_store);
 
-	free(wa.dpid_array1);
-	free(wa.dpid_array2);
+	free(wa.pointindex_array1);
+	free(wa.pointindex_array2);
 	free(wa.dist_array);
 	free(wa.vertex_markers);
 	free(wa.edge_store1);
@@ -323,14 +323,14 @@ void scc_ut_hi_push_to_stack(void** state)
 {
 	(void) state;
 
-	iscc_Dpid* ref_clusters = calloc(3, sizeof(iscc_hi_ClusterItem));
-	iscc_Dpid* ref_dpid_store = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* ref_clusters = calloc(3, sizeof(iscc_hi_ClusterItem));
+	scc_PointIndex* ref_pointindex_store = calloc(20, sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterStack cl_stack = {
 		.capacity = 3,
 		.items = 2,
 		.clusters = calloc(3, sizeof(iscc_hi_ClusterItem)),
-		.dpid_store = calloc(20, sizeof(iscc_Dpid)),
+		.pointindex_store = calloc(20, sizeof(scc_PointIndex)),
 	};
 
 	iscc_hi_ClusterItem* new_cl_item1 = NULL;
@@ -340,7 +340,7 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_int_equal(cl_stack.items, 3);
 	assert_ptr_equal(new_cl_item1, cl_stack.clusters + 2);
 	assert_memory_equal(cl_stack.clusters, ref_clusters, 3 * sizeof(iscc_hi_ClusterItem));
-	assert_memory_equal(cl_stack.dpid_store, ref_dpid_store, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl_stack.pointindex_store, ref_pointindex_store, 20 * sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterItem* new_cl_item2 = NULL;
 	scc_ErrorCode ec2 = iscc_hi_push_to_stack(&cl_stack, &new_cl_item2);
@@ -349,7 +349,7 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_int_equal(cl_stack.items, 4);
 	assert_ptr_equal(new_cl_item2, cl_stack.clusters + 3);
 	assert_memory_equal(cl_stack.clusters, ref_clusters, 3 * sizeof(iscc_hi_ClusterItem));
-	assert_memory_equal(cl_stack.dpid_store, ref_dpid_store, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl_stack.pointindex_store, ref_pointindex_store, 20 * sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterItem* new_cl_item3 = NULL;
 	scc_ErrorCode ec3 = iscc_hi_push_to_stack(&cl_stack, &new_cl_item3);
@@ -358,13 +358,13 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_int_equal(cl_stack.items, 5);
 	assert_ptr_equal(new_cl_item3, cl_stack.clusters + 4);
 	assert_memory_equal(cl_stack.clusters, ref_clusters, 3 * sizeof(iscc_hi_ClusterItem));
-	assert_memory_equal(cl_stack.dpid_store, ref_dpid_store, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl_stack.pointindex_store, ref_pointindex_store, 20 * sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterStack cl_stack_fail = {
 		.capacity = SIZE_MAX,
 		.items = SIZE_MAX,
 		.clusters = calloc(3, sizeof(iscc_hi_ClusterItem)),
-		.dpid_store = calloc(20, sizeof(iscc_Dpid)),
+		.pointindex_store = calloc(20, sizeof(scc_PointIndex)),
 	};
 
 	iscc_hi_ClusterItem* new_cl_item_fail = NULL;
@@ -372,11 +372,11 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_int_equal(ec_fail, SCC_ER_TOO_LARGE_PROBLEM);
 
 	free(ref_clusters);
-	free(ref_dpid_store);
+	free(ref_pointindex_store);
 	free(cl_stack.clusters);
-	free(cl_stack.dpid_store);
+	free(cl_stack.pointindex_store);
 	free(cl_stack_fail.clusters);
-	free(cl_stack_fail.dpid_store);
+	free(cl_stack_fail.pointindex_store);
 }
 
 
@@ -385,32 +385,32 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	(void) state;
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = malloc(sizeof(iscc_Dpid[100])),
-		.dpid_array2 = malloc(sizeof(iscc_Dpid[100])),
+		.pointindex_array1 = malloc(sizeof(scc_PointIndex[100])),
+		.pointindex_array2 = malloc(sizeof(scc_PointIndex[100])),
 		.dist_array = malloc(sizeof(double[100])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[40])),
 		.edge_store2 = malloc(sizeof(iscc_hi_DistanceEdge[40])),
 	};
 
-	iscc_Dpid members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_PointIndex members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_hi_ClusterItem cl1 = {
 		.size = 10,
 		.marker = 0,
 		.members = members1,
 	};
 
-	iscc_Dpid ref_cl1[6] = { 2, 20, 14, 4, 12, 16 };
-	iscc_Dpid ref_cl2[4] = { 8, 6, 10, 18 };
+	scc_PointIndex ref_cl1[6] = { 2, 20, 14, 4, 12, 16 };
+	scc_PointIndex ref_cl2[4] = { 8, 6, 10, 18 };
 	iscc_hi_ClusterItem cl1_a;
 	scc_ErrorCode ec1 = iscc_hi_break_cluster_into_two(&cl1, scc_ut_test_data_large, &wa, 3, true, &cl1_a);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(cl1.size, 6);
 	assert_int_equal(cl1.marker, 2);
-	assert_memory_equal(cl1.members, ref_cl1, cl1.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl1.members, ref_cl1, cl1.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl1_a.size, 4);
 	assert_int_equal(cl1_a.marker, 2);
-	assert_memory_equal(cl1_a.members, ref_cl2, cl1_a.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl1_a.members, ref_cl2, cl1_a.size * sizeof(scc_PointIndex));
 	assert_int_equal(wa.vertex_markers[2], 2);
 	assert_int_equal(wa.vertex_markers[4], 2);
 	assert_int_equal(wa.vertex_markers[6], 2);
@@ -422,17 +422,17 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	assert_int_equal(wa.vertex_markers[18], 2);
 	assert_int_equal(wa.vertex_markers[20], 2);
 
-	iscc_Dpid ref_cl3[3] = { 2, 20, 4 };
-	iscc_Dpid ref_cl4[3] = { 14, 12, 16 };
+	scc_PointIndex ref_cl3[3] = { 2, 20, 4 };
+	scc_PointIndex ref_cl4[3] = { 14, 12, 16 };
 	iscc_hi_ClusterItem cl1_b;
 	scc_ErrorCode ec2 = iscc_hi_break_cluster_into_two(&cl1, scc_ut_test_data_large, &wa, 3, true, &cl1_b);
 	assert_int_equal(ec2, SCC_ER_OK);
 	assert_int_equal(cl1.size, 3);
 	assert_int_equal(cl1.marker, 4);
-	assert_memory_equal(cl1.members, ref_cl3, cl1.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl1.members, ref_cl3, cl1.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl1_b.size, 3);
 	assert_int_equal(cl1_b.marker, 4);
-	assert_memory_equal(cl1_b.members, ref_cl4, cl1_b.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl1_b.members, ref_cl4, cl1_b.size * sizeof(scc_PointIndex));
 	assert_int_equal(wa.vertex_markers[2], 4);
 	assert_int_equal(wa.vertex_markers[4], 4);
 	assert_int_equal(wa.vertex_markers[6], 2);
@@ -444,27 +444,27 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	assert_int_equal(wa.vertex_markers[18], 2);
 	assert_int_equal(wa.vertex_markers[20], 4);
 
-	iscc_Dpid ref_members1[10] = { 2, 20, 4, 14, 12, 16, 8, 6, 10, 18 };
-	assert_memory_equal(members1, ref_members1, 10 * sizeof(iscc_Dpid));
+	scc_PointIndex ref_members1[10] = { 2, 20, 4, 14, 12, 16, 8, 6, 10, 18 };
+	assert_memory_equal(members1, ref_members1, 10 * sizeof(scc_PointIndex));
 
-	iscc_Dpid members2[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
+	scc_PointIndex members2[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
 	iscc_hi_ClusterItem cl2 = {
 		.size = 10,
 		.marker = 0,
 		.members = members2,
 	};
 
-	iscc_Dpid ref_cl5[5] = { 21, 30, 22, 29, 24 };
-	iscc_Dpid ref_cl6[5] = { 23, 25, 27, 26, 28 };
+	scc_PointIndex ref_cl5[5] = { 21, 30, 22, 29, 24 };
+	scc_PointIndex ref_cl6[5] = { 23, 25, 27, 26, 28 };
 	iscc_hi_ClusterItem cl2_a;
 	scc_ErrorCode ec3 = iscc_hi_break_cluster_into_two(&cl2, scc_ut_test_data_large, &wa, 2, false, &cl2_a);
 	assert_int_equal(ec3, SCC_ER_OK);
 	assert_int_equal(cl2.size, 5);
 	assert_int_equal(cl2.marker, 2);
-	assert_memory_equal(cl2.members, ref_cl5, cl2.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2.members, ref_cl5, cl2.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl2_a.size, 5);
 	assert_int_equal(cl2_a.marker, 2);
-	assert_memory_equal(cl2_a.members, ref_cl6, cl2_a.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2_a.members, ref_cl6, cl2_a.size * sizeof(scc_PointIndex));
 	assert_int_equal(wa.vertex_markers[21], 2);
 	assert_int_equal(wa.vertex_markers[22], 2);
 	assert_int_equal(wa.vertex_markers[23], 2);
@@ -476,17 +476,17 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	assert_int_equal(wa.vertex_markers[29], 2);
 	assert_int_equal(wa.vertex_markers[30], 2);
 
-	iscc_Dpid ref_cl7[2] = { 29, 24 };
-	iscc_Dpid ref_cl8[3] = { 21, 22, 30 };
+	scc_PointIndex ref_cl7[2] = { 29, 24 };
+	scc_PointIndex ref_cl8[3] = { 21, 22, 30 };
 	iscc_hi_ClusterItem cl2_b;
 	scc_ErrorCode ec4 = iscc_hi_break_cluster_into_two(&cl2, scc_ut_test_data_large, &wa, 2, false, &cl2_b);
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_int_equal(cl2.size, 2);
 	assert_int_equal(cl2.marker, 4);
-	assert_memory_equal(cl2.members, ref_cl7, cl2.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2.members, ref_cl7, cl2.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl2_b.size, 3);
 	assert_int_equal(cl2_b.marker, 4);
-	assert_memory_equal(cl2_b.members, ref_cl8, cl2_b.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2_b.members, ref_cl8, cl2_b.size * sizeof(scc_PointIndex));
 	assert_int_equal(wa.vertex_markers[21], 4);
 	assert_int_equal(wa.vertex_markers[22], 4);
 	assert_int_equal(wa.vertex_markers[23], 2);
@@ -498,17 +498,17 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	assert_int_equal(wa.vertex_markers[29], 4);
 	assert_int_equal(wa.vertex_markers[30], 4);
 
-	iscc_Dpid ref_cl9[3] = { 23, 27, 25 };
-	iscc_Dpid ref_cl10[2] = { 28, 26 };
+	scc_PointIndex ref_cl9[3] = { 23, 27, 25 };
+	scc_PointIndex ref_cl10[2] = { 28, 26 };
 	iscc_hi_ClusterItem cl2_c;
 	scc_ErrorCode ec5 = iscc_hi_break_cluster_into_two(&cl2_a, scc_ut_test_data_large, &wa, 2, false, &cl2_c);
 	assert_int_equal(ec5, SCC_ER_OK);
 	assert_int_equal(cl2_a.size, 3);
 	assert_int_equal(cl2_a.marker, 4);
-	assert_memory_equal(cl2_a.members, ref_cl9, cl2_a.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2_a.members, ref_cl9, cl2_a.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl2_c.size, 2);
 	assert_int_equal(cl2_c.marker, 4);
-	assert_memory_equal(cl2_c.members, ref_cl10, cl2_c.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2_c.members, ref_cl10, cl2_c.size * sizeof(scc_PointIndex));
 	assert_int_equal(wa.vertex_markers[21], 4);
 	assert_int_equal(wa.vertex_markers[22], 4);
 	assert_int_equal(wa.vertex_markers[23], 4);
@@ -520,7 +520,7 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 	assert_int_equal(wa.vertex_markers[29], 4);
 	assert_int_equal(wa.vertex_markers[30], 4);
 
-	iscc_Dpid members3[40] = { 34, 42, 78, 27, 99, 67, 29, 18, 92, 25,
+	scc_PointIndex members3[40] = { 34, 42, 78, 27, 99, 67, 29, 18, 92, 25,
 	                           33, 23, 55, 82, 21, 79, 70, 85, 83, 61,
 	                           16, 57, 24, 35, 12, 95, 60, 7, 86, 48,
 	                           46, 76, 75, 54, 59, 38, 11, 6, 39, 13 };
@@ -529,20 +529,20 @@ void scc_ut_hi_break_cluster_into_two(void** state)
 		.marker = 10,
 		.members = members3,
 	};
-	iscc_Dpid ref_cl11[20] = { 78, 92, 85, 42, 21, 33, 70, 57, 60, 48, 61, 79, 12, 95, 54, 38, 11, 82, 67, 59 };
-	iscc_Dpid ref_cl12[20] = { 35, 34, 16, 39, 86, 25, 13, 27, 75, 76, 6, 46, 7, 23, 29, 99, 24, 83, 18, 55 };
+	scc_PointIndex ref_cl11[20] = { 78, 92, 85, 42, 21, 33, 70, 57, 60, 48, 61, 79, 12, 95, 54, 38, 11, 82, 67, 59 };
+	scc_PointIndex ref_cl12[20] = { 35, 34, 16, 39, 86, 25, 13, 27, 75, 76, 6, 46, 7, 23, 29, 99, 24, 83, 18, 55 };
 	iscc_hi_ClusterItem cl3_a;
 	scc_ErrorCode ec6 = iscc_hi_break_cluster_into_two(&cl3, scc_ut_test_data_large, &wa, 20, true, &cl3_a);
 	assert_int_equal(ec6, SCC_ER_OK);
 	assert_int_equal(cl3.size, 20);
 	assert_int_equal(cl3.marker, 12);
-	assert_memory_equal(cl3.members, ref_cl11, cl3.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl3.members, ref_cl11, cl3.size * sizeof(scc_PointIndex));
 	assert_int_equal(cl3_a.size, 20);
 	assert_int_equal(cl3_a.marker, 12);
-	assert_memory_equal(cl3_a.members, ref_cl12, cl3_a.size * sizeof(iscc_Dpid));
+	assert_memory_equal(cl3_a.members, ref_cl12, cl3_a.size * sizeof(scc_PointIndex));
 
-	free(wa.dpid_array1);
-	free(wa.dpid_array2);
+	free(wa.pointindex_array1);
+	free(wa.pointindex_array2);
 	free(wa.dist_array);
 	free(wa.vertex_markers);
 	free(wa.edge_store1);
@@ -563,8 +563,8 @@ void scc_ut_hi_get_next_marker(void** state)
 	                                     11, 12, 13, 14, 15,
 	                                     16, 17, 18, 0, 20 };
 
-	const iscc_Dpid mems_ref[5] = { 0, 4, 6, 8, 18 };
-	iscc_Dpid mems[5] = { 0, 4, 6, 8, 18 };
+	const scc_PointIndex mems_ref[5] = { 0, 4, 6, 8, 18 };
+	scc_PointIndex mems[5] = { 0, 4, 6, 8, 18 };
 	iscc_hi_ClusterItem cl_item = {
 		.size = 5,
 		.marker = 0,
@@ -575,14 +575,14 @@ void scc_ut_hi_get_next_marker(void** state)
 	assert_int_equal(next_marker1, 1);
 	assert_int_equal(cl_item.size, 5);
 	assert_int_equal(cl_item.marker, 1);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
 
 	uint_fast16_t next_marker2 = iscc_hi_get_next_marker(&cl_item, vertex_markers);
 	assert_int_equal(next_marker2, 2);
 	assert_int_equal(cl_item.size, 5);
 	assert_int_equal(cl_item.marker, 2);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
 
 	vertex_markers[0] = 4;
@@ -596,14 +596,14 @@ void scc_ut_hi_get_next_marker(void** state)
 	assert_int_equal(next_marker3, 1);
 	assert_int_equal(cl_item.size, 5);
 	assert_int_equal(cl_item.marker, 1);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
 
 	uint_fast16_t next_marker4 = iscc_hi_get_next_marker(&cl_item, vertex_markers);
 	assert_int_equal(next_marker4, 2);
 	assert_int_equal(cl_item.size, 5);
 	assert_int_equal(cl_item.marker, 2);
-	assert_memory_equal(mems, mems_ref, 5 * sizeof(iscc_Dpid));
+	assert_memory_equal(mems, mems_ref, 5 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, vertex_markers_ref, 20 * sizeof(uint_fast16_t));
 }
 
@@ -612,7 +612,7 @@ void scc_ut_hi_get_next_k_nn(void** state)
 {
 	(void) state;
 
-	iscc_Dpid members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_PointIndex members[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_hi_ClusterItem cl = {
 		.size = 10,
 		.marker = 0,
@@ -620,8 +620,8 @@ void scc_ut_hi_get_next_k_nn(void** state)
 	};
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = NULL,
-		.dpid_array2 = NULL,
+		.pointindex_array1 = NULL,
+		.pointindex_array2 = NULL,
 		.dist_array = malloc(sizeof(double[20])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[10])),
@@ -630,18 +630,18 @@ void scc_ut_hi_get_next_k_nn(void** state)
 
 	assert_int_equal(iscc_hi_populate_edge_lists(&cl, scc_ut_test_data_large, 6, 16, &wa), SCC_ER_OK);
 
-	iscc_Dpid out_dist_array0[4];
-	const iscc_Dpid ref_dist_array0[4] = { 12, 16, 18, 4 };
+	scc_PointIndex out_dist_array0[4];
+	const scc_PointIndex ref_dist_array0[4] = { 12, 16, 18, 4 };
 	iscc_hi_DistanceEdge* prev_dist0 = iscc_hi_get_next_k_nn(wa.edge_store1, 4, wa.vertex_markers, 1, out_dist_array0);
-	assert_memory_equal(out_dist_array0, ref_dist_array0, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array0, ref_dist_array0, 4 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist0->head, 4);
 	assert_double_equal(prev_dist0->distance, 72.125847);
 	assert_ptr_equal(prev_dist0->next_dist, prev_dist0 + 1);
 
-	iscc_Dpid out_dist_array1[4];
-	const iscc_Dpid ref_dist_array1[4] = { 18, 4, 10, 14 };
+	scc_PointIndex out_dist_array1[4];
+	const scc_PointIndex ref_dist_array1[4] = { 18, 4, 10, 14 };
 	iscc_hi_DistanceEdge* prev_dist1 = iscc_hi_get_next_k_nn(&wa.edge_store1[2], 4, wa.vertex_markers, 1, out_dist_array1);
-	assert_memory_equal(out_dist_array1, ref_dist_array1, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array1, ref_dist_array1, 4 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist1->head, 14);
 	assert_double_equal(prev_dist1->distance, 80.566800);
 	assert_ptr_equal(prev_dist1->next_dist, prev_dist1 + 1);
@@ -650,45 +650,45 @@ void scc_ut_hi_get_next_k_nn(void** state)
 	wa.vertex_markers[4] = 1;
 	wa.vertex_markers[8] = 1;
 
-	iscc_Dpid out_dist_arrayY[4];
-	const iscc_Dpid ref_dist_arrayY[4] = { 12, 16, 10, 14 };
+	scc_PointIndex out_dist_arrayY[4];
+	const scc_PointIndex ref_dist_arrayY[4] = { 12, 16, 10, 14 };
 	iscc_hi_DistanceEdge* prev_distY = iscc_hi_get_next_k_nn(wa.edge_store1, 4, wa.vertex_markers, 1, out_dist_arrayY);
-	assert_memory_equal(out_dist_arrayY, ref_dist_arrayY, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_arrayY, ref_dist_arrayY, 4 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_distY->head, 14);
 	assert_double_equal(prev_distY->distance, 80.566800);
 	assert_ptr_equal(prev_distY->next_dist, prev_distY + 1);
 
-	iscc_Dpid out_dist_arrayX[2];
-	const iscc_Dpid ref_dist_arrayX[2] = { 12, 16 };
+	scc_PointIndex out_dist_arrayX[2];
+	const scc_PointIndex ref_dist_arrayX[2] = { 12, 16 };
 	iscc_hi_DistanceEdge* prev_distX = iscc_hi_get_next_k_nn(wa.edge_store1, 2, wa.vertex_markers, 1, out_dist_arrayX);
-	assert_memory_equal(out_dist_arrayX, ref_dist_arrayX, 2 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_arrayX, ref_dist_arrayX, 2 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_distX->head, 16);
 	assert_double_equal(prev_distX->distance, 43.918798);
 	assert_ptr_equal(prev_distX->next_dist, prev_distX + 3);
 
-	iscc_Dpid out_dist_array2[4];
-	const iscc_Dpid ref_dist_array2[4] = { 10, 14, 20, 2 };
+	scc_PointIndex out_dist_array2[4];
+	const scc_PointIndex ref_dist_array2[4] = { 10, 14, 20, 2 };
 	iscc_hi_DistanceEdge* prev_dist2 = iscc_hi_get_next_k_nn(&wa.edge_store1[2], 4, wa.vertex_markers, 1, out_dist_array2);
-	assert_memory_equal(out_dist_array2, ref_dist_array2, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array2, ref_dist_array2, 4 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist2->head, 2);
 	assert_double_equal(prev_dist2->distance, 103.030113);
 	assert_null(prev_dist2->next_dist);
 
 	wa.vertex_markers[20] = 1;
 
-	iscc_Dpid out_dist_array3[4];
-	const iscc_Dpid ref_dist_array3[4] = { 16, 10, 14, 2 };
+	scc_PointIndex out_dist_array3[4];
+	const scc_PointIndex ref_dist_array3[4] = { 16, 10, 14, 2 };
 	iscc_hi_DistanceEdge* prev_dist3 = iscc_hi_get_next_k_nn(&wa.edge_store1[1], 4, wa.vertex_markers, 1, out_dist_array3);
-	assert_memory_equal(out_dist_array3, ref_dist_array3, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array3, ref_dist_array3, 4 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist3->head, 2);
 	assert_double_equal(prev_dist3->distance, 103.030113);
 	assert_null(prev_dist3->next_dist);
 
 
-	iscc_Dpid out_dist_array4[1];
-	const iscc_Dpid ref_dist_array4[1] = { 8 };
+	scc_PointIndex out_dist_array4[1];
+	const scc_PointIndex ref_dist_array4[1] = { 8 };
 	iscc_hi_DistanceEdge* prev_dist4 = iscc_hi_get_next_k_nn(&wa.edge_store2[4], 1, wa.vertex_markers, 2, out_dist_array4);
-	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array4, ref_dist_array4, 1 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist4->head, 8);
 	assert_double_equal(prev_dist4->distance, 62.616031);
 	assert_ptr_equal(prev_dist4->next_dist, prev_dist4 + 1);
@@ -697,10 +697,10 @@ void scc_ut_hi_get_next_k_nn(void** state)
 	wa.vertex_markers[14] = 2;
 	wa.vertex_markers[20] = 2;
 
-	iscc_Dpid out_dist_array5[3];
-	const iscc_Dpid ref_dist_array5[3] = { 8, 10, 2 };
+	scc_PointIndex out_dist_array5[3];
+	const scc_PointIndex ref_dist_array5[3] = { 8, 10, 2 };
 	iscc_hi_DistanceEdge* prev_dist5 = iscc_hi_get_next_k_nn(&wa.edge_store2[2], 3, wa.vertex_markers, 2, out_dist_array5);
-	assert_memory_equal(out_dist_array5, ref_dist_array5, 3 * sizeof(iscc_Dpid));
+	assert_memory_equal(out_dist_array5, ref_dist_array5, 3 * sizeof(scc_PointIndex));
 	assert_int_equal(prev_dist5->head, 2);
 	assert_double_equal(prev_dist5->distance, 83.120587);
 	assert_ptr_equal(prev_dist5->next_dist, prev_dist5 + 1);
@@ -716,7 +716,7 @@ void scc_ut_hi_get_next_dist(void** state)
 {
 	(void) state;
 
-	iscc_Dpid members[5] = { 2, 4, 6, 8, 10 };
+	scc_PointIndex members[5] = { 2, 4, 6, 8, 10 };
 	iscc_hi_ClusterItem cl = {
 		.size = 5,
 		.marker = 0,
@@ -724,8 +724,8 @@ void scc_ut_hi_get_next_dist(void** state)
 	};
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = NULL,
-		.dpid_array2 = NULL,
+		.pointindex_array1 = NULL,
+		.pointindex_array2 = NULL,
 		.dist_array = malloc(sizeof(double[10])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[5])),
@@ -843,7 +843,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	(void) state;
 
 	uint_fast16_t* vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* members = calloc(20, sizeof(scc_PointIndex));
 	members[0] = 4;
 	members[1] = 1;
 	members[2] = 2;
@@ -858,7 +858,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	};
 
 	uint_fast16_t* ref_vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* ref_members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* ref_members = calloc(20, sizeof(scc_PointIndex));
 	ref_members[0] = 4;
 	ref_members[1] = 1;
 	ref_members[2] = 2;
@@ -869,7 +869,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 3);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 
@@ -879,7 +879,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 4);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[4] = 3;
@@ -888,7 +888,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 5);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[5] = 6;
@@ -897,7 +897,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 6);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[6] = 10;
@@ -906,7 +906,7 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 7);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[7] = 14;
@@ -915,13 +915,13 @@ void scc_ut_hi_move_point_to_cluster1(void** state)
 	assert_int_equal(cl.size, 8);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
-	iscc_Dpid end_members[8] = { 4, 1, 2, 11, 3, 6, 10, 14 };
+	scc_PointIndex end_members[8] = { 4, 1, 2, 11, 3, 6, 10, 14 };
 	assert_int_equal(cl.size, 8);
 	assert_int_equal(cl.marker, 1);
-	assert_memory_equal(cl.members, end_members, 8 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, end_members, 8 * sizeof(scc_PointIndex));
 
 	free(vertex_markers);
 	free(members);
@@ -935,7 +935,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	(void) state;
 
 	uint_fast16_t* vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* members = calloc(20, sizeof(scc_PointIndex));
 	members[19] = 4;
 	members[18] = 1;
 	members[17] = 2;
@@ -950,7 +950,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	};
 
 	uint_fast16_t* ref_vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* ref_members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* ref_members = calloc(20, sizeof(scc_PointIndex));
 	ref_members[19] = 4;
 	ref_members[18] = 1;
 	ref_members[17] = 2;
@@ -961,7 +961,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 3);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[17]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 
@@ -971,7 +971,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 4);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[16]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[15] = 3;
@@ -980,7 +980,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 5);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[15]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[14] = 6;
@@ -989,7 +989,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 6);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[14]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[13] = 10;
@@ -998,7 +998,7 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 7);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[13]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[12] = 14;
@@ -1007,13 +1007,13 @@ void scc_ut_hi_move_point_to_cluster2(void** state)
 	assert_int_equal(cl.size, 8);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[12]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
-	iscc_Dpid end_members[8] = { 14, 10, 6, 3, 11, 2, 1, 4 };
+	scc_PointIndex end_members[8] = { 14, 10, 6, 3, 11, 2, 1, 4 };
 	assert_int_equal(cl.size, 8);
 	assert_int_equal(cl.marker, 1);
-	assert_memory_equal(cl.members, end_members, 8 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, end_members, 8 * sizeof(scc_PointIndex));
 
 	free(vertex_markers);
 	free(members);
@@ -1027,7 +1027,7 @@ void scc_ut_hi_move_array_to_cluster1(void** state)
 	(void) state;
 
 	uint_fast16_t* vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* members = calloc(20, sizeof(scc_PointIndex));
 	members[0] = 4;
 	members[1] = 1;
 	members[2] = 2;
@@ -1042,7 +1042,7 @@ void scc_ut_hi_move_array_to_cluster1(void** state)
 	};
 
 	uint_fast16_t* ref_vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* ref_members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* ref_members = calloc(20, sizeof(scc_PointIndex));
 	ref_members[0] = 4;
 	ref_members[1] = 1;
 	ref_members[2] = 2;
@@ -1053,29 +1053,29 @@ void scc_ut_hi_move_array_to_cluster1(void** state)
 	assert_int_equal(cl.size, 3);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[3] = 11;
 	ref_members[4] = 3;
 	ref_vertex_markers[11] = 1;
 	ref_vertex_markers[3] = 1;
-	iscc_Dpid add1[2] = { 11, 3 };
+	scc_PointIndex add1[2] = { 11, 3 };
 	iscc_hi_move_array_to_cluster1(2, add1, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 5);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[5] = 6;
 	ref_vertex_markers[6] = 1;
-	iscc_Dpid add2[1] = { 6 };
+	scc_PointIndex add2[1] = { 6 };
 	iscc_hi_move_array_to_cluster1(1, add2, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 6);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[6] = 10;
@@ -1084,18 +1084,18 @@ void scc_ut_hi_move_array_to_cluster1(void** state)
 	ref_vertex_markers[10] = 1;
 	ref_vertex_markers[14] = 1;
 	ref_vertex_markers[17] = 1;
-	iscc_Dpid add3[3] = { 10, 14, 17 };
+	scc_PointIndex add3[3] = { 10, 14, 17 };
 	iscc_hi_move_array_to_cluster1(3, add3, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 9);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, members);
-	assert_memory_equal(cl.members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
-	iscc_Dpid end_members[9] = { 4, 1, 2, 11, 3, 6, 10, 14, 17 };
+	scc_PointIndex end_members[9] = { 4, 1, 2, 11, 3, 6, 10, 14, 17 };
 	assert_int_equal(cl.size, 9);
 	assert_int_equal(cl.marker, 1);
-	assert_memory_equal(cl.members, end_members, 9 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, end_members, 9 * sizeof(scc_PointIndex));
 
 	free(vertex_markers);
 	free(members);
@@ -1109,7 +1109,7 @@ void scc_ut_hi_move_array_to_cluster2(void** state)
 	(void) state;
 
 	uint_fast16_t* vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* members = calloc(20, sizeof(scc_PointIndex));
 	members[19] = 4;
 	members[18] = 1;
 	members[17] = 2;
@@ -1124,7 +1124,7 @@ void scc_ut_hi_move_array_to_cluster2(void** state)
 	};
 
 	uint_fast16_t* ref_vertex_markers = calloc(20, sizeof(uint_fast16_t));
-	iscc_Dpid* ref_members = calloc(20, sizeof(iscc_Dpid));
+	scc_PointIndex* ref_members = calloc(20, sizeof(scc_PointIndex));
 	ref_members[19] = 4;
 	ref_members[18] = 1;
 	ref_members[17] = 2;
@@ -1135,29 +1135,29 @@ void scc_ut_hi_move_array_to_cluster2(void** state)
 	assert_int_equal(cl.size, 3);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[17]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[16] = 11;
 	ref_members[15] = 3;
 	ref_vertex_markers[11] = 1;
 	ref_vertex_markers[3] = 1;
-	iscc_Dpid add1[2] = { 11, 3 };
+	scc_PointIndex add1[2] = { 11, 3 };
 	iscc_hi_move_array_to_cluster2(2, add1, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 5);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[15]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[14] = 6;
 	ref_vertex_markers[6] = 1;
-	iscc_Dpid add2[1] = { 6 };
+	scc_PointIndex add2[1] = { 6 };
 	iscc_hi_move_array_to_cluster2(1, add2, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 6);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[14]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
 	ref_members[13] = 10;
@@ -1166,18 +1166,18 @@ void scc_ut_hi_move_array_to_cluster2(void** state)
 	ref_vertex_markers[10] = 1;
 	ref_vertex_markers[14] = 1;
 	ref_vertex_markers[17] = 1;
-	iscc_Dpid add3[3] = { 10, 14, 17 };
+	scc_PointIndex add3[3] = { 10, 14, 17 };
 	iscc_hi_move_array_to_cluster2(3, add3, &cl, vertex_markers, 1);
 	assert_int_equal(cl.size, 9);
 	assert_int_equal(cl.marker, 1);
 	assert_ptr_equal(cl.members, &members[11]);
-	assert_memory_equal(members, ref_members, 20 * sizeof(iscc_Dpid));
+	assert_memory_equal(members, ref_members, 20 * sizeof(scc_PointIndex));
 	assert_memory_equal(vertex_markers, ref_vertex_markers, 20 * sizeof(uint_fast16_t));
 
-	iscc_Dpid end_members[9] = { 17, 14, 10, 6, 3, 11, 2, 1, 4 };
+	scc_PointIndex end_members[9] = { 17, 14, 10, 6, 3, 11, 2, 1, 4 };
 	assert_int_equal(cl.size, 9);
 	assert_int_equal(cl.marker, 1);
-	assert_memory_equal(cl.members, end_members, 9 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl.members, end_members, 9 * sizeof(scc_PointIndex));
 
 	free(vertex_markers);
 	free(members);
@@ -1191,54 +1191,54 @@ void scc_ut_hi_find_centers(void** state)
 	(void) state;
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = malloc(sizeof(iscc_Dpid[100])),
-		.dpid_array2 = malloc(sizeof(iscc_Dpid[100])),
+		.pointindex_array1 = malloc(sizeof(scc_PointIndex[100])),
+		.pointindex_array2 = malloc(sizeof(scc_PointIndex[100])),
 		.dist_array = malloc(sizeof(double[100])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = NULL,
 		.edge_store2 = NULL,
 	};
 
-	iscc_Dpid ref_members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	iscc_Dpid members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_PointIndex ref_members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	scc_PointIndex members1[10] = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 	iscc_hi_ClusterItem cl1 = {
 		.size = 10,
 		.marker = 0,
 		.members = members1,
 	};
 
-	iscc_Dpid ref_members2[5] = { 2, 4, 6, 8, 12 };
-	iscc_Dpid members2[5] = { 2, 4, 6, 8, 12 };
+	scc_PointIndex ref_members2[5] = { 2, 4, 6, 8, 12 };
+	scc_PointIndex members2[5] = { 2, 4, 6, 8, 12 };
 	iscc_hi_ClusterItem cl2 = {
 		.size = 5,
 		.marker = 10,
 		.members = members2,
 	};
 
-	iscc_Dpid ref_members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
-	iscc_Dpid members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
+	scc_PointIndex ref_members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
+	scc_PointIndex members3[10] = { 22, 21, 23, 24, 25, 26, 27, 28, 29, 30 };
 	iscc_hi_ClusterItem cl3 = {
 		.size = 10,
 		.marker = 20,
 		.members = members3,
 	};
 
-	iscc_Dpid ref_members4[4] = { 21, 23, 25, 27 };
-	iscc_Dpid members4[4] = { 21, 23, 25, 27 };
+	scc_PointIndex ref_members4[4] = { 21, 23, 25, 27 };
+	scc_PointIndex members4[4] = { 21, 23, 25, 27 };
 	iscc_hi_ClusterItem cl4 = {
 		.size = 4,
 		.marker = 30,
 		.members = members4,
 	};
 
-	iscc_Dpid center1, center2;
+	scc_PointIndex center1, center2;
 	scc_ErrorCode ec1 = iscc_hi_find_centers(&cl1, scc_ut_test_data_large, &wa, &center1, &center2);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(center1, 2);
 	assert_int_equal(center2, 18);
 	assert_int_equal(cl1.size, 10);
 	assert_int_equal(cl1.marker, 1);
-	assert_memory_equal(cl1.members, ref_members1, 10 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl1.members, ref_members1, 10 * sizeof(scc_PointIndex));
 
 	scc_ErrorCode ec2 = iscc_hi_find_centers(&cl2, scc_ut_test_data_large, &wa, &center1, &center2);
 	assert_int_equal(ec2, SCC_ER_OK);
@@ -1246,7 +1246,7 @@ void scc_ut_hi_find_centers(void** state)
 	assert_int_equal(center2, 8);
 	assert_int_equal(cl2.size, 5);
 	assert_int_equal(cl2.marker, 11);
-	assert_memory_equal(cl2.members, ref_members2, 5 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl2.members, ref_members2, 5 * sizeof(scc_PointIndex));
 
 	scc_ErrorCode ec3 = iscc_hi_find_centers(&cl3, scc_ut_test_data_large, &wa, &center1, &center2);
 	assert_int_equal(ec3, SCC_ER_OK);
@@ -1254,7 +1254,7 @@ void scc_ut_hi_find_centers(void** state)
 	assert_int_equal(center2, 28);
 	assert_int_equal(cl3.size, 10);
 	assert_int_equal(cl3.marker, 21);
-	assert_memory_equal(cl3.members, ref_members3, 10 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl3.members, ref_members3, 10 * sizeof(scc_PointIndex));
 
 	scc_ErrorCode ec4 = iscc_hi_find_centers(&cl4, scc_ut_test_data_large, &wa, &center1, &center2);
 	assert_int_equal(ec4, SCC_ER_OK);
@@ -1262,10 +1262,10 @@ void scc_ut_hi_find_centers(void** state)
 	assert_int_equal(center2, 27);
 	assert_int_equal(cl4.size, 4);
 	assert_int_equal(cl4.marker, 31);
-	assert_memory_equal(cl4.members, ref_members4, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(cl4.members, ref_members4, 4 * sizeof(scc_PointIndex));
 
-	free(wa.dpid_array1);
-	free(wa.dpid_array2);
+	free(wa.pointindex_array1);
+	free(wa.pointindex_array2);
 	free(wa.dist_array);
 	free(wa.vertex_markers);
 }
@@ -1276,15 +1276,15 @@ void scc_ut_hi_find_centers_second(void** state)
 	(void) state;
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = malloc(sizeof(iscc_Dpid[100])),
-		.dpid_array2 = malloc(sizeof(iscc_Dpid[100])),
+		.pointindex_array1 = malloc(sizeof(scc_PointIndex[100])),
+		.pointindex_array2 = malloc(sizeof(scc_PointIndex[100])),
 		.dist_array = malloc(sizeof(double[100])),
 		.vertex_markers = calloc(100, sizeof(uint_fast16_t)),
 		.edge_store1 = NULL,
 		.edge_store2 = NULL,
 	};
 
-	iscc_Dpid members1[40] = { 34, 42, 78, 27, 99, 67, 29, 18, 92, 25,
+	scc_PointIndex members1[40] = { 34, 42, 78, 27, 99, 67, 29, 18, 92, 25,
 	                           33, 23, 55, 82, 21, 79, 70, 85, 83, 61,
 	                           16, 57, 24, 35, 12, 95, 60, 7, 86, 48,
 	                           46, 76, 75, 54, 59, 38, 11, 6, 39, 13 };
@@ -1294,14 +1294,14 @@ void scc_ut_hi_find_centers_second(void** state)
 		.members = members1,
 	};
 
-	iscc_Dpid center1, center2;
+	scc_PointIndex center1, center2;
 	scc_ErrorCode ec1 = iscc_hi_find_centers(&cl1, scc_ut_test_data_large, &wa, &center1, &center2);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(center1, 78);
 	assert_int_equal(center2, 55);
 
-	free(wa.dpid_array1);
-	free(wa.dpid_array2);
+	free(wa.pointindex_array1);
+	free(wa.pointindex_array2);
 	free(wa.dist_array);
 	free(wa.vertex_markers);
 }
@@ -1311,7 +1311,7 @@ void scc_ut_hi_populate_edge_lists(void** state)
 {
 	(void) state;
 
-	iscc_Dpid members[4] = { 10, 3, 5, 2 };
+	scc_PointIndex members[4] = { 10, 3, 5, 2 };
 	iscc_hi_ClusterItem cl = {
 		.size = 4,
 		.marker = 0,
@@ -1319,8 +1319,8 @@ void scc_ut_hi_populate_edge_lists(void** state)
 	};
 
 	iscc_hi_WorkArea wa = {
-		.dpid_array1 = NULL,
-		.dpid_array2 = NULL,
+		.pointindex_array1 = NULL,
+		.pointindex_array2 = NULL,
 		.dist_array = malloc(sizeof(double[8])),
 		.vertex_markers = NULL,
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[4])),
@@ -1362,7 +1362,7 @@ void scc_ut_hi_sort_edge_list(void** state)
 {
 	(void) state;
 
-	iscc_Dpid mem[10] = { 1, 6, 3, 8, 9, 4, 10, 12, 13, 14 };
+	scc_PointIndex mem[10] = { 1, 6, 3, 8, 9, 4, 10, 12, 13, 14 };
 
 	iscc_hi_ClusterItem ci = {
 		.size = 10,

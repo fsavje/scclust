@@ -36,20 +36,20 @@
 
 static inline uintmax_t iscc_do_union_and_delete(uint_fast16_t num_dgs,
                                                  const iscc_Digraph dgs[restrict static num_dgs],
-                                                 iscc_Dpid row_markers[restrict],
+                                                 scc_PointIndex row_markers[restrict],
                                                  const bool tails_to_keep[restrict],
                                                  bool keep_self_loops,
                                                  bool write,
-                                                 iscc_Arci out_tail_ptr[restrict],
-                                                 iscc_Dpid out_head[restrict]);
+                                                 iscc_ArcIndex out_tail_ptr[restrict],
+                                                 scc_PointIndex out_head[restrict]);
 
 static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* dg_a,
                                                   const iscc_Digraph* dg_b,
-                                                  iscc_Dpid row_markers[restrict],
+                                                  scc_PointIndex row_markers[restrict],
                                                   bool force_loops,
                                                   bool write,
-                                                  iscc_Arci out_tail_ptr[restrict],
-                                                  iscc_Dpid out_head[restrict]);
+                                                  iscc_ArcIndex out_tail_ptr[restrict],
+                                                  scc_PointIndex out_head[restrict]);
 
 
 // =============================================================================
@@ -63,12 +63,12 @@ scc_ErrorCode iscc_delete_loops(iscc_Digraph* const dg)
 	if (iscc_digraph_is_empty(dg)) return iscc_no_error();
 	assert(dg->head != NULL);
 
-	iscc_Arci head_write = 0;
-	assert(dg->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) dg->vertices; // If `iscc_Dpid` is signed
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		const iscc_Dpid* v_arc = dg->head + dg->tail_ptr[v];
-		const iscc_Dpid* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];
+	iscc_ArcIndex head_write = 0;
+	assert(dg->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) dg->vertices; // If `scc_PointIndex` is signed
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
+		const scc_PointIndex* v_arc = dg->head + dg->tail_ptr[v];
+		const scc_PointIndex* const v_arc_stop = dg->head + dg->tail_ptr[v + 1];
 		dg->tail_ptr[v] = head_write;
 
 		for (; v_arc != v_arc_stop; ++v_arc) {
@@ -105,7 +105,7 @@ scc_ErrorCode iscc_digraph_union_and_delete(const uint_fast16_t num_in_dgs,
 		out_arcs_write += in_dgs[i].tail_ptr[vertices];
 	}
 
-	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[vertices]));
+	scc_PointIndex* const row_markers = malloc(sizeof(scc_PointIndex[vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	scc_ErrorCode ec;
@@ -155,27 +155,27 @@ scc_ErrorCode iscc_digraph_difference(iscc_Digraph* const minuend_dg,
 	if (iscc_digraph_is_empty(minuend_dg)) return iscc_no_error();
 	assert(minuend_dg->head != NULL);
 
-	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[minuend_dg->vertices]));
+	scc_PointIndex* const row_markers = malloc(sizeof(scc_PointIndex[minuend_dg->vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	for (size_t v = 0; v < minuend_dg->vertices; ++v) {
-		row_markers[v] = ISCC_DPID_NA;
+		row_markers[v] = SCC_POINTINDEX_NA;
 	}
 
 	uint32_t row_counter;
-	iscc_Arci out_arcs_write = 0;
-	assert(minuend_dg->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) minuend_dg->vertices; // If `iscc_Dpid` is signed
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		const iscc_Dpid* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
-		for (const iscc_Dpid* v_arc_s = subtrahend_dg->head + subtrahend_dg->tail_ptr[v];
+	iscc_ArcIndex out_arcs_write = 0;
+	assert(minuend_dg->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) minuend_dg->vertices; // If `scc_PointIndex` is signed
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
+		const scc_PointIndex* const v_arc_s_stop = subtrahend_dg->head + subtrahend_dg->tail_ptr[v + 1];
+		for (const scc_PointIndex* v_arc_s = subtrahend_dg->head + subtrahend_dg->tail_ptr[v];
 		        v_arc_s != v_arc_s_stop; ++v_arc_s) {
 			row_markers[*v_arc_s] = v;
 		}
 
 		row_counter = 0;
-		const iscc_Dpid* arc_m = minuend_dg->head + minuend_dg->tail_ptr[v];
-		const iscc_Dpid* const arc_m_stop = minuend_dg->head + minuend_dg->tail_ptr[v + 1];
+		const scc_PointIndex* arc_m = minuend_dg->head + minuend_dg->tail_ptr[v];
+		const scc_PointIndex* const arc_m_stop = minuend_dg->head + minuend_dg->tail_ptr[v + 1];
 		minuend_dg->tail_ptr[v] = out_arcs_write;
 		for (; ((row_counter < max_out_degree) && (arc_m != arc_m_stop)); ++arc_m) {
 			if (row_markers[*arc_m] != v) {
@@ -209,8 +209,8 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
 	assert(in_dg->head != NULL);
 	assert(out_dg->head != NULL);
 
-	const iscc_Dpid* const arc_c_stop = in_dg->head + in_dg->tail_ptr[in_dg->vertices];
-	for (const iscc_Dpid* arc_c = in_dg->head;
+	const scc_PointIndex* const arc_c_stop = in_dg->head + in_dg->tail_ptr[in_dg->vertices];
+	for (const scc_PointIndex* arc_c = in_dg->head;
 	        arc_c != arc_c_stop; ++arc_c) {
 		++out_dg->tail_ptr[*arc_c];
 	}
@@ -219,11 +219,11 @@ scc_ErrorCode iscc_digraph_transpose(const iscc_Digraph* const in_dg,
 		out_dg->tail_ptr[v + 1] += out_dg->tail_ptr[v];
 	}
 
-	assert(in_dg->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) in_dg->vertices; // If `iscc_Dpid` is signed
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		const iscc_Dpid* const arc_stop = in_dg->head + in_dg->tail_ptr[v + 1];
-		for (const iscc_Dpid* arc = in_dg->head + in_dg->tail_ptr[v];
+	assert(in_dg->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) in_dg->vertices; // If `scc_PointIndex` is signed
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
+		const scc_PointIndex* const arc_stop = in_dg->head + in_dg->tail_ptr[v + 1];
+		for (const scc_PointIndex* arc = in_dg->head + in_dg->tail_ptr[v];
 		        arc != arc_stop; ++arc) {
 			--out_dg->tail_ptr[*arc];
 			out_dg->head[out_dg->tail_ptr[*arc]] = v;
@@ -249,13 +249,13 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 
 	const size_t vertices = in_dg_a->vertices;
 
-	iscc_Dpid* const row_markers = malloc(sizeof(iscc_Dpid[vertices]));
+	scc_PointIndex* const row_markers = malloc(sizeof(scc_PointIndex[vertices]));
 	if (row_markers == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	// Try greedy memory count first
 	uintmax_t out_arcs_write = 0;
-	const iscc_Dpid* const arc_a_stop = in_dg_a->head + in_dg_a->tail_ptr[vertices];
-	for (const iscc_Dpid* arc_a = in_dg_a->head; arc_a != arc_a_stop; ++arc_a) {
+	const scc_PointIndex* const arc_a_stop = in_dg_a->head + in_dg_a->tail_ptr[vertices];
+	for (const scc_PointIndex* arc_a = in_dg_a->head; arc_a != arc_a_stop; ++arc_a) {
 		out_arcs_write += in_dg_b->tail_ptr[*arc_a + 1] - in_dg_b->tail_ptr[*arc_a];
 	}
 	if (force_loops) out_arcs_write += in_dg_b->tail_ptr[vertices];
@@ -299,12 +299,12 @@ scc_ErrorCode iscc_adjacency_product(const iscc_Digraph* const in_dg_a,
 
 static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
                                                  const iscc_Digraph dgs[restrict const static num_dgs],
-                                                 iscc_Dpid row_markers[restrict const],
+                                                 scc_PointIndex row_markers[restrict const],
                                                  const bool tails_to_keep[restrict const],
                                                  const bool keep_self_loops,
                                                  const bool write,
-                                                 iscc_Arci out_tail_ptr[restrict const],
-                                                 iscc_Dpid out_head[restrict const])
+                                                 iscc_ArcIndex out_tail_ptr[restrict const],
+                                                 scc_PointIndex out_head[restrict const])
 {
 	assert(num_dgs > 0);
 	assert(dgs != NULL);
@@ -320,19 +320,19 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	#endif
 
 	uintmax_t counter = 0;
-	assert(dgs->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) dgs->vertices; // If `iscc_Dpid` is signed
+	assert(dgs->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) dgs->vertices; // If `scc_PointIndex` is signed
 
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		row_markers[v] = ISCC_DPID_NA;
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_POINTINDEX_NA;
 	}
 
 	if ((tails_to_keep == NULL) && !write) {
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			if (!keep_self_loops) row_markers[v] = v;
 			for (uint_fast16_t i = 0; i < num_dgs; ++i) {
-				const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
-				for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
+				const scc_PointIndex* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
+				for (const scc_PointIndex* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
 				        arc_i != arc_i_stop; ++arc_i) {
 					if (row_markers[*arc_i] != v) {
 						row_markers[*arc_i] = v;
@@ -343,12 +343,12 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 		}
 
 	} else if ((tails_to_keep != NULL) && !write) {
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			if (tails_to_keep[v]) {
 				if (!keep_self_loops) row_markers[v] = v;
 				for (uint_fast16_t i = 0; i < num_dgs; ++i) {
-					const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
-					for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
+					const scc_PointIndex* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
+					for (const scc_PointIndex* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
 					        arc_i != arc_i_stop; ++arc_i) {
 						if (row_markers[*arc_i] != v) {
 							row_markers[*arc_i] = v;
@@ -362,11 +362,11 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 	} else if ((tails_to_keep == NULL) && write) {
 		assert(out_tail_ptr != NULL);
 		out_tail_ptr[0] = 0;
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			if (!keep_self_loops) row_markers[v] = v;
 			for (uint_fast16_t i = 0; i < num_dgs; ++i) {
-				const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
-				for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
+				const scc_PointIndex* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
+				for (const scc_PointIndex* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
 				        arc_i != arc_i_stop; ++arc_i) {
 					if (row_markers[*arc_i] != v) {
 						row_markers[*arc_i] = v;
@@ -375,19 +375,19 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 					}
 				}
 			}
-			out_tail_ptr[v + 1] = (iscc_Arci) counter;
+			out_tail_ptr[v + 1] = (iscc_ArcIndex) counter;
 			assert((counter == 0) || (out_head != NULL));
 		}
 
 	} else if ((tails_to_keep != NULL) && write) {
 		assert(out_tail_ptr != NULL);
 		out_tail_ptr[0] = 0;
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			if (tails_to_keep[v]) {
 				if (!keep_self_loops) row_markers[v] = v;
 				for (uint_fast16_t i = 0; i < num_dgs; ++i) {
-					const iscc_Dpid* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
-					for (const iscc_Dpid* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
+					const scc_PointIndex* const arc_i_stop = dgs[i].head + dgs[i].tail_ptr[v + 1];
+					for (const scc_PointIndex* arc_i = dgs[i].head + dgs[i].tail_ptr[v];
 					        arc_i != arc_i_stop; ++arc_i) {
 						if (row_markers[*arc_i] != v) {
 							row_markers[*arc_i] = v;
@@ -397,7 +397,7 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 					}
 				}
 			}
-			out_tail_ptr[v + 1] = (iscc_Arci) counter;
+			out_tail_ptr[v + 1] = (iscc_ArcIndex) counter;
 			assert((counter == 0) || (out_head != NULL));
 		}
 	}
@@ -408,11 +408,11 @@ static inline uintmax_t iscc_do_union_and_delete(const uint_fast16_t num_dgs,
 
 static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a,
                                                   const iscc_Digraph* const dg_b,
-                                                  iscc_Dpid row_markers[restrict const],
+                                                  scc_PointIndex row_markers[restrict const],
                                                   const bool force_loops,
                                                   const bool write,
-                                                  iscc_Arci out_tail_ptr[restrict const],
-                                                  iscc_Dpid out_head[restrict const])
+                                                  iscc_ArcIndex out_tail_ptr[restrict const],
+                                                  scc_PointIndex out_head[restrict const])
 {
 	assert(iscc_digraph_is_initialized(dg_a));
 	assert(iscc_digraph_is_initialized(dg_b));
@@ -423,24 +423,24 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 	assert(row_markers != NULL);
 
 	uintmax_t counter = 0;
-	assert(dg_a->vertices <= ISCC_DPID_MAX);
-	const iscc_Dpid vertices = (iscc_Dpid) dg_a->vertices; // If `iscc_Dpid` is signed
+	assert(dg_a->vertices <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex vertices = (scc_PointIndex) dg_a->vertices; // If `scc_PointIndex` is signed
 
-	const iscc_Arci* const dg_a_tail_ptr = dg_a->tail_ptr;
-	const iscc_Dpid* const dg_a_head = dg_a->head;
-	const iscc_Arci* const dg_b_tail_ptr = dg_b->tail_ptr;
-	const iscc_Dpid* const dg_b_head = dg_b->head;
+	const iscc_ArcIndex* const dg_a_tail_ptr = dg_a->tail_ptr;
+	const scc_PointIndex* const dg_a_head = dg_a->head;
+	const iscc_ArcIndex* const dg_b_tail_ptr = dg_b->tail_ptr;
+	const scc_PointIndex* const dg_b_head = dg_b->head;
 
-	for (iscc_Dpid v = 0; v < vertices; ++v) {
-		row_markers[v] = ISCC_DPID_NA;
+	for (scc_PointIndex v = 0; v < vertices; ++v) {
+		row_markers[v] = SCC_POINTINDEX_NA;
 	}
 
 	if (!write) {
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			row_markers[v] = v;
 			if (force_loops) {
-				const iscc_Dpid* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
-				for (const iscc_Dpid* v_arc_b = dg_b_head + dg_b_tail_ptr[v];
+				const scc_PointIndex* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
+				for (const scc_PointIndex* v_arc_b = dg_b_head + dg_b_tail_ptr[v];
 				        v_arc_b != v_arc_b_stop; ++v_arc_b) {
 					if (row_markers[*v_arc_b] != v) {
 						row_markers[*v_arc_b] = v;
@@ -448,11 +448,11 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 					}
 				}
 			}
-			const iscc_Dpid* const arc_a_stop = dg_a_head + dg_a_tail_ptr[v + 1];
-			for (const iscc_Dpid* arc_a = dg_a_head + dg_a_tail_ptr[v];
+			const scc_PointIndex* const arc_a_stop = dg_a_head + dg_a_tail_ptr[v + 1];
+			for (const scc_PointIndex* arc_a = dg_a_head + dg_a_tail_ptr[v];
 			        arc_a != arc_a_stop; ++arc_a) {
-				const iscc_Dpid* const arc_b_stop = dg_b_head + dg_b_tail_ptr[*arc_a + 1];
-				for (const iscc_Dpid* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
+				const scc_PointIndex* const arc_b_stop = dg_b_head + dg_b_tail_ptr[*arc_a + 1];
+				for (const scc_PointIndex* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
 				        arc_b != arc_b_stop; ++arc_b) {
 					if (row_markers[*arc_b] != v) {
 						row_markers[*arc_b] = v;
@@ -467,11 +467,11 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 		assert(out_head != NULL);
 
 		out_tail_ptr[0] = 0;
-		for (iscc_Dpid v = 0; v < vertices; ++v) {
+		for (scc_PointIndex v = 0; v < vertices; ++v) {
 			row_markers[v] = v;
 			if (force_loops) {
-				const iscc_Dpid* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
-				for (const iscc_Dpid* v_arc_b = dg_b_head + dg_b_tail_ptr[v];
+				const scc_PointIndex* const v_arc_b_stop = dg_b_head + dg_b_tail_ptr[v + 1];
+				for (const scc_PointIndex* v_arc_b = dg_b_head + dg_b_tail_ptr[v];
 				        v_arc_b != v_arc_b_stop; ++v_arc_b) {
 					if (row_markers[*v_arc_b] != v) {
 						row_markers[*v_arc_b] = v;
@@ -480,11 +480,11 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 					}
 				}
 			}
-			const iscc_Dpid* const arc_a_stop = dg_a_head + dg_a_tail_ptr[v + 1];
-			for (const iscc_Dpid* arc_a = dg_a_head + dg_a_tail_ptr[v];
+			const scc_PointIndex* const arc_a_stop = dg_a_head + dg_a_tail_ptr[v + 1];
+			for (const scc_PointIndex* arc_a = dg_a_head + dg_a_tail_ptr[v];
 			        arc_a != arc_a_stop; ++arc_a) {
-				const iscc_Dpid* const arc_b_stop = dg_b_head + dg_b_tail_ptr[*arc_a + 1];
-				for (const iscc_Dpid* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
+				const scc_PointIndex* const arc_b_stop = dg_b_head + dg_b_tail_ptr[*arc_a + 1];
+				for (const scc_PointIndex* arc_b = dg_b_head + dg_b_tail_ptr[*arc_a];
 				        arc_b != arc_b_stop; ++arc_b) {
 					if (row_markers[*arc_b] != v) {
 						row_markers[*arc_b] = v;
@@ -493,7 +493,7 @@ static inline uintmax_t iscc_do_adjacency_product(const iscc_Digraph* const dg_a
 					}
 				}
 			}
-			out_tail_ptr[v + 1] = (iscc_Arci) counter;
+			out_tail_ptr[v + 1] = (iscc_ArcIndex) counter;
 		}
 	}
 

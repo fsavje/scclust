@@ -55,7 +55,7 @@ typedef struct iscc_Digraph iscc_Digraph;
  */
 struct iscc_Digraph {
 
-	/** Number of vertices in the digraph. May not be greater than `ISCC_DPID_MAX`.
+	/** Number of vertices in the digraph. May not be greater than `ISCC_POINTINDEX_MAX`.
 	 *
 	 *  \note Valid vertices in this digraph is any `i` such that `0 <= i < #vertices`.
 	 */
@@ -71,7 +71,7 @@ struct iscc_Digraph {
 	 *
 	 *  \note All used elements of #head must be less than #vertices.
 	 */
-	iscc_Dpid* head;
+	scc_PointIndex* head;
 
 	/** Array of arc indices indicating arcs for which a vertex is the tail.
 	 *
@@ -80,7 +80,7 @@ struct iscc_Digraph {
 	 *  The first element of #tail_ptr must be zero (`#tail_ptr[0] == 0`). For all `i < #vertices`,
 	 *  we must have `#tail_ptr[i] <= #tail_ptr[i+1] <= #max_arcs`.
 	 */
-	iscc_Arci* tail_ptr;
+	iscc_ArcIndex* tail_ptr;
 };
 
 /** The null digraph.

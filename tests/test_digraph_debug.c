@@ -30,8 +30,8 @@ void scc_ut_is_balanced_digraph(void** state)
 {
 	(void) state;
 
-	iscc_Dpid head1[4] = {0, 1, 2, 3};
-	iscc_Arci tail_ptr1[5] = {0, 1, 2, 3, 4};
+	scc_PointIndex head1[4] = {0, 1, 2, 3};
+	iscc_ArcIndex tail_ptr1[5] = {0, 1, 2, 3, 4};
 	iscc_Digraph dg1 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -39,8 +39,8 @@ void scc_ut_is_balanced_digraph(void** state)
 		.tail_ptr = tail_ptr1,
 	};
 
-	iscc_Dpid head2[4] = {0, 1, 2, 3};
-	iscc_Arci tail_ptr2[5] = {0, 2, 2, 3, 4};
+	scc_PointIndex head2[4] = {0, 1, 2, 3};
+	iscc_ArcIndex tail_ptr2[5] = {0, 2, 2, 3, 4};
 	iscc_Digraph dg2 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -48,8 +48,8 @@ void scc_ut_is_balanced_digraph(void** state)
 		.tail_ptr = tail_ptr2,
 	};
 
-	iscc_Dpid head3[4] = {123, 124, 125, 126};
-	iscc_Arci tail_ptr3[5] = {0, 0, 0, 0, 0};
+	scc_PointIndex head3[4] = {123, 124, 125, 126};
+	iscc_ArcIndex tail_ptr3[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg3 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -70,8 +70,8 @@ void scc_ut_digraphs_equal(void** state)
 {
 	(void) state;
 
-	iscc_Dpid head1[4] = {1, 0, 2, 2};
-	iscc_Arci tail_ptr1[5] = {0, 2, 2, 4, 4};
+	scc_PointIndex head1[4] = {1, 0, 2, 2};
+	iscc_ArcIndex tail_ptr1[5] = {0, 2, 2, 4, 4};
 	iscc_Digraph dg1 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -79,8 +79,8 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr1,
 	};
 
-	iscc_Dpid head2[3] = {0, 1, 2};
-	iscc_Arci tail_ptr2[5] = {0, 2, 2, 3, 3};
+	scc_PointIndex head2[3] = {0, 1, 2};
+	iscc_ArcIndex tail_ptr2[5] = {0, 2, 2, 3, 3};
 	iscc_Digraph dg2 = {
 		.vertices = 4,
 		.max_arcs = 3,
@@ -88,8 +88,8 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr2,
 	};
 
-	iscc_Dpid head3[3] = {0, 3, 2};
-	iscc_Arci tail_ptr3[5] = {0, 2, 2, 3, 3};
+	scc_PointIndex head3[3] = {0, 3, 2};
+	iscc_ArcIndex tail_ptr3[5] = {0, 2, 2, 3, 3};
 	iscc_Digraph dg3 = {
 		.vertices = 4,
 		.max_arcs = 3,
@@ -97,8 +97,8 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr3,
 	};
 
-	iscc_Dpid head4[4] = {1, 0, 2, 3};
-	iscc_Arci tail_ptr4[5] = {0, 2, 2, 4, 4};
+	scc_PointIndex head4[4] = {1, 0, 2, 3};
+	iscc_ArcIndex tail_ptr4[5] = {0, 2, 2, 4, 4};
 	iscc_Digraph dg4 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -106,8 +106,8 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr4,
 	};
 
-	iscc_Dpid head5[3] = {0, 1, 2};
-	iscc_Arci tail_ptr5[4] = {0, 2, 2, 3};
+	scc_PointIndex head5[3] = {0, 1, 2};
+	iscc_ArcIndex tail_ptr5[4] = {0, 2, 2, 3};
 	iscc_Digraph dg5 = {
 		.vertices = 3,
 		.max_arcs = 3,
@@ -115,7 +115,7 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr5,
 	};
 
-	iscc_Arci tail_ptr6[5] = {0, 0, 0, 0, 0};
+	iscc_ArcIndex tail_ptr6[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg6 = {
 		.vertices = 4,
 		.max_arcs = 0,
@@ -123,8 +123,8 @@ void scc_ut_digraphs_equal(void** state)
 		.tail_ptr = tail_ptr6,
 	};
 
-	iscc_Dpid head7[1] = {0};
-	iscc_Arci tail_ptr7[5] = {0, 0, 0, 0, 0};
+	scc_PointIndex head7[1] = {0};
+	iscc_ArcIndex tail_ptr7[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg7 = {
 		.vertices = 4,
 		.max_arcs = 1,
@@ -161,8 +161,8 @@ void scc_ut_digraph_from_pieces(void** state)
 {
 	(void) state;
 
-	const iscc_Dpid head[6] = { 1, 0, 2, 4, 6, 2 };
-	const iscc_Arci tail_ptr[5] = { 0, 2, 2, 3, 3 };
+	const scc_PointIndex head[6] = { 1, 0, 2, 4, 6, 2 };
+	const iscc_ArcIndex tail_ptr[5] = { 0, 2, 2, 3, 3 };
 
 	iscc_Digraph dg;
 	scc_ErrorCode ec = iscc_digraph_from_pieces(4, 3, tail_ptr, head, &dg);
@@ -170,10 +170,10 @@ void scc_ut_digraph_from_pieces(void** state)
 	assert_int_equal(dg.max_arcs, 3);
 	assert_non_null(dg.head);
 	assert_ptr_not_equal(dg.head, head);
-	assert_memory_equal(dg.head, head, 3 * sizeof(iscc_Dpid));
+	assert_memory_equal(dg.head, head, 3 * sizeof(scc_PointIndex));
 	assert_non_null(dg.tail_ptr);
 	assert_ptr_not_equal(dg.tail_ptr, tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tail_ptr, 5 * sizeof(iscc_Arci));
+	assert_memory_equal(dg.tail_ptr, tail_ptr, 5 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec, SCC_ER_OK);
 
 	iscc_free_digraph(&dg);
@@ -184,8 +184,8 @@ void scc_ut_digraph_from_string(void** state)
 {
 	(void) state;
 
-	iscc_Dpid headA[7] = {0,1,1,1,3,2,3};
-	iscc_Arci tail_ptrA[5] = {0,2,3,5,7};
+	scc_PointIndex headA[7] = {0,1,1,1,3,2,3};
+	iscc_ArcIndex tail_ptrA[5] = {0,2,3,5,7};
 
 	iscc_Digraph ut_dg1;
 	scc_ErrorCode ec1 = iscc_digraph_from_pieces(4, 7, tail_ptrA, headA, &ut_dg1);
@@ -194,7 +194,7 @@ void scc_ut_digraph_from_string(void** state)
 	iscc_Digraph ut_dg3;
 	scc_ErrorCode ec3 = iscc_digraph_from_string("##../.#../.#.#/..##", &ut_dg3);
 
-	iscc_Arci tail_ptrB[5] = {0,0,0,0,0};
+	iscc_ArcIndex tail_ptrB[5] = {0,0,0,0,0};
 	iscc_Digraph ut_dg4;
 	scc_ErrorCode ec4 = iscc_digraph_from_pieces(4, 7, tail_ptrB, headA, &ut_dg4);
 	iscc_Digraph ut_dg5;
@@ -202,8 +202,8 @@ void scc_ut_digraph_from_string(void** state)
 	iscc_Digraph empty_dg1;
 	iscc_empty_digraph(4, 0, &empty_dg1);
 
-	iscc_Dpid headC[4] = {0,1,2,3};
-	iscc_Arci tail_ptrC[5] = {0,1,2,3,4};
+	scc_PointIndex headC[4] = {0,1,2,3};
+	iscc_ArcIndex tail_ptrC[5] = {0,1,2,3,4};
 	iscc_Digraph ut_dg6;
 	scc_ErrorCode ec6 = iscc_digraph_from_pieces(4, 4, tail_ptrC, headC, &ut_dg6);
 	iscc_Digraph ut_dg7;
@@ -238,23 +238,23 @@ void scc_ut_digraph_from_string(void** state)
 	assert_int_equal(ut_dg7.max_arcs, 4);
 	assert_int_equal(ut_dg8.max_arcs, 4);
 
-	assert_memory_equal(ut_dg1.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg2.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg3.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg4.tail_ptr, &tail_ptrB, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg5.tail_ptr, &tail_ptrB, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg6.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg7.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_Arci));
-	assert_memory_equal(ut_dg8.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_Arci));
+	assert_memory_equal(ut_dg1.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg2.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg3.tail_ptr, &tail_ptrA, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg4.tail_ptr, &tail_ptrB, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg5.tail_ptr, &tail_ptrB, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg6.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg7.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_ArcIndex));
+	assert_memory_equal(ut_dg8.tail_ptr, &tail_ptrC, 5 * sizeof(iscc_ArcIndex));
 
-	assert_memory_equal(ut_dg1.head, &headA, ut_dg1.max_arcs * sizeof(iscc_Dpid));
-	assert_memory_equal(ut_dg2.head, &headA, ut_dg2.max_arcs * sizeof(iscc_Dpid));
-	assert_memory_equal(ut_dg3.head, &headA, ut_dg3.max_arcs * sizeof(iscc_Dpid));
-	assert_memory_equal(ut_dg4.head, &headA, ut_dg4.max_arcs * sizeof(iscc_Dpid));
+	assert_memory_equal(ut_dg1.head, &headA, ut_dg1.max_arcs * sizeof(scc_PointIndex));
+	assert_memory_equal(ut_dg2.head, &headA, ut_dg2.max_arcs * sizeof(scc_PointIndex));
+	assert_memory_equal(ut_dg3.head, &headA, ut_dg3.max_arcs * sizeof(scc_PointIndex));
+	assert_memory_equal(ut_dg4.head, &headA, ut_dg4.max_arcs * sizeof(scc_PointIndex));
 	assert_null(ut_dg5.head);
-	assert_memory_equal(ut_dg6.head, &headC, ut_dg6.max_arcs * sizeof(iscc_Dpid));
-	assert_memory_equal(ut_dg7.head, &headC, ut_dg7.max_arcs * sizeof(iscc_Dpid));
-	assert_memory_equal(ut_dg8.head, &headC, ut_dg8.max_arcs * sizeof(iscc_Dpid));
+	assert_memory_equal(ut_dg6.head, &headC, ut_dg6.max_arcs * sizeof(scc_PointIndex));
+	assert_memory_equal(ut_dg7.head, &headC, ut_dg7.max_arcs * sizeof(scc_PointIndex));
+	assert_memory_equal(ut_dg8.head, &headC, ut_dg8.max_arcs * sizeof(scc_PointIndex));
 
 	assert_true(iscc_digraphs_equal(&ut_dg1, &ut_dg2));
 	assert_true(iscc_digraphs_equal(&ut_dg1, &ut_dg3));

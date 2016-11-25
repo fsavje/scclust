@@ -44,8 +44,8 @@ typedef struct iscc_TypeCount iscc_TypeCount;
 struct iscc_TypeCount {
 	uint32_t sum_type_constraints;
 	size_t* type_group_size;
-	iscc_Dpid* point_store;
-	iscc_Dpid** type_groups;
+	scc_PointIndex* point_store;
+	scc_PointIndex** type_groups;
 };
 
 
@@ -58,7 +58,7 @@ static const size_t ISCC_ESTIMATE_AVG_MAX_SAMPLE = 1000;
 
 static scc_ErrorCode iscc_make_nng(void* data_set,
                                    size_t len_search_indices,
-                                   const iscc_Dpid search_indices[],
+                                   const scc_PointIndex search_indices[],
                                    size_t len_query_indicators,
                                    const bool query_indicators[],
                                    bool out_query_indicators[],
@@ -80,7 +80,7 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_se
 
 static inline void iscc_ensure_self_match(iscc_Digraph* nng,
                                           size_t len_search_indices,
-                                          const iscc_Dpid search_indices[]);
+                                          const scc_PointIndex search_indices[]);
 
 static scc_ErrorCode iscc_type_count(size_t num_data_points,
                                      uint32_t size_constraint,
@@ -374,9 +374,9 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set,
 	if (dist_scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
 	for (size_t s = 0; s < seed_result->count; s += step) {
-		const iscc_Dpid seed = seed_result->seeds[s];
+		const scc_PointIndex seed = seed_result->seeds[s];
 		const size_t num_neighbors = (nng->tail_ptr[seed + 1] - nng->tail_ptr[seed]);
-		const iscc_Dpid* const neighbors = nng->head + nng->tail_ptr[seed];
+		const scc_PointIndex* const neighbors = nng->head + nng->tail_ptr[seed];
 
 		// Either zero or one self-loops
 		assert((num_neighbors == size_constraint) ||
@@ -456,16 +456,16 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	}
 
 	// If SCC_UM_CLOSEST_ASSIGNED, construct array with seeds and their neighbors for the nn search object
-	iscc_Dpid* seed_or_neighbor = NULL;
+	scc_PointIndex* seed_or_neighbor = NULL;
 	if ((unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	        (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED)) {
-		seed_or_neighbor = malloc(sizeof(iscc_Dpid[num_assigned_as_seed_or_neighbor]));
+		seed_or_neighbor = malloc(sizeof(scc_PointIndex[num_assigned_as_seed_or_neighbor]));
 		if (seed_or_neighbor == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 
-		iscc_Dpid* write_seed_or_neighbor = seed_or_neighbor;
-		assert(clustering->num_data_points <= ISCC_DPID_MAX);
-		const iscc_Dpid num_data_points_dpid = (iscc_Dpid) clustering->num_data_points; // If `iscc_Dpid` is signed.
-		for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
+		scc_PointIndex* write_seed_or_neighbor = seed_or_neighbor;
+		assert(clustering->num_data_points <= ISCC_POINTINDEX_MAX);
+		const scc_PointIndex num_data_points_pi = (scc_PointIndex) clustering->num_data_points; // If `scc_PointIndex` is signed.
+		for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
 			if (clustering->cluster_label[i] != SCC_CLABEL_NA) {
 				*write_seed_or_neighbor = i;
 				++write_seed_or_neighbor;
@@ -692,7 +692,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 
 static scc_ErrorCode iscc_make_nng(void* const data_set,
                                    const size_t len_search_indices,
-                                   const iscc_Dpid search_indices[const],
+                                   const scc_PointIndex search_indices[const],
                                    const size_t len_query_indicators,
                                    const bool query_indicators[const],
                                    bool out_query_indicators[const],
@@ -787,7 +787,7 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 
 static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
                                           const size_t len_search_indices,
-                                          const iscc_Dpid search_indices[const])
+                                          const scc_PointIndex search_indices[const])
 {
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
@@ -799,11 +799,11 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 	 * are disjoint, it's safe to call `iscc_make_nng` without `iscc_ensure_self_match`. */
 
 	if (search_indices == NULL) {
-		assert(len_search_indices <= ISCC_DPID_MAX);
-		const iscc_Dpid len_search_indices_dpid = (iscc_Dpid) len_search_indices; // If `iscc_Dpid` is signed.
-		for (iscc_Dpid search_point = 0; search_point < len_search_indices_dpid; ++search_point) {
-			iscc_Dpid* v_arc = nng->head + nng->tail_ptr[search_point];
-			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
+		assert(len_search_indices <= ISCC_POINTINDEX_MAX);
+		const scc_PointIndex len_search_indices_pi = (scc_PointIndex) len_search_indices; // If `scc_PointIndex` is signed.
+		for (scc_PointIndex search_point = 0; search_point < len_search_indices_pi; ++search_point) {
+			scc_PointIndex* v_arc = nng->head + nng->tail_ptr[search_point];
+			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
 			if ((*v_arc == search_point) || (v_arc == v_arc_stop)) continue;
 			for (++v_arc; (*v_arc != search_point) && (v_arc != v_arc_stop); ++v_arc);
 			if (v_arc == v_arc_stop) *(v_arc - 1) = search_point;
@@ -811,9 +811,9 @@ static inline void iscc_ensure_self_match(iscc_Digraph* const nng,
 
 	} else if (search_indices != NULL) {
 		for (size_t s = 0; s < len_search_indices; ++s) {
-			const iscc_Dpid search_point = search_indices[s];
-			iscc_Dpid* v_arc = nng->head + nng->tail_ptr[search_point];
-			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
+			const scc_PointIndex search_point = search_indices[s];
+			scc_PointIndex* v_arc = nng->head + nng->tail_ptr[search_point];
+			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[search_point + 1];
 			if ((*v_arc == search_point) || (v_arc == v_arc_stop)) continue;
 			for (++v_arc; (*v_arc != search_point) && (v_arc != v_arc_stop); ++v_arc);
 			if (v_arc == v_arc_stop) *(v_arc - 1) = search_point;
@@ -840,8 +840,8 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 	*out_type_result = (iscc_TypeCount) {
 		.sum_type_constraints = 0,
 		.type_group_size = calloc(num_types, sizeof(size_t)),
-		.point_store = malloc(sizeof(iscc_Dpid[num_data_points])),
-		.type_groups = malloc(sizeof(iscc_Dpid*[num_types])),
+		.point_store = malloc(sizeof(scc_PointIndex[num_data_points])),
+		.type_groups = malloc(sizeof(scc_PointIndex*[num_types])),
 	};
 
 	if ((out_type_result->type_group_size == NULL) || (out_type_result->point_store == NULL) || (out_type_result->type_groups == NULL)) {
@@ -878,9 +878,9 @@ static scc_ErrorCode iscc_type_count(const size_t num_data_points,
 		out_type_result->type_groups[i] = out_type_result->type_groups[i - 1] + out_type_result->type_group_size[i];
 	}
 
-	assert(num_data_points <= ISCC_DPID_MAX);
-	const iscc_Dpid num_data_points_dpid = (iscc_Dpid) num_data_points; // if case `iscc_Dpid` is signed.
-	for (iscc_Dpid i = 0; i < num_data_points_dpid; ++i) {
+	assert(num_data_points <= ISCC_POINTINDEX_MAX);
+	const scc_PointIndex num_data_points_pi = (scc_PointIndex) num_data_points; // if case `scc_PointIndex` is signed.
+	for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
 		--(out_type_result->type_groups[type_labels[i]]);
 		*(out_type_result->type_groups[type_labels[i]]) = i;
 	}
@@ -908,15 +908,15 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
 
 	size_t num_assigned = 0;
 	scc_Clabel clabel = 0;
-	const iscc_Dpid* const seed_stop = seed_result->seeds + seed_result->count;
-	for (const iscc_Dpid* seed = seed_result->seeds;
+	const scc_PointIndex* const seed_stop = seed_result->seeds + seed_result->count;
+	for (const scc_PointIndex* seed = seed_result->seeds;
 	        seed != seed_stop; ++seed, ++clabel) {
 		assert(clabel != SCC_CLABEL_NA);
 		assert(clabel < SCC_CLABEL_MAX);
 		assert(clustering->cluster_label[*seed] == SCC_CLABEL_NA);
 
-		const iscc_Dpid* const s_arc_stop = nng->head + nng->tail_ptr[*seed + 1];
-		for (const iscc_Dpid* s_arc = nng->head + nng->tail_ptr[*seed];
+		const scc_PointIndex* const s_arc_stop = nng->head + nng->tail_ptr[*seed + 1];
+		for (const scc_PointIndex* s_arc = nng->head + nng->tail_ptr[*seed];
 		        s_arc != s_arc_stop; ++s_arc) {
 			assert(clustering->cluster_label[*s_arc] == SCC_CLABEL_NA);
 			clustering->cluster_label[*s_arc] = clabel;
@@ -949,8 +949,8 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		if (scratch[i]) {
 			assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
-			const iscc_Dpid* const v_arc_stop = nng->head + nng->tail_ptr[i + 1];
-			for (const iscc_Dpid* v_arc = nng->head + nng->tail_ptr[i];
+			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[i + 1];
+			for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[i];
 			        v_arc != v_arc_stop; ++v_arc) {
 				if (!scratch[*v_arc]) {
 					assert(clustering->cluster_label[*v_arc] != SCC_CLABEL_NA);
@@ -1023,10 +1023,10 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 
 #ifdef SCC_STABLE_NNG
 
-static int iscc_compare_Dpid(const void* const a, const void* const b)
+static int iscc_compare_PointIndex(const void* const a, const void* const b)
 {
-    const iscc_Dpid arg1 = *(const iscc_Dpid* const)a;
-    const iscc_Dpid arg2 = *(const iscc_Dpid* const)b;
+    const scc_PointIndex arg1 = *(const scc_PointIndex* const)a;
+    const scc_PointIndex arg2 = *(const scc_PointIndex* const)b;
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
@@ -1035,7 +1035,7 @@ static void iscc_sort_nng(iscc_Digraph* const nng)
 	for (size_t v = 0; v < nng->vertices; ++v) {
 		const size_t count = nng->tail_ptr[v + 1] - nng->tail_ptr[v];
 		if (count > 1) {
-			qsort(nng->head + nng->tail_ptr[v], count, sizeof(iscc_Dpid), iscc_compare_Dpid);
+			qsort(nng->head + nng->tail_ptr[v], count, sizeof(scc_PointIndex), iscc_compare_PointIndex);
 		}
 	}
 }

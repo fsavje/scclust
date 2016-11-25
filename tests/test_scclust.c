@@ -124,9 +124,9 @@ void scc_ut_init_empty_clustering(void** state)
 	assert_null(cl2);
 	assert_int_equal(ec2, SCC_ER_INVALID_INPUT);
 
-	#if ISCC_M_DPID_MAX < UINTMAX_MAX
+	#if ISCC_M_POINTINDEX_MAX < UINTMAX_MAX
 		scc_Clustering* cl4;
-		scc_ErrorCode ec4 = scc_init_empty_clustering(((uintmax_t) ISCC_DPID_MAX) + 1, external_cluster_labels, &cl4);
+		scc_ErrorCode ec4 = scc_init_empty_clustering(((uintmax_t) ISCC_POINTINDEX_MAX) + 1, external_cluster_labels, &cl4);
 		assert_null(cl4);
 		assert_int_equal(ec4, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
@@ -196,9 +196,9 @@ void scc_ut_init_existing_clustering(void** state)
 		assert_int_equal(ec4, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
-	#if ISCC_M_DPID_MAX < UINTMAX_MAX
+	#if ISCC_M_POINTINDEX_MAX < UINTMAX_MAX
 		scc_Clustering* cl6;
-		scc_ErrorCode ec6 = scc_init_existing_clustering(((uintmax_t) ISCC_DPID_MAX) + 1, 5, cluster_labels, true, &cl6);
+		scc_ErrorCode ec6 = scc_init_existing_clustering(((uintmax_t) ISCC_POINTINDEX_MAX) + 1, 5, cluster_labels, true, &cl6);
 		assert_null(cl6);
 		assert_int_equal(ec6, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
@@ -339,8 +339,8 @@ void scc_ut_is_initialized_clustering(void** state)
 	in_cl.num_data_points = 10;
 	assert_true(scc_is_initialized_clustering(&in_cl));
 
-	#if ISCC_M_DPID_MAX < SIZE_MAX
-		in_cl.num_data_points = ((size_t) ISCC_DPID_MAX) + 1;
+	#if ISCC_M_POINTINDEX_MAX < SIZE_MAX
+		in_cl.num_data_points = ((size_t) ISCC_POINTINDEX_MAX) + 1;
 		assert_false(scc_is_initialized_clustering(&in_cl));
 		in_cl.num_data_points = 10;
 		assert_true(scc_is_initialized_clustering(&in_cl));

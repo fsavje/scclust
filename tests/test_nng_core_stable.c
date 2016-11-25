@@ -34,8 +34,8 @@ void scc_ut_sort_nng(void** state)
 {
 	(void) state;
 
-	iscc_Dpid head[7] = { 0, 1, 4, 2, 5, 3, 4 };
-	iscc_Arci tail_ptr[5] = { 0, 2, 6, 7, 7 };
+	scc_PointIndex head[7] = { 0, 1, 4, 2, 5, 3, 4 };
+	iscc_ArcIndex tail_ptr[5] = { 0, 2, 6, 7, 7 };
 
 	iscc_Digraph nng = {
 		.vertices = 4,
@@ -46,15 +46,15 @@ void scc_ut_sort_nng(void** state)
 
 	iscc_sort_nng(&nng);
 
-	const iscc_Dpid ref_head[7] = { 0, 1, 2, 3, 4, 5, 4 };
-	const iscc_Arci ref_tail_ptr[5] = { 0, 2, 6, 7, 7 };
+	const scc_PointIndex ref_head[7] = { 0, 1, 2, 3, 4, 5, 4 };
+	const iscc_ArcIndex ref_tail_ptr[5] = { 0, 2, 6, 7, 7 };
 
 	assert_int_equal(nng.vertices, 4);
 	assert_int_equal(nng.max_arcs, 7);
 	assert_non_null(nng.head);
 	assert_non_null(nng.tail_ptr);
-	assert_memory_equal(nng.head, ref_head, 7 * sizeof(iscc_Dpid));
-	assert_memory_equal(nng.tail_ptr, ref_tail_ptr, 5 * sizeof(iscc_Arci));
+	assert_memory_equal(nng.head, ref_head, 7 * sizeof(scc_PointIndex));
+	assert_memory_equal(nng.tail_ptr, ref_tail_ptr, 5 * sizeof(iscc_ArcIndex));
 }
 
 

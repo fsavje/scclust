@@ -34,28 +34,28 @@ void scc_ut_free_digraph(void** state)
 	iscc_Digraph dg1 = {
 		.vertices = 123,
 		.max_arcs = 1234,
-		.head = malloc(sizeof(iscc_Dpid[1234])),
-		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+		.head = malloc(sizeof(scc_PointIndex[1234])),
+		.tail_ptr = malloc(sizeof(iscc_ArcIndex[124])),
 	};
 
 	iscc_Digraph dg2 = {
 		.vertices = 123,
 		.max_arcs = 0,
 		.head = NULL,
-		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+		.tail_ptr = malloc(sizeof(iscc_ArcIndex[124])),
 	};
 
 	iscc_Digraph dg3 = {
 		.vertices = 123,
 		.max_arcs = 1234,
 		.head = NULL,
-		.tail_ptr = malloc(sizeof(iscc_Arci[124])),
+		.tail_ptr = malloc(sizeof(iscc_ArcIndex[124])),
 	};
 
 	iscc_Digraph dg4 = {
 		.vertices = 123,
 		.max_arcs = 1234,
-		.head = malloc(sizeof(iscc_Dpid[1234])),
+		.head = malloc(sizeof(scc_PointIndex[1234])),
 		.tail_ptr = NULL,
 	};
 
@@ -84,8 +84,8 @@ void scc_ut_digraph_is_initialized(void** state)
 {
 	(void) state;
 
-	iscc_Dpid heads[100];
-	iscc_Arci tails[11];
+	scc_PointIndex heads[100];
+	iscc_ArcIndex tails[11];
 
 	iscc_Digraph dg = {
 		.vertices = 10,
@@ -110,14 +110,14 @@ void scc_ut_digraph_is_initialized(void** state)
 	assert_false(iscc_digraph_is_initialized(&dg));
 	dg.tail_ptr = tails;
 
-	#if ISCC_M_DPID_MAX < SIZE_MAX
-		dg.vertices = ((size_t) ISCC_DPID_MAX) + 1;
+	#if ISCC_M_POINTINDEX_MAX < SIZE_MAX
+		dg.vertices = ((size_t) ISCC_POINTINDEX_MAX) + 1;
 		assert_false(iscc_digraph_is_initialized(&dg));
 		dg.vertices = 10;
 	#endif
 
-	#if ISCC_M_ARCI_MAX < SIZE_MAX
-		dg.max_arcs = ((size_t) ISCC_ARCI_MAX) + 1;
+	#if ISCC_M_ARCINDEX_MAX < SIZE_MAX
+		dg.max_arcs = ((size_t) ISCC_ARCINDEX_MAX) + 1;
 		assert_false(iscc_digraph_is_initialized(&dg));
 		dg.max_arcs = 100;
 	#endif
@@ -140,8 +140,8 @@ void scc_ut_digraph_is_valid(void** state)
 {
 	(void) state;
 
-	iscc_Dpid head1[4] = {0, 1, 2, 3};
-	iscc_Arci tail_ptr1[5] = {0, 1, 2, 3, 4};
+	scc_PointIndex head1[4] = {0, 1, 2, 3};
+	iscc_ArcIndex tail_ptr1[5] = {0, 1, 2, 3, 4};
 	iscc_Digraph dg1 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -173,8 +173,8 @@ void scc_ut_digraph_is_valid(void** state)
 	dg1.head[0] = 0;
 	assert_true(iscc_digraph_is_valid(&dg1));
 
-	iscc_Dpid head2[4] = {123, 124, 125, 126};
-	iscc_Arci tail_ptr2[5] = {0, 0, 0, 0, 0};
+	scc_PointIndex head2[4] = {123, 124, 125, 126};
+	iscc_ArcIndex tail_ptr2[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg2 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -184,7 +184,7 @@ void scc_ut_digraph_is_valid(void** state)
 
 	assert_true(iscc_digraph_is_valid(&dg2));
 
-	iscc_Arci tail_ptr3[5] = {0, 0, 0, 0, 0};
+	iscc_ArcIndex tail_ptr3[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg3 = {
 		.vertices = 4,
 		.max_arcs = 0,
@@ -200,8 +200,8 @@ void scc_ut_digraph_is_empty(void** state)
 {
 	(void) state;
 
-	iscc_Dpid head1[4] = {0, 1, 2, 3};
-	iscc_Arci tail_ptr1[5] = {0, 1, 2, 3, 4};
+	scc_PointIndex head1[4] = {0, 1, 2, 3};
+	iscc_ArcIndex tail_ptr1[5] = {0, 1, 2, 3, 4};
 	iscc_Digraph dg1 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -209,8 +209,8 @@ void scc_ut_digraph_is_empty(void** state)
 		.tail_ptr = tail_ptr1,
 	};
 
-	iscc_Dpid head2[4] = {123, 124, 125, 126};
-	iscc_Arci tail_ptr2[5] = {0, 0, 0, 0, 0};
+	scc_PointIndex head2[4] = {123, 124, 125, 126};
+	iscc_ArcIndex tail_ptr2[5] = {0, 0, 0, 0, 0};
 	iscc_Digraph dg2 = {
 		.vertices = 4,
 		.max_arcs = 4,
@@ -227,9 +227,9 @@ void scc_ut_init_digraph(void** state)
 {
 	(void) state;
 
-	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
+	#if ISCC_M_ARCINDEX_MAX < UINTMAX_MAX
 		iscc_Digraph dg1;
-		scc_ErrorCode ec1 = iscc_init_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
+		scc_ErrorCode ec1 = iscc_init_digraph(100, ((uintmax_t) ISCC_ARCINDEX_MAX) + 1, &dg1);
 		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
@@ -260,9 +260,9 @@ void scc_ut_empty_digraph(void** state)
 {
 	(void) state;
 
-	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
+	#if ISCC_M_ARCINDEX_MAX < UINTMAX_MAX
 		iscc_Digraph dg1;
-		scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uintmax_t) ISCC_ARCI_MAX) + 1, &dg1);
+		scc_ErrorCode ec1 = iscc_empty_digraph(100, ((uintmax_t) ISCC_ARCINDEX_MAX) + 1, &dg1);
 		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
@@ -299,26 +299,26 @@ void scc_ut_change_arc_storage(void** state)
 {
 	(void) state;
 
-	iscc_Arci tails[6] = { 0, 1, 2, 3, 4, 5 };
-	const iscc_Arci tails_ref[6] = { 0, 1, 2, 3, 4, 5 };
-	iscc_Arci tails_zero[6] = { 0, 0, 0, 0, 0, 0 };
-	const iscc_Arci tails_zero_ref[6] = { 0, 0, 0, 0, 0, 0 };
+	iscc_ArcIndex tails[6] = { 0, 1, 2, 3, 4, 5 };
+	const iscc_ArcIndex tails_ref[6] = { 0, 1, 2, 3, 4, 5 };
+	iscc_ArcIndex tails_zero[6] = { 0, 0, 0, 0, 0, 0 };
+	const iscc_ArcIndex tails_zero_ref[6] = { 0, 0, 0, 0, 0, 0 };
 
 	iscc_Digraph dg = {
 		.vertices = 5,
 		.max_arcs = 10,
-		.head = malloc(sizeof(iscc_Dpid[10])),
+		.head = malloc(sizeof(scc_PointIndex[10])),
 		.tail_ptr = tails,
 	};
 
-	#if ISCC_M_ARCI_MAX < UINTMAX_MAX
+	#if ISCC_M_ARCINDEX_MAX < UINTMAX_MAX
 		assert_true(iscc_digraph_is_initialized(&dg));
-		scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uintmax_t) ISCC_ARCI_MAX) + 1);
+		scc_ErrorCode ec1 = iscc_change_arc_storage(&dg, ((uintmax_t) ISCC_ARCINDEX_MAX) + 1);
 		assert_int_equal(dg.vertices, 5);
 		assert_int_equal(dg.max_arcs, 10);
 		assert_non_null(dg.head);
 		assert_non_null(dg.tail_ptr);
-		assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+		assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_ArcIndex));
 		assert_int_equal(ec1, SCC_ER_TOO_LARGE_PROBLEM);
 	#endif
 
@@ -328,7 +328,7 @@ void scc_ut_change_arc_storage(void** state)
 	assert_int_equal(dg.max_arcs, 10);
 	assert_non_null(dg.head);
 	assert_non_null(dg.tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec3, SCC_ER_OK);
 
 	assert_true(iscc_digraph_is_initialized(&dg));
@@ -338,7 +338,7 @@ void scc_ut_change_arc_storage(void** state)
 	assert_non_null(dg.head);
 	dg.head[99] = 1234567;
 	assert_non_null(dg.tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_Arci));
+	assert_memory_equal(dg.tail_ptr, tails_ref, 6 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec4, SCC_ER_OK);
 
 	dg.tail_ptr = tails_zero;
@@ -348,10 +348,10 @@ void scc_ut_change_arc_storage(void** state)
 	assert_int_equal(dg.max_arcs, 0);
 	assert_null(dg.head);
 	assert_non_null(dg.tail_ptr);
-	assert_memory_equal(dg.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
+	assert_memory_equal(dg.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec5, SCC_ER_OK);
 
-	iscc_Arci tails2[6] = { 0, 0, 0, 0, 0, 0 };
+	iscc_ArcIndex tails2[6] = { 0, 0, 0, 0, 0, 0 };
 
 	iscc_Digraph dg2 = {
 		.vertices = 5,
@@ -366,7 +366,7 @@ void scc_ut_change_arc_storage(void** state)
 	assert_int_equal(dg2.max_arcs, 0);
 	assert_null(dg2.head);
 	assert_non_null(dg2.tail_ptr);
-	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
+	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec6, SCC_ER_OK);
 
 	assert_true(iscc_digraph_is_initialized(&dg2));
@@ -376,7 +376,7 @@ void scc_ut_change_arc_storage(void** state)
 	assert_non_null(dg2.head);
 	dg2.head[9] = 1234567;
 	assert_non_null(dg2.tail_ptr);
-	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_Arci));
+	assert_memory_equal(dg2.tail_ptr, tails_zero_ref, 6 * sizeof(iscc_ArcIndex));
 	assert_int_equal(ec7, SCC_ER_OK);
 
 	free(dg2.head);

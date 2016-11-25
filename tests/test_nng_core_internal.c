@@ -30,7 +30,7 @@ void scc_ut_make_nng(void** state)
 {
 	(void) state;
 
-	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	scc_PointIndex search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 
 	// 3, 6, 9, 15, 19, 20, 23, 33, 88, 90
 	const bool query1b[100] = { false, false, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false,
@@ -39,10 +39,10 @@ void scc_ut_make_nng(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 15, 18, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+	const iscc_ArcIndex ref_nn_ref1b[101] = { 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 15, 18, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
 	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 27, 27, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 };
-	const iscc_Dpid ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
+	const scc_PointIndex ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
 	iscc_Digraph ref_nng1b;
 	iscc_digraph_from_pieces(100, 30, ref_nn_ref1b, ref_nn_indices1b, &ref_nng1b);
 	iscc_Digraph out_nng1b;
@@ -61,10 +61,10 @@ void scc_ut_make_nng(void** state)
 	                            false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true };
-	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
-	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	const scc_PointIndex ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	iscc_Digraph ref_nng1c;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref1c, ref_nn_indices1c, &ref_nng1c);
 	iscc_Digraph out_nng1c;
@@ -77,11 +77,11 @@ void scc_ut_make_nng(void** state)
 	iscc_free_digraph(&ref_nng1c);
 
 
-	iscc_Dpid search4b[2] = { 76, 33 };
-	const iscc_Arci ref_nn_ref4b[101] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+	scc_PointIndex search4b[2] = { 76, 33 };
+	const iscc_ArcIndex ref_nn_ref4b[101] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
 	                                      34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65,
 	                                      66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 };
-	const iscc_Dpid ref_nn_indices4b[100] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76,
+	const scc_PointIndex ref_nn_indices4b[100] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76,
 	                                          76, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 76, 33, 33, 76, 33, 76, 33, 76, 76, 76, 33, 33, 33, 76, 33, 33, 76, 76, 76, 76, 76, 76, 33, 76,
 	                                          33, 76, 33, 33, 33, 76, 76, 33, 33, 33, 76, 33, 33, 76, 33, 33, 76, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 76, 33, 33 };
 	iscc_Digraph ref_nng4b;
@@ -102,9 +102,9 @@ void scc_ut_make_nng(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+	const iscc_ArcIndex ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
-	const iscc_Dpid ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
+	const scc_PointIndex ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
 	iscc_Digraph ref_nng5a;
 	iscc_digraph_from_pieces(100, 5, ref_nn_ref5a, ref_nn_indices5a, &ref_nng5a);
 	iscc_Digraph out_nng5a;
@@ -123,9 +123,9 @@ void scc_ut_make_nng(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	const iscc_ArcIndex ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
-	const iscc_Dpid ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
+	const scc_PointIndex ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
 	iscc_Digraph ref_nng5b;
 	iscc_digraph_from_pieces(100, 8, ref_nn_ref5b, ref_nn_indices5b, &ref_nng5b);
 	iscc_Digraph out_nng5b;
@@ -144,9 +144,9 @@ void scc_ut_make_nng(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	const iscc_ArcIndex ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
-	const iscc_Dpid ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
+	const scc_PointIndex ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
 	iscc_Digraph ref_nng5c;
 	iscc_digraph_from_pieces(100, 6, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
@@ -159,8 +159,8 @@ void scc_ut_make_nng(void** state)
 	iscc_free_digraph(&ref_nng5c);
 
 
-	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
-	const iscc_Dpid ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
+	const iscc_ArcIndex ref_nn_ref6a[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const scc_PointIndex ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
 	iscc_Digraph ref_nng6a;
 	iscc_digraph_from_pieces(15, 30, ref_nn_ref6a, ref_nn_indices6a, &ref_nng6a);
 	iscc_Digraph out_nng6a;
@@ -173,8 +173,8 @@ void scc_ut_make_nng(void** state)
 	iscc_free_digraph(&ref_nng6a);
 
 
-	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
-	const iscc_Dpid ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
+	const iscc_ArcIndex ref_nn_ref6c[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const scc_PointIndex ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
 	iscc_Digraph ref_nng6c;
 	iscc_digraph_from_pieces(15, 30, ref_nn_ref6c, ref_nn_indices6c, &ref_nng6c);
 	iscc_Digraph out_nng6c;
@@ -187,8 +187,8 @@ void scc_ut_make_nng(void** state)
 	iscc_free_digraph(&ref_nng6c);
 
 
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
+	const iscc_ArcIndex ref_nn_ref6d[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 20, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
@@ -206,7 +206,7 @@ void scc_ut_make_nng_radius(void** state)
 {
 	(void) state;
 
-	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	scc_PointIndex search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 
 	// 3, 6, 9, 15, 19, 20, 23, 33, 88, 90
 	const bool query1b[100] = { false, false, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false,
@@ -215,10 +215,10 @@ void scc_ut_make_nng_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	const iscc_ArcIndex ref_nn_ref1b[101] = { 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 	                                      15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 	                                      15, 15, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 };
-	const iscc_Dpid ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
+	const scc_PointIndex ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
 	iscc_Digraph ref_nng1b;
 	iscc_digraph_from_pieces(100, 21, ref_nn_ref1b, ref_nn_indices1b, &ref_nng1b);
 	iscc_Digraph out_nng1b;
@@ -247,9 +247,9 @@ void scc_ut_make_nng_radius(void** state)
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	const iscc_ArcIndex ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
-	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	const scc_PointIndex ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	iscc_Digraph ref_nng1c;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref1c, ref_nn_indices1c, &ref_nng1c);
 	iscc_Digraph out_nng1c;
@@ -263,7 +263,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_free_digraph(&ref_nng1c);
 
 
-	iscc_Dpid search4b[2] = { 76, 33 };
+	scc_PointIndex search4b[2] = { 76, 33 };
 	bool out_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
@@ -277,9 +277,9 @@ void scc_ut_make_nng_radius(void** state)
 		                                  false, false, false, false, false, false, true, false, false, false, false, true, true, false, false, true,
 		                                  false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false,
 		                                  false, false, false, false };
-	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
+	const iscc_ArcIndex ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
-	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
+	const scc_PointIndex ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
 	iscc_Digraph ref_nng4b;
 	iscc_digraph_from_pieces(100, 14, ref_nn_ref4b, ref_nn_indices4b, &ref_nng4b);
 	iscc_Digraph out_nng4b;
@@ -328,9 +328,9 @@ void scc_ut_make_nng_radius(void** state)
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false };
-	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	const iscc_ArcIndex ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-	const iscc_Dpid ref_nn_indices5b[4] = { 15, 50, 96, 1 };
+	const scc_PointIndex ref_nn_indices5b[4] = { 15, 50, 96, 1 };
 	iscc_Digraph ref_nng5b;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref5b, ref_nn_indices5b, &ref_nng5b);
 	iscc_Digraph out_nng5b;
@@ -350,9 +350,9 @@ void scc_ut_make_nng_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	const iscc_ArcIndex ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-	const iscc_Dpid ref_nn_indices5c[3] = { 15, 1, 42 };
+	const scc_PointIndex ref_nn_indices5c[3] = { 15, 1, 42 };
 	iscc_Digraph ref_nng5c;
 	iscc_digraph_from_pieces(100, 3, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
@@ -371,7 +371,7 @@ void scc_ut_make_nng_radius(void** state)
 	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                            true, true, true, true, true };
-	const iscc_Arci ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -390,7 +390,7 @@ void scc_ut_make_nng_radius(void** state)
 	assert_int_equal(out_nng5d.max_arcs, 0);
 	assert_null(out_nng5d.head);
 	assert_non_null(out_nng5d.tail_ptr);
-	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_ArcIndex));
 	iscc_free_digraph(&out_nng5d);
 
 
@@ -400,7 +400,7 @@ void scc_ut_make_nng_radius(void** state)
 	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                      true, true, true, true, true };
-	const iscc_Arci ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -425,15 +425,15 @@ void scc_ut_make_nng_radius(void** state)
 	assert_int_equal(out_nng5e.max_arcs, 0);
 	assert_null(out_nng5e.head);
 	assert_non_null(out_nng5e.tail_ptr);
-	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_ArcIndex));
 	iscc_free_digraph(&out_nng5e);
 	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
 
 
 	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6a[15] = { true, true, false, false, true, false, true, true, true, false, true, false, true, true, true };
-	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
+	const iscc_ArcIndex ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
 	iscc_Digraph ref_nng6a;
 	iscc_digraph_from_pieces(15, 20, ref_nn_ref6a, ref_nn_indices6a, &ref_nng6a);
 	iscc_Digraph out_nng6a;
@@ -449,8 +449,8 @@ void scc_ut_make_nng_radius(void** state)
 
 	bool out_indicators6c[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6c[15] = { true, true, false, false, false, false, false, true, true, false, false, false, false, true, true };
-	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8, 8, 8, 8, 10, 12 };
-	const iscc_Dpid ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
+	const iscc_ArcIndex ref_nn_ref6c[16] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8, 8, 8, 8, 10, 12 };
+	const scc_PointIndex ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
 	iscc_Digraph ref_nng6c;
 	iscc_digraph_from_pieces(15, 12, ref_nn_ref6c, ref_nn_indices6c, &ref_nng6c);
 	iscc_Digraph out_nng6c;
@@ -466,8 +466,8 @@ void scc_ut_make_nng_radius(void** state)
 
 	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6d[10] = { true, true, false, false, false, false, false, true, true, false };
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
-	const iscc_Dpid ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
+	const iscc_ArcIndex ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
+	const scc_PointIndex ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 8, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
@@ -486,7 +486,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 {
 	(void) state;
 
-	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	scc_PointIndex search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 	iscc_NNSearchObject* nn_search_object1;
 	iscc_init_nn_search_object(scc_ut_test_data_large, 10, search1, &nn_search_object1);
 
@@ -497,10 +497,10 @@ void scc_ut_make_nng_from_search_object(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 15, 18, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+	const iscc_ArcIndex ref_nn_ref1b[101] = { 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 9, 9, 9, 12, 12, 12, 12, 15, 18, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
 	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 	                                      24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 27, 27, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 };
-	const iscc_Dpid ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
+	const scc_PointIndex ref_nn_indices1b[30] = { 4, 12, 0, 6, 12, 16, 2, 4, 14, 4, 12, 2, 14, 2, 16, 14, 2, 4, 8, 10, 16, 4, 12, 6, 0, 14, 10, 8, 10, 0 };
 	iscc_Digraph ref_nng1b;
 	iscc_digraph_from_pieces(100, 30, ref_nn_ref1b, ref_nn_indices1b, &ref_nng1b);
 	iscc_Digraph out_nng1b;
@@ -519,10 +519,10 @@ void scc_ut_make_nng_from_search_object(void** state)
 	                            false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true };
-	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
-	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	const scc_PointIndex ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	iscc_Digraph ref_nng1c;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref1c, ref_nn_indices1c, &ref_nng1c);
 	iscc_Digraph out_nng1c;
@@ -537,11 +537,11 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_close_nn_search_object(&nn_search_object1);
 
 
-	iscc_Dpid search4b[2] = { 76, 33 };
-	const iscc_Arci ref_nn_ref4b[101] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+	scc_PointIndex search4b[2] = { 76, 33 };
+	const iscc_ArcIndex ref_nn_ref4b[101] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
 	                                      34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65,
 	                                      66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 };
-	const iscc_Dpid ref_nn_indices4b[100] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76,
+	const scc_PointIndex ref_nn_indices4b[100] = { 76, 33, 33, 33, 33, 33, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 76, 33, 76, 76, 76, 76, 33, 76, 76, 33, 33, 76, 33, 33, 76,
 	                                          76, 76, 76, 76, 76, 76, 33, 33, 33, 76, 33, 76, 33, 33, 76, 33, 76, 33, 76, 76, 76, 33, 33, 33, 76, 33, 33, 76, 76, 76, 76, 76, 76, 33, 76,
 	                                          33, 76, 33, 33, 33, 76, 76, 33, 33, 33, 76, 33, 33, 76, 33, 33, 76, 33, 33, 33, 76, 33, 33, 33, 33, 76, 33, 76, 33, 33 };
 	iscc_Digraph ref_nng4b;
@@ -565,9 +565,9 @@ void scc_ut_make_nng_from_search_object(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+	const iscc_ArcIndex ref_nn_ref5a[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
-	const iscc_Dpid ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
+	const scc_PointIndex ref_nn_indices5a[5] = { 15, 50, 96, 1, 73 };
 	iscc_Digraph ref_nng5a;
 	iscc_digraph_from_pieces(100, 5, ref_nn_ref5a, ref_nn_indices5a, &ref_nng5a);
 	iscc_Digraph out_nng5a;
@@ -589,9 +589,9 @@ void scc_ut_make_nng_from_search_object(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	const iscc_ArcIndex ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
-	const iscc_Dpid ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
+	const scc_PointIndex ref_nn_indices5b[8] = { 15, 50, 96, 1, 65, 8, 97, 63 };
 	iscc_Digraph ref_nng5b;
 	iscc_digraph_from_pieces(100, 8, ref_nn_ref5b, ref_nn_indices5b, &ref_nng5b);
 	iscc_Digraph out_nng5b;
@@ -613,9 +613,9 @@ void scc_ut_make_nng_from_search_object(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	const iscc_ArcIndex ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
-	const iscc_Dpid ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
+	const scc_PointIndex ref_nn_indices5c[6] = { 15, 1, 42, 8, 10, 27 };
 	iscc_Digraph ref_nng5c;
 	iscc_digraph_from_pieces(100, 6, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
@@ -631,8 +631,8 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_free_digraph(&ref_nng5c);
 
 
-	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
-	const iscc_Dpid ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
+	const iscc_ArcIndex ref_nn_ref6a[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const scc_PointIndex ref_nn_indices6a[30] = { 0, 8, 1, 7, 2, 10, 3, 5, 4, 13, 5, 3, 6, 12, 7, 1, 8, 0, 9, 3, 10, 12, 11, 5, 12, 6, 13, 4, 14, 6 };
 	iscc_Digraph ref_nng6a;
 	iscc_digraph_from_pieces(15, 30, ref_nn_ref6a, ref_nn_indices6a, &ref_nng6a);
 	iscc_Digraph out_nng6a;
@@ -648,8 +648,8 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_free_digraph(&ref_nng6a);
 
 
-	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
-	const iscc_Dpid ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
+	const iscc_ArcIndex ref_nn_ref6c[16] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
+	const scc_PointIndex ref_nn_indices6c[30] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3, 6, 2, 5, 3, 6, 4, 4, 6, 6, 4 };
 	iscc_Digraph ref_nng6c;
 	iscc_digraph_from_pieces(15, 30, ref_nn_ref6c, ref_nn_indices6c, &ref_nng6c);
 	iscc_Digraph out_nng6c;
@@ -665,8 +665,8 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_free_digraph(&ref_nng6c);
 
 
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
+	const iscc_ArcIndex ref_nn_ref6d[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices6d[20] = { 0, 8, 1, 7, 2, 9, 3, 5, 4, 6, 5, 3, 6, 4, 7, 1, 8, 0, 9, 3 };
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 20, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
@@ -687,7 +687,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 {
 	(void) state;
 
-	iscc_Dpid search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
+	scc_PointIndex search1[10] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 };
 	iscc_NNSearchObject* nn_search_object1;
 	iscc_init_nn_search_object(scc_ut_test_data_large, 10, search1, &nn_search_object1);
 
@@ -698,10 +698,10 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, true, false, true, false, false, false, false, false, false, false, false, false };
-	const iscc_Arci ref_nn_ref1b[101] = { 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	const iscc_ArcIndex ref_nn_ref1b[101] = { 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 12, 12, 12, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 	                                      15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 	                                      15, 15, 18, 18, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 };
-	const iscc_Dpid ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
+	const scc_PointIndex ref_nn_indices1b[21] = { 6, 12, 16, 2, 4, 14, 14, 2, 16, 14, 2, 4, 8, 10, 16, 0, 14, 10, 8, 10, 0 };
 	iscc_Digraph ref_nng1b;
 	iscc_digraph_from_pieces(100, 21, ref_nn_ref1b, ref_nn_indices1b, &ref_nng1b);
 	iscc_Digraph out_nng1b;
@@ -730,9 +730,9 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                                     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
-	const iscc_Arci ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	const iscc_ArcIndex ref_nn_ref1c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	                                      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
-	const iscc_Dpid ref_nn_indices1c[4] = { 0, 10, 18, 10 };
+	const scc_PointIndex ref_nn_indices1c[4] = { 0, 10, 18, 10 };
 	iscc_Digraph ref_nng1c;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref1c, ref_nn_indices1c, &ref_nng1c);
 	iscc_Digraph out_nng1c;
@@ -748,7 +748,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_close_nn_search_object(&nn_search_object1);
 
 
-	iscc_Dpid search4b[2] = { 76, 33 };
+	scc_PointIndex search4b[2] = { 76, 33 };
 	bool out_indicators4b[100] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                               true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
@@ -761,9 +761,9 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                                     true, false, true, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true,
 	                                     false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false };
-	const iscc_Arci ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
+	const iscc_ArcIndex ref_nn_ref4b[101] = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
 	                                      5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 };
-	const iscc_Dpid ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
+	const scc_PointIndex ref_nn_indices4b[14] = { 76, 76, 33, 33, 76, 33, 76, 33, 33, 76, 76, 33, 33, 76 };
 	iscc_Digraph ref_nng4b;
 	iscc_digraph_from_pieces(100, 14, ref_nn_ref4b, ref_nn_indices4b, &ref_nng4b);
 	iscc_Digraph out_nng4b;
@@ -818,9 +818,9 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                                     false, false, false, false };
-	const iscc_Arci ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	const iscc_ArcIndex ref_nn_ref5b[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	                                      4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-	const iscc_Dpid ref_nn_indices5b[4] = { 15, 50, 96, 1 };
+	const scc_PointIndex ref_nn_indices5b[4] = { 15, 50, 96, 1 };
 	iscc_Digraph ref_nng5b;
 	iscc_digraph_from_pieces(100, 4, ref_nn_ref5b, ref_nn_indices5b, &ref_nng5b);
 	iscc_Digraph out_nng5b;
@@ -843,9 +843,9 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false,
 	                            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 	                            false, false, false, false };
-	const iscc_Arci ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	const iscc_ArcIndex ref_nn_ref5c[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	                                      3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-	const iscc_Dpid ref_nn_indices5c[3] = { 15, 1, 42 };
+	const scc_PointIndex ref_nn_indices5c[3] = { 15, 1, 42 };
 	iscc_Digraph ref_nng5c;
 	iscc_digraph_from_pieces(100, 3, ref_nn_ref5c, ref_nn_indices5c, &ref_nng5c);
 	iscc_Digraph out_nng5c;
@@ -867,7 +867,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                            true, true, true, true, true };
-	const iscc_Arci ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref5d[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -889,7 +889,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	assert_int_equal(out_nng5d.max_arcs, 0);
 	assert_null(out_nng5d.head);
 	assert_non_null(out_nng5d.tail_ptr);
-	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nng5d.tail_ptr, ref_nn_ref5d, 101 * sizeof(iscc_ArcIndex));
 	iscc_free_digraph(&out_nng5d);
 
 
@@ -899,7 +899,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                      true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 	                      true, true, true, true, true };
-	const iscc_Arci ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	const iscc_ArcIndex ref_nn_ref5e[101] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -927,15 +927,15 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	assert_int_equal(out_nng5e.max_arcs, 0);
 	assert_null(out_nng5e.head);
 	assert_non_null(out_nng5e.tail_ptr);
-	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_Arci));
+	assert_memory_equal(out_nng5e.tail_ptr, ref_nn_ref5e, 101 * sizeof(iscc_ArcIndex));
 	iscc_free_digraph(&out_nng5e);
 	assert_memory_equal(query5e, ref_query5e, 100 * sizeof(bool));
 
 
 	bool out_indicators6a[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6a[15] = { true, true, false, false, true, false, true, true, true, false, true, false, true, true, true };
-	const iscc_Arci ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
+	const iscc_ArcIndex ref_nn_ref6a[16] = { 0, 2, 4, 4, 4, 6, 6, 8, 10, 12, 12, 14, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices6a[20] = { 0, 8, 1, 7, 4, 13, 6, 12, 7, 1, 8, 0, 10, 12, 12, 6, 13, 4, 14, 6 };
 	iscc_Digraph ref_nng6a;
 	iscc_digraph_from_pieces(15, 20, ref_nn_ref6a, ref_nn_indices6a, &ref_nng6a);
 	iscc_Digraph out_nng6a;
@@ -954,8 +954,8 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 
 	bool out_indicators6c[15] = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6c[15] = { true, true, false, false, false, false, false, true, true, false, false, false, false, true, true };
-	const iscc_Arci ref_nn_ref6c[16] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8, 8, 8, 8, 10, 12 };
-	const iscc_Dpid ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
+	const iscc_ArcIndex ref_nn_ref6c[16] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8, 8, 8, 8, 10, 12 };
+	const scc_PointIndex ref_nn_indices6c[12] = { 0, 8, 1, 7, 7, 1, 8, 0, 4, 6, 6, 4 };
 	iscc_Digraph ref_nng6c;
 	iscc_digraph_from_pieces(15, 12, ref_nn_ref6c, ref_nn_indices6c, &ref_nng6c);
 	iscc_Digraph out_nng6c;
@@ -974,8 +974,8 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 
 	bool out_indicators6d[10] = { true, true, true, true, true, true, true, true, true, true };
 	const bool ref_indicators6d[10] = { true, true, false, false, false, false, false, true, true, false };
-	const iscc_Arci ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
-	const iscc_Dpid ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
+	const iscc_ArcIndex ref_nn_ref6d[11] = { 0, 2, 4, 4, 4, 4, 4, 4, 6, 8, 8 };
+	const scc_PointIndex ref_nn_indices6d[8] = { 0, 8, 1, 7, 7, 1, 8, 0 };
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 8, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
@@ -997,13 +997,13 @@ void scc_ut_ensure_self_match(void** state)
 {
 	(void) state;
 
-	const iscc_Arci out_nn_ref1[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid out_nn_indices1[20] = { 0, 1, 3, 2, 4, 1, 3, 8, 5, 2,
+	const iscc_ArcIndex out_nn_ref1[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex out_nn_indices1[20] = { 0, 1, 3, 2, 4, 1, 3, 8, 5, 2,
 	                                        1, 0, 3, 6, 3, 2, 9, 7, 9, 3 };
 	iscc_Digraph out_nng1;
 	iscc_digraph_from_pieces(10, 20, out_nn_ref1, out_nn_indices1, &out_nng1);
-	const iscc_Arci ref_nn_ref1[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices1[20] = { 0, 1, 3, 1, 4, 2, 3, 8, 5, 4,
+	const iscc_ArcIndex ref_nn_ref1[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices1[20] = { 0, 1, 3, 1, 4, 2, 3, 8, 5, 4,
 	                                        1, 5, 3, 6, 3, 7, 9, 8, 9, 3 };
 	iscc_Digraph ref_nng1;
 	iscc_digraph_from_pieces(10, 20, ref_nn_ref1, ref_nn_indices1, &ref_nng1);
@@ -1015,13 +1015,13 @@ void scc_ut_ensure_self_match(void** state)
 	iscc_free_digraph(&ref_nng1);
 
 
-	const iscc_Arci out_nn_ref2[11] = { 0, 2, 4, 6, 8, 10, 10, 12, 12, 14, 16 };
-	const iscc_Dpid out_nn_indices2[16] = { 0, 1,  1, 6,  2, 3,  3, 1,  0, 1,
+	const iscc_ArcIndex out_nn_ref2[11] = { 0, 2, 4, 6, 8, 10, 10, 12, 12, 14, 16 };
+	const scc_PointIndex out_nn_indices2[16] = { 0, 1,  1, 6,  2, 3,  3, 1,  0, 1,
 	                                        3, 5,  4, 2,  0, 9 };
 	iscc_Digraph out_nng2;
 	iscc_digraph_from_pieces(10, 16, out_nn_ref2, out_nn_indices2, &out_nng2);
-	const iscc_Arci ref_nn_ref2[11] = { 0, 2, 4, 6, 8, 10, 10, 12, 12, 14, 16 };
-	const iscc_Dpid ref_nn_indices2[16] = { 0, 1,  1, 6,  2, 3,  3, 1,  0, 4,
+	const iscc_ArcIndex ref_nn_ref2[11] = { 0, 2, 4, 6, 8, 10, 10, 12, 12, 14, 16 };
+	const scc_PointIndex ref_nn_indices2[16] = { 0, 1,  1, 6,  2, 3,  3, 1,  0, 4,
 	                                        3, 6,  4, 8,  0, 9 };
 	iscc_Digraph ref_nng2;
 	iscc_digraph_from_pieces(10, 16, ref_nn_ref2, ref_nn_indices2, &ref_nng2);
@@ -1033,15 +1033,15 @@ void scc_ut_ensure_self_match(void** state)
 	iscc_free_digraph(&ref_nng2);
 
 
-	const iscc_Dpid search_indices3[5] = { 0, 1, 2, 3, 4 };
+	const scc_PointIndex search_indices3[5] = { 0, 1, 2, 3, 4 };
 
-	const iscc_Arci out_nn_ref3[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid out_nn_indices3[20] = { 4, 3,  2, 1,  0, 1,  2, 3,  4, 0,
+	const iscc_ArcIndex out_nn_ref3[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex out_nn_indices3[20] = { 4, 3,  2, 1,  0, 1,  2, 3,  4, 0,
 	                                        4, 3,  4, 3,  2, 1,  3, 2,  4, 1 };
 	iscc_Digraph out_nng3;
 	iscc_digraph_from_pieces(10, 20, out_nn_ref3, out_nn_indices3, &out_nng3);
-	const iscc_Arci ref_nn_ref3[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-	const iscc_Dpid ref_nn_indices3[20] = { 4, 0,  2, 1,  0, 2,  2, 3,  4, 0,
+	const iscc_ArcIndex ref_nn_ref3[11] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+	const scc_PointIndex ref_nn_indices3[20] = { 4, 0,  2, 1,  0, 2,  2, 3,  4, 0,
 	                                        4, 3,  4, 3,  2, 1,  3, 2,  4, 1 };
 	iscc_Digraph ref_nng3;
 	iscc_digraph_from_pieces(10, 20, ref_nn_ref3, ref_nn_indices3, &ref_nng3);
@@ -1053,14 +1053,14 @@ void scc_ut_ensure_self_match(void** state)
 	iscc_free_digraph(&ref_nng3);
 
 
-	const iscc_Dpid search_indices4[5] = { 0, 1, 2, 3, 4 };
+	const scc_PointIndex search_indices4[5] = { 0, 1, 2, 3, 4 };
 
-	const iscc_Arci out_nn_ref4[11] = { 0, 2, 2, 4, 4, 6, 8, 10, 12, 12, 14 };
-	const iscc_Dpid out_nn_indices4[14] = { 4, 3,  0, 1,  4, 0,  4, 3,  4, 3,  2, 1,  4, 1 };
+	const iscc_ArcIndex out_nn_ref4[11] = { 0, 2, 2, 4, 4, 6, 8, 10, 12, 12, 14 };
+	const scc_PointIndex out_nn_indices4[14] = { 4, 3,  0, 1,  4, 0,  4, 3,  4, 3,  2, 1,  4, 1 };
 	iscc_Digraph out_nng4;
 	iscc_digraph_from_pieces(10, 14, out_nn_ref4, out_nn_indices4, &out_nng4);
-	const iscc_Arci ref_nn_ref4[11] = { 0, 2, 2, 4, 4, 6, 8, 10, 12, 12, 14 };
-	const iscc_Dpid ref_nn_indices4[14] = { 4, 0,  0, 2,  4, 0,  4, 3,  4, 3,  2, 1,  4, 1 };
+	const iscc_ArcIndex ref_nn_ref4[11] = { 0, 2, 2, 4, 4, 6, 8, 10, 12, 12, 14 };
+	const scc_PointIndex ref_nn_indices4[14] = { 4, 0,  0, 2,  4, 0,  4, 3,  4, 3,  2, 1,  4, 1 };
 	iscc_Digraph ref_nng4;
 	iscc_digraph_from_pieces(10, 14, ref_nn_ref4, ref_nn_indices4, &ref_nng4);
 
@@ -1095,27 +1095,27 @@ void scc_ut_type_count(void** state)
 	assert_int_equal(ec1, SCC_ER_OK);
 
 	const size_t ref_type_group_size1[4] = { 5, 5, 6, 4 };
-	const iscc_Dpid ref_point_store1[20] = { 18, 14, 8, 7, 0,
+	const scc_PointIndex ref_point_store1[20] = { 18, 14, 8, 7, 0,
 	                                         19, 13, 9, 6, 4,
 	                                         16, 15, 12, 5, 2, 1,
 	                                         17, 11, 10, 3 };
-	const iscc_Dpid* ref_type_groups1[4] = { tc1.point_store,
+	const scc_PointIndex* ref_type_groups1[4] = { tc1.point_store,
 	                                         tc1.point_store + 5,
 	                                         tc1.point_store + 10,
 	                                         tc1.point_store + 16 };
-	const iscc_Dpid ref_content1_t0[5] = { 18, 14, 8, 7, 0 };
-	const iscc_Dpid ref_content1_t1[5] = { 19, 13, 9, 6, 4 };
-	const iscc_Dpid ref_content1_t2[6] = { 16, 15, 12, 5, 2, 1 };
-	const iscc_Dpid ref_content1_t3[4] = { 17, 11, 10, 3 };
+	const scc_PointIndex ref_content1_t0[5] = { 18, 14, 8, 7, 0 };
+	const scc_PointIndex ref_content1_t1[5] = { 19, 13, 9, 6, 4 };
+	const scc_PointIndex ref_content1_t2[6] = { 16, 15, 12, 5, 2, 1 };
+	const scc_PointIndex ref_content1_t3[4] = { 17, 11, 10, 3 };
 
 	assert_int_equal(tc1.sum_type_constraints, 6);
 	assert_memory_equal(tc1.type_group_size, ref_type_group_size1, 4 * sizeof(size_t));
-	assert_memory_equal(tc1.point_store, ref_point_store1, 20 * sizeof(iscc_Dpid));
-	assert_memory_equal(tc1.type_groups, ref_type_groups1, 4 * sizeof(iscc_Dpid*));
-	assert_memory_equal(tc1.type_groups[0], ref_content1_t0, 5 * sizeof(iscc_Dpid));
-	assert_memory_equal(tc1.type_groups[1], ref_content1_t1, 5 * sizeof(iscc_Dpid));
-	assert_memory_equal(tc1.type_groups[2], ref_content1_t2, 6 * sizeof(iscc_Dpid));
-	assert_memory_equal(tc1.type_groups[3], ref_content1_t3, 4 * sizeof(iscc_Dpid));
+	assert_memory_equal(tc1.point_store, ref_point_store1, 20 * sizeof(scc_PointIndex));
+	assert_memory_equal(tc1.type_groups, ref_type_groups1, 4 * sizeof(scc_PointIndex*));
+	assert_memory_equal(tc1.type_groups[0], ref_content1_t0, 5 * sizeof(scc_PointIndex));
+	assert_memory_equal(tc1.type_groups[1], ref_content1_t1, 5 * sizeof(scc_PointIndex));
+	assert_memory_equal(tc1.type_groups[2], ref_content1_t2, 6 * sizeof(scc_PointIndex));
+	assert_memory_equal(tc1.type_groups[3], ref_content1_t3, 4 * sizeof(scc_PointIndex));
 
 	free(tc1.type_group_size);
 	free(tc1.point_store);
@@ -1164,7 +1164,7 @@ void scc_ut_assign_seeds_and_neighbors(void** state)
 	                         "..... ..###/"
 	                         "....# ...#./"
 	                         "...#. ....#/", &nng1);
-	iscc_Dpid fp_seeds1[3] = {0, 4, 7};
+	scc_PointIndex fp_seeds1[3] = {0, 4, 7};
 	iscc_SeedResult sr1 = {
 		.capacity = 10,
 		.count = 3,
@@ -1198,7 +1198,7 @@ void scc_ut_assign_seeds_and_neighbors(void** state)
 	                         "..... ..###/"
 	                         "....# ...#./"
 	                         "...#. ....#/", &nng2);
-	iscc_Dpid fp_seeds2[3] = {0, 7};
+	scc_PointIndex fp_seeds2[3] = {0, 7};
 	iscc_SeedResult sr2 = {
 		.capacity = 10,
 		.count = 2,
@@ -1325,7 +1325,7 @@ void scc_ut_assign_by_nn_search(void** state)
 		.external_labels = true,
 	};
 	iscc_NNSearchObject* nn_search_object1;
-	const iscc_Dpid search_indices1[5] = { 0, 1, 2, 3, 4 };
+	const scc_PointIndex search_indices1[5] = { 0, 1, 2, 3, 4 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 5, search_indices1, &nn_search_object1));
 	bool to_assign1[15] = { false, false, false, false, false,
 	                        true,  false, true,  false, true,
@@ -1357,7 +1357,7 @@ void scc_ut_assign_by_nn_search(void** state)
 		.external_labels = true,
 	};
 	iscc_NNSearchObject* nn_search_object2;
-	const iscc_Dpid search_indices2[5] = { 0, 1, 2, 3, 4 };
+	const scc_PointIndex search_indices2[5] = { 0, 1, 2, 3, 4 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 5, search_indices2, &nn_search_object2));
 	bool to_assign2[15] = { false, false, false, false, false,
 	                        true,  false, true,  false, true,
@@ -1389,7 +1389,7 @@ void scc_ut_assign_by_nn_search(void** state)
 		.external_labels = true,
 	};
 	iscc_NNSearchObject* nn_search_object3;
-	const iscc_Dpid search_indices3[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
+	const scc_PointIndex search_indices3[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 10, search_indices3, &nn_search_object3));
 	bool to_assign3[15] = { false, false, false, false, false,
 	                        true,  true,  true,  true,  true,
@@ -1421,7 +1421,7 @@ void scc_ut_assign_by_nn_search(void** state)
 		.external_labels = true,
 	};
 	iscc_NNSearchObject* nn_search_object4;
-	const iscc_Dpid search_indices4[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
+	const scc_PointIndex search_indices4[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 10, search_indices4, &nn_search_object4));
 	bool to_assign4[15] = { false, false, false, false, false,
 	                        true,  true,  true,  true,  true,

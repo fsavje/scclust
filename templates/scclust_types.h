@@ -40,16 +40,13 @@
 
 
 static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
-
-static const uintmax_t ISCC_DPID_MAX = {% dpid_max %};
-
-static const uintmax_t ISCC_ARCI_MAX = {% arc_max %};
-
+static const uintmax_t ISCC_POINTINDEX_MAX = {% pointindex_max %};
+static const uintmax_t ISCC_ARCINDEX_MAX = {% arcindex_max %};
 static const uintmax_t ISCC_TYPELABEL_MAX = 65535;
 
 #define ISCC_M_CLABEL_MAX {% clabel_max %}
-#define ISCC_M_DPID_MAX {% dpid_max %}
-#define ISCC_M_ARCI_MAX {% arc_max %}
+#define ISCC_M_POINTINDEX_MAX {% pointindex_max %}
+#define ISCC_M_ARCINDEX_MAX {% arcindex_max %}
 #define ISCC_M_TYPELABEL_MAX 65535
 
 
