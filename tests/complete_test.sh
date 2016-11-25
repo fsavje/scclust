@@ -58,10 +58,12 @@ for CLABEL_FOR in uint32_t uint64_t int int_mna; do
 	for TYPELABEL in uint_fast16_t int; do
 		for DPID in uint32_t uint64_t int int_mna; do
 			for ARC in uint32_t uint64_t; do
-
 				# Add ANN SEARCH
 				run_tests "--with-clabel=$CLABEL --with-clabel-na=$CLABEL_NA --with-typelabel=$TYPELABEL --with-dpid=$DPID --with-arc=$ARC"
-
+				if [ "$?" != "0" ]; then
+					printf "${REDCOLOR}***TEST FAILED***${NOCOLOR}\n"
+					exit 1
+				fi
 			done
 		done
 	done
