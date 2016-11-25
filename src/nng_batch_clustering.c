@@ -18,13 +18,14 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include "../include/scclust.h"
+#include "nng_batch_clustering.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "../include/scclust.h"
 #include "clustering_struct.h"
 #include "dist_search.h"
 #include "error.h"

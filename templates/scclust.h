@@ -59,14 +59,31 @@ void scc_get_compiled_version(uint32_t* out_major,
 // =============================================================================
 
 enum scc_ErrorCode {
+
+	/// No error.
 	SCC_ER_OK,
+
+	/// Unkonwn error.
 	SCC_ER_UNKNOWN_ERROR,
+
+	/// Function parameters are invalid.
 	SCC_ER_INVALID_INPUT,
+
+	/// Cannot allocate required memory.
 	SCC_ER_NO_MEMORY,
+
+	/// Clustering problem has no solution.
 	SCC_ER_NO_SOLUTION,
+
+	/// Clustering problem is too large.
 	SCC_ER_TOO_LARGE_PROBLEM,
+
+	/// Failed to calculate distances.
 	SCC_ER_DIST_SEARCH_ERROR,
+
+	/// Functionality not yet implemented.
 	SCC_ER_NOT_IMPLEMENTED,
+
 };
 
 /// Typedef for the scc_ErrorCode enum
@@ -217,10 +234,14 @@ enum scc_SeedMethod {
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
 	SCC_SM_EXCLUSION_UPDATING,
+
+
+	SCC_SM_BATCHES,
 };
 
 /// Typedef for the scc_NNGMethod enum
 typedef enum scc_SeedMethod scc_SeedMethod;
+
 
 enum scc_UnassignedMethod {
 	SCC_UM_IGNORE,
@@ -232,35 +253,43 @@ enum scc_UnassignedMethod {
 
 typedef enum scc_UnassignedMethod scc_UnassignedMethod;
 
-scc_ErrorCode scc_make_clustering(scc_Clustering* clustering,
-                                  void* data_set,
-                                  uint32_t size_constraint,
-                                  uintmax_t num_types,
-                                  const uint32_t type_constraints[],
-                                  size_t len_type_labels,
-                                  const scc_TypeLabel type_labels[],
-                                  scc_SeedMethod seed_method,
-                                  scc_UnassignedMethod unassigned_method,
-                                  bool radius_constraint,
-                                  double radius,
-                                  size_t len_primary_data_points,
-                                  const bool primary_data_points[],
-                                  scc_UnassignedMethod secondary_unassigned_method,
-                                  bool secondary_radius_constraint,
-                                  double secondary_radius);
 
-scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* clustering,
-                                         void* data_set,
-                                         uint32_t size_constraint,
-                                         scc_UnassignedMethod unassigned_method,
-                                         bool radius_constraint,
-                                         double radius,
-                                         size_t len_primary_data_points,
-                                         const bool primary_data_points[],
-                                         uint32_t batch_size);
+struct scc_ClusterOptions {
 
-scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* clustering,
-                                          void* data_set,
+	/** scc_ClusterOptions struct version
+	 *
+	 *  \note
+	 *  This must be set to "722678001".
+	 */
+	const int32_t options_version;
+	uint32_t size_constraint;
+	uintmax_t num_types;
+	const uint32_t* type_constraints;
+	size_t len_type_labels;
+	const scc_TypeLabel* type_labels;
+	scc_SeedMethod seed_method;
+	scc_UnassignedMethod unassigned_method;
+	bool radius_constraint;
+	double radius;
+	size_t len_primary_data_points;
+	const bool* primary_data_points;
+	scc_UnassignedMethod secondary_unassigned_method;
+	bool secondary_radius_constraint;
+	double secondary_radius;
+	uint32_t batch_size;
+};
+
+typedef struct scc_ClusterOptions scc_ClusterOptions;
+
+extern const scc_ClusterOptions scc_default_cluster_options;
+
+
+scc_ErrorCode scc_make_clustering(void* data_set,
+                                  scc_Clustering* clustering,
+                                  const scc_ClusterOptions* options);
+
+scc_ErrorCode scc_hierarchical_clustering(void* data_set,
+                                          scc_Clustering* clustering,
                                           uint32_t size_constraint,
                                           bool batch_assign);
 
