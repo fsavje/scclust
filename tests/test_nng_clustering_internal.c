@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <src/nng_clustering.c>
 #include "assert_digraph.h"
 #include "data_object_test.h"
@@ -219,6 +219,8 @@ void scc_ut_make_clustering_from_nng(void** state)
 
 int main(void)
 {
+	scc_ut_init_tests();
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_make_clustering_from_nng),
 	};

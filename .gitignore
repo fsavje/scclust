@@ -46,6 +46,10 @@ scc_build/
 # Local miscellaneous
 localmisc/
 
+# Test files
+tests/ann_1.1.2/
+tests/ann_1.1.2.zip
+
 # Example files
 examples/ann/ann_1.1.2/
 examples/ann/ann_1.1.2.zip

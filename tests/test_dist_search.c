@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <src/dist_search.h>
@@ -1907,6 +1907,8 @@ void scc_ut_nearest_neighbor_search_index_radius(void** state)
 
 int main(void)
 {
+	scc_ut_init_tests();
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_check_data_set),
 		cmocka_unit_test(scc_ut_get_dist_matrix),

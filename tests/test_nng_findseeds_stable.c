@@ -20,7 +20,7 @@
 
 #define SCC_STABLE_FINDSEED
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <include/scclust.h>
 #include <src/digraph_core.h>
 #include <src/digraph_debug.h>
@@ -307,6 +307,8 @@ void scc_ut_find_seeds_stable_withdiag(void** state)
 
 int main(void)
 {
+	scc_ut_init_tests();
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_fs_debug_bucket_sort),
 		cmocka_unit_test(scc_ut_find_seeds_stable),

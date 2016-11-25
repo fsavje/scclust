@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <stddef.h>
 #include <src/digraph_core.h>
 #include <src/digraph_debug.h>
@@ -314,6 +314,8 @@ void scc_ut_copy_digraph(void** state)
 
 int main(void)
 {
+	scc_ut_init_tests();
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_is_balanced_digraph),
 		cmocka_unit_test(scc_ut_digraphs_equal),

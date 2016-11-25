@@ -18,7 +18,7 @@
  * License along with this library. If not, see http://www.gnu.org/licenses/
  * ========================================================================== */
 
-#include <src/cmocka_headers.h>
+#include "init_test.h"
 #include <src/nng_core.c>
 #include <src/digraph_debug.h>
 #include <src/scclust_types.h>
@@ -1445,6 +1445,8 @@ void scc_ut_assign_by_nn_search(void** state)
 
 int main(void)
 {
+	scc_ut_init_tests();
+
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_make_nng),
 		cmocka_unit_test(scc_ut_make_nng_radius),
