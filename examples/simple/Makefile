@@ -29,4 +29,4 @@ clean:
 	$(RM) simple_example.out
 
 simple_example.out: simple_example.c
-	$(CC) $(CFLAGS) $(SCC_PATHS) $< -lscclust -o $@
+	$(CC) $(CFLAGS) $(SCC_PATHS) $< -lscclust -lm -o $@
