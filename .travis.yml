@@ -30,14 +30,14 @@ script:
   - cd build
   - ../configure --enable-documentation
   - make
-  - make clean
-  - cd ..
-  - ./configure --disable-documentation
-  - make
   - cd examples/simple
   - make
   - ./simple_example.out
   - cd ../..
+  - make clean
+  - cd ..
+  - ./configure --disable-documentation
+  - make
   - ./clean.sh
   - cd tests
   - ./run_tests.sh

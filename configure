@@ -222,7 +222,7 @@ case $OPT_DPID_TYPE in
 		TYPEH_DPID_NA="UINT32_MAX"
 		;;
 	uint64_t )
-		TYPEH_DPID_TYPE="uint64_ta"
+		TYPEH_DPID_TYPE="uint64_t"
 		TYPEH_DPID_MAX="UINT64_MAX"
 		TYPEH_DPID_NA="UINT64_MAX"
 		;;
@@ -343,6 +343,9 @@ fi
 # ==============================================================================
 
 BUILD_FOLDERS="
+	examples
+	examples/ann
+	examples/simple
 	src
 	include"
 
@@ -350,6 +353,9 @@ SOURCE_FILES="
 	doxyrefs.bib
 	LICENSE
 	README.md
+	examples/ann/make_ann.sh
+	examples/simple/Makefile
+	examples/simple/simple_example.c
 	src/clustering_struct.h
 	src/cmocka_headers.h
 	src/data_set_struct.h
