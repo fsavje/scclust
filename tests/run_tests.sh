@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 REDCOLOR="\033[0;31m"
 NOCOLOR="\033[0m"
