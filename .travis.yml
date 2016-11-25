@@ -38,4 +38,5 @@ script:
   - ./clean.sh
   - cd tests
   - ./run_tests.sh
+  - ./run_tests.sh -a
   - ./complete_test.sh
