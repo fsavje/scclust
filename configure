@@ -386,6 +386,7 @@ SOURCE_FILES="
 	src/error.h
 	src/hierarchical_clustering.c
 	src/nng_batch_clustering.c
+	src/nng_batch_clustering.h
 	src/nng_clustering.c
 	src/nng_core.c
 	src/nng_core.h

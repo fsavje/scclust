@@ -160,8 +160,8 @@ static int iscc_hi_compare_dist_edges(const void* a,
 // External function implementations
 // =============================================================================
 
-scc_ErrorCode scc_hierarchical_clustering(scc_Clustering* const clustering,
-                                          void* const data_set,
+scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
+                                          scc_Clustering* const clustering,
                                           const uint32_t size_constraint,
                                           const bool batch_assign)
 {
