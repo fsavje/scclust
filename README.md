@@ -2,16 +2,17 @@
 
 [![Build Status](https://travis-ci.org/fsavje/scclust.svg?branch=master)](https://travis-ci.org/fsavje/scclust)
 
-**scclust** is a C99 library for size constrained clustering. Subject to user-specified conditions on the minimum size and composition of the clusters, scclust derives a partition of a set of data points so that the similarity of points assigned to the same cluster is maximized.
+**scclust** is used for **s**ize **c**onstrained **clust**ering. It solves clustering problems where one wants to partition of a set of data points in to groups subject to constraints on the composition of the groups. In particular, scclust constructs a clustering that satisfies the constraints while trying to minimize the dissimilarity of points assigned to the same clusters. It is possible to specify overall size constraints and constraints specific to types of data points. For example, one can require that each cluster should contain at least five data points in total and at least two "red" data points.
 
-scclust is made with large data sets in mind, and it can cluster hundreds of millions of data points within minutes on an ordinary desktop computer. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management is separated from the rest of the library.
+scclust is made with large data sets in mind, and it can cluster millions of data points in less than a minute. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management can be accessed and changed at runtime.
 
-The library is currently in alpha, and breaking changes to the API might happen.
+*The library is currently in alpha. Breaking changes to the API might happen.*
 
 
 ## How to compile scclust
 
-This snippet downloads and compiles scclust:
+The following code downloads and compiles the current development version of scclust:
+
 ```bash
 wget https://github.com/fsavje/scclust/archive/master.zip
 unzip master.zip
@@ -25,7 +26,7 @@ scclust compiles into a static library.
 
 ## How to use scclust
 
-The library can be used in several different ways, for different purposes. We recommend looking at the examples distributed with the code and the documentation for the full picture. Here is example showing the simple use case: we have a set of data points and want to construct clusters that each contain at least three points.
+Details on how to use scclust is best found in the documentation, the library header (`include/scclust.h`) and the examples distributed with the code (`examples`). For those that are impatient, the following snippet shows a simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
 
 ```c
 #include <stdbool.h>
@@ -90,147 +91,164 @@ int main(void) {
 }
 ```
 
-The example's output is:
+This is the output the program generates:
 
-```bash
+```
 Cluster assignment:
 0 2 1 0 2 1 2 0 0 1
 ```
 
-That is, the first point is assigned to cluster `0`, the second to cluster `2` and so on.
+That is, the first point is assigned to cluster "0", the second to cluster "2" and so on.
 
-This example is distributed with the library. After compiling scclust itself, you can run by calling the following in the scclust folder
+This program is distributed with the library. After compiling scclust itself, you can compile and run it by calling the following in the `examples/simple` folder.
+
 ```bash
-cd examples/simple
 make
 ./simple_example.out
 ```
 
 ## Compilation options
 
-### Debug mode
+scclust accepts several compilation options as flags to the `configure` script:
 
-Compiles the library with a number of debug asserts. This will slow down execution, but is helpful to catch bugs.
-
-To turn on when calling `make`:
-```bash
-make library DEBUG=Y
 ```
+Usage: ./configure [OPTIONS]...
 
-To turn **off** when compiling individual files (on by default):
-```bash
-cc -c -DNDEBUG src/digraph_core.c -o digraph_core.o
-```
+  -h, --help                display this help and exit
+  --version                 display version information and exit
+  -q, --quiet               do not print messages
 
+  --enable-FEATURE          include FEATURE
+  --disable-FEATURE         do not include FEATURE
 
-### Test mode
+  --enable-assert           enable ASSERT checking [default=off]
+  --enable-digraph-debug    enable debug functions for digraphs [default=off]
+  --enable-cmocka-headers   use cmocka allocation functions [default=off]
+  --enable-documentation    make documentation [default=off]
+  --enable-all-docs         make documentation for internal methods [default=off]
 
-Compiles the library with test suite that watches for overflows and memory leaks. Use only when actively testing the library.
-
-To turn on when calling `make`:
-```bash
-make library TESTH=Y
-```
-
-To turn on when compiling individual files:
-```bash
-cc -c -include tests/test_suite.h src/digraph_core.c -o digraph_core.o
-```
-
-### Cluster label data type
-
-To change the date type used to store cluster labels, change the `typedef` for `scc_Clabel` in `include/scclust.h`. Remember to change `SCC_CLABEL_MAX` and `SCC_CLABEL_NA` to appropriate values. The library has been tested with `scc_Clabel` set to `uint32_t`, `uint64_t` and `int`.
-
-
-### Type label data type
-
-To change the date type used to store type labels, change the `typedef` for `scc_TypeLabel` in `include/scclust.h`. The library has been tested with `scc_Clabel` set to `uint_fast16_t` and `int`.
-
-
-### Data point ID data type
-
-The data type used to store data point IDs. This choice restricts the maximum number of points in any clustering problem solved by scclust -- a wider type allows larger problems but requires more memory. The possible types are:
-
-| Flag            | Data type  | Max data points |
-| --------------- | ---------- | --------------- |
-| SCC_DPID_UINT32 | `uint32_t` | $2^{32} − 1$    |
-| SCC_DPID_UINT64 | `uint64_t` | $2^{64} − 1$    |
-| SCC_DPID_INT    | `int`      | $2^{31} − 1$    |
-
-The default is `SCC_DPID_UINT32`.
-
-To change type when calling `make`:
-```bash
-make library DPID=SCC_DPID_INT
-```
-
-To change type when compiling individual files:
-```bash
-cc -c -DSCC_DPID_INT src/digraph_core.c -o digraph_core.o
+  --with-clabel=[ARG]       cluster label type [default=uint32_t]
+  --with-clabel-na=[ARG]    cluster label NA value [default=default]
+  --with-typelabel=[ARG]    type label type [default=uint_fast16_t]
+  --with-pointindex=[ARG]   data point ID type [default=uint32_t]
+  --with-arcindex=[ARG]     digraph arc type [default=uint32_t]
 ```
 
 
-### Arc reference data type
+### `--[enable/disable]-assert`
 
-The data type used to store arc references. This choice restricts the size of the graphs used by scclust to solve clustering problems -- a wider type allows larger problems but requires more memory. A rough estimate of the number of the required maximum arc reference is given by $\{\text{number of points}\} \times \{\text{minimum size of clusters}\}$. The possible types are:
+Default: `--disable-assert`
 
-| Flag      | Data type  | Max arc ref   |
-| --------- | ---------- | ------------- |
-| SCC_ARC32 | `uint32_t` | $2^{32} − 1$  |
-| SCC_ARC64 | `uint64_t` | $2^{64} − 1$  |
-
-The default is `SCC_ARC32`.
-
-To change type when calling `make`:
-```bash
-make library ARC=SCC_ARC64
-```
-
-To change type when compiling individual files:
-```bash
-cc -c -DSCC_ARC64 src/digraph_core.c -o digraph_core.o
-```
+Compiles with debug asserts. This will slow down execution, but is helpful to catch bugs.
 
 
-### The ANN library for nearest neighbor search
+### `--[enable/disable]-digraph-debug`
 
-scclust can use the [ANN library](https://www.cs.umd.edu/~mount/ANN/) to do all nearest neighbor searches. This will usually speed up execution considerably, but requires that the library is linked with a C++ linker.
+Default: `--disable-digraph-debug`
 
-To turn on when calling `make`:
-```bash
-make library ANN_SEARCH=Y
-```
-
-When using the ANN library, it is recommended to compile with `SCC_DPID_INT`. This avoids costly type translations between the libraries.
+Compiles with debug support for the internal digraph object. This is only useful when debugging.
 
 
-### Tree data structure used by ANN
+### `--[enable/disable]-cmocka-headers`
 
-The ANN library can use both k-d trees (`SCC_ANN_KDTREE`) and box-decomposition trees (`SCC_ANN_BDTREE`). The latter is more robust to clustered data points. See the [ANN manual](https://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ANNmanual_1.1.pdf) for more details.
+Default: `--disable-cmocka-headers`
 
-To change tree when calling `make`:
-```bash
-make library ANN_SEARCH=Y ANN_TREE=SCC_ANN_BDTREE
-```
+Compiles with support for [cmocka](https://cmocka.org)'s internal allocation and assert functions which watches for overflows and memory leaks. This is only useful when testing during development and is not recommended for production use.
 
-To change tree when compiling individual files:
-```bash
-cc -c -DSCC_ANN_BDTREE src/digraph_core.c -o digraph_core.o
-```
-
-The default is `SCC_ANN_KDTREE`. This option is ignore if the ANN library is not used for nearest neighbor search.
+Requires the [cmocka](https://cmocka.org) library.
 
 
-## How to contribute to scclust
+### `--[enable/disable]-documentation`
+
+Default: `--disable-documentation`
+
+Compiles documentation.
+
+Requires the [doxygen](http://www.stack.nl/~dimitri/doxygen/) library.
+
+
+### `--[enable/disable]-all-docs`
+
+Default: `--disable-all-docs`
+
+By default, scclust only makes documentation for the public header methods. With this option, one can make documentation for internal methods as well. This can be useful during development.
+
+
+### `--with-clabel=[ARG]`
+
+Allowed values: ``uint32_t  uint64_t  int``
+Default: ``uint32_t``
+
+Change the data type that stores cluster labels. scclust uses this type to report cluster assignment.
+
+
+### `--with-clabel-na=[ARG]`
+
+Allowed values: ``default  max  -1  -2  -3  ...``
+Default: ``default``
+
+Change the value used to denote unassigned data points.
+
+| `--with-clabel-na=`  | Value                                         |
+| -------------------- | --------------------------------------------- |
+| `default`            | Use default for `--with-clabel`               |
+| `max`                | Use maximum value storable in `--with-clabel` |
+| Negative integer     | Use [ARG], `--with-clabel` must be signed     |
+
+
+### `--with-typelabel=[ARG]`
+
+Allowed values: ``uint_fast16_t  int``
+Default: ``uint_fast16_t``
+
+Change the data type that stores data point type labels. This type is used to denote which type data points are.
+
+
+### `--with-pointindex=[ARG]`
+
+Allowed values: ``uint32_t  uint64_t  int``
+Default: ``uint32_t``
+
+Change the data type that stores point indices. This choice restricts the maximum number of points in any clustering problem solved by scclust. A wider type allows for larger problems but requires more memory. The maximum number of data points is given by:
+
+| `--with-pointindex=`  | Max data points |
+| --------------------- | --------------- |
+| `uint32_t`            | $2^{32} − 1$    |
+| `uint64_t`            | $2^{64} − 1$    |
+| `int`                 | $2^{31} − 1$    |
+
+
+### `--with-arcindex=[ARG]`
+
+Allowed values: ``uint32_t  uint64_t``
+Default: ``uint32_t``
+
+Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the number of the maximum graph size is given by $\{\text{number of points}\} \times \{\text{minimum size of clusters}\}$. The maximum number of arcs are given by:
+
+| `--with-arcindex=`  | Max arcs      |
+| ------------------- | ------------- |
+| `uint32_t`          | $2^{32} − 1$  |
+| `uint64_t`          | $2^{64} − 1$  |
+
+
+## Service Provider Interface (SPI)
+
+scclust is based on functions that access the data points and derive distances between them. It is possible to change these functions at runtime. This can be useful when extending scclust to accept other databases or if one wants to use particular functions to calculate the distances. In particular, scclust ships with a simple nearest neighbor search algorithm; performance can often be improved drastically by using a dedicated nearest neighbor search library.
+
+See `include/scclust_spi.h` and `src/dist_search.h` for the distance functions that can be exchanged. Note that if the new functions accepts the `scc_DataSet` struct as input (see `src/data_set_struct.h`), one can swap only parts of the distance functions.
+
+See `examples/ann/` for an example where the [ANN library](https://www.cs.umd.edu/~mount/ANN/) is used for nearest neighbor searching. (It is recommended to compile scclust with the `--with-pointindex=int` option when using the ANN wrapper. This avoids costly type translations between the libraries.)
+
+
+## How to contribute
 
 Thank you for considering contributing to scclust!
 
-There are many ways to help out: report bugs, suggest useful new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
+There are many ways to help out: report bugs, suggest new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
 
-If you're filing a bug, please include all information needed to reproduce the bug. Besides the code you're trying to run, your platform, toolchain and compilation options is often useful information.
+If you're filing a bug, please include all information needed to reproduce it. Besides the code you're trying to run, your platform, toolchain and compilation options is often useful information.
 
 
 ## License
 
 scclust is distributed under the [GNU Lesser General Public License v2.1](https://github.com/fsavje/scclust/blob/master/LICENSE).
-
