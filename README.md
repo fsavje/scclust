@@ -100,7 +100,7 @@ Cluster assignment:
 
 That is, the first point is assigned to cluster "0", the second to cluster "2" and so on.
 
-This program is distributed with the library. After compiling scclust itself, you can compile and run it by calling the following in the `examples/simple` folder.
+The example is distributed with the library. After compiling scclust itself, you can compile and run it by calling the following in the `examples/simple` folder.
 
 ```bash
 make
@@ -176,16 +176,18 @@ By default, scclust only makes documentation for the public header methods. With
 
 ### `--with-clabel=[ARG]`
 
-Allowed values: ``uint32_t  uint64_t  int``
-Default: ``uint32_t``
+Allowed values: `uint32_t uint64_t int`
+
+Default: `uint32_t`
 
 Change the data type that stores cluster labels. scclust uses this type to report cluster assignment.
 
 
 ### `--with-clabel-na=[ARG]`
 
-Allowed values: ``default  max  -1  -2  -3  ...``
-Default: ``default``
+Allowed values: `default max -1 -2 -3 ...`
+
+Default: `default`
 
 Change the value used to denote unassigned data points.
 
@@ -193,42 +195,45 @@ Change the value used to denote unassigned data points.
 | -------------------- | --------------------------------------------- |
 | `default`            | Use default for `--with-clabel`               |
 | `max`                | Use maximum value storable in `--with-clabel` |
-| Negative integer     | Use [ARG], `--with-clabel` must be signed     |
+| `-1 -2 -3 ...`       | Use [ARG], `--with-clabel` must be signed     |
 
 
 ### `--with-typelabel=[ARG]`
 
-Allowed values: ``uint_fast16_t  int``
-Default: ``uint_fast16_t``
+Allowed values: `uint_fast16_t  int`
+
+Default: `uint_fast16_t`
 
 Change the data type that stores data point type labels. This type is used to denote which type data points are.
 
 
 ### `--with-pointindex=[ARG]`
 
-Allowed values: ``uint32_t  uint64_t  int``
-Default: ``uint32_t``
+Allowed values: `uint32_t  uint64_t  int`
+
+Default: `uint32_t`
 
 Change the data type that stores point indices. This choice restricts the maximum number of points in any clustering problem solved by scclust. A wider type allows for larger problems but requires more memory. The maximum number of data points is given by:
 
 | `--with-pointindex=`  | Max data points |
-| --------------------- | --------------- |
-| `uint32_t`            | $2^{32} − 1$    |
-| `uint64_t`            | $2^{64} − 1$    |
-| `int`                 | $2^{31} − 1$    |
+| --------------------- | --------------  |
+| `uint32_t`            | 2^32 − 1        |
+| `uint64_t`            | 2^64 − 1        |
+| `int`                 | 2^31 − 1        |
 
 
 ### `--with-arcindex=[ARG]`
 
-Allowed values: ``uint32_t  uint64_t``
-Default: ``uint32_t``
+Allowed values: `uint32_t  uint64_t`
+
+Default: `uint32_t`
 
 Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the number of the maximum graph size is given by $\{\text{number of points}\} \times \{\text{minimum size of clusters}\}$. The maximum number of arcs are given by:
 
-| `--with-arcindex=`  | Max arcs      |
-| ------------------- | ------------- |
-| `uint32_t`          | $2^{32} − 1$  |
-| `uint64_t`          | $2^{64} − 1$  |
+| `--with-arcindex=`  | Max arcs  |
+| ------------------- | --------- |
+| `uint32_t`          | 2^32 − 1  |
+| `uint64_t`          | 2^64 − 1  |
 
 
 ## Service Provider Interface (SPI)
