@@ -41,10 +41,11 @@
 static const scc_SeedMethod SCC_MAX_SEED_METHOD = SCC_SM_BATCHES;
 static const scc_UnassignedMethod SCC_MAX_UNASSIGNED_METHOD = SCC_UM_CLOSEST_SEED_EST_RADIUS;
 
-static const int32_t ISCC_OPTIONS_STRUCT_VERSION = 722678001;
+#define ISCC_M_OPTIONS_STRUCT_VERSION 722678001
+static const int32_t ISCC_OPTIONS_STRUCT_VERSION = ISCC_M_OPTIONS_STRUCT_VERSION;
 
 const scc_ClusterOptions scc_default_cluster_options = {
-	.options_version = ISCC_OPTIONS_STRUCT_VERSION,
+	.options_version = ISCC_M_OPTIONS_STRUCT_VERSION, // GCC error if not init with macro
 	.size_constraint = 0,
 	.num_types = 0,
 	.type_constraints = NULL,
