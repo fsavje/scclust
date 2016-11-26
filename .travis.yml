@@ -26,16 +26,23 @@ install:
     - rm -rf cmocka-1.0.1
 
 script:
+  - ./make_dist scclust_dist && cd scclust_dist
   - mkdir build && cd build
-  - ../configure --enable-documentation
+  - ../configure
   - make
   - cd examples/simple && make && ./simple_example.out && make clean && cd ../..
   - cd examples/ann && make && ./ann_example.out && make clean && cd ../..
   - make clean
   - cd ..
+  - ./configure --enable-documentation
+  - make
+  - cd examples/simple && make && ./simple_example.out && make clean && cd ../..
+  - make clean
+  - cd ..
   - ./configure --disable-documentation
   - make
-  - ./clean.sh
+  - cd examples/simple && make && ./simple_example.out && make clean && cd ../..
+  - ./clean
   - cd tests
   - ./run_tests.sh
   - ./run_tests.sh -a

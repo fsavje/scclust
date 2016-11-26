@@ -1,0 +1,74 @@
+#!/bin/sh
+# ==============================================================================
+# scclust -- A C library for size constrained clustering
+# https://github.com/fsavje/scclust
+#
+# Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library. If not, see http://www.gnu.org/licenses/
+# ==============================================================================
+
+SCC_VERSION_MAJOR=0
+SCC_VERSION_MINOR=1
+SCC_VERSION_PATCH=1
+
+DIST_FOLDERS="
+	examples
+	examples/ann
+	examples/simple
+	src"
+
+SOURCE_FILES="
+	doxyrefs.bib
+	LICENSE
+	README.md
+	examples/ann/ann_example.c
+	examples/ann/ann_wrapper.cpp
+	examples/ann/ann_wrapper.h
+	examples/ann/download_ann.sh
+	examples/ann/Makefile
+	examples/simple/Makefile
+	examples/simple/simple_example.c
+	src/clustering_struct.h
+	src/cmocka_headers.h
+	src/data_set_struct.h
+	src/data_set.c
+	src/digraph_core.c
+	src/digraph_core.h
+	src/digraph_debug.c
+	src/digraph_debug.h
+	src/digraph_operations.c
+	src/digraph_operations.h
+	src/dist_search_imp.c
+	src/dist_search_imp.h
+	src/dist_search.h
+	src/error.c
+	src/error.h
+	src/hierarchical_clustering.c
+	src/nng_batch_clustering.c
+	src/nng_batch_clustering.h
+	src/nng_clustering.c
+	src/nng_core.c
+	src/nng_core.h
+	src/nng_findseeds.c
+	src/nng_findseeds.h
+	src/scclust_spi.c
+	src/scclust.c"
+
+TEMPLATE_FILES="
+	DoxyAPI
+	Makefile
+	scclust_spi.h
+	scclust_types.h
+	scclust.h"

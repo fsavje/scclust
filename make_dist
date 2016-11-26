@@ -1,0 +1,64 @@
+#!/bin/sh
+# ==============================================================================
+# scclust -- A C library for size constrained clustering
+# https://github.com/fsavje/scclust
+#
+# Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library. If not, see http://www.gnu.org/licenses/
+# ==============================================================================
+
+
+# ==============================================================================
+# Settings
+# ==============================================================================
+
+SOURCE_DIR=$(dirname "$0")
+
+# Distribution information
+. $SOURCE_DIR/dist_info
+
+if [ -z "$1" ]; then
+	LIBNAME=scclust-$SCC_VERSION_MAJOR.$SCC_VERSION_MINOR.$SCC_VERSION_PATCH
+else
+	LIBNAME="$1"
+fi
+
+BUILD_DIR=$LIBNAME
+
+if [ -e "$BUILD_DIR" ]; then
+	echo "$BUILD_DIR already exists."
+	exit 1
+fi
+
+mkdir $BUILD_DIR
+mkdir $BUILD_DIR/templates
+for FOLDER in $DIST_FOLDERS; do
+	mkdir $BUILD_DIR/$FOLDER
+done
+
+for FILE in $TEMPLATE_FILES; do
+	cp -n $SOURCE_DIR/templates/$FILE $BUILD_DIR/templates/$FILE
+done
+
+for FILE in $SOURCE_FILES; do
+	cp -n $SOURCE_DIR/$FILE $BUILD_DIR/$FILE
+done
+
+cp -n $SOURCE_DIR/configure $BUILD_DIR/configure
+cp -n $SOURCE_DIR/dist_info $BUILD_DIR/dist_info
+
+tar -cJf $BUILD_DIR.tar.xz $BUILD_DIR
+
+echo "All done."

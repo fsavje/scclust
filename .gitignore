@@ -49,6 +49,7 @@ localmisc/
 tests/ann_1.1.2/
 tests/scc_build/
 tests/ann_1.1.2.zip
+tests/tmp_output_results
 
 # Example files
 examples/ann/ann_1.1.2/

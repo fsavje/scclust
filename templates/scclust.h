@@ -261,7 +261,7 @@ struct scc_ClusterOptions {
 	 *  \note
 	 *  This must be set to "722678001".
 	 */
-	const int32_t options_version;
+	int32_t options_version;
 	uint32_t size_constraint;
 	uintmax_t num_types;
 	const uint32_t* type_constraints;
