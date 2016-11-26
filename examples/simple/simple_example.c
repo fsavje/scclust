@@ -24,10 +24,8 @@
 #include <scclust.h>
 
 int main(void) {
-	// Variable for error reporting
-	scc_ErrorCode ec;
 
-	// Our data set: 10 two-dimensional points
+	// Data: 10 two-dimensional points
 	double raw_data[20] = { 0.088316633,  0.807443027,
 	                       -1.080004390,  0.969638235,
 	                        1.316503268,  1.492648875,
@@ -39,30 +37,44 @@ int main(void) {
 	                       -0.641513488,  0.417153186,
 	                        1.509341003, -0.026534633 };
 
+	// Error code variable
+	scc_ErrorCode ec;
+
 	// Construct scclust data set object
 	scc_DataSet* data_set;
-	ec = scc_init_data_set(10, 2, 20, raw_data, &data_set);
-	if(ec != SCC_ER_OK) return 1; // Check error
+	ec = scc_init_data_set(10,           // # data points
+	                       2,            // # dimensions
+	                       20,           // Length of data matrix
+	                       raw_data,     // Data matrix
+	                       &data_set);   // Data set to initialize
+	// Check error code
+	if(ec != SCC_ER_OK) return 1;
 
 	// Make empty clustering object
 	scc_Clabel cluster_labels[10];
-	scc_Clustering* cl;
-	ec = scc_init_empty_clustering(10, cluster_labels, &cl);
+	scc_Clustering* clustering;
+	ec = scc_init_empty_clustering(10,               // Data points
+	                               cluster_labels,   // Clustering labels
+	                               &clustering);     // Clustering to initialize
 	if(ec != SCC_ER_OK) return 1;
 
-	// Construct a clustering where each cluster contains at least 3 points
-	ec = scc_make_clustering(cl, data_set, 3, 0, NULL, 0, NULL,
-	                         SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                         0, NULL, SCC_UM_IGNORE, false, 0.0);
+	// Set clustering options (start with defaults)
+	scc_ClusterOptions options = scc_default_cluster_options;
+	// At least 3 data points in each cluster
+	options.size_constraint = 3;
+
+	// Make clustering
+	ec = scc_make_clustering(data_set, clustering, &options);
 	if(ec != SCC_ER_OK) return 1;
 
+	// Print clustering
 	printf("Cluster assignment:\n");
 	for(size_t i = 0; i < 10; ++i) {
 		printf("%d ", cluster_labels[i]);
 	}
 	printf("\n");
 
-	// Free cluster and data set objects
-	scc_free_clustering(&cl);
+	// Free clustering and data set objects
+	scc_free_clustering(&clustering);
 	scc_free_data_set(&data_set);
 }

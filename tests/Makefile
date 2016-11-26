@@ -48,6 +48,7 @@ STDTESTS = \
 	test_dist_search.out \
 	test_error.out \
 	test_hierarchical_clustering.out \
+	test_nng_clustering_batches_internal.out \
 	test_nng_clustering_batches.out \
 	test_nng_clustering.out \
 	test_nng_core.out \

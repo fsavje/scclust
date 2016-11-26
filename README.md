@@ -9,9 +9,23 @@ scclust is made with large data sets in mind, and it can cluster hundreds of mil
 The library is currently in alpha, and breaking changes to the API might happen.
 
 
+## How to compile scclust
+
+This snippet downloads and compiles scclust:
+```bash
+wget https://github.com/fsavje/scclust/archive/master.zip
+unzip master.zip
+cd scclust-master
+./configure
+make
+```
+
+scclust compiles into a static library.
+
+
 ## How to use scclust
 
-The library can be used in several different ways, for different purposes. We recommend looking at the examples distributed with the code and the documentation for the full picture. Here we give you a minimal working example showing the simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
+The library can be used in several different ways, for different purposes. We recommend looking at the examples distributed with the code and the documentation for the full picture. Here is example showing the simple use case: we have a set of data points and want to construct clusters that each contain at least three points.
 
 ```c
 #include <stdbool.h>
@@ -20,10 +34,8 @@ The library can be used in several different ways, for different purposes. We re
 #include <scclust.h>
 
 int main(void) {
-	// Variable for error reporting
-	scc_ErrorCode ec;
 
-	// Our data set: 10 two-dimensional points
+	// Data: 10 two-dimensional points
 	double raw_data[20] = { 0.088316633,  0.807443027,
 	                       -1.080004390,  0.969638235,
 	                        1.316503268,  1.492648875,
@@ -35,36 +47,50 @@ int main(void) {
 	                       -0.641513488,  0.417153186,
 	                        1.509341003, -0.026534633 };
 
+	// Error code variable
+	scc_ErrorCode ec;
+
 	// Construct scclust data set object
 	scc_DataSet* data_set;
-	ec = scc_init_data_set(10, 2, 20, raw_data, false, &data_set);
-	if(ec != SCC_ER_OK) return 1; // Check error
+	ec = scc_init_data_set(10,           // # data points
+	                       2,            // # dimensions
+	                       20,           // Length of data matrix
+	                       raw_data,     // Data matrix
+	                       &data_set);   // Data set to initialize
+	// Check error code
+	if(ec != SCC_ER_OK) return 1;
 
 	// Make empty clustering object
 	scc_Clabel cluster_labels[10];
-	scc_Clustering* cl;
-	ec = scc_init_empty_clustering(10, cluster_labels, &cl);
+	scc_Clustering* clustering;
+	ec = scc_init_empty_clustering(10,               // Data points
+	                               cluster_labels,   // Clustering labels
+	                               &clustering);     // Clustering to initialize
 	if(ec != SCC_ER_OK) return 1;
 
-	// Construct a clustering where each cluster contains at least 3 points
-	ec = scc_make_clustering(cl, data_set, 3, 0, NULL, 0, NULL,
-	                         SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
-	                         0, NULL, SCC_UM_IGNORE, false, 0.0);
+	// Set clustering options (start with defaults)
+	scc_ClusterOptions options = scc_default_cluster_options;
+	// At least 3 data points in each cluster
+	options.size_constraint = 3;
+
+	// Make clustering
+	ec = scc_make_clustering(data_set, clustering, &options);
 	if(ec != SCC_ER_OK) return 1;
 
+	// Print clustering
 	printf("Cluster assignment:\n");
 	for(size_t i = 0; i < 10; ++i) {
 		printf("%d ", cluster_labels[i]);
 	}
 	printf("\n");
 
-	// Free cluster and data set objects
-	scc_free_clustering(&cl);
+	// Free clustering and data set objects
+	scc_free_clustering(&clustering);
 	scc_free_data_set(&data_set);
 }
 ```
 
-The example produces:
+The example's output is:
 
 ```bash
 Cluster assignment:
@@ -73,28 +99,14 @@ Cluster assignment:
 
 That is, the first point is assigned to cluster `0`, the second to cluster `2` and so on.
 
-This example is distributed with the library. You can run it by calling the following in the scclust folder
+This example is distributed with the library. After compiling scclust itself, you can run by calling the following in the scclust folder
 ```bash
-cd example && make
+cd examples/simple
+make
 ./simple_example.out
 ```
 
-
-## How to compile scclust
-
-This snippet downloads and compiles scclust:
-```bash
-wget https://github.com/fsavje/scclust/archive/master.zip
-unzip master.zip
-cd scclust-master && make library
-```
-
-scclust compiles into a static library by default.
-
-Calling `make` without the `library` target compiles the documentation as well (requires DoxyGen).
-
-
-## Compile options
+## Compilation options
 
 ### Debug mode
 
@@ -211,9 +223,11 @@ The default is `SCC_ANN_KDTREE`. This option is ignore if the ANN library is not
 
 ## How to contribute to scclust
 
-Thank you for considering contributing to scclust. This is a free, open source library and it gets better if we all help out. There are many ways to do that: report bugs, suggest useful new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
+Thank you for considering contributing to scclust!
 
-If you're filing a bug, please include the information needed to reproduce the bug. Besides the code you're trying to running, information about your platform and compilation options is often useful.
+There are many ways to help out: report bugs, suggest useful new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
+
+If you're filing a bug, please include all information needed to reproduce the bug. Besides the code you're trying to run, your platform, toolchain and compilation options is often useful information.
 
 
 ## License
