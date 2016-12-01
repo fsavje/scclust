@@ -6,6 +6,8 @@
 
 scclust is made with large data sets in mind, and it can cluster millions of data points in less than a minute. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management can be accessed and changed at runtime.
 
+scclust is written in C99 and compiles only with the standard C library.
+
 *The library is currently in alpha. Breaking changes to the API might happen.*
 
 
@@ -185,15 +187,14 @@ Change the data type that stores cluster labels. scclust uses this type to repor
 
 ### `--with-clabel-na=[ARG]`
 
-Allowed values: `default max -1 -2 -3 ...`
+Allowed values: `max -1 -2 -3 ...`
 
-Default: `default`
+Default: `max`
 
 Change the value used to denote unassigned data points.
 
 | `--with-clabel-na=`  | Value                                         |
 | -------------------- | --------------------------------------------- |
-| `default`            | Use default for `--with-clabel`               |
 | `max`                | Use maximum value storable in `--with-clabel` |
 | `-1 -2 -3 ...`       | Use [ARG], `--with-clabel` must be signed     |
 
@@ -249,7 +250,7 @@ See `examples/ann/` for an example where the [ANN library](https://www.cs.umd.ed
 
 Thank you for considering contributing to scclust!
 
-There are many ways to help out: report bugs, suggest new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [Issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [Pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
+There are many ways to help out: report bugs, suggest new features and submitting code that implements enhancements and bug fixes. If possible, use Github's internal tools for to do so: [issues](https://github.com/fsavje/scclust/issues) for bug reports and suggestions, and [pull requests](https://github.com/fsavje/scclust/pulls) for code. If you're new to Github, read this [guide](https://guides.github.com/activities/contributing-to-open-source/) to learn more.
 
 If you're filing a bug, please include all information needed to reproduce it. Besides the code you're trying to run, your platform, toolchain and compilation options is often useful information.
 

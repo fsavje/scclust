@@ -70,7 +70,7 @@ usage() {
 	echo "  --enable-all-docs         make documentation for internal methods [default=off]"
 	echo ""
 	echo "  --with-clabel=[ARG]       cluster label type [default=uint32_t]"
-	echo "  --with-clabel-na=[ARG]    cluster label NA value [default=default]"
+	echo "  --with-clabel-na=[ARG]    cluster label NA value [default=max]"
 	echo "  --with-typelabel=[ARG]    type label type [default=uint_fast16_t]"
 	echo "  --with-pointindex=[ARG]   data point ID type [default=uint32_t]"
 	echo "  --with-arcindex=[ARG]     digraph arc type [default=uint32_t]"
@@ -282,7 +282,7 @@ case $OPT_CLABEL_TYPE in
 esac
 
 case $OPT_CLABEL_NA in
-	max | default )
+	max )
 		case $SCCH_CLABEL_TYPE in
 			uint32_t )
 				SCCH_CLABEL_NA="UINT32_MAX" ;;
