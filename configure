@@ -39,7 +39,7 @@ OPT_CMOCKA_HEADERS="false"
 OPT_DOCUMENTATION="default"
 OPT_ALL_DOCUMENTATION="false"
 OPT_CLABEL_TYPE="uint32_t"
-OPT_CLABEL_NA="default"
+OPT_CLABEL_NA="max"
 OPT_TYPELABEL_TYPE="uint_fast16_t"
 OPT_POINTINDEX_TYPE="uint32_t"
 OPT_ARCINDEX_TYPE="uint32_t"
@@ -299,14 +299,14 @@ case $OPT_CLABEL_NA in
 	* )
 		case $SCCH_CLABEL_TYPE in
 			uint32_t | uint64_t )
-				conf_print "with-clabel-na=[default  max]\n"
+				conf_print "with-clabel-na=[max]\n"
 				exit 1
 				;;
 			int )
 				if [ $OPT_CLABEL_NA -lt 0 ]; then
 					SCCH_CLABEL_NA="$OPT_CLABEL_NA"
 				else
-					conf_print "with-clabel-na=[default  max  -1  -2  ...]\n"
+					conf_print "with-clabel-na=[max  -1  -2  ...]\n"
 					exit 1
 				fi
 				;;

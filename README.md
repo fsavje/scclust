@@ -130,7 +130,7 @@ Usage: ./configure [OPTIONS]...
   --enable-all-docs         make documentation for internal methods [default=off]
 
   --with-clabel=[ARG]       cluster label type [default=uint32_t]
-  --with-clabel-na=[ARG]    cluster label NA value [default=default]
+  --with-clabel-na=[ARG]    cluster label NA value [default=max]
   --with-typelabel=[ARG]    type label type [default=uint_fast16_t]
   --with-pointindex=[ARG]   data point ID type [default=uint32_t]
   --with-arcindex=[ARG]     digraph arc type [default=uint32_t]
