@@ -49,6 +49,13 @@ extern "C" {
 #define SCC_SCCLUST_MINOR_VERSION {% scclust_minor_version %}
 #define SCC_SCCLUST_PATCH_VERSION {% scclust_patch_version %}
 
+/** Get the version the library was compiled with.
+ *
+ *  \param[out] out_major variable to write major version to.
+ *  \param[out] out_minor variable to write minor version to.
+ *  \param[out] out_patch variable to write patch version to.
+ *
+ */
 void scc_get_compiled_version(uint32_t* out_major,
                               uint32_t* out_minor,
                               uint32_t* out_patch);
@@ -58,6 +65,7 @@ void scc_get_compiled_version(uint32_t* out_major,
 // Error handling
 // =============================================================================
 
+/// Error code returned by methods in the library.
 enum scc_ErrorCode {
 
 	/// No error.
@@ -89,6 +97,16 @@ enum scc_ErrorCode {
 /// Typedef for the scc_ErrorCode enum
 typedef enum scc_ErrorCode scc_ErrorCode;
 
+/** Get latest scclust error.
+ *
+ *  Writes a description of the latest error prroduced by the library to the
+ *  supplied buffer.
+ *
+ *  \param[in] len_error_message_buffer the length of the buffer #error_message_buffer.
+ *  \param[out] error_message_buffer the buffer to write to.
+ *
+ *  \return \c true if write was a success, otherwise \c false.
+ */
 bool scc_get_latest_error(size_t len_error_message_buffer,
                           char error_message_buffer[]);
 
@@ -97,16 +115,50 @@ bool scc_get_latest_error(size_t len_error_message_buffer,
 // Data set object
 // =============================================================================
 
+/// Typedef for struct containing data sets.
 typedef struct scc_DataSet scc_DataSet;
 
+/** Construct new data set from raw data.
+ *
+ *  Creates a #scc_DataSet based on supplied raw data.
+ *
+ *  \param[in] num_data_points the number of data points in the data set.
+ *  \param[in] num_dimensions the number of dimensions for each data point.
+ *  \param[in] len_data_matrix the length of #data_matrix.
+ *  \param[in] data_matrix the raw data. The data should be ordered first by point,
+ *                         then by dimension. With three units (A, B, C) in two
+ *                         dimensions, #data_matrix should be `[A_1, A_2, B_1,
+ *                         B_2, C_1, C_2]`.
+ *  \param[out] out_data_set double pointer to where to write the data set reference.
+ *
+ *  \return #scc_ErrorCode describing eventual error.
+ */
 scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
                                 uintmax_t num_dimensions,
                                 size_t len_data_matrix,
                                 const double data_matrix[],
                                 scc_DataSet** out_data_set);
 
+/** Free data set.
+ *
+ *  Frees a #scc_DataSet previously allocated by #scc_init_data_set.
+ *
+ *  \param[in,out] data_set double pointer to a #scc_DataSet objec to free.
+ */
 void scc_free_data_set(scc_DataSet** data_set);
 
+/** Check data set.
+ *
+ *  Checks whether inputted data set is properly initialized.
+ *
+ *  \param[in] data_set pointer to a #scc_DataSet objec to check.
+ *
+ *  \return \c true if #data_set is initialized, otherwise \c false.
+ *
+ *  \note This function does not check whether #data_set is a sensible data_set.
+ *        It only ensures that #data_set is initialized properly and is of a
+ *        compatible version.
+ */
 bool scc_is_initialized_data_set(const scc_DataSet* data_set);
 
 
