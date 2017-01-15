@@ -505,9 +505,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	iscc_free_digraph(nng);
 
 	// Derive which data points to assign
-	bool* secondary_assign = NULL;
 	size_t num_main_assign = 0;
-	size_t num_secondary_assign = 0;
 	if (primary_data_points == NULL) {
 		// All data points are in main
 		assert(secondary_unassigned_method == SCC_UM_IGNORE);
@@ -525,7 +523,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 			assert(total_assigned + dbg_main_count == clustering->num_data_points);
 		#endif
 
-	} else if (secondary_unassigned_method == SCC_UM_IGNORE) {
+	} else {
 		// Assign only data points in main
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
 			main_assign[i] = primary_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
@@ -539,148 +537,126 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 			}
 			assert(total_assigned + num_main_assign + dbg_secondary_count == clustering->num_data_points);
 		#endif
-
-	} else {
-		// Assign both main and secondary
-		secondary_assign = malloc(sizeof(bool[clustering->num_data_points]));
-		if (secondary_assign == NULL) {
-			free(seed_or_neighbor);
-			free(main_assign);
-			return iscc_make_error(SCC_ER_NO_MEMORY);
-		}
-		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = primary_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
-			num_main_assign += main_assign[i];
-			secondary_assign[i] = !primary_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
-			num_secondary_assign += secondary_assign[i];
-		}
-		assert(total_assigned + num_main_assign + num_secondary_assign == clustering->num_data_points);
 	}
 
-	if ((num_main_assign == 0) || (unassigned_method == SCC_UM_IGNORE)) {
-		assert(main_assign != NULL);
-		free(main_assign);
-		main_assign = NULL;
+	if (num_main_assign == 0) {
 		unassigned_method = SCC_UM_IGNORE;
 	}
 
-	if ((num_secondary_assign == 0) && (secondary_unassigned_method != SCC_UM_IGNORE)) {
-		// If `secondary_unassigned_method == SCC_UM_IGNORE`, then `secondary_assign` should already be NULL
-		assert(secondary_assign != NULL);
-		free(secondary_assign);
-		secondary_assign = NULL;
-		secondary_unassigned_method = SCC_UM_IGNORE;
-	}
-
-	assert(((unassigned_method == SCC_UM_IGNORE) && (main_assign == NULL)) ||
-	       ((unassigned_method != SCC_UM_IGNORE) && (main_assign != NULL)));
-	assert(((secondary_unassigned_method == SCC_UM_IGNORE) && (secondary_assign == NULL)) ||
-	       ((secondary_unassigned_method != SCC_UM_IGNORE) && (secondary_assign != NULL)));
-
 	scc_ErrorCode ec = SCC_ER_OK;
-	// Run assign to closest assigned
+	iscc_NNSearchObject* nn_assigned_search_object = NULL;
+	iscc_NNSearchObject* nn_seed_search_object = NULL;
+
 	if ((unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	        (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED)) {
 		assert(seed_or_neighbor != NULL);
-		iscc_NNSearchObject* nn_search_object;
 		if (!iscc_init_nn_search_object(data_set,
 		                                num_assigned_as_seed_or_neighbor,
 		                                seed_or_neighbor,
-		                                &nn_search_object)) {
+		                                &nn_assigned_search_object)) {
 			ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
-
-		if ((ec == SCC_ER_OK) && (unassigned_method == SCC_UM_CLOSEST_ASSIGNED)) {
-			assert(num_main_assign > 0);
-			assert(main_assign != NULL);
-			ec = iscc_assign_by_nn_search(clustering,
-			                              nn_search_object,
-			                              num_main_assign,
-			                              main_assign,
-			                              radius_constraint,
-			                              radius);
-			free(main_assign);
-			main_assign = NULL;
-		}
-
-		if ((ec == SCC_ER_OK) && (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED)) {
-			assert(num_secondary_assign > 0);
-			assert(secondary_assign != NULL);
-			ec = iscc_assign_by_nn_search(clustering,
-			                              nn_search_object,
-			                              num_secondary_assign,
-			                              secondary_assign,
-			                              secondary_radius_constraint,
-			                              secondary_radius);
-			free(secondary_assign);
-			secondary_assign = NULL;
-		}
-
-		if (!iscc_close_nn_search_object(&nn_search_object)) {
-			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
-
-		if (ec != SCC_ER_OK) {
-			free(seed_or_neighbor);
-			free(main_assign);
-			free(secondary_assign);
-			return ec;
 		}
 	}
 
-	free(seed_or_neighbor);
-	seed_or_neighbor = NULL;
+	if (ec != SCC_ER_OK) {
+		free(seed_or_neighbor);
+		free(main_assign);
+		return ec;
+	}
 
-	// Run assign to closest seed
 	if ((unassigned_method == SCC_UM_CLOSEST_SEED) ||
 	        (secondary_unassigned_method == SCC_UM_CLOSEST_SEED)) {
-		iscc_NNSearchObject* nn_search_object;
 		if (!iscc_init_nn_search_object(data_set,
 		                                seed_result->count,
 		                                seed_result->seeds,
-		                                &nn_search_object)) {
+		                                &nn_seed_search_object)) {
 			ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
-
-		if ((ec == SCC_ER_OK) && (unassigned_method == SCC_UM_CLOSEST_SEED)) {
-			assert(num_main_assign > 0);
-			assert(main_assign != NULL);
-			ec = iscc_assign_by_nn_search(clustering,
-			                              nn_search_object,
-			                              num_main_assign,
-			                              main_assign,
-			                              radius_constraint,
-			                              radius);
-			free(main_assign);
-			main_assign = NULL;
-		}
-
-		if ((ec == SCC_ER_OK) && (secondary_unassigned_method == SCC_UM_CLOSEST_SEED)) {
-			assert(num_secondary_assign > 0);
-			assert(secondary_assign != NULL);
-			ec = iscc_assign_by_nn_search(clustering,
-			                              nn_search_object,
-			                              num_secondary_assign,
-			                              secondary_assign,
-			                              secondary_radius_constraint,
-			                              secondary_radius);
-			free(secondary_assign);
-			secondary_assign = NULL;
-		}
-
-		if (!iscc_close_nn_search_object(&nn_search_object)) {
-			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
-
-		if (ec != SCC_ER_OK) {
-			free(main_assign);
-			free(secondary_assign);
-			return ec;
 		}
 	}
 
-	assert(main_assign == NULL);
-	assert(secondary_assign == NULL);
+	if (ec != SCC_ER_OK) {
+		free(seed_or_neighbor);
+		free(main_assign);
+		if (nn_assigned_search_object != NULL) {
+			iscc_close_nn_search_object(&nn_assigned_search_object);
+		}
+		return ec;
+	}
+
+	if (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
+		assert(num_main_assign > 0);
+		assert(main_assign != NULL);
+		ec = iscc_assign_by_nn_search(clustering,
+		                              nn_assigned_search_object,
+		                              num_main_assign,
+		                              main_assign,
+		                              radius_constraint,
+		                              radius);
+	} else if (unassigned_method == SCC_UM_CLOSEST_SEED) {
+		assert(num_main_assign > 0);
+		assert(main_assign != NULL);
+		ec = iscc_assign_by_nn_search(clustering,
+		                              nn_seed_search_object,
+		                              num_main_assign,
+		                              main_assign,
+		                              radius_constraint,
+		                              radius);
+	}
+
+	if (ec != SCC_ER_OK) {
+		free(seed_or_neighbor);
+		free(main_assign);
+		if (nn_assigned_search_object != NULL) {
+			iscc_close_nn_search_object(&nn_assigned_search_object);
+		}
+		if (nn_seed_search_object != NULL) {
+			iscc_close_nn_search_object(&nn_seed_search_object);
+		}
+		return ec;
+	}
+
+	num_main_assign = 0;
+	for (size_t i = 0; i < clustering->num_data_points; ++i) {
+		main_assign[i] = (clustering->cluster_label[i] == SCC_CLABEL_NA);
+		num_main_assign += main_assign[i];
+	}
+
+	if (num_main_assign == 0) {
+		unassigned_method = SCC_UM_IGNORE;
+	}
+
+	if (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
+		assert(num_main_assign > 0);
+		assert(main_assign != NULL);
+		ec = iscc_assign_by_nn_search(clustering,
+		                              nn_assigned_search_object,
+		                              num_main_assign,
+		                              main_assign,
+		                              secondary_radius_constraint,
+		                              secondary_radius);
+	} else if (secondary_unassigned_method == SCC_UM_CLOSEST_SEED) {
+		assert(num_main_assign > 0);
+		assert(main_assign != NULL);
+		ec = iscc_assign_by_nn_search(clustering,
+		                              nn_seed_search_object,
+		                              num_main_assign,
+		                              main_assign,
+		                              secondary_radius_constraint,
+		                              secondary_radius);
+	}
+
+	free(seed_or_neighbor);
+	free(main_assign);
+	if (nn_assigned_search_object != NULL) {
+		if (!iscc_close_nn_search_object(&nn_assigned_search_object)) {
+			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
+		}
+	}
+	if (nn_seed_search_object != NULL) {
+		if (!iscc_close_nn_search_object(&nn_seed_search_object)) {
+			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
+		}
+	}
 
 	return iscc_no_error();
 }

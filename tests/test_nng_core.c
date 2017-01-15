@@ -1347,7 +1347,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr7a, &nng7a, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
-	const scc_Clabel ref_cluster_label7a[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label7a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7a, SCC_ER_OK);
 	assert_int_equal(cl7a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl7a->num_data_points, 15);
@@ -1391,7 +1391,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr7b, &nng7b, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
-	const scc_Clabel ref_cluster_label7b[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label7b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7b, SCC_ER_OK);
 	assert_int_equal(cl7b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl7b->num_data_points, 15);
@@ -1435,7 +1435,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr7c, &nng7c, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
-	const scc_Clabel ref_cluster_label7c[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   M, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label7c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7c, SCC_ER_OK);
 	assert_int_equal(cl7c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl7c->num_data_points, 15);
@@ -1479,7 +1479,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr7d, &nng7d, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
 	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
-	const scc_Clabel ref_cluster_label7d[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, M,   M, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label7d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7d, SCC_ER_OK);
 	assert_int_equal(cl7d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl7d->num_data_points, 15);
@@ -2227,7 +2227,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr11a, &nng11a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
-	const scc_Clabel ref_cluster_label11a[15] = { 1, 1, 2, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label11a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11a, SCC_ER_OK);
 	assert_int_equal(cl11a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl11a->num_data_points, 15);
@@ -2315,7 +2315,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr11c, &nng11c, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
-	const scc_Clabel ref_cluster_label11c[15] = { 1, 1, 2, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label11c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11c, SCC_ER_OK);
 	assert_int_equal(cl11c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl11c->num_data_points, 15);
@@ -2667,7 +2667,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr13a, &nng13a, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
-	const scc_Clabel ref_cluster_label13a[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label13a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13a, SCC_ER_OK);
 	assert_int_equal(cl13a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl13a->num_data_points, 15);
@@ -2711,7 +2711,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr13b, &nng13b, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
-	const scc_Clabel ref_cluster_label13b[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label13b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13b, SCC_ER_OK);
 	assert_int_equal(cl13b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl13b->num_data_points, 15);
@@ -2755,7 +2755,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr13c, &nng13c, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
-	const scc_Clabel ref_cluster_label13c[15] = { 1, 1, M, M, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label13c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13c, SCC_ER_OK);
 	assert_int_equal(cl13c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl13c->num_data_points, 15);
@@ -2799,7 +2799,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	                                                      &sr13d, &nng13d, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
 	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
-	const scc_Clabel ref_cluster_label13d[15] = { 1, 1, M, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
+	const scc_Clabel ref_cluster_label13d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13d, SCC_ER_OK);
 	assert_int_equal(cl13d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl13d->num_data_points, 15);
