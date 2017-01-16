@@ -35,6 +35,9 @@
 #include "nng_findseeds.h"
 #include "scclust_types.h"
 
+// Remove later
+#include "data_set_struct.h"
+
 
 // =============================================================================
 // Internal structs & variables
@@ -59,13 +62,13 @@ static const size_t ISCC_ESTIMATE_AVG_MAX_SAMPLE = 1000;
 static scc_ErrorCode iscc_make_nng(void* data_set,
                                    size_t len_search_indices,
                                    const scc_PointIndex search_indices[],
-                                   size_t len_query_indicators,
-                                   const bool query_indicators[],
-                                   bool out_query_indicators[],
+                                   size_t len_query_indices,
+                                   const scc_PointIndex query_indices[],
                                    uint32_t k,
                                    bool radius_search,
                                    double radius,
-                                   uintmax_t max_arcs,
+                                   size_t* out_len_query_indices,
+                                   scc_PointIndex out_query_indices[],
                                    iscc_Digraph* out_nng);
 
 static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* nn_search_object,
@@ -137,30 +140,20 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set,
 		num_queries = len_primary_data_points;
 	}
 
-	bool* tmp_primary_data_points = NULL;
-	if (primary_data_points != NULL) {
-		tmp_primary_data_points = calloc(num_data_points, sizeof(bool));
-		for (size_t i = 0; i < len_primary_data_points; ++i) {
-			tmp_primary_data_points[primary_data_points[i]] = true;
-		}
-	}
-
 	scc_ErrorCode ec;
 	if ((ec = iscc_make_nng(data_set,
 	                        num_data_points,
 	                        NULL,
-	                        num_data_points,
-	                        tmp_primary_data_points,
-	                        NULL,
+	                        num_queries,
+	                        primary_data_points,
 	                        size_constraint,
 	                        radius_constraint,
 	                        radius,
-	                        (size_constraint * num_queries),
+	                        NULL,
+	                        NULL,
 	                        out_nng)) != SCC_ER_OK) {
 		return ec;
 	}
-
-	free(tmp_primary_data_points);
 
 	if (iscc_digraph_is_empty(out_nng)) {
 		iscc_free_digraph(out_nng);
@@ -212,36 +205,27 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		num_queries = len_primary_data_points;
 	}
 
-	bool* tmp_primary_data_points = NULL;
-	if (primary_data_points != NULL) {
-		tmp_primary_data_points = calloc(num_data_points, sizeof(bool));
-		for (size_t i = 0; i < len_primary_data_points; ++i) {
-			tmp_primary_data_points[primary_data_points[i]] = true;
-		}
-	}
-
-	bool* seedable;
-	const bool* seedable_const;
+	scc_PointIndex* seedable;
+	const scc_PointIndex* seedable_const;
 	if (radius_constraint) {
-		seedable = malloc(sizeof(bool[num_data_points]));
+		seedable = malloc(sizeof(scc_PointIndex[num_queries]));
 		if (seedable == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		seedable_const = seedable;
-		if (tmp_primary_data_points == NULL) {
-			for (size_t i = 0; i < num_data_points; ++i) {
-				seedable[i] = true;
+		if (primary_data_points == NULL) {
+			for (scc_PointIndex i = 0; i < num_data_points; ++i) {
+				seedable[i] = i;
 			}
 		} else {
-			memcpy(seedable, tmp_primary_data_points, sizeof(bool[num_data_points]));
+			memcpy(seedable, primary_data_points, sizeof(scc_PointIndex[num_queries]));
 		}
 	} else {
 		seedable = NULL;
-		seedable_const = tmp_primary_data_points;
+		seedable_const = primary_data_points;
 	}
 
 	iscc_Digraph* const nng_by_type = malloc(sizeof(iscc_Digraph[num_types]));
 	if (nng_by_type == NULL) {
 		free(seedable);
-		free(tmp_primary_data_points);
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
 
@@ -254,7 +238,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	                          type_labels,
 	                          &tc)) != SCC_ER_OK) {
 		free(seedable);
-		free(tmp_primary_data_points);
 		free(nng_by_type);
 		return ec;
 	}
@@ -265,13 +248,13 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 			if ((ec = iscc_make_nng(data_set,
 			                        tc.type_group_size[i],
 			                        tc.type_groups[i],
-			                        num_data_points,
+			                        num_queries,
 			                        seedable_const,
-			                        seedable,
 			                        type_constraints[i],
 			                        radius_constraint,
 			                        radius,
-			                        (type_constraints[i] * num_queries),
+			                        &num_queries,
+			                        seedable,
 			                        &nng_by_type[num_non_zero_type_constraints])) != SCC_ER_OK) {
 				break;
 			}
@@ -290,14 +273,26 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	free(tc.point_store);
 	free(tc.type_groups);
 
+
+	bool* tmp_seedable_indicators = NULL;
+	if (seedable_const != NULL) {
+		tmp_seedable_indicators = calloc(num_data_points, sizeof(bool));
+		for (size_t i = 0; i < num_queries; ++i) {
+			tmp_seedable_indicators[seedable_const[i]] = true;
+		}
+	}
+
 	if (ec == SCC_ER_OK) {
 		if (size_constraint > tc.sum_type_constraints) {
 			// If general size constaint (besides type constraints), we need to keep self-loops
-			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, seedable_const, true, out_nng);
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, tmp_seedable_indicators, true, out_nng);
 		} else {
-			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, seedable_const, false, out_nng);
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, tmp_seedable_indicators, false, out_nng);
 		}
 	}
+
+	free(tmp_seedable_indicators);
+	tmp_seedable_indicators = NULL;
 
 	for (uint_fast16_t i = 0; i < num_non_zero_type_constraints; ++i) {
 		iscc_free_digraph(&nng_by_type[i]);
@@ -307,7 +302,6 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	if (ec != SCC_ER_OK) {
 		// When `ec != SCC_ER_OK`, error is from `iscc_digraph_union_and_delete` so `out_nng` is already freed
 		free(seedable);
-		free(tmp_primary_data_points);
 		return ec;
 	}
 
@@ -319,16 +313,15 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		if ((ec = iscc_make_nng(data_set,
 		                        num_data_points,
 		                        NULL,
-		                        num_data_points,
+		                        num_queries,
 		                        seedable_const,
-		                        seedable,
 		                        size_constraint,
 		                        radius_constraint,
 		                        radius,
-		                        (size_constraint * num_queries),
+		                        &num_queries,
+		                        seedable,
 		                        &nng_sum[1])) != SCC_ER_OK) {
 			free(seedable);
-			free(tmp_primary_data_points);
 			iscc_free_digraph(&nng_sum[0]);
 			return ec;
 		}
@@ -340,7 +333,16 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		}
 
 		if (ec == SCC_ER_OK) {
-			ec = iscc_digraph_union_and_delete(2, nng_sum, seedable_const, false, out_nng);
+			bool* tmp_seedable_indicators2 = NULL;
+			if (seedable_const != NULL) {
+				tmp_seedable_indicators2 = calloc(num_data_points, sizeof(bool));
+				for (size_t i = 0; i < num_queries; ++i) {
+					tmp_seedable_indicators2[seedable_const[i]] = true;
+				}
+			}
+			ec = iscc_digraph_union_and_delete(2, nng_sum, tmp_seedable_indicators2, false, out_nng);
+			free(tmp_seedable_indicators2);
+			tmp_seedable_indicators2 = NULL;
 		}
 
 		iscc_free_digraph(&nng_sum[0]);
@@ -348,13 +350,11 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 
 		if (ec != SCC_ER_OK) {
 			free(seedable);
-			free(tmp_primary_data_points);
 			return ec;
 		}
 	}
 
 	free(seedable);
-	free(tmp_primary_data_points);
 
 	#ifdef SCC_STABLE_NNG
 		iscc_sort_nng(out_nng);
@@ -650,18 +650,18 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 static scc_ErrorCode iscc_make_nng(void* const data_set,
                                    const size_t len_search_indices,
                                    const scc_PointIndex search_indices[const],
-                                   const size_t len_query_indicators,
-                                   const bool query_indicators[const],
-                                   bool out_query_indicators[const],
+                                   const size_t len_query_indices,
+                                   const scc_PointIndex query_indices[const],
                                    const uint32_t k,
                                    const bool radius_search,
                                    const double radius,
-                                   const uintmax_t max_arcs,
+                                   size_t* const out_len_query_indices,
+                                   scc_PointIndex out_query_indices[const],
                                    iscc_Digraph* const out_nng)
 {
-	assert(iscc_check_data_set(data_set, len_query_indicators));
+	assert(iscc_check_data_set(data_set, len_query_indices));
 	assert(len_search_indices > 0);
-	assert(len_query_indicators > 0);
+	assert(len_query_indices > 0);
 	assert(k > 0);
 	assert(len_search_indices >= k);
 	assert(!radius_search || (radius > 0.0));
@@ -675,6 +675,25 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
 
+	size_t len_query_indicators = 0;
+	bool* query_indicators = calloc(((scc_DataSet*) data_set)->num_data_points, sizeof(bool));
+	if (query_indices != NULL) {
+		len_query_indicators = ((scc_DataSet*) data_set)->num_data_points;
+		for (size_t i = 0; i < len_query_indices; ++i) {
+			query_indicators[query_indices[i]] = true;
+		}
+	} else {
+		len_query_indicators = len_query_indices;
+		for (size_t i = 0; i < len_query_indices; ++i) {
+			query_indicators[i] = true;
+		}
+	}
+
+	bool* out_query_indicators = NULL;
+	if (out_query_indices != NULL) {
+		out_query_indicators = query_indicators;
+	}
+
 	scc_ErrorCode ec;
 	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
 	                                           len_query_indicators,
@@ -683,7 +702,7 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
 	                                           k,
 	                                           radius_search,
 	                                           radius,
-	                                           max_arcs,
+	                                           len_query_indices * k,
 	                                           out_nng)) != SCC_ER_OK) {
 		iscc_close_nn_search_object(&nn_search_object);
 		return ec;
@@ -693,6 +712,19 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
 		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
+
+	if (out_query_indices != NULL) {
+		size_t index = 0;
+		for (scc_PointIndex i = 0; i < (scc_PointIndex) len_query_indicators; ++i) {
+			if (out_query_indicators[i]) {
+				out_query_indices[index] = i;
+				++index;
+			}
+		}
+		*out_len_query_indices = index;
+	}
+
+	free(query_indicators);
 
 	return iscc_no_error();
 }
