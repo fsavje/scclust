@@ -212,7 +212,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		if (seedable == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		seedable_const = seedable;
 		if (primary_data_points == NULL) {
-			for (scc_PointIndex i = 0; i < num_data_points; ++i) {
+			for (scc_PointIndex i = 0; i < (scc_PointIndex) num_data_points; ++i) {
 				seedable[i] = i;
 			}
 		} else {
@@ -975,6 +975,7 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 		tmp_to_assign[to_assign[i]] = true;
 	}
 
+	// Change to direct call to NN search function.
 	scc_ErrorCode ec;
 	iscc_Digraph priority_graph;
 	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
