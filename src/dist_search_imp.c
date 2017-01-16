@@ -553,6 +553,29 @@ bool iscc_imp_nearest_neighbor_search_index(iscc_NNSearchObject* const nn_search
 }
 
 
+bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_object,
+                                      const size_t len_query_indices,
+                                      const scc_PointIndex query_indices[const],
+                                      const uint32_t k,
+                                      const bool radius_search,
+                                      const double radius,
+                                      size_t* const out_len_query_indices,
+                                      scc_PointIndex out_query_indices[const],
+                                      scc_PointIndex out_nn_indices[const])
+{
+	(void) nn_search_object;
+	(void) len_query_indices;
+	(void) query_indices;
+	(void) k;
+	(void) radius_search;
+	(void) radius;
+	(void) out_len_query_indices;
+	(void) out_query_indices;
+	(void) out_nn_indices;
+	return false;
+}
+
+
 bool iscc_imp_close_nn_search_object(iscc_NNSearchObject** const nn_search_object)
 {
 	if (nn_search_object != NULL && *nn_search_object != NULL) {

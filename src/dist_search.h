@@ -37,6 +37,7 @@ struct iscc_dist_functions_struct {
 	scc_init_nn_search_object init_nn_search_object;
 	scc_nearest_neighbor_search_digraph nearest_neighbor_search_digraph;
 	scc_nearest_neighbor_search_index nearest_neighbor_search_index;
+	scc_nearest_neighbor_search nearest_neighbor_search;
 	scc_close_nn_search_object close_nn_search_object;
 };
 
@@ -168,6 +169,27 @@ inline bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_ob
 	                                                         radius_search,
 	                                                         radius,
 	                                                         out_nn_indices);
+}
+
+inline bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
+                                         size_t len_query_indices,
+                                         const scc_PointIndex query_indices[],
+                                         uint32_t k,
+                                         bool radius_search,
+                                         double radius,
+                                         size_t* out_len_query_indices,
+                                         scc_PointIndex out_query_indices[],
+                                         scc_PointIndex out_nn_indices[])
+{
+	return iscc_dist_functions.nearest_neighbor_search(nn_search_object,
+	                                                   len_query_indices,
+	                                                   query_indices,
+	                                                   k,
+	                                                   radius_search,
+	                                                   radius,
+	                                                   out_len_query_indices,
+	                                                   out_query_indices,
+	                                                   out_nn_indices);
 }
 
 inline bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object)

@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "../include/scclust.h"
 #include "../include/scclust_spi.h"
 
 #ifdef __cplusplus
@@ -101,6 +102,17 @@ bool iscc_imp_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_objec
                                             bool radius_search,
                                             double radius,
                                             scc_PointIndex out_nn_indices[]);
+
+// `out_nn_indices` must be of length `k * len_query_indices`
+bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
+                                      size_t len_query_indices,
+                                      const scc_PointIndex query_indices[],
+                                      uint32_t k,
+                                      bool radius_search,
+                                      double radius,
+                                      size_t* out_len_query_indices,
+                                      scc_PointIndex out_query_indices[],
+                                      scc_PointIndex out_nn_indices[]);
 
 bool iscc_imp_close_nn_search_object(iscc_NNSearchObject** nn_search_object);
 

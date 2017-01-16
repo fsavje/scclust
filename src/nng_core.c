@@ -677,14 +677,14 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
 
 	scc_ErrorCode ec;
 	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
-                                               len_query_indicators,
-                                               query_indicators,
-                                               out_query_indicators,
-                                               k,
-                                               radius_search,
-                                               radius,
-                                               max_arcs,
-                                               out_nng)) != SCC_ER_OK) {
+	                                           len_query_indicators,
+	                                           query_indicators,
+	                                           out_query_indicators,
+	                                           k,
+	                                           radius_search,
+	                                           radius,
+	                                           max_arcs,
+	                                           out_nng)) != SCC_ER_OK) {
 		iscc_close_nn_search_object(&nn_search_object);
 		return ec;
 	}
