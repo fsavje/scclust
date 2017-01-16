@@ -1227,7 +1227,6 @@ void scc_ut_assign_by_nng(void** state)
 	(void) state;
 
 	const scc_Clabel M = SCC_CLABEL_NA;
-	bool scratch[15];
 
 	scc_Clabel cl_labels1[15] = { 0, 1, 2, 3, 4,
 	                              M, 4, M, 3, M,
@@ -1257,7 +1256,7 @@ void scc_ut_assign_by_nng(void** state)
 	                         "..... ..... #.##./"
 	                         ".#.#. #..#. ..#../"
 	                         "..#.. ###.. ..##./", &nng1);
-	size_t num_assigned1 = iscc_assign_by_nng(&clust1, &nng1, scratch);
+	size_t num_assigned1 = iscc_assign_by_nng(&clust1, &nng1);
 	assert_int_equal(num_assigned1, 5);
 	assert_int_equal(clust1.clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(clust1.num_data_points, 15);
@@ -1296,7 +1295,7 @@ void scc_ut_assign_by_nng(void** state)
 	                         "..... ..... #.##./"
 	                         "..... ..#.# ...#./"
 	                         "..#.. ###.. ..##./", &nng2);
-	size_t num_assigned2 = iscc_assign_by_nng(&clust2, &nng2, scratch);
+	size_t num_assigned2 = iscc_assign_by_nng(&clust2, &nng2);
 	assert_int_equal(num_assigned2, 3);
 	assert_int_equal(clust2.clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(clust2.num_data_points, 15);
@@ -1327,9 +1326,7 @@ void scc_ut_assign_by_nn_search(void** state)
 	iscc_NNSearchObject* nn_search_object1;
 	const scc_PointIndex search_indices1[5] = { 0, 1, 2, 3, 4 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 5, search_indices1, &nn_search_object1));
-	bool to_assign1[15] = { false, false, false, false, false,
-	                        true,  false, true,  false, true,
-	                        false, false, false, false, false };
+	scc_PointIndex to_assign1[3] = { 5, 7, 9 };
 	scc_ErrorCode ec1 = iscc_assign_by_nn_search(&clust1,
 	                                             nn_search_object1,
 	                                             3,
@@ -1359,9 +1356,7 @@ void scc_ut_assign_by_nn_search(void** state)
 	iscc_NNSearchObject* nn_search_object2;
 	const scc_PointIndex search_indices2[5] = { 0, 1, 2, 3, 4 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 5, search_indices2, &nn_search_object2));
-	bool to_assign2[15] = { false, false, false, false, false,
-	                        true,  false, true,  false, true,
-	                        false, false, false, false, false };
+	scc_PointIndex to_assign2[3] = { 5, 7, 9 };
 	scc_ErrorCode ec2 = iscc_assign_by_nn_search(&clust2,
 	                                             nn_search_object2,
 	                                             3,
@@ -1391,9 +1386,7 @@ void scc_ut_assign_by_nn_search(void** state)
 	iscc_NNSearchObject* nn_search_object3;
 	const scc_PointIndex search_indices3[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 10, search_indices3, &nn_search_object3));
-	bool to_assign3[15] = { false, false, false, false, false,
-	                        true,  true,  true,  true,  true,
-	                        false, false, false, false, false };
+	scc_PointIndex to_assign3[5] = { 5, 6, 7, 8, 9 };
 	scc_ErrorCode ec3 = iscc_assign_by_nn_search(&clust3,
 	                                             nn_search_object3,
 	                                             5,
@@ -1423,9 +1416,7 @@ void scc_ut_assign_by_nn_search(void** state)
 	iscc_NNSearchObject* nn_search_object4;
 	const scc_PointIndex search_indices4[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 	assert_true(iscc_init_nn_search_object(&scc_ut_test_data_small_struct, 10, search_indices4, &nn_search_object4));
-	bool to_assign4[15] = { false, false, false, false, false,
-	                        true,  true,  true,  true,  true,
-	                        false, false, false, false, false };
+	scc_PointIndex to_assign4[5] = { 5, 6, 7, 8, 9 };
 	scc_ErrorCode ec4 = iscc_assign_by_nn_search(&clust4,
 	                                             nn_search_object4,
 	                                             5,

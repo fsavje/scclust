@@ -94,13 +94,12 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* clustering,
                                               iscc_Digraph* nng);
 
 static size_t iscc_assign_by_nng(scc_Clustering* clustering,
-                                 iscc_Digraph* nng,
-                                 bool scratch[restrict static clustering->num_data_points]);
+                                 iscc_Digraph* nng);
 
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* clustering,
                                               iscc_NNSearchObject* nn_search_object,
                                               size_t num_to_assign,
-                                              const bool to_assign[restrict static clustering->num_data_points],
+                                              const scc_PointIndex to_assign[restrict static num_to_assign],
                                               bool radius_constraint,
                                               double radius);
 
@@ -460,14 +459,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED));
 	assert(!secondary_radius_constraint || (secondary_radius > 0.0));
 
-	bool* tmp_primary_data_points = NULL;
-	if (primary_data_points != NULL) {
-		tmp_primary_data_points = calloc(clustering->num_data_points, sizeof(bool));
-		for (size_t i = 0; i < len_primary_data_points; ++i) {
-			tmp_primary_data_points[primary_data_points[i]] = true;
-		}
-	}
-
 	// Assign seeds and their neighbors
 	const size_t num_assigned_as_seed_or_neighbor = iscc_assign_seeds_and_neighbors(clustering, seed_result, nng);
 	size_t total_assigned = num_assigned_as_seed_or_neighbor;
@@ -475,7 +466,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	// Are we done?
 	if ((total_assigned == clustering->num_data_points) ||
 	        ((unassigned_method == SCC_UM_IGNORE) && (secondary_unassigned_method == SCC_UM_IGNORE))) {
-		free(tmp_primary_data_points);
 		return iscc_no_error();
 	}
 
@@ -498,19 +488,11 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		assert(((size_t) (write_seed_or_neighbor - seed_or_neighbor)) == num_assigned_as_seed_or_neighbor);
 	}
 
-	// Indicators of main data points that are unassigned (first used as scratch)
-	bool* main_assign = malloc(sizeof(bool[clustering->num_data_points]));
-	if (main_assign == NULL) {
-		free(seed_or_neighbor);
-		free(tmp_primary_data_points);
-		return iscc_make_error(SCC_ER_NO_MEMORY);
-	}
-
 	// Run assignment by nng. When nng is ordered, we can use it for `SCC_UM_CLOSEST_ASSIGNED` as well.
 	// (NNG already contains radius constraint.)
 	if ((unassigned_method == SCC_UM_ANY_NEIGHBOR) ||
 	        (nng_is_ordered && (unassigned_method == SCC_UM_CLOSEST_ASSIGNED))) {
-		total_assigned += iscc_assign_by_nng(clustering, nng, main_assign); // Use `main_assign` as scratch
+		total_assigned += iscc_assign_by_nng(clustering, nng);
 
 		// Ignore remaining points if SCC_UM_ANY_NEIGHBOR
 		if (unassigned_method == SCC_UM_ANY_NEIGHBOR) {
@@ -521,53 +503,12 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		if ((total_assigned == clustering->num_data_points) ||
 		        ((unassigned_method == SCC_UM_IGNORE) && (secondary_unassigned_method == SCC_UM_IGNORE))) {
 			free(seed_or_neighbor);
-			free(main_assign);
-			free(tmp_primary_data_points);
 			return iscc_no_error();
 		}
 	}
 
 	// No need for nng any more
 	iscc_free_digraph(nng);
-
-	// Derive which data points to assign
-	size_t num_main_assign = 0;
-	if (tmp_primary_data_points == NULL) {
-		// All data points are in main
-		assert(secondary_unassigned_method == SCC_UM_IGNORE);
-		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = (clustering->cluster_label[i] == SCC_CLABEL_NA);
-		}
-		num_main_assign = clustering->num_data_points - total_assigned;
-
-		#ifndef NDEBUG
-			size_t dbg_main_count = 0;
-			for (size_t i = 0; i < clustering->num_data_points; ++i) {
-				dbg_main_count += main_assign[i];
-			}
-			assert(dbg_main_count == num_main_assign);
-			assert(total_assigned + dbg_main_count == clustering->num_data_points);
-		#endif
-
-	} else {
-		// Assign only data points in main
-		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			main_assign[i] = tmp_primary_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
-			num_main_assign += main_assign[i];
-		}
-
-		#ifndef NDEBUG
-			size_t dbg_secondary_count = 0;
-			for (size_t i = 0; i < clustering->num_data_points; ++i) {
-				dbg_secondary_count += !tmp_primary_data_points[i] && (clustering->cluster_label[i] == SCC_CLABEL_NA);
-			}
-			assert(total_assigned + num_main_assign + dbg_secondary_count == clustering->num_data_points);
-		#endif
-	}
-
-	if (num_main_assign == 0) {
-		unassigned_method = SCC_UM_IGNORE;
-	}
 
 	scc_ErrorCode ec = SCC_ER_OK;
 	iscc_NNSearchObject* nn_assigned_search_object = NULL;
@@ -586,8 +527,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 
 	if (ec != SCC_ER_OK) {
 		free(seed_or_neighbor);
-		free(main_assign);
-		free(tmp_primary_data_points);
 		return ec;
 	}
 
@@ -603,38 +542,58 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 
 	if (ec != SCC_ER_OK) {
 		free(seed_or_neighbor);
-		free(main_assign);
-		free(tmp_primary_data_points);
 		if (nn_assigned_search_object != NULL) {
 			iscc_close_nn_search_object(&nn_assigned_search_object);
 		}
 		return ec;
 	}
 
-	if (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
-		assert(num_main_assign > 0);
-		assert(main_assign != NULL);
-		ec = iscc_assign_by_nn_search(clustering,
-		                              nn_assigned_search_object,
-		                              num_main_assign,
-		                              main_assign,
-		                              radius_constraint,
-		                              radius);
-	} else if (unassigned_method == SCC_UM_CLOSEST_SEED) {
-		assert(num_main_assign > 0);
-		assert(main_assign != NULL);
-		ec = iscc_assign_by_nn_search(clustering,
-		                              nn_seed_search_object,
-		                              num_main_assign,
-		                              main_assign,
-		                              radius_constraint,
-		                              radius);
+	size_t num_to_assign = 0;
+	scc_PointIndex* const to_assign = malloc(sizeof(scc_PointIndex[clustering->num_data_points - total_assigned + 1]));
+	if (to_assign == NULL) {
+		free(seed_or_neighbor);
+		if (nn_assigned_search_object != NULL) {
+			iscc_close_nn_search_object(&nn_assigned_search_object);
+		}
+		if (nn_seed_search_object != NULL) {
+			iscc_close_nn_search_object(&nn_seed_search_object);
+		}
+		return iscc_make_error(SCC_ER_NO_MEMORY);
+	}
+	if (primary_data_points != NULL) {
+		for (size_t i = 0; i < len_primary_data_points; ++i) {
+			to_assign[num_to_assign] = primary_data_points[i];
+			num_to_assign += (clustering->cluster_label[primary_data_points[i]] == SCC_CLABEL_NA);
+		}
+	} else {
+		const scc_PointIndex num_data_points_pi = (scc_PointIndex) clustering->num_data_points;
+		for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
+			to_assign[num_to_assign] = i;
+			num_to_assign += (clustering->cluster_label[i] == SCC_CLABEL_NA);
+		}
+	}
+
+	if (num_to_assign > 0) {
+		if (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
+			ec = iscc_assign_by_nn_search(clustering,
+			                              nn_assigned_search_object,
+			                              num_to_assign,
+			                              to_assign,
+			                              radius_constraint,
+			                              radius);
+		} else if (unassigned_method == SCC_UM_CLOSEST_SEED) {
+			ec = iscc_assign_by_nn_search(clustering,
+			                              nn_seed_search_object,
+			                              num_to_assign,
+			                              to_assign,
+			                              radius_constraint,
+			                              radius);
+		}
 	}
 
 	if (ec != SCC_ER_OK) {
 		free(seed_or_neighbor);
-		free(main_assign);
-		free(tmp_primary_data_points);
+		free(to_assign);
 		if (nn_assigned_search_object != NULL) {
 			iscc_close_nn_search_object(&nn_assigned_search_object);
 		}
@@ -644,48 +603,40 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		return ec;
 	}
 
-	num_main_assign = 0;
-	for (size_t i = 0; i < clustering->num_data_points; ++i) {
-		main_assign[i] = (clustering->cluster_label[i] == SCC_CLABEL_NA);
-		num_main_assign += main_assign[i];
-	}
+	if ((primary_data_points != NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) {
+		size_t num_to_assign = 0;
+		const scc_PointIndex num_data_points_pi = (scc_PointIndex) clustering->num_data_points;
+		for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
+			to_assign[num_to_assign] = i;
+			num_to_assign += (clustering->cluster_label[i] == SCC_CLABEL_NA);
+		}
 
-	if (num_main_assign == 0) {
-		unassigned_method = SCC_UM_IGNORE;
-	}
-
-	if (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
-		assert(num_main_assign > 0);
-		assert(main_assign != NULL);
-		ec = iscc_assign_by_nn_search(clustering,
-		                              nn_assigned_search_object,
-		                              num_main_assign,
-		                              main_assign,
-		                              secondary_radius_constraint,
-		                              secondary_radius);
-	} else if (secondary_unassigned_method == SCC_UM_CLOSEST_SEED) {
-		assert(num_main_assign > 0);
-		assert(main_assign != NULL);
-		ec = iscc_assign_by_nn_search(clustering,
-		                              nn_seed_search_object,
-		                              num_main_assign,
-		                              main_assign,
-		                              secondary_radius_constraint,
-		                              secondary_radius);
+		if (num_to_assign > 0) {
+			if (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) {
+				ec = iscc_assign_by_nn_search(clustering,
+				                              nn_assigned_search_object,
+				                              num_to_assign,
+				                              to_assign,
+				                              secondary_radius_constraint,
+				                              secondary_radius);
+			} else if (secondary_unassigned_method == SCC_UM_CLOSEST_SEED) {
+				ec = iscc_assign_by_nn_search(clustering,
+				                              nn_seed_search_object,
+				                              num_to_assign,
+				                              to_assign,
+				                              secondary_radius_constraint,
+				                              secondary_radius);
+			}
+		}
 	}
 
 	free(seed_or_neighbor);
-	free(main_assign);
-	free(tmp_primary_data_points);
+	free(to_assign);
 	if (nn_assigned_search_object != NULL) {
-		if (!iscc_close_nn_search_object(&nn_assigned_search_object)) {
-			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
+		iscc_close_nn_search_object(&nn_assigned_search_object);
 	}
 	if (nn_seed_search_object != NULL) {
-		if (!iscc_close_nn_search_object(&nn_seed_search_object)) {
-			if (ec == SCC_ER_OK) ec = iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
-		}
+		iscc_close_nn_search_object(&nn_seed_search_object);
 	}
 
 	return iscc_no_error();
@@ -939,14 +890,14 @@ static size_t iscc_assign_seeds_and_neighbors(scc_Clustering* const clustering,
 
 
 static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
-                                 iscc_Digraph* const nng,
-                                 bool scratch[restrict const static clustering->num_data_points])
+                                 iscc_Digraph* const nng)
 {
 	assert(iscc_check_input_clustering(clustering));
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
-	assert(scratch != NULL);
 
+	bool* const scratch = malloc(sizeof(bool[clustering->num_data_points]));
+	if (scratch == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 	for (size_t i = 0; i < clustering->num_data_points; ++i) {
 		scratch[i] = (clustering->cluster_label[i] == SCC_CLABEL_NA);
 	}
@@ -968,6 +919,8 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 		}
 	}
 
+	free(scratch);
+
 	return num_assigned_by_nng;
 }
 
@@ -975,7 +928,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
                                               iscc_NNSearchObject* const nn_search_object,
                                               const size_t num_to_assign,
-                                              const bool to_assign[restrict const static clustering->num_data_points],
+                                              const scc_PointIndex to_assign[restrict const static num_to_assign],
                                               const bool radius_constraint,
                                               const double radius)
 {
@@ -985,42 +938,49 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 	assert(to_assign != NULL);
 	assert(!radius_constraint || (radius > 0.0));
 
+	bool* const tmp_to_assign = calloc(clustering->num_data_points, sizeof(bool));
+	for (size_t i = 0; i < num_to_assign; ++i) {
+		tmp_to_assign[to_assign[i]] = true;
+	}
+
 	scc_ErrorCode ec;
 	iscc_Digraph priority_graph;
 	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
 	                                           clustering->num_data_points,
-	                                           to_assign,
+	                                           tmp_to_assign,
 	                                           NULL,
 	                                           1,
 	                                           radius_constraint,
 	                                           radius,
 	                                           num_to_assign,
 	                                           &priority_graph)) != SCC_ER_OK) {
+		free(tmp_to_assign);
 		return ec;
 	}
 
 	if (radius_constraint) {
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			if (to_assign[i] && (priority_graph.tail_ptr[i] < priority_graph.tail_ptr[i + 1])) {
+			if (tmp_to_assign[i] && (priority_graph.tail_ptr[i] < priority_graph.tail_ptr[i + 1])) {
 				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
 				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
-				assert(!to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
+				assert(!tmp_to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
 				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
 				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
 			}
 		}
 	} else {
 		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			if (to_assign[i]) {
+			if (tmp_to_assign[i]) {
 				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
 				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
-				assert(!to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
+				assert(!tmp_to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
 				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
 				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
 			}
 		}
 	}
 
+	free(tmp_to_assign);
 	iscc_free_digraph(&priority_graph);
 
 	return iscc_no_error();
