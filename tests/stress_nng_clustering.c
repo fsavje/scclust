@@ -121,9 +121,8 @@ void scc_ut_stress_nng_clustering(void** state)
 
 		size_t len_primary_data_points = 0;
 		scc_PointIndex* const primary_data_points = malloc(sizeof(scc_PointIndex[SAMPLE_SIZE]));
-		size_t index = 0;
-		for (scc_PointIndex i = 0; i < SAMPLE_SIZE; ++i) {
-			primary_data_points[index] = i;
+		for (size_t i = 0, index = 0; i < SAMPLE_SIZE; ++i) {
+			primary_data_points[index] = (scc_PointIndex) i;
 			index += construct_primary_data_points[i];
 		}
 
@@ -248,9 +247,8 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 
 		size_t len_primary_data_points = 0;
 		scc_PointIndex* const primary_data_points = malloc(sizeof(scc_PointIndex[SAMPLE_SIZE]));
-		size_t index = 0;
-		for (scc_PointIndex i = 0; i < SAMPLE_SIZE; ++i) {
-			primary_data_points[index] = i;
+		for (size_t i = 0, index = 0; i < SAMPLE_SIZE; ++i) {
+			primary_data_points[index] = (scc_PointIndex) i;
 			index += construct_primary_data_points[i];
 		}
 
@@ -386,9 +384,8 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 
 		size_t len_primary_data_points = 0;
 		scc_PointIndex* const primary_data_points = malloc(sizeof(scc_PointIndex[SAMPLE_SIZE]));
-		size_t index = 0;
-		for (scc_PointIndex i = 0; i < SAMPLE_SIZE; ++i) {
-			primary_data_points[index] = i;
+		for (size_t i = 0, index = 0; i < SAMPLE_SIZE; ++i) {
+			primary_data_points[index] = (scc_PointIndex) i;
 			index += construct_primary_data_points[i];
 		}
 
