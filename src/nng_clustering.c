@@ -220,6 +220,13 @@ static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const 
 	if ((options->primary_data_points != NULL) && (options->len_primary_data_points == 0)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
 	}
+	if (options->primary_data_points != NULL) {
+		for (size_t i = 1; i < options->len_primary_data_points; ++i) {
+			if (options->primary_data_points[i - 1] >= options->primary_data_points[i]) {
+				return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "`primary_data_points` is not sorted.");
+			}
+		}
+	}
 	if ((options->primary_data_points == NULL) && (options->len_primary_data_points > 0)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
 	}
