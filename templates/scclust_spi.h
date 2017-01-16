@@ -26,15 +26,10 @@
 #ifndef SCC_SCCLUST_SPI_HG
 #define SCC_SCCLUST_SPI_HG
 
-{% limits_include %}#ifdef __cplusplus
-{% limits_include %}// So g++ defines integer limits
-{% limits_include %}#define __STDC_LIMIT_MACROS
-{% limits_include %}#endif
-{% limits_include %}
-{% limits_include %}#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "scclust.h"
 
 #ifdef __cplusplus
 extern "C" {
