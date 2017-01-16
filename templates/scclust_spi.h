@@ -45,16 +45,6 @@ extern "C" {
 // Internal types
 // =============================================================================
 
-/** Type used for data point IDs. May be unsigned or signed.
- *
- *  \note
- *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_PointIndex.
- */
-typedef {% pointindex_type %} scc_PointIndex;
-
-static const scc_PointIndex SCC_POINTINDEX_NA = {% pointindex_na %};
-
 /** Type used for arc indices. Must be unsigned.
  *
  *  \note
@@ -67,8 +57,6 @@ typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
 typedef struct iscc_NNSearchObject iscc_NNSearchObject;
 
-#define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
-#define SCC_M_POINTINDEX_NA {% pointindex_na %}
 #define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
 
 
