@@ -300,10 +300,18 @@ enum scc_UnassignedMethod {
 	SCC_UM_ANY_NEIGHBOR,
 	SCC_UM_CLOSEST_ASSIGNED,
 	SCC_UM_CLOSEST_SEED,
-	SCC_UM_CLOSEST_SEED_EST_RADIUS,
 };
 
 typedef enum scc_UnassignedMethod scc_UnassignedMethod;
+
+enum scc_RadiusMethod {
+	SCC_RM_NO_RADIUS,
+	SCC_RM_USE_SUPPLIED,
+	SCC_RM_USE_SEED_RADIUS,
+	SCC_RM_USE_ESTIMATED,
+};
+
+typedef enum scc_RadiusMethod scc_RadiusMethod;
 
 
 struct scc_ClusterOptions {
@@ -320,14 +328,16 @@ struct scc_ClusterOptions {
 	size_t len_type_labels;
 	const scc_TypeLabel* type_labels;
 	scc_SeedMethod seed_method;
-	scc_UnassignedMethod unassigned_method;
-	bool radius_constraint;
-	double radius;
 	size_t len_primary_data_points;
 	const bool* primary_data_points;
+	scc_UnassignedMethod primary_unassigned_method;
 	scc_UnassignedMethod secondary_unassigned_method;
-	bool secondary_radius_constraint;
-	double secondary_radius;
+	scc_RadiusMethod seed_radius;
+	double seed_supplied_radius;
+	scc_RadiusMethod primary_radius;
+	double primary_supplied_radius;
+	scc_RadiusMethod secondary_radius;
+	double secondary_supplied_radius;
 	uint32_t batch_size;
 };
 

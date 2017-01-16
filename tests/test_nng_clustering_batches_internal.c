@@ -33,6 +33,44 @@ void iscc_run_nonval_tests_batches(scc_UnassignedMethod unassigned_method,
                                    size_t len_primary_data_points,
                                    const bool primary_data_points[]);
 
+static scc_ClusterOptions iscc_translate_options(const uint32_t size_constraint,
+                                                 const uintmax_t num_types,
+                                                 const uint32_t* const type_constraints,
+                                                 const size_t len_type_labels,
+                                                 const scc_TypeLabel* const type_labels,
+                                                 const scc_SeedMethod seed_method,
+                                                 const scc_UnassignedMethod unassigned_method,
+                                                 const bool radius_constraint,
+                                                 const double radius,
+                                                 const size_t len_primary_data_points,
+                                                 const bool* const primary_data_points,
+                                                 const scc_UnassignedMethod secondary_unassigned_method,
+                                                 const bool secondary_radius_constraint,
+                                                 const double secondary_radius,
+                                                const  uint32_t batch_size)
+{
+	return (scc_ClusterOptions) {
+		.options_version = ISCC_UT_OPTIONS_STRUCT_VERSION,
+		.size_constraint = size_constraint,
+		.num_types = num_types,
+		.type_constraints = type_constraints,
+		.len_type_labels = len_type_labels,
+		.type_labels = type_labels,
+		.seed_method = seed_method,
+		.len_primary_data_points = len_primary_data_points,
+		.primary_data_points = primary_data_points,
+		.primary_unassigned_method = unassigned_method,
+		.secondary_unassigned_method = secondary_unassigned_method,
+		.seed_radius = radius_constraint,
+		.seed_supplied_radius = radius,
+		.primary_radius = SCC_RM_USE_SEED_RADIUS,
+		.primary_supplied_radius = 0.0,
+		.secondary_radius = secondary_radius_constraint,
+		.secondary_supplied_radius = secondary_radius,
+		.batch_size = batch_size,
+	};
+}
+
 
 void scc_ut_nng_clustering_batches_internal(void** state)
 {
@@ -151,12 +189,6 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	ec = scc_nng_clustering_batches(cl, &scc_ut_test_data_large_struct, 3,
-	                                SCC_UM_CLOSEST_SEED_EST_RADIUS, false, 0.0, 0, NULL, 10);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	scc_free_clustering(&cl);
-
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	ec = scc_nng_clustering_batches(cl, &scc_ut_test_data_large_struct, 3,
 	                                SCC_UM_IGNORE, true, 0.0, 0, NULL, 10);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
@@ -206,10 +238,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 3,
+	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -236,10 +268,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 2,
+	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -266,10 +298,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 10,
+	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -360,10 +392,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 3,
+	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -390,10 +422,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 2,
+	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -420,10 +452,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 10,
+	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
-	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -514,10 +546,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 3,
+	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -544,10 +576,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 2,
+	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -574,10 +606,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 10,
+	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -668,10 +700,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 3,
+	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -698,10 +730,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 2,
+	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -728,10 +760,10 @@ void scc_ut_nng_clustering_batches_internal(void** state)
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_true(cl_is_OK);
 	scc_init_empty_clustering(100, external_cluster_labels_compare, &cl_compare);
-	options = (scc_ClusterOptions) { ISCC_UT_OPTIONS_STRUCT_VERSION, 10,
+	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0 };
+	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
