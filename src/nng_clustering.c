@@ -91,8 +91,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
 	}
 	scc_ErrorCode ec;
-	if ((ec = iscc_check_cluster_options(options,
-		                                  clustering->num_data_points)) != SCC_ER_OK) {
+	if ((ec = iscc_check_cluster_options(options, clustering->num_data_points)) != SCC_ER_OK) {
 		return ec;
 	}
 	if (clustering->num_clusters != 0) {
@@ -111,24 +110,16 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		                                  options->batch_size);
 	}
 
-	bool* tmp_primary_data_points = NULL;
-	if (options->primary_data_points != NULL) {
-		tmp_primary_data_points = calloc(clustering->num_data_points, sizeof(bool));
-		for (size_t i = 0; i < options->len_primary_data_points; ++i) {
-			tmp_primary_data_points[options->primary_data_points[i]] = true;
-		}
-	}
-
 	iscc_Digraph nng;
 	if (options->num_types < 2) {
 		if ((ec = iscc_get_nng_with_size_constraint(data_set,
 		                                            clustering->num_data_points,
 		                                            options->size_constraint,
-		                                            tmp_primary_data_points,
+		                                            options->len_primary_data_points,
+		                                            options->primary_data_points,
 		                                            (options->seed_radius == SCC_RM_USE_SUPPLIED),
 		                                            options->seed_supplied_radius,
 		                                            &nng)) != SCC_ER_OK) {
-			free(tmp_primary_data_points);
 			return ec;
 		}
 	} else {
@@ -139,11 +130,11 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		                                            (uint_fast16_t) options->num_types,
 		                                            options->type_constraints,
 		                                            options->type_labels,
-		                                            tmp_primary_data_points,
+		                                            options->len_primary_data_points,
+		                                            options->primary_data_points,
 		                                            (options->seed_radius == SCC_RM_USE_SUPPLIED),
 		                                            options->seed_supplied_radius,
 		                                            &nng)) != SCC_ER_OK) {
-			free(tmp_primary_data_points);
 			return ec;
 		}
 	}
@@ -156,8 +147,6 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 	                                   options);
 
 	iscc_free_digraph(&nng);
-
-	free(tmp_primary_data_points);
 
 	return ec;
 }
