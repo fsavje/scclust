@@ -722,62 +722,99 @@ static scc_ErrorCode iscc_make_nng_from_search_object(iscc_NNSearchObject* const
 	assert(!radius_search || (radius > 0.0));
 	assert(out_nng != NULL);
 
-	size_t len_query_indicators = 0;
-	bool* query_indicators = calloc(num_data_points, sizeof(bool));
-	if (query_indices != NULL) {
-		len_query_indicators = num_data_points;
-		for (size_t i = 0; i < len_query_indices; ++i) {
-			query_indicators[query_indices[i]] = true;
-		}
-	} else {
-		len_query_indicators = len_query_indices;
-		for (size_t i = 0; i < len_query_indices; ++i) {
-			query_indicators[i] = true;
-		}
-	}
+	scc_PointIndex* internal_out_query_indices = NULL;
+	scc_PointIndex* dist_out_query_indices = NULL;
 
-	bool* out_query_indicators = NULL;
-	if (out_query_indices != NULL) {
-		out_query_indicators = query_indicators;
+	if (radius_search) {
+		if (out_query_indices != NULL) {
+			dist_out_query_indices = out_query_indices;
+		} else {
+			internal_out_query_indices = malloc(sizeof(scc_PointIndex[len_query_indices]));
+			if (internal_out_query_indices == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+			dist_out_query_indices = internal_out_query_indices;
+		}
 	}
 
 	scc_ErrorCode ec;
-	if ((ec = iscc_init_digraph(len_query_indicators, len_query_indices * k, out_nng)) != SCC_ER_OK) return ec;
+	if ((ec = iscc_init_digraph(num_data_points,
+	                            len_query_indices * k,
+	                            out_nng)) != SCC_ER_OK) {
+		free(internal_out_query_indices);
+		return ec;
+	}
 
-	if (!iscc_nearest_neighbor_search_digraph(nn_search_object,
-	                                          len_query_indicators,
-	                                          query_indicators,
-	                                          out_query_indicators,
-	                                          k,
-	                                          radius_search,
-	                                          radius,
-	                                          out_nng->tail_ptr,
-	                                          out_nng->head)) {
-		free(query_indicators);
+	size_t num_ok_queries = 0;
+	if (!iscc_nearest_neighbor_search(nn_search_object,
+	                                  len_query_indices,
+	                                  query_indices,
+	                                  k,
+	                                  radius_search,
+	                                  radius,
+	                                  &num_ok_queries,
+	                                  dist_out_query_indices,
+	                                  out_nng->head)) {
+		free(internal_out_query_indices);
 		iscc_free_digraph(out_nng);
 		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
 
-	if (len_query_indices * k > out_nng->tail_ptr[out_nng->vertices]) {
-		if ((ec = iscc_change_arc_storage(out_nng, out_nng->tail_ptr[out_nng->vertices])) != SCC_ER_OK) {
-			free(query_indicators);
+	iscc_ArcIndex* write_tail_ptr = out_nng->tail_ptr;
+	*write_tail_ptr = 0;
+	++write_tail_ptr;
+	const iscc_ArcIndex* const write_tail_ptr_stop = write_tail_ptr + num_data_points;
+
+	if (radius_search || query_indices != NULL) {
+		const scc_PointIndex* ok_q;
+		if (radius_search) {
+			assert(dist_out_query_indices != NULL);
+			ok_q = dist_out_query_indices;
+		} else {
+			assert(len_query_indices == num_ok_queries);
+			assert(query_indices != NULL);
+			ok_q = query_indices;
+		}
+
+		scc_PointIndex i = 0;
+		const scc_PointIndex* const ok_q_stop = ok_q + num_ok_queries;
+		for (; ok_q < ok_q_stop; ++ok_q) {
+			for (; i < *ok_q; ++i) {
+				*write_tail_ptr = *(write_tail_ptr - 1);
+				++write_tail_ptr;
+			}
+			*write_tail_ptr = *(write_tail_ptr - 1) + k;
+			++write_tail_ptr;
+			++i;
+		}
+	} else {
+		assert(!radius_search && query_indices == NULL);
+		assert(len_query_indices == num_ok_queries);
+		for (size_t q = 0; q < len_query_indices; ++q) {
+			*write_tail_ptr = *(write_tail_ptr - 1) + k;
+			++write_tail_ptr;
+		}
+	}
+
+	for (; write_tail_ptr < write_tail_ptr_stop; ++write_tail_ptr) {
+		*write_tail_ptr = *(write_tail_ptr - 1);
+	}
+
+	if (internal_out_query_indices != NULL) {
+		assert(radius_search);
+		assert(out_query_indices == NULL);
+		free(internal_out_query_indices);
+	}
+
+	if (len_query_indices > num_ok_queries) {
+		assert(radius_search);
+		if ((ec = iscc_change_arc_storage(out_nng, num_ok_queries * k)) != SCC_ER_OK) {
 			iscc_free_digraph(out_nng);
 			return ec;
 		}
 	}
 
-	if (out_query_indices != NULL) {
-		size_t index = 0;
-		for (scc_PointIndex i = 0; i < (scc_PointIndex) len_query_indicators; ++i) {
-			if (out_query_indicators[i]) {
-				out_query_indices[index] = i;
-				++index;
-			}
-		}
-		*out_len_query_indices = index;
+	if (out_len_query_indices != NULL) {
+		*out_len_query_indices = num_ok_queries;
 	}
-
-	free(query_indicators);
 
 	return iscc_no_error();
 }

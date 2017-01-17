@@ -175,7 +175,7 @@ void scc_ut_make_nng(void** state)
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 20, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
-	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 15, 10, NULL,
+	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 10, 10, NULL,
                                       10, NULL,
                                       2, false, 0.0,
                                       NULL, NULL, &out_nng6d);
@@ -414,7 +414,7 @@ void scc_ut_make_nng_radius(void** state)
 	iscc_Digraph ref_nng6d;
 	iscc_digraph_from_pieces(10, 8, ref_nn_ref6d, ref_nn_indices6d, &ref_nng6d);
 	iscc_Digraph out_nng6d;
-	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 15, 10, NULL,
+	scc_ErrorCode ec6d = iscc_make_nng(scc_ut_test_data_small, 10, 10, NULL,
                                       10, NULL,
                                       2, true, 0.2,
                                       &num_query6d, out_indicators6d, &out_nng6d);
@@ -599,7 +599,7 @@ void scc_ut_make_nng_from_search_object(void** state)
 	iscc_Digraph out_nng6d;
 	iscc_NNSearchObject* nn_search_object6d;
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d);
-	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d, 15,
+	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d, 10,
 	                                                      10, NULL,
 	                                                      2, false, 0.0,
 	                                                      NULL, NULL, &out_nng6d);
@@ -866,7 +866,7 @@ void scc_ut_make_nng_from_search_object_radius(void** state)
 	iscc_Digraph out_nng6d;
 	iscc_NNSearchObject* nn_search_object6d;
 	iscc_init_nn_search_object(scc_ut_test_data_small, 10, NULL, &nn_search_object6d);
-	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d, 15,
+	scc_ErrorCode ec6d = iscc_make_nng_from_search_object(nn_search_object6d, 10,
 	                                                      10, NULL,
 	                                                      2, true, 0.2,
 	                                                      &num_out_indicators6d, out_indicators6d, &out_nng6d);
