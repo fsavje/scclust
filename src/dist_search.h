@@ -177,7 +177,7 @@ inline bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
                                          uint32_t k,
                                          bool radius_search,
                                          double radius,
-                                         size_t* out_len_query_indices,
+                                         size_t* out_num_ok_queries,
                                          scc_PointIndex out_query_indices[],
                                          scc_PointIndex out_nn_indices[])
 {
@@ -187,7 +187,7 @@ inline bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
 	                                                   k,
 	                                                   radius_search,
 	                                                   radius,
-	                                                   out_len_query_indices,
+	                                                   out_num_ok_queries,
 	                                                   out_query_indices,
 	                                                   out_nn_indices);
 }

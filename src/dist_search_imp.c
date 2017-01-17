@@ -559,7 +559,7 @@ bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
                                       const uint32_t k,
                                       const bool radius_search,
                                       const double radius,
-                                      size_t* const out_len_query_indices,
+                                      size_t* const out_num_ok_queries,
                                       scc_PointIndex out_query_indices[const],
                                       scc_PointIndex out_nn_indices[const])
 {
@@ -575,12 +575,11 @@ bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 	assert(k > 0);
 	assert(k <= len_search_indices);
 	assert(!radius_search || (radius > 0.0));
-	assert((out_len_query_indices == NULL && out_query_indices == NULL) ||
-				(out_len_query_indices != NULL && out_query_indices != NULL));
+	assert(out_num_ok_queries != NULL);
 	assert(out_nn_indices != NULL);
 
 	double tmp_dist;
-	scc_PointIndex* out_query_indices_write = out_query_indices;
+	size_t num_ok_queries = 0;
 	scc_PointIndex* index_write = out_nn_indices;
 	double* const sort_scratch = malloc(sizeof(double[k]));
 	if (sort_scratch == NULL) return false;
@@ -622,11 +621,11 @@ bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 
 			assert(found == k || out_query_indices != NULL);
 			if (found == k) {
-				index_write += k;
 				if (out_query_indices != NULL) {
-					*out_query_indices_write = (scc_PointIndex) query;
-					++out_query_indices_write;
+					out_query_indices[num_ok_queries] = (scc_PointIndex) query;
 				}
+				++num_ok_queries;
+				index_write += k;
 			}
 		}
 	} else {
@@ -665,19 +664,16 @@ bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 
 			assert(found == k || out_query_indices != NULL);
 			if (found == k) {
-				index_write += k;
 				if (out_query_indices != NULL) {
-					*out_query_indices_write = (scc_PointIndex) query;
-					++out_query_indices_write;
+					out_query_indices[num_ok_queries] = (scc_PointIndex) query;
 				}
+				++num_ok_queries;
+				index_write += k;
 			}
 		}
 	}
 
-	if (out_query_indices != NULL) {
-		assert(out_len_query_indices != NULL);
-		*out_len_query_indices = (size_t) (out_query_indices_write - out_query_indices);
-	}
+	*out_num_ok_queries = num_ok_queries;
 
 	free(sort_scratch);
 
