@@ -104,7 +104,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* clustering,
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* clustering,
                                               iscc_NNSearchObject* nn_search_object,
                                               size_t num_to_assign,
-                                              const scc_PointIndex to_assign[restrict static num_to_assign],
+                                              scc_PointIndex to_assign[restrict static num_to_assign],
                                               bool radius_constraint,
                                               double radius);
 
@@ -1006,7 +1006,7 @@ static size_t iscc_assign_by_nng(scc_Clustering* const clustering,
 static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
                                               iscc_NNSearchObject* const nn_search_object,
                                               const size_t num_to_assign,
-                                              const scc_PointIndex to_assign[restrict const static num_to_assign],
+                                              scc_PointIndex to_assign[restrict const static num_to_assign],
                                               const bool radius_constraint,
                                               const double radius)
 {
@@ -1016,51 +1016,38 @@ static scc_ErrorCode iscc_assign_by_nn_search(scc_Clustering* const clustering,
 	assert(to_assign != NULL);
 	assert(!radius_constraint || (radius > 0.0));
 
-	// Change to direct call to NN search function.
-	scc_ErrorCode ec;
-	iscc_Digraph priority_graph;
-	if ((ec = iscc_make_nng_from_search_object(nn_search_object,
-	                                           clustering->num_data_points,
-	                                           num_to_assign,
-	                                           to_assign,
-	                                           1,
-	                                           radius_constraint,
-	                                           radius,
-	                                           NULL,
-	                                           NULL,
-	                                           &priority_graph)) != SCC_ER_OK) {
-		return ec;
-	}
-
-	bool* const tmp_to_assign = calloc(clustering->num_data_points, sizeof(bool));
-	for (size_t i = 0; i < num_to_assign; ++i) {
-		tmp_to_assign[to_assign[i]] = true;
-	}
-
+	size_t num_ok_queries = 0;
+	scc_PointIndex* out_ok_query = NULL;
 	if (radius_constraint) {
-		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			if (tmp_to_assign[i] && (priority_graph.tail_ptr[i] < priority_graph.tail_ptr[i + 1])) {
-				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
-				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
-				assert(!tmp_to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
-				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
-				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
-			}
-		}
-	} else {
-		for (size_t i = 0; i < clustering->num_data_points; ++i) {
-			if (tmp_to_assign[i]) {
-				assert(clustering->cluster_label[i] == SCC_CLABEL_NA);
-				assert(priority_graph.tail_ptr[i] + 1 == priority_graph.tail_ptr[i + 1]);
-				assert(!tmp_to_assign[priority_graph.head[priority_graph.tail_ptr[i]]]);
-				assert(clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]] != SCC_CLABEL_NA);
-				clustering->cluster_label[i] = clustering->cluster_label[priority_graph.head[priority_graph.tail_ptr[i]]];
-			}
-		}
+		out_ok_query = to_assign;
+	}
+	scc_PointIndex* const out_nn_indices = malloc(sizeof(scc_PointIndex[num_to_assign]));
+
+	if (!iscc_nearest_neighbor_search(nn_search_object,
+	                                  num_to_assign,
+	                                  to_assign,
+	                                  1,
+	                                  radius_constraint,
+	                                  radius,
+	                                  &num_ok_queries,
+	                                  out_ok_query,
+	                                  out_nn_indices)) {
+		free(out_nn_indices);
+		return iscc_make_error(SCC_ER_DIST_SEARCH_ERROR);
 	}
 
-	free(tmp_to_assign);
-	iscc_free_digraph(&priority_graph);
+	if (!radius_constraint) {
+		assert(num_ok_queries == num_to_assign);
+		out_ok_query = to_assign;
+	}
+
+	for (size_t i = 0; i < num_ok_queries; ++i) {
+		assert(clustering->cluster_label[out_ok_query[i]] == SCC_CLABEL_NA);
+		assert(clustering->cluster_label[out_nn_indices[i]] != SCC_CLABEL_NA);
+		clustering->cluster_label[out_ok_query[i]] = clustering->cluster_label[out_nn_indices[i]];
+	}
+
+	free(out_nn_indices);
 
 	return iscc_no_error();
 }
