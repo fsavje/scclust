@@ -570,7 +570,7 @@ bool iscc_ann_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 			size_t num_ok_queries = 0;
 
 			if (!radius_search) {
-				scc_PointIndex* write_nnidx = out_nn_indices;
+				int* write_nnidx = out_nn_indices;
 				for (size_t q = 0; q < len_query_indices; ++q) {
 					size_t query = q;
 					if (query_indices != NULL) {
@@ -586,18 +586,18 @@ bool iscc_ann_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 						out_query_indices[num_ok_queries] = (scc_PointIndex) query;
 					}
 					++num_ok_queries;
-					write_nnidx += k;
+					write_nnidx += k_int;
 				}
 			} else {
 				assert(radius_search);
 				const double radius_sq = radius * radius;
-				scc_PointIndex* write_nnidx = out_nn_indices;
+				int* write_nnidx = out_nn_indices;
 				for (size_t q = 0; q < len_query_indices; ++q) {
 					size_t query = q;
 					if (query_indices != NULL) {
 						query = (size_t) query_indices[q];
 					}
-					const ANNpoint query_point = const_cast<double*>(data_set->data_matrix) + q * data_set->num_dimensions;
+					const ANNpoint query_point = const_cast<double*>(data_set->data_matrix) + query * data_set->num_dimensions;
 					const int num_found = search_tree->annkFRSearch(query_point,              // pointer to query point
 					                                                radius_sq,                // squared caliper
 					                                                k_int,                    // number of neighbors
@@ -610,7 +610,7 @@ bool iscc_ann_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 							out_query_indices[num_ok_queries] = (scc_PointIndex) query;
 						}
 						++num_ok_queries;
-						write_nnidx += k;
+						write_nnidx += k_int;
 					}
 			}
 
