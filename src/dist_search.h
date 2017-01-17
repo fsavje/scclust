@@ -35,7 +35,6 @@ struct iscc_dist_functions_struct {
 	scc_get_max_dist get_max_dist;
 	scc_close_max_dist_object close_max_dist_object;
 	scc_init_nn_search_object init_nn_search_object;
-	scc_nearest_neighbor_search_digraph nearest_neighbor_search_digraph;
 	scc_nearest_neighbor_search_index nearest_neighbor_search_index;
 	scc_nearest_neighbor_search nearest_neighbor_search;
 	scc_close_nn_search_object close_nn_search_object;
@@ -57,6 +56,7 @@ inline bool iscc_check_data_set(void* data_set,
 	                                          num_data_points);
 }
 
+
 inline bool iscc_get_dist_matrix(void* data_set,
                                  size_t len_point_indices,
                                  const scc_PointIndex point_indices[],
@@ -67,6 +67,7 @@ inline bool iscc_get_dist_matrix(void* data_set,
 	                                           point_indices,
 	                                           output_dists);
 }
+
 
 inline bool iscc_get_dist_rows(void* data_set,
                                size_t len_query_indices,
@@ -99,6 +100,7 @@ inline bool iscc_init_max_dist_object(void* data_set,
 	                                                out_max_dist_object);
 }
 
+
 inline bool iscc_get_max_dist(iscc_MaxDistObject* max_dist_object,
                               size_t len_query_indices,
                               const scc_PointIndex query_indices[],
@@ -111,6 +113,7 @@ inline bool iscc_get_max_dist(iscc_MaxDistObject* max_dist_object,
 	                                        out_max_indices,
 	                                        out_max_dists);
 }
+
 
 inline bool iscc_close_max_dist_object(iscc_MaxDistObject** max_dist_object)
 {
@@ -133,26 +136,6 @@ inline bool iscc_init_nn_search_object(void* data_set,
 	                                                 out_nn_search_object);
 }
 
-inline bool iscc_nearest_neighbor_search_digraph(iscc_NNSearchObject* nn_search_object,
-                                                 size_t len_query_indicators,
-                                                 const bool query_indicators[],
-                                                 bool out_query_indicators[],
-                                                 uint32_t k,
-                                                 bool radius_search,
-                                                 double radius,
-                                                 iscc_ArcIndex out_nn_ref[],
-                                                 scc_PointIndex out_nn_indices[])
-{
-	return iscc_dist_functions.nearest_neighbor_search_digraph(nn_search_object,
-	                                                           len_query_indicators,
-	                                                           query_indicators,
-	                                                           out_query_indicators,
-	                                                           k,
-	                                                           radius_search,
-	                                                           radius,
-	                                                           out_nn_ref,
-	                                                           out_nn_indices);
-}
 
 inline bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_object,
                                                size_t len_query_indices,
@@ -170,6 +153,7 @@ inline bool iscc_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_ob
 	                                                         radius,
 	                                                         out_nn_indices);
 }
+
 
 inline bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
                                          size_t len_query_indices,
@@ -191,6 +175,7 @@ inline bool iscc_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
 	                                                   out_query_indices,
 	                                                   out_nn_indices);
 }
+
 
 inline bool iscc_close_nn_search_object(iscc_NNSearchObject** nn_search_object)
 {

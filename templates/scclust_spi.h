@@ -92,16 +92,6 @@ typedef bool (*scc_init_nn_search_object) (void*,
                                            const scc_PointIndex*,
                                            iscc_NNSearchObject**);
 
-typedef bool (*scc_nearest_neighbor_search_digraph) (iscc_NNSearchObject*,
-                                                     size_t,
-                                                     const bool*,
-                                                     bool*,
-                                                     uint32_t,
-                                                     bool,
-                                                     double,
-                                                     iscc_ArcIndex*,
-                                                     scc_PointIndex*);
-
 typedef bool (*scc_nearest_neighbor_search_index) (iscc_NNSearchObject*,
                                                    size_t,
                                                    const scc_PointIndex*,
@@ -134,7 +124,6 @@ bool scc_set_dist_functions(scc_check_data_set,
                             scc_get_max_dist,
                             scc_close_max_dist_object,
                             scc_init_nn_search_object,
-                            scc_nearest_neighbor_search_digraph,
                             scc_nearest_neighbor_search_index,
                             scc_nearest_neighbor_search,
                             scc_close_nn_search_object);
