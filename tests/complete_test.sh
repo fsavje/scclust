@@ -50,8 +50,11 @@ while [ "$1" != "" ]; do
 done
 
 for ANN_SEARCH in "" "-a"; do
-	for CLABEL_FOR in uint32_t uint64_t int int_mna; do
-		if [ "$CLABEL_FOR" = "int_mna" ]; then
+	for CLABEL_FOR in uint32_t uint64_t int int_min int_mna; do
+		if [ "$CLABEL_FOR" = "int_min" ]; then
+			CLABEL="int"
+			CLABEL_NA="min"
+		elif [ "$CLABEL_FOR" = "int_mna" ]; then
 			CLABEL="int"
 			CLABEL_NA="-1"
 		else

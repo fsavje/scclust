@@ -295,6 +295,20 @@ case $OPT_CLABEL_NA in
 				conf_print "error\n" ; exit 1 ;;
 		esac
 		;;
+	min )
+		case $SCCH_CLABEL_TYPE in
+			uint32_t | uint64_t )
+				conf_print "with-clabel-na=[max]\n"
+				exit 1
+				;;
+			int )
+				SCCH_LIMITSH="true"
+				SCCH_CLABEL_NA="INT_MIN"
+				;;
+			* )
+				conf_print "error\n" ; exit 1 ;;
+		esac
+		;;
 	* )
 		case $SCCH_CLABEL_TYPE in
 			uint32_t | uint64_t )
@@ -305,7 +319,7 @@ case $OPT_CLABEL_NA in
 				if [ $OPT_CLABEL_NA -lt 0 ]; then
 					SCCH_CLABEL_NA="$OPT_CLABEL_NA"
 				else
-					conf_print "with-clabel-na=[max  -1  -2  ...]\n"
+					conf_print "with-clabel-na=[max  min  -1  -2  ...]\n"
 					exit 1
 				fi
 				;;
