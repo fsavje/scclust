@@ -187,7 +187,7 @@ Change the data type that stores cluster labels. scclust uses this type to repor
 
 ### `--with-clabel-na=[ARG]`
 
-Allowed values: `max -1 -2 -3 ...`
+Allowed values: `max min -1 -2 -3 ...`
 
 Default: `max`
 
@@ -196,6 +196,7 @@ Change the value used to denote unassigned data points.
 | `--with-clabel-na=`  | Value                                         |
 | -------------------- | --------------------------------------------- |
 | `max`                | Use maximum value storable in `--with-clabel` |
+| `min`                | Use minimum value, `--with-clabel` must be signed |
 | `-1 -2 -3 ...`       | Use [ARG], `--with-clabel` must be signed     |
 
 
