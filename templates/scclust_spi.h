@@ -136,7 +136,7 @@ bool scc_set_dist_functions(scc_check_data_set,
                             scc_init_nn_search_object,
                             scc_nearest_neighbor_search_digraph,
                             scc_nearest_neighbor_search_index,
-//                            scc_nearest_neighbor_search,
+                            scc_nearest_neighbor_search,
                             scc_close_nn_search_object);
 
 

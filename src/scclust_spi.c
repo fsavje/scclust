@@ -49,7 +49,7 @@ bool scc_set_dist_functions(scc_check_data_set check_data_set,
                             scc_init_nn_search_object init_nn_search_object,
                             scc_nearest_neighbor_search_digraph nearest_neighbor_search_digraph,
                             scc_nearest_neighbor_search_index nearest_neighbor_search_index,
-//                            scc_nearest_neighbor_search nearest_neighbor_search,
+                            scc_nearest_neighbor_search nearest_neighbor_search,
                             scc_close_nn_search_object close_nn_search_object)
 {
 	if (check_data_set != NULL) {
@@ -79,24 +79,20 @@ bool scc_set_dist_functions(scc_check_data_set check_data_set,
 	if (init_nn_search_object != NULL &&
 			nearest_neighbor_search_digraph != NULL &&
 			nearest_neighbor_search_index != NULL &&
+			nearest_neighbor_search != NULL &&
 			close_nn_search_object != NULL) {
 		iscc_dist_functions.init_nn_search_object = init_nn_search_object;
 		iscc_dist_functions.nearest_neighbor_search_digraph = nearest_neighbor_search_digraph;
 		iscc_dist_functions.nearest_neighbor_search_index = nearest_neighbor_search_index;
+		iscc_dist_functions.nearest_neighbor_search = nearest_neighbor_search;
 		iscc_dist_functions.close_nn_search_object = close_nn_search_object;
 	} else if (init_nn_search_object != NULL ||
 			nearest_neighbor_search_digraph != NULL ||
 			nearest_neighbor_search_index != NULL ||
+			nearest_neighbor_search != NULL ||
 			close_nn_search_object != NULL) {
 		return false;
 	}
-
-	// $$$$$##$#%^%$GEL<RLG:GD<RG:KMDKGDLKRGNDKLRGNDLKGN
-	// FIX THIS!!!
-	// lskmf/sklefnekntk;j5nktj4n5kjtno4ij5ntoijee09jfoij
-	//if (scc_nearest_neighbor_search != NULL) {
-	//	iscc_dist_functions.nearest_neighbor_search = nearest_neighbor_search;
-	//}
 
 	return true;
 }
