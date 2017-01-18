@@ -39,6 +39,16 @@
 #include "../include/scclust_spi.h"
 
 
+/** Type used for arc indices. Must be unsigned.
+ *
+ *  \note
+ *  Number of arcs in any digraph must be less or equal to
+ *  the maximum number that can be stored in #iscc_ArcIndex.
+ */
+typedef {% arcindex_type %} iscc_ArcIndex;
+
+#define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
+
 static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
 static const uintmax_t ISCC_POINTINDEX_MAX = {% pointindex_max %};
 static const uintmax_t ISCC_ARCINDEX_MAX = {% arcindex_max %};

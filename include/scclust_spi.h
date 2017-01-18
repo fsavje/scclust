@@ -40,19 +40,9 @@ extern "C" {
 // Internal types
 // =============================================================================
 
-/** Type used for arc indices. Must be unsigned.
- *
- *  \note
- *  Number of arcs in any digraph must be less or equal to
- *  the maximum number that can be stored in #iscc_ArcIndex.
- */
-typedef {% arcindex_type %} iscc_ArcIndex;
-
 typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
 typedef struct iscc_NNSearchObject iscc_NNSearchObject;
-
-#define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
 
 
 // =============================================================================

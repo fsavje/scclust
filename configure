@@ -178,9 +178,8 @@ SCCH_POINTINDEX_TYPE=""
 SCCH_POINTINDEX_NA=""
 SCCH_TYPELABEL_TYPE=""
 
-SPIH_ARCINDEX_TYPE=""
-
 TYPEH_LIMITSH="false"
+TYPEH_ARCINDEX_TYPE=""
 TYPEH_CLABEL_MAX=""
 TYPEH_POINTINDEX_MAX=""
 TYPEH_ARCINDEX_MAX=""
@@ -247,11 +246,11 @@ esac
 
 case $OPT_ARCINDEX_TYPE in
 	uint32_t )
-		SPIH_ARCINDEX_TYPE="uint32_t"
+		TYPEH_ARCINDEX_TYPE="uint32_t"
 		TYPEH_ARCINDEX_MAX="UINT32_MAX"
 		;;
 	uint64_t )
-		SPIH_ARCINDEX_TYPE="uint64_t"
+		TYPEH_ARCINDEX_TYPE="uint64_t"
 		TYPEH_ARCINDEX_MAX="UINT64_MAX"
 		;;
 	* )
@@ -446,14 +445,9 @@ $SCCH_LIMITSH
 q
 EOF
 
-ed -s $SOURCE_DIR/templates/scclust_spi.h > $BUILD_DIR/include/scclust_spi.h <<EOF
-,s/{% arcindex_type %}/$SPIH_ARCINDEX_TYPE/g
-,p
-q
-EOF
-
 ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
 $TYPEH_LIMITSH
+,s/{% arcindex_type %}/$TYPEH_ARCINDEX_TYPE/g
 ,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
 ,s/{% pointindex_max %}/$TYPEH_POINTINDEX_MAX/g
 ,s/{% arcindex_max %}/$TYPEH_ARCINDEX_MAX/g
