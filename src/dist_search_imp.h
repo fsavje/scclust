@@ -83,15 +83,6 @@ bool iscc_imp_init_nn_search_object(void* data_set,
                                     iscc_NNSearchObject** out_nn_search_object);
 
 // `out_nn_indices` must be of length `k * len_query_indices`
-bool iscc_imp_nearest_neighbor_search_index(iscc_NNSearchObject* nn_search_object,
-                                            size_t len_query_indices,
-                                            const scc_PointIndex query_indices[],
-                                            uint32_t k,
-                                            bool radius_search,
-                                            double radius,
-                                            scc_PointIndex out_nn_indices[]);
-
-// `out_nn_indices` must be of length `k * len_query_indices`
 bool iscc_imp_nearest_neighbor_search(iscc_NNSearchObject* nn_search_object,
                                       size_t len_query_indices,
                                       const scc_PointIndex query_indices[],
