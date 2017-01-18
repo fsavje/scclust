@@ -126,10 +126,6 @@ typedef {% pointindex_type %} scc_PointIndex;
 /// Macro for data point ID type.
 #define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
 
-// Remove!?
-static const scc_PointIndex SCC_POINTINDEX_NA = {% pointindex_na %};
-#define SCC_M_POINTINDEX_NA {% pointindex_na %}
-
 
 /** Type used for cluster labels.
  *

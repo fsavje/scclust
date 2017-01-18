@@ -62,7 +62,7 @@ for ANN_SEARCH in "" "-a"; do
 			CLABEL_NA="max"
 		fi
 		for TYPELABEL in uint_fast16_t int; do
-			for POINTINDEX in uint32_t uint64_t int int_mna; do
+			for POINTINDEX in uint32_t uint64_t int; do
 				for ARC in uint32_t uint64_t; do
 					run_tests "$ANN_SEARCH" "--with-clabel=$CLABEL --with-clabel-na=$CLABEL_NA --with-typelabel=$TYPELABEL --with-pointindex=$POINTINDEX --with-arcindex=$ARC"
 					if [ "$?" != "0" ]; then

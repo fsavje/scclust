@@ -790,7 +790,7 @@ void scc_ut_nearest_neighbor_search(void** state)
 
 	size_t out_ok_queries2a = 12340;
 	scc_PointIndex out_nn_indices2a[15];
-	const scc_PointIndex ref_nn_indices2a[15] = { 2, 44, 54, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 54, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 54, 44, 2, 54, 54, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA };
+	const scc_PointIndex ref_nn_indices2a[15] = { 2, 44, 54, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 54, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 54, 44, 2, 54, 54, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX };
 	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 5, query2,
                                             3, false, 0.0,
                                             &out_ok_queries2a, NULL, out_nn_indices2a));
@@ -803,13 +803,13 @@ void scc_ut_nearest_neighbor_search(void** state)
 	assert_true((out_nn_indices2a[7] == 11) || (out_nn_indices2a[7] == 38));
 	assert_true((out_nn_indices2a[13] == 11) || (out_nn_indices2a[13] == 38));
 	assert_true((out_nn_indices2a[14] == 11) || (out_nn_indices2a[14] == 38));
-	out_nn_indices2a[3] = out_nn_indices2a[4] = out_nn_indices2a[6] = SCC_POINTINDEX_NA;
-	out_nn_indices2a[7] = out_nn_indices2a[13] = out_nn_indices2a[14] = SCC_POINTINDEX_NA;
+	out_nn_indices2a[3] = out_nn_indices2a[4] = out_nn_indices2a[6] = ISCC_POINTINDEX_MAX;
+	out_nn_indices2a[7] = out_nn_indices2a[13] = out_nn_indices2a[14] = ISCC_POINTINDEX_MAX;
 	assert_memory_equal(out_nn_indices2a, ref_nn_indices2a, 15 * sizeof(scc_PointIndex));
 
 	size_t out_ok_queries2b = 12340;
 	scc_PointIndex out_nn_indices2b[10];
-	const scc_PointIndex ref_nn_indices2b[10] = { 2, 44, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 44, 2, 54, SCC_POINTINDEX_NA };
+	const scc_PointIndex ref_nn_indices2b[10] = { 2, 44, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 44, 2, 54, ISCC_POINTINDEX_MAX };
 	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 5, query2,
                                             2, false, 0.0,
                                             &out_ok_queries2b, NULL, out_nn_indices2b));
@@ -821,8 +821,8 @@ void scc_ut_nearest_neighbor_search(void** state)
 	assert_true((out_nn_indices2b[4] == 11) || (out_nn_indices2b[4] == 38));
 	assert_true((out_nn_indices2b[5] == 11) || (out_nn_indices2b[5] == 38));
 	assert_true((out_nn_indices2b[9] == 11) || (out_nn_indices2b[9] == 38));
-	out_nn_indices2b[2] = out_nn_indices2b[3] = out_nn_indices2b[4] = SCC_POINTINDEX_NA;
-	out_nn_indices2b[5] = out_nn_indices2b[9] = SCC_POINTINDEX_NA;
+	out_nn_indices2b[2] = out_nn_indices2b[3] = out_nn_indices2b[4] = ISCC_POINTINDEX_MAX;
+	out_nn_indices2b[5] = out_nn_indices2b[9] = ISCC_POINTINDEX_MAX;
 	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 10 * sizeof(scc_PointIndex));
 
 	assert_true(iscc_close_nn_search_object(&nn_search_object2));
@@ -1041,7 +1041,7 @@ void scc_ut_nearest_neighbor_search_radius(void** state)
 	scc_PointIndex out_indicators2a[5];
 	const scc_PointIndex ref_indicators2a[3] = { 11, 38, 54 };
 	scc_PointIndex out_nn_indices2a[15];
-	const scc_PointIndex ref_nn_indices2a[9] = { SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 54, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 54, 54, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA };
+	const scc_PointIndex ref_nn_indices2a[9] = { ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 54, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 54, 54, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX };
 	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 5, query2,
                                             3, true, 30.0,
                                             &num_out_indicators2a, out_indicators2a, out_nn_indices2a));
@@ -1054,8 +1054,8 @@ void scc_ut_nearest_neighbor_search_radius(void** state)
 	assert_true((out_nn_indices2a[4] == 11) || (out_nn_indices2a[4] == 38));
 	assert_true((out_nn_indices2a[7] == 11) || (out_nn_indices2a[7] == 38));
 	assert_true((out_nn_indices2a[8] == 11) || (out_nn_indices2a[8] == 38));
-	out_nn_indices2a[0] = out_nn_indices2a[1] = out_nn_indices2a[3] = SCC_POINTINDEX_NA;
-	out_nn_indices2a[4] = out_nn_indices2a[7] = out_nn_indices2a[8] = SCC_POINTINDEX_NA;
+	out_nn_indices2a[0] = out_nn_indices2a[1] = out_nn_indices2a[3] = ISCC_POINTINDEX_MAX;
+	out_nn_indices2a[4] = out_nn_indices2a[7] = out_nn_indices2a[8] = ISCC_POINTINDEX_MAX;
 	assert_memory_equal(out_nn_indices2a, ref_nn_indices2a, 9 * sizeof(scc_PointIndex));
 
 
@@ -1063,7 +1063,7 @@ void scc_ut_nearest_neighbor_search_radius(void** state)
 	scc_PointIndex out_indicators2b[5];
 	const scc_PointIndex ref_indicators2b[3] = { 11, 38, 54 };
 	scc_PointIndex out_nn_indices2b[10];
-	const scc_PointIndex ref_nn_indices2b[6] = { SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, SCC_POINTINDEX_NA, 54, SCC_POINTINDEX_NA };
+	const scc_PointIndex ref_nn_indices2b[6] = { ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, ISCC_POINTINDEX_MAX, 54, ISCC_POINTINDEX_MAX };
 	assert_true(iscc_nearest_neighbor_search(nn_search_object2, 5, query2,
                                             2, true, 35.0,
                                             &num_out_indicators2b, out_indicators2b, out_nn_indices2b));
@@ -1075,8 +1075,8 @@ void scc_ut_nearest_neighbor_search_radius(void** state)
 	assert_true((out_nn_indices2b[2] == 11) || (out_nn_indices2b[2] == 38));
 	assert_true((out_nn_indices2b[3] == 11) || (out_nn_indices2b[3] == 38));
 	assert_true((out_nn_indices2b[5] == 11) || (out_nn_indices2b[5] == 38));
-	out_nn_indices2b[0] = out_nn_indices2b[1] = out_nn_indices2b[2] = SCC_POINTINDEX_NA;
-	out_nn_indices2b[3] = out_nn_indices2b[5] = SCC_POINTINDEX_NA;
+	out_nn_indices2b[0] = out_nn_indices2b[1] = out_nn_indices2b[2] = ISCC_POINTINDEX_MAX;
+	out_nn_indices2b[3] = out_nn_indices2b[5] = ISCC_POINTINDEX_MAX;
 	assert_memory_equal(out_nn_indices2b, ref_nn_indices2b, 6 * sizeof(scc_PointIndex));
 
 	assert_true(iscc_close_nn_search_object(&nn_search_object2));
