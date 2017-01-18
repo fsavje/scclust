@@ -50,6 +50,7 @@ typedef {% arcindex_type %} iscc_ArcIndex;
 #define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
 
 static const scc_Clabel SCC_CLABEL_MAX = {% clabel_max %};
+static const scc_PointIndex ISCC_POINTINDEX_MAX_PI = {% pointindex_max %};
 static const uintmax_t ISCC_POINTINDEX_MAX = {% pointindex_max %};
 static const uintmax_t ISCC_ARCINDEX_MAX = {% arcindex_max %};
 static const uintmax_t ISCC_TYPELABEL_MAX = 65535;
