@@ -48,8 +48,7 @@ bool scc_reset_dist_functions(void)
 		.get_max_dist = iscc_imp_get_max_dist,
 		.close_max_dist_object = iscc_imp_close_max_dist_object,
 		.init_nn_search_object = iscc_imp_init_nn_search_object,
-		.nearest_neighbor_search_digraph = iscc_imp_nearest_neighbor_search_digraph,
-		.nearest_neighbor_search_index = iscc_imp_nearest_neighbor_search_index,
+		.nearest_neighbor_search = iscc_imp_nearest_neighbor_search,
 		.close_nn_search_object = iscc_imp_close_nn_search_object,
 	};
 
