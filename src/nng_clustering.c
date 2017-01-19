@@ -198,12 +198,12 @@ static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const 
 	}
 
 	if ((options->seed_method != SCC_SM_LEXICAL) &&
+			(options->seed_method != SCC_SM_BATCHES) &&
 			(options->seed_method != SCC_SM_INWARDS_ORDER) &&
 			(options->seed_method != SCC_SM_INWARDS_UPDATING) &&
 			(options->seed_method != SCC_SM_INWARDS_ALT_UPDATING) &&
 			(options->seed_method != SCC_SM_EXCLUSION_ORDER) &&
-			(options->seed_method != SCC_SM_EXCLUSION_UPDATING) &&
-			(options->seed_method != SCC_SM_BATCHES)) {
+			(options->seed_method != SCC_SM_EXCLUSION_UPDATING)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown seed method.");
 	}
 	if ((options->primary_data_points != NULL) && (options->len_primary_data_points == 0)) {

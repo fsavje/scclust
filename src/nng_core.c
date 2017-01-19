@@ -35,9 +35,6 @@
 #include "nng_findseeds.h"
 #include "scclust_types.h"
 
-// Remove later
-#include "data_set_struct.h"
-
 
 // =============================================================================
 // Internal structs & variables
@@ -565,6 +562,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		}
 		return iscc_make_error(SCC_ER_NO_MEMORY);
 	}
+
 	if (primary_data_points != NULL) {
 		for (size_t i = 0; i < len_primary_data_points; ++i) {
 			to_assign[num_to_assign] = primary_data_points[i];

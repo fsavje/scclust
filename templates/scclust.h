@@ -269,6 +269,9 @@ enum scc_SeedMethod {
 	 */
 	SCC_SM_LEXICAL,
 
+
+	SCC_SM_BATCHES,
+
 	/** Find seeds ordered by inwards pointing arcs.
 	 *
 	 *  This method counts vertices' inwards pointing arcs and finds seeds in ascending order by the arc count. Vertices pointing to a seed cannot
@@ -308,9 +311,6 @@ enum scc_SeedMethod {
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
 	SCC_SM_EXCLUSION_UPDATING,
-
-
-	SCC_SM_BATCHES,
 };
 
 /// Typedef for the scc_NNGMethod enum
