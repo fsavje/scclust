@@ -108,15 +108,15 @@ void scc_ut_digraph_union_and_delete(void** state)
 	iscc_Digraph ut_dg3;
 	iscc_digraph_from_string("#.../#.../#.../#.../", &ut_dg3);
 
-	const bool tails_to_keep1[4] = { true, true, false, false };
-	const bool tails_to_keep2[4] = { true, false, true, false };
-	const bool tails_to_keep3[4] = { false, false, true, true };
+	const scc_PointIndex tails_to_keep1[2] = { 0, 1 };
+	const scc_PointIndex tails_to_keep2[2] = { 0, 2 };
+	const scc_PointIndex tails_to_keep3[2] = { 2, 3 };
 
 	const iscc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
 	iscc_Digraph ut_make12_a;
 	iscc_Digraph ut_make12_a_ttk;
-	scc_ErrorCode ec1 = iscc_digraph_union_and_delete(2, sum_12, NULL, false, &ut_make12_a);
-	scc_ErrorCode ec2 = iscc_digraph_union_and_delete(2, sum_12, tails_to_keep1, false, &ut_make12_a_ttk);
+	scc_ErrorCode ec1 = iscc_digraph_union_and_delete(2, sum_12, 0, NULL, false, &ut_make12_a);
+	scc_ErrorCode ec2 = iscc_digraph_union_and_delete(2, sum_12, 2, tails_to_keep1, false, &ut_make12_a_ttk);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(ec2, SCC_ER_OK);
 	assert_valid_digraph(&ut_make12_a, 4);
@@ -134,8 +134,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 	iscc_Digraph ut_make13_a;
 	iscc_Digraph ut_make13_a_ttk;
-	scc_ErrorCode ec3 = iscc_digraph_union_and_delete(2, sum_13, NULL, false, &ut_make13_a);
-	scc_ErrorCode ec4 = iscc_digraph_union_and_delete(2, sum_13, tails_to_keep2, false, &ut_make13_a_ttk);
+	scc_ErrorCode ec3 = iscc_digraph_union_and_delete(2, sum_13, 0, NULL, false, &ut_make13_a);
+	scc_ErrorCode ec4 = iscc_digraph_union_and_delete(2, sum_13, 2, tails_to_keep2, false, &ut_make13_a_ttk);
 	assert_int_equal(ec3, SCC_ER_OK);
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_valid_digraph(&ut_make13_a, 4);
@@ -148,8 +148,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 	iscc_Digraph ut_make31_a;
 	iscc_Digraph ut_make31_a_ttk;
-	scc_ErrorCode ec5 = iscc_digraph_union_and_delete(2, sum_31, NULL, false, &ut_make31_a);
-	scc_ErrorCode ec6 = iscc_digraph_union_and_delete(2, sum_31, tails_to_keep3, false, &ut_make31_a_ttk);
+	scc_ErrorCode ec5 = iscc_digraph_union_and_delete(2, sum_31, 0, NULL, false, &ut_make31_a);
+	scc_ErrorCode ec6 = iscc_digraph_union_and_delete(2, sum_31, 2, tails_to_keep3, false, &ut_make31_a_ttk);
 	assert_int_equal(ec5, SCC_ER_OK);
 	assert_int_equal(ec6, SCC_ER_OK);
 	assert_valid_digraph(&ut_make31_a, 4);
@@ -165,8 +165,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 	iscc_Digraph ut_make123;
 	iscc_Digraph ut_make123_ttk;
-	scc_ErrorCode ec7 = iscc_digraph_union_and_delete(3, sum_123, NULL, false, &ut_make123);
-	scc_ErrorCode ec8 = iscc_digraph_union_and_delete(3, sum_123, tails_to_keep1, false, &ut_make123_ttk);
+	scc_ErrorCode ec7 = iscc_digraph_union_and_delete(3, sum_123, 0, NULL, false, &ut_make123);
+	scc_ErrorCode ec8 = iscc_digraph_union_and_delete(3, sum_123, 2, tails_to_keep1, false, &ut_make123_ttk);
 	assert_int_equal(ec7, SCC_ER_OK);
 	assert_int_equal(ec8, SCC_ER_OK);
 	assert_valid_digraph(&ut_make123, 4);
@@ -179,8 +179,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 	iscc_Digraph ut_make132;
 	iscc_Digraph ut_make132_ttk;
-	scc_ErrorCode ec9 = iscc_digraph_union_and_delete(3, sum_132, NULL, false, &ut_make132);
-	scc_ErrorCode ec10 = iscc_digraph_union_and_delete(3, sum_132, tails_to_keep2, false, &ut_make132_ttk);
+	scc_ErrorCode ec9 = iscc_digraph_union_and_delete(3, sum_132, 0, NULL, false, &ut_make132);
+	scc_ErrorCode ec10 = iscc_digraph_union_and_delete(3, sum_132, 2, tails_to_keep2, false, &ut_make132_ttk);
 	assert_int_equal(ec9, SCC_ER_OK);
 	assert_int_equal(ec10, SCC_ER_OK);
 	assert_valid_digraph(&ut_make132, 4);
@@ -193,8 +193,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 	iscc_Digraph ut_make213;
 	iscc_Digraph ut_make213_ttk;
-	scc_ErrorCode ec11 = iscc_digraph_union_and_delete(3, sum_213, NULL, false, &ut_make213);
-	scc_ErrorCode ec12 = iscc_digraph_union_and_delete(3, sum_213, tails_to_keep3, false, &ut_make213_ttk);
+	scc_ErrorCode ec11 = iscc_digraph_union_and_delete(3, sum_213, 0, NULL, false, &ut_make213);
+	scc_ErrorCode ec12 = iscc_digraph_union_and_delete(3, sum_213, 2, tails_to_keep3, false, &ut_make213_ttk);
 	assert_int_equal(ec11, SCC_ER_OK);
 	assert_int_equal(ec12, SCC_ER_OK);
 	assert_valid_digraph(&ut_make213, 4);
@@ -207,8 +207,8 @@ void scc_ut_digraph_union_and_delete(void** state)
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 	iscc_Digraph ut_make321;
 	iscc_Digraph ut_make321_ttk;
-	scc_ErrorCode ec13 = iscc_digraph_union_and_delete(3, sum_321, NULL, false, &ut_make321);
-	scc_ErrorCode ec14 = iscc_digraph_union_and_delete(3, sum_321, tails_to_keep1, false, &ut_make321_ttk);
+	scc_ErrorCode ec13 = iscc_digraph_union_and_delete(3, sum_321, 0, NULL, false, &ut_make321);
+	scc_ErrorCode ec14 = iscc_digraph_union_and_delete(3, sum_321, 2, tails_to_keep1, false, &ut_make321_ttk);
 	assert_int_equal(ec13, SCC_ER_OK);
 	assert_int_equal(ec14, SCC_ER_OK);
 	assert_valid_digraph(&ut_make321, 4);
@@ -258,13 +258,13 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	iscc_digraph_from_string("..../..../..../..../", &ut_dg5);
 	iscc_Digraph ut_dg6;
 	iscc_empty_digraph(4, 0, &ut_dg6);
-	const bool tails_to_keep4[4] = { true, true, false, false };
+	const scc_PointIndex tails_to_keep4[2] = { 0, 1 };
 
 	const iscc_Digraph sum_45[2] = {ut_dg4, ut_dg5};
 	iscc_Digraph ut_make45;
 	iscc_Digraph ut_make45_ttk;
-	scc_ErrorCode ec15 = iscc_digraph_union_and_delete(2, sum_45, NULL, false, &ut_make45);
-	scc_ErrorCode ec16 = iscc_digraph_union_and_delete(2, sum_45, tails_to_keep4, false, &ut_make45_ttk);
+	scc_ErrorCode ec15 = iscc_digraph_union_and_delete(2, sum_45, 0, NULL, false, &ut_make45);
+	scc_ErrorCode ec16 = iscc_digraph_union_and_delete(2, sum_45, 2, tails_to_keep4, false, &ut_make45_ttk);
 	assert_int_equal(ec15, SCC_ER_OK);
 	assert_int_equal(ec16, SCC_ER_OK);
 	assert_valid_digraph(&ut_make45, 4);
@@ -279,8 +279,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_46[2] = {ut_dg4, ut_dg6};
 	iscc_Digraph ut_make46;
 	iscc_Digraph ut_make46_ttk;
-	scc_ErrorCode ec17 = iscc_digraph_union_and_delete(2, sum_46, NULL, false, &ut_make46);
-	scc_ErrorCode ec18 = iscc_digraph_union_and_delete(2, sum_46, tails_to_keep4, false, &ut_make46_ttk);
+	scc_ErrorCode ec17 = iscc_digraph_union_and_delete(2, sum_46, 0, NULL, false, &ut_make46);
+	scc_ErrorCode ec18 = iscc_digraph_union_and_delete(2, sum_46, 2, tails_to_keep4, false, &ut_make46_ttk);
 	assert_int_equal(ec17, SCC_ER_OK);
 	assert_int_equal(ec18, SCC_ER_OK);
 	assert_valid_digraph(&ut_make46, 4);
@@ -295,8 +295,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_54[2] = {ut_dg5, ut_dg4};
 	iscc_Digraph ut_make54;
 	iscc_Digraph ut_make54_ttk;
-	scc_ErrorCode ec19 = iscc_digraph_union_and_delete(2, sum_54, NULL, false, &ut_make54);
-	scc_ErrorCode ec20 = iscc_digraph_union_and_delete(2, sum_54, tails_to_keep4, false, &ut_make54_ttk);
+	scc_ErrorCode ec19 = iscc_digraph_union_and_delete(2, sum_54, 0, NULL, false, &ut_make54);
+	scc_ErrorCode ec20 = iscc_digraph_union_and_delete(2, sum_54, 2, tails_to_keep4, false, &ut_make54_ttk);
 	assert_int_equal(ec19, SCC_ER_OK);
 	assert_int_equal(ec20, SCC_ER_OK);
 	assert_valid_digraph(&ut_make54, 4);
@@ -311,8 +311,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_64[2] = {ut_dg6, ut_dg4};
 	iscc_Digraph ut_make64;
 	iscc_Digraph ut_make64_ttk;
-	scc_ErrorCode ec21 = iscc_digraph_union_and_delete(2, sum_64, NULL, false, &ut_make64);
-	scc_ErrorCode ec22 = iscc_digraph_union_and_delete(2, sum_64, tails_to_keep4, false, &ut_make64_ttk);
+	scc_ErrorCode ec21 = iscc_digraph_union_and_delete(2, sum_64, 0, NULL, false, &ut_make64);
+	scc_ErrorCode ec22 = iscc_digraph_union_and_delete(2, sum_64, 2, tails_to_keep4, false, &ut_make64_ttk);
 	assert_int_equal(ec21, SCC_ER_OK);
 	assert_int_equal(ec22, SCC_ER_OK);
 	assert_valid_digraph(&ut_make64, 4);
@@ -327,8 +327,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_56[2] = {ut_dg5, ut_dg6};
 	iscc_Digraph ut_make56;
 	iscc_Digraph ut_make56_ttk;
-	scc_ErrorCode ec23 = iscc_digraph_union_and_delete(2, sum_56, NULL, false, &ut_make56);
-	scc_ErrorCode ec24 = iscc_digraph_union_and_delete(2, sum_56, tails_to_keep4, false, &ut_make56_ttk);
+	scc_ErrorCode ec23 = iscc_digraph_union_and_delete(2, sum_56, 0, NULL, false, &ut_make56);
+	scc_ErrorCode ec24 = iscc_digraph_union_and_delete(2, sum_56, 2, tails_to_keep4, false, &ut_make56_ttk);
 	assert_int_equal(ec23, SCC_ER_OK);
 	assert_int_equal(ec24, SCC_ER_OK);
 	assert_valid_digraph(&ut_make56, 4);
@@ -343,8 +343,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_65[2] = {ut_dg6, ut_dg5};
 	iscc_Digraph ut_make65;
 	iscc_Digraph ut_make65_ttk;
-	scc_ErrorCode ec25 = iscc_digraph_union_and_delete(2, sum_65, NULL, false, &ut_make65);
-	scc_ErrorCode ec26 = iscc_digraph_union_and_delete(2, sum_65, tails_to_keep4, false, &ut_make65_ttk);
+	scc_ErrorCode ec25 = iscc_digraph_union_and_delete(2, sum_65, 0, NULL, false, &ut_make65);
+	scc_ErrorCode ec26 = iscc_digraph_union_and_delete(2, sum_65, 2, tails_to_keep4, false, &ut_make65_ttk);
 	assert_int_equal(ec25, SCC_ER_OK);
 	assert_int_equal(ec26, SCC_ER_OK);
 	assert_valid_digraph(&ut_make65, 4);
@@ -359,8 +359,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_55[2] = {ut_dg5, ut_dg5};
 	iscc_Digraph ut_make55;
 	iscc_Digraph ut_make55_ttk;
-	scc_ErrorCode ec27 = iscc_digraph_union_and_delete(2, sum_55, NULL, false, &ut_make55);
-	scc_ErrorCode ec28 = iscc_digraph_union_and_delete(2, sum_55, tails_to_keep4, false, &ut_make55_ttk);
+	scc_ErrorCode ec27 = iscc_digraph_union_and_delete(2, sum_55, 0, NULL, false, &ut_make55);
+	scc_ErrorCode ec28 = iscc_digraph_union_and_delete(2, sum_55, 2, tails_to_keep4, false, &ut_make55_ttk);
 	assert_int_equal(ec27, SCC_ER_OK);
 	assert_int_equal(ec28, SCC_ER_OK);
 	assert_valid_digraph(&ut_make55, 4);
@@ -375,8 +375,8 @@ void scc_ut_digraph_union_and_delete_empty(void** state)
 	const iscc_Digraph sum_66[2] = {ut_dg6, ut_dg6};
 	iscc_Digraph ut_make66;
 	iscc_Digraph ut_make66_ttk;
-	scc_ErrorCode ec29 = iscc_digraph_union_and_delete(2, sum_66, NULL, false, &ut_make66);
-	scc_ErrorCode ec30 = iscc_digraph_union_and_delete(2, sum_66, tails_to_keep4, false, &ut_make66_ttk);
+	scc_ErrorCode ec29 = iscc_digraph_union_and_delete(2, sum_66, 0, NULL, false, &ut_make66);
+	scc_ErrorCode ec30 = iscc_digraph_union_and_delete(2, sum_66, 2, tails_to_keep4, false, &ut_make66_ttk);
 	assert_int_equal(ec29, SCC_ER_OK);
 	assert_int_equal(ec30, SCC_ER_OK);
 	assert_valid_digraph(&ut_make66, 4);
@@ -432,13 +432,13 @@ void scc_ut_digraph_union_and_delete_single(void** state)
 
 	iscc_Digraph ut_dg7;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
-	const bool tails_to_keep5[4] = { true, true, false, false };
+	const scc_PointIndex tails_to_keep5[2] = { 0, 1 };
 
 	const iscc_Digraph sum_7[1] = {ut_dg7};
 	iscc_Digraph ut_make7;
 	iscc_Digraph ut_make7_ttk;
-	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, NULL, false, &ut_make7);
-	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, tails_to_keep5, false, &ut_make7_ttk);
+	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, 0, NULL, false, &ut_make7);
+	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, 2, tails_to_keep5, false, &ut_make7_ttk);
 	assert_int_equal(ec31, SCC_ER_OK);
 	assert_int_equal(ec32, SCC_ER_OK);
 	assert_valid_digraph(&ut_make7, 4);
@@ -469,15 +469,15 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	iscc_Digraph ut_dg3;
 	iscc_digraph_from_string("#.../#.../#.../#.../", &ut_dg3);
 
-	const bool tails_to_keep1[4] = { true, true, false, false };
-	const bool tails_to_keep2[4] = { true, false, true, false };
-	const bool tails_to_keep3[4] = { false, false, true, true };
+	const scc_PointIndex tails_to_keep1[2] = { 0, 1 };
+	const scc_PointIndex tails_to_keep2[2] = { 0, 2 };
+	const scc_PointIndex tails_to_keep3[2] = { 2, 3 };
 
 	const iscc_Digraph sum_12[2] = {ut_dg1, ut_dg2};
 	iscc_Digraph ut_make12_a;
 	iscc_Digraph ut_make12_a_ttk;
-	scc_ErrorCode ec1 = iscc_digraph_union_and_delete(2, sum_12, NULL, true, &ut_make12_a);
-	scc_ErrorCode ec2 = iscc_digraph_union_and_delete(2, sum_12, tails_to_keep1, true, &ut_make12_a_ttk);
+	scc_ErrorCode ec1 = iscc_digraph_union_and_delete(2, sum_12, 0, NULL, true, &ut_make12_a);
+	scc_ErrorCode ec2 = iscc_digraph_union_and_delete(2, sum_12, 2, tails_to_keep1, true, &ut_make12_a_ttk);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(ec2, SCC_ER_OK);
 	assert_valid_digraph(&ut_make12_a, 4);
@@ -495,8 +495,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_13[2] = {ut_dg1, ut_dg3};
 	iscc_Digraph ut_make13_a;
 	iscc_Digraph ut_make13_a_ttk;
-	scc_ErrorCode ec3 = iscc_digraph_union_and_delete(2, sum_13, NULL, true, &ut_make13_a);
-	scc_ErrorCode ec4 = iscc_digraph_union_and_delete(2, sum_13, tails_to_keep2, true, &ut_make13_a_ttk);
+	scc_ErrorCode ec3 = iscc_digraph_union_and_delete(2, sum_13, 0, NULL, true, &ut_make13_a);
+	scc_ErrorCode ec4 = iscc_digraph_union_and_delete(2, sum_13, 2, tails_to_keep2, true, &ut_make13_a_ttk);
 	assert_int_equal(ec3, SCC_ER_OK);
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_valid_digraph(&ut_make13_a, 4);
@@ -509,8 +509,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_31[2] = {ut_dg3, ut_dg1};
 	iscc_Digraph ut_make31_a;
 	iscc_Digraph ut_make31_a_ttk;
-	scc_ErrorCode ec5 = iscc_digraph_union_and_delete(2, sum_31, NULL, true, &ut_make31_a);
-	scc_ErrorCode ec6 = iscc_digraph_union_and_delete(2, sum_31, tails_to_keep3, true, &ut_make31_a_ttk);
+	scc_ErrorCode ec5 = iscc_digraph_union_and_delete(2, sum_31, 0, NULL, true, &ut_make31_a);
+	scc_ErrorCode ec6 = iscc_digraph_union_and_delete(2, sum_31, 2, tails_to_keep3, true, &ut_make31_a_ttk);
 	assert_int_equal(ec5, SCC_ER_OK);
 	assert_int_equal(ec6, SCC_ER_OK);
 	assert_valid_digraph(&ut_make31_a, 4);
@@ -526,8 +526,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_123[3] = {ut_dg1, ut_dg2, ut_dg3};
 	iscc_Digraph ut_make123;
 	iscc_Digraph ut_make123_ttk;
-	scc_ErrorCode ec7 = iscc_digraph_union_and_delete(3, sum_123, NULL, true, &ut_make123);
-	scc_ErrorCode ec8 = iscc_digraph_union_and_delete(3, sum_123, tails_to_keep1, true, &ut_make123_ttk);
+	scc_ErrorCode ec7 = iscc_digraph_union_and_delete(3, sum_123, 0, NULL, true, &ut_make123);
+	scc_ErrorCode ec8 = iscc_digraph_union_and_delete(3, sum_123, 2, tails_to_keep1, true, &ut_make123_ttk);
 	assert_int_equal(ec7, SCC_ER_OK);
 	assert_int_equal(ec8, SCC_ER_OK);
 	assert_valid_digraph(&ut_make123, 4);
@@ -540,8 +540,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_132[3] = {ut_dg1, ut_dg3, ut_dg2};
 	iscc_Digraph ut_make132;
 	iscc_Digraph ut_make132_ttk;
-	scc_ErrorCode ec9 = iscc_digraph_union_and_delete(3, sum_132, NULL, true, &ut_make132);
-	scc_ErrorCode ec10 = iscc_digraph_union_and_delete(3, sum_132, tails_to_keep2, true, &ut_make132_ttk);
+	scc_ErrorCode ec9 = iscc_digraph_union_and_delete(3, sum_132, 0, NULL, true, &ut_make132);
+	scc_ErrorCode ec10 = iscc_digraph_union_and_delete(3, sum_132, 2, tails_to_keep2, true, &ut_make132_ttk);
 	assert_int_equal(ec9, SCC_ER_OK);
 	assert_int_equal(ec10, SCC_ER_OK);
 	assert_valid_digraph(&ut_make132, 4);
@@ -554,8 +554,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_213[3] = {ut_dg2, ut_dg1, ut_dg3};
 	iscc_Digraph ut_make213;
 	iscc_Digraph ut_make213_ttk;
-	scc_ErrorCode ec11 = iscc_digraph_union_and_delete(3, sum_213, NULL, true, &ut_make213);
-	scc_ErrorCode ec12 = iscc_digraph_union_and_delete(3, sum_213, tails_to_keep3, true, &ut_make213_ttk);
+	scc_ErrorCode ec11 = iscc_digraph_union_and_delete(3, sum_213, 0, NULL, true, &ut_make213);
+	scc_ErrorCode ec12 = iscc_digraph_union_and_delete(3, sum_213, 2, tails_to_keep3, true, &ut_make213_ttk);
 	assert_int_equal(ec11, SCC_ER_OK);
 	assert_int_equal(ec12, SCC_ER_OK);
 	assert_valid_digraph(&ut_make213, 4);
@@ -568,8 +568,8 @@ void scc_ut_digraph_union_and_delete_keep_loops(void** state)
 	const iscc_Digraph sum_321[3] = {ut_dg3, ut_dg2, ut_dg1};
 	iscc_Digraph ut_make321;
 	iscc_Digraph ut_make321_ttk;
-	scc_ErrorCode ec13 = iscc_digraph_union_and_delete(3, sum_321, NULL, true, &ut_make321);
-	scc_ErrorCode ec14 = iscc_digraph_union_and_delete(3, sum_321, tails_to_keep1, true, &ut_make321_ttk);
+	scc_ErrorCode ec13 = iscc_digraph_union_and_delete(3, sum_321, 0, NULL, true, &ut_make321);
+	scc_ErrorCode ec14 = iscc_digraph_union_and_delete(3, sum_321, 2, tails_to_keep1, true, &ut_make321_ttk);
 	assert_int_equal(ec13, SCC_ER_OK);
 	assert_int_equal(ec14, SCC_ER_OK);
 	assert_valid_digraph(&ut_make321, 4);
@@ -619,13 +619,13 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	iscc_digraph_from_string("..../..../..../..../", &ut_dg5);
 	iscc_Digraph ut_dg6;
 	iscc_empty_digraph(4, 0, &ut_dg6);
-	const bool tails_to_keep4[4] = { true, true, false, false };
+	const scc_PointIndex tails_to_keep4[2] = { 0, 1 };
 
 	const iscc_Digraph sum_45[2] = {ut_dg4, ut_dg5};
 	iscc_Digraph ut_make45;
 	iscc_Digraph ut_make45_ttk;
-	scc_ErrorCode ec15 = iscc_digraph_union_and_delete(2, sum_45, NULL, true, &ut_make45);
-	scc_ErrorCode ec16 = iscc_digraph_union_and_delete(2, sum_45, tails_to_keep4, true, &ut_make45_ttk);
+	scc_ErrorCode ec15 = iscc_digraph_union_and_delete(2, sum_45, 0, NULL, true, &ut_make45);
+	scc_ErrorCode ec16 = iscc_digraph_union_and_delete(2, sum_45, 2, tails_to_keep4, true, &ut_make45_ttk);
 	assert_int_equal(ec15, SCC_ER_OK);
 	assert_int_equal(ec16, SCC_ER_OK);
 	assert_valid_digraph(&ut_make45, 4);
@@ -640,8 +640,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_46[2] = {ut_dg4, ut_dg6};
 	iscc_Digraph ut_make46;
 	iscc_Digraph ut_make46_ttk;
-	scc_ErrorCode ec17 = iscc_digraph_union_and_delete(2, sum_46, NULL, true, &ut_make46);
-	scc_ErrorCode ec18 = iscc_digraph_union_and_delete(2, sum_46, tails_to_keep4, true, &ut_make46_ttk);
+	scc_ErrorCode ec17 = iscc_digraph_union_and_delete(2, sum_46, 0, NULL, true, &ut_make46);
+	scc_ErrorCode ec18 = iscc_digraph_union_and_delete(2, sum_46, 2, tails_to_keep4, true, &ut_make46_ttk);
 	assert_int_equal(ec17, SCC_ER_OK);
 	assert_int_equal(ec18, SCC_ER_OK);
 	assert_valid_digraph(&ut_make46, 4);
@@ -656,8 +656,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_54[2] = {ut_dg5, ut_dg4};
 	iscc_Digraph ut_make54;
 	iscc_Digraph ut_make54_ttk;
-	scc_ErrorCode ec19 = iscc_digraph_union_and_delete(2, sum_54, NULL, true, &ut_make54);
-	scc_ErrorCode ec20 = iscc_digraph_union_and_delete(2, sum_54, tails_to_keep4, true, &ut_make54_ttk);
+	scc_ErrorCode ec19 = iscc_digraph_union_and_delete(2, sum_54, 0, NULL, true, &ut_make54);
+	scc_ErrorCode ec20 = iscc_digraph_union_and_delete(2, sum_54, 2, tails_to_keep4, true, &ut_make54_ttk);
 	assert_int_equal(ec19, SCC_ER_OK);
 	assert_int_equal(ec20, SCC_ER_OK);
 	assert_valid_digraph(&ut_make54, 4);
@@ -672,8 +672,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_64[2] = {ut_dg6, ut_dg4};
 	iscc_Digraph ut_make64;
 	iscc_Digraph ut_make64_ttk;
-	scc_ErrorCode ec21 = iscc_digraph_union_and_delete(2, sum_64, NULL, true, &ut_make64);
-	scc_ErrorCode ec22 = iscc_digraph_union_and_delete(2, sum_64, tails_to_keep4, true, &ut_make64_ttk);
+	scc_ErrorCode ec21 = iscc_digraph_union_and_delete(2, sum_64, 0, NULL, true, &ut_make64);
+	scc_ErrorCode ec22 = iscc_digraph_union_and_delete(2, sum_64, 2, tails_to_keep4, true, &ut_make64_ttk);
 	assert_int_equal(ec21, SCC_ER_OK);
 	assert_int_equal(ec22, SCC_ER_OK);
 	assert_valid_digraph(&ut_make64, 4);
@@ -688,8 +688,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_56[2] = {ut_dg5, ut_dg6};
 	iscc_Digraph ut_make56;
 	iscc_Digraph ut_make56_ttk;
-	scc_ErrorCode ec23 = iscc_digraph_union_and_delete(2, sum_56, NULL, true, &ut_make56);
-	scc_ErrorCode ec24 = iscc_digraph_union_and_delete(2, sum_56, tails_to_keep4, true, &ut_make56_ttk);
+	scc_ErrorCode ec23 = iscc_digraph_union_and_delete(2, sum_56, 0, NULL, true, &ut_make56);
+	scc_ErrorCode ec24 = iscc_digraph_union_and_delete(2, sum_56, 2, tails_to_keep4, true, &ut_make56_ttk);
 	assert_int_equal(ec23, SCC_ER_OK);
 	assert_int_equal(ec24, SCC_ER_OK);
 	assert_valid_digraph(&ut_make56, 4);
@@ -704,8 +704,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_65[2] = {ut_dg6, ut_dg5};
 	iscc_Digraph ut_make65;
 	iscc_Digraph ut_make65_ttk;
-	scc_ErrorCode ec25 = iscc_digraph_union_and_delete(2, sum_65, NULL, true, &ut_make65);
-	scc_ErrorCode ec26 = iscc_digraph_union_and_delete(2, sum_65, tails_to_keep4, true, &ut_make65_ttk);
+	scc_ErrorCode ec25 = iscc_digraph_union_and_delete(2, sum_65, 0, NULL, true, &ut_make65);
+	scc_ErrorCode ec26 = iscc_digraph_union_and_delete(2, sum_65, 2, tails_to_keep4, true, &ut_make65_ttk);
 	assert_int_equal(ec25, SCC_ER_OK);
 	assert_int_equal(ec26, SCC_ER_OK);
 	assert_valid_digraph(&ut_make65, 4);
@@ -720,8 +720,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_55[2] = {ut_dg5, ut_dg5};
 	iscc_Digraph ut_make55;
 	iscc_Digraph ut_make55_ttk;
-	scc_ErrorCode ec27 = iscc_digraph_union_and_delete(2, sum_55, NULL, true, &ut_make55);
-	scc_ErrorCode ec28 = iscc_digraph_union_and_delete(2, sum_55, tails_to_keep4, true, &ut_make55_ttk);
+	scc_ErrorCode ec27 = iscc_digraph_union_and_delete(2, sum_55, 0, NULL, true, &ut_make55);
+	scc_ErrorCode ec28 = iscc_digraph_union_and_delete(2, sum_55, 2, tails_to_keep4, true, &ut_make55_ttk);
 	assert_int_equal(ec27, SCC_ER_OK);
 	assert_int_equal(ec28, SCC_ER_OK);
 	assert_valid_digraph(&ut_make55, 4);
@@ -736,8 +736,8 @@ void scc_ut_digraph_union_and_delete_keep_loops_empty(void** state)
 	const iscc_Digraph sum_66[2] = {ut_dg6, ut_dg6};
 	iscc_Digraph ut_make66;
 	iscc_Digraph ut_make66_ttk;
-	scc_ErrorCode ec29 = iscc_digraph_union_and_delete(2, sum_66, NULL, true, &ut_make66);
-	scc_ErrorCode ec30 = iscc_digraph_union_and_delete(2, sum_66, tails_to_keep4, true, &ut_make66_ttk);
+	scc_ErrorCode ec29 = iscc_digraph_union_and_delete(2, sum_66, 0, NULL, true, &ut_make66);
+	scc_ErrorCode ec30 = iscc_digraph_union_and_delete(2, sum_66, 2, tails_to_keep4, true, &ut_make66_ttk);
 	assert_int_equal(ec29, SCC_ER_OK);
 	assert_int_equal(ec30, SCC_ER_OK);
 	assert_valid_digraph(&ut_make66, 4);
@@ -793,13 +793,13 @@ void scc_ut_digraph_union_and_delete_keep_loops_single(void** state)
 
 	iscc_Digraph ut_dg7;
 	iscc_digraph_from_string("#..#/.#.#/..##/...#/", &ut_dg7);
-	const bool tails_to_keep5[4] = { true, true, false, false };
+	const scc_PointIndex tails_to_keep5[2] = { 0, 1 };
 
 	const iscc_Digraph sum_7[1] = {ut_dg7};
 	iscc_Digraph ut_make7;
 	iscc_Digraph ut_make7_ttk;
-	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, NULL, true, &ut_make7);
-	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, tails_to_keep5, true, &ut_make7_ttk);
+	scc_ErrorCode ec31 = iscc_digraph_union_and_delete(1, sum_7, 0, NULL, true, &ut_make7);
+	scc_ErrorCode ec32 = iscc_digraph_union_and_delete(1, sum_7, 2, tails_to_keep5, true, &ut_make7_ttk);
 	assert_int_equal(ec31, SCC_ER_OK);
 	assert_int_equal(ec32, SCC_ER_OK);
 	assert_valid_digraph(&ut_make7, 4);

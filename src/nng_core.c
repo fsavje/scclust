@@ -274,26 +274,14 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 	free(tc.point_store);
 	free(tc.type_groups);
 
-
-	bool* tmp_seedable_indicators = NULL;
-	if (seedable_const != NULL) {
-		tmp_seedable_indicators = calloc(num_data_points, sizeof(bool));
-		for (size_t i = 0; i < num_queries; ++i) {
-			tmp_seedable_indicators[seedable_const[i]] = true;
-		}
-	}
-
 	if (ec == SCC_ER_OK) {
 		if (size_constraint > tc.sum_type_constraints) {
 			// If general size constaint (besides type constraints), we need to keep self-loops
-			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, tmp_seedable_indicators, true, out_nng);
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, num_queries, seedable_const, true, out_nng);
 		} else {
-			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, tmp_seedable_indicators, false, out_nng);
+			ec = iscc_digraph_union_and_delete(num_non_zero_type_constraints, nng_by_type, num_queries, seedable_const, false, out_nng);
 		}
 	}
-
-	free(tmp_seedable_indicators);
-	tmp_seedable_indicators = NULL;
 
 	for (uint_fast16_t i = 0; i < num_non_zero_type_constraints; ++i) {
 		iscc_free_digraph(&nng_by_type[i]);
@@ -335,16 +323,7 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
 		}
 
 		if (ec == SCC_ER_OK) {
-			bool* tmp_seedable_indicators2 = NULL;
-			if (seedable_const != NULL) {
-				tmp_seedable_indicators2 = calloc(num_data_points, sizeof(bool));
-				for (size_t i = 0; i < num_queries; ++i) {
-					tmp_seedable_indicators2[seedable_const[i]] = true;
-				}
-			}
-			ec = iscc_digraph_union_and_delete(2, nng_sum, tmp_seedable_indicators2, false, out_nng);
-			free(tmp_seedable_indicators2);
-			tmp_seedable_indicators2 = NULL;
+			ec = iscc_digraph_union_and_delete(2, nng_sum, num_queries, seedable_const, false, out_nng);
 		}
 
 		iscc_free_digraph(&nng_sum[0]);
