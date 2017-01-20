@@ -55,8 +55,8 @@ int main(void) {
 
 	// Construct scclust data set object
 	scc_DataSet* data_set;
-	ec = scc_init_data_set(10,           // # data points
-	                       2,            // # dimensions
+	ec = scc_init_data_set(10,           // Number of data points
+	                       2,            // Number of dimensions
 	                       20,           // Length of data matrix
 	                       raw_data,     // Data matrix
 	                       &data_set);   // Data set to initialize
@@ -66,7 +66,7 @@ int main(void) {
 	// Make empty clustering object
 	scc_Clabel cluster_labels[10];
 	scc_Clustering* clustering;
-	ec = scc_init_empty_clustering(10,               // Data points
+	ec = scc_init_empty_clustering(10,               // Number of data points
 	                               cluster_labels,   // Clustering labels
 	                               &clustering);     // Clustering to initialize
 	if(ec != SCC_ER_OK) return 1;
@@ -230,7 +230,7 @@ Allowed values: `uint32_t  uint64_t`
 
 Default: `uint32_t`
 
-Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the number of the maximum graph size is given by $\{\text{number of points}\} \times \{\text{minimum size of clusters}\}$. The maximum number of arcs are given by:
+Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the maximum number of arcs is given by `{number of points} x {minimum size of clusters}`. The maximum number of arcs are given by:
 
 | `--with-arcindex=`  | Max arcs  |
 | ------------------- | --------- |

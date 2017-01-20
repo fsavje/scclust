@@ -42,8 +42,8 @@ int main(void) {
 
 	// Construct scclust data set object
 	scc_DataSet* data_set;
-	ec = scc_init_data_set(10,           // # data points
-	                       2,            // # dimensions
+	ec = scc_init_data_set(10,           // Number of data points
+	                       2,            // Number of dimensions
 	                       20,           // Length of data matrix
 	                       raw_data,     // Data matrix
 	                       &data_set);   // Data set to initialize
@@ -53,7 +53,7 @@ int main(void) {
 	// Make empty clustering object
 	scc_Clabel cluster_labels[10];
 	scc_Clustering* clustering;
-	ec = scc_init_empty_clustering(10,               // Data points
+	ec = scc_init_empty_clustering(10,               // Number of data points
 	                               cluster_labels,   // Clustering labels
 	                               &clustering);     // Clustering to initialize
 	if(ec != SCC_ER_OK) return 1;
