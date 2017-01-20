@@ -112,6 +112,51 @@ bool scc_get_latest_error(size_t len_error_message_buffer,
 
 
 // =============================================================================
+// Library types
+// =============================================================================
+
+/** Type used for data point IDs.
+ *
+ *  \note
+ *  Number of data points in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_PointIndex.
+ */
+typedef {% pointindex_type %} scc_PointIndex;
+
+/// Macro for data point ID type.
+#define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
+
+
+/** Type used for cluster labels.
+ *
+ *  \note
+ *  Number of clusters in any clustering problem must be strictly less
+ *  than the maximum number that can be stored in #scc_Clabel.
+ */
+typedef {% clabel_type %} scc_Clabel;
+
+/// Macro for cluster labels type.
+#define SCC_M_CLABEL_TYPE_{% clabel_type %}
+
+/// Label given to unassigned vertices.
+static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
+
+/// Macro for unassigned label.
+#define SCC_M_CLABEL_NA {% clabel_na %}
+
+
+/** Type used to indicate data point type.
+ *
+ *  \note
+ *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
+ */
+typedef {% typelabel_type %} scc_TypeLabel;
+
+/// Macro for cluster data point type.
+#define SCC_M_TYPELABEL_TYPE_{% typelabel_type %}
+
+
+// =============================================================================
 // Data set object
 // =============================================================================
 
@@ -165,29 +210,6 @@ bool scc_is_initialized_data_set(const scc_DataSet* data_set);
 // =============================================================================
 // Clustering object
 // =============================================================================
-
-/** Type used for cluster labels.
- *
- *  \note
- *  Number of clusters in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_Clabel.
- */
-typedef {% clabel_type %} scc_Clabel;
-
-/// Label given to unassigned vertices.
-static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
-
-/** Type used to indicate data point type.
- *
- *  \note
- *  Type labels must be in the sequence `[0, 1, ..., 65534]`.
- */
-typedef {% typelabel_type %} scc_TypeLabel;
-
-/// Type Macros
-#define SCC_M_CLABEL_TYPE_{% clabel_type %}
-#define SCC_M_CLABEL_NA {% clabel_na %}
-#define SCC_M_TYPELABEL_TYPE_{% typelabel_type %}
 
 /// Type used for clusterings
 typedef struct scc_Clustering scc_Clustering;
@@ -247,6 +269,9 @@ enum scc_SeedMethod {
 	 */
 	SCC_SM_LEXICAL,
 
+
+	SCC_SM_BATCHES,
+
 	/** Find seeds ordered by inwards pointing arcs.
 	 *
 	 *  This method counts vertices' inwards pointing arcs and finds seeds in ascending order by the arc count. Vertices pointing to a seed cannot
@@ -286,9 +311,6 @@ enum scc_SeedMethod {
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
 	SCC_SM_EXCLUSION_UPDATING,
-
-
-	SCC_SM_BATCHES,
 };
 
 /// Typedef for the scc_NNGMethod enum
@@ -303,6 +325,7 @@ enum scc_UnassignedMethod {
 };
 
 typedef enum scc_UnassignedMethod scc_UnassignedMethod;
+
 
 enum scc_RadiusMethod {
 	SCC_RM_NO_RADIUS,
@@ -329,7 +352,7 @@ struct scc_ClusterOptions {
 	const scc_TypeLabel* type_labels;
 	scc_SeedMethod seed_method;
 	size_t len_primary_data_points;
-	const bool* primary_data_points;
+	const scc_PointIndex* primary_data_points;
 	scc_UnassignedMethod primary_unassigned_method;
 	scc_UnassignedMethod secondary_unassigned_method;
 	scc_RadiusMethod seed_radius;

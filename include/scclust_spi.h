@@ -26,15 +26,10 @@
 #ifndef SCC_SCCLUST_SPI_HG
 #define SCC_SCCLUST_SPI_HG
 
-{% limits_include %}#ifdef __cplusplus
-{% limits_include %}// So g++ defines integer limits
-{% limits_include %}#define __STDC_LIMIT_MACROS
-{% limits_include %}#endif
-{% limits_include %}
-{% limits_include %}#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "scclust.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,31 +40,9 @@ extern "C" {
 // Internal types
 // =============================================================================
 
-/** Type used for data point IDs. May be unsigned or signed.
- *
- *  \note
- *  Number of data points in any clustering problem must be strictly less
- *  than the maximum number that can be stored in #scc_PointIndex.
- */
-typedef {% pointindex_type %} scc_PointIndex;
-
-static const scc_PointIndex SCC_POINTINDEX_NA = {% pointindex_na %};
-
-/** Type used for arc indices. Must be unsigned.
- *
- *  \note
- *  Number of arcs in any digraph must be less or equal to
- *  the maximum number that can be stored in #iscc_ArcIndex.
- */
-typedef {% arcindex_type %} iscc_ArcIndex;
-
 typedef struct iscc_MaxDistObject iscc_MaxDistObject;
 
 typedef struct iscc_NNSearchObject iscc_NNSearchObject;
-
-#define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
-#define SCC_M_POINTINDEX_NA {% pointindex_na %}
-#define ISCC_M_ARCINDEX_TYPE_{% arcindex_type %}
 
 
 // =============================================================================
@@ -109,23 +82,15 @@ typedef bool (*scc_init_nn_search_object) (void*,
                                            const scc_PointIndex*,
                                            iscc_NNSearchObject**);
 
-typedef bool (*scc_nearest_neighbor_search_digraph) (iscc_NNSearchObject*,
-                                                     size_t,
-                                                     const bool*,
-                                                     bool*,
-                                                     uint32_t,
-                                                     bool,
-                                                     double,
-                                                     iscc_ArcIndex*,
-                                                     scc_PointIndex*);
-
-typedef bool (*scc_nearest_neighbor_search_index) (iscc_NNSearchObject*,
-                                                   size_t,
-                                                   const scc_PointIndex*,
-                                                   uint32_t,
-                                                   bool,
-                                                   double,
-                                                   scc_PointIndex*);
+typedef bool (*scc_nearest_neighbor_search) (iscc_NNSearchObject*,
+                                             size_t,
+                                             const scc_PointIndex*,
+                                             uint32_t,
+                                             bool,
+                                             double,
+                                             size_t*,
+                                             scc_PointIndex*,
+                                             scc_PointIndex*);
 
 typedef bool (*scc_close_nn_search_object) (iscc_NNSearchObject**);
 
@@ -143,8 +108,7 @@ bool scc_set_dist_functions(scc_check_data_set,
                             scc_get_max_dist,
                             scc_close_max_dist_object,
                             scc_init_nn_search_object,
-                            scc_nearest_neighbor_search_digraph,
-                            scc_nearest_neighbor_search_index,
+                            scc_nearest_neighbor_search,
                             scc_close_nn_search_object);
 
 

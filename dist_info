@@ -27,6 +27,7 @@ DIST_FOLDERS="
 	examples
 	examples/ann
 	examples/simple
+	include
 	src"
 
 SOURCE_FILES="
@@ -40,6 +41,7 @@ SOURCE_FILES="
 	examples/ann/Makefile
 	examples/simple/Makefile
 	examples/simple/simple_example.c
+	include/scclust_spi.h
 	src/clustering_struct.h
 	src/cmocka_headers.h
 	src/data_set_struct.h
@@ -69,6 +71,5 @@ SOURCE_FILES="
 TEMPLATE_FILES="
 	DoxyAPI
 	Makefile
-	scclust_spi.h
-	scclust_types.h
-	scclust.h"
+	scclust.h
+	scclust_types.h"

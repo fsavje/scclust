@@ -32,14 +32,14 @@
 *.dSYM/
 
 # Build folders
-build/
-doc/
-include/
-lib/
+/build/
+/doc/
+/lib/
 
 # Build files
 /DoxyAPI
 /Makefile
+/include/scclust.h
 /src/scclust_types.h
 
 # Local miscellaneous

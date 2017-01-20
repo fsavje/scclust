@@ -34,14 +34,11 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 {
 	(void) state;
 
-	const bool primary_data_points[15] = { true,  true,  true,  true,  true,
-	                                       false, false, false, false, false,
-	                                       true,  true,  true,  true,  true };
-
+	const scc_PointIndex primary_data_points[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 
 	iscc_Digraph out_nng1;
 	scc_ErrorCode ec1 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 3, NULL, false, 0.0, &out_nng1);
+	                                                      15, 3, 0, NULL, false, 0.0, &out_nng1);
 	iscc_Digraph ref_nng1;
 	iscc_digraph_from_string("..... ..##. ...../"
 	                         "....# ..#.. ...../"
@@ -68,7 +65,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng2;
 	scc_ErrorCode ec2 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 3, NULL, true, 0.2, &out_nng2);
+	                                                      15, 3, 0, NULL, true, 0.2, &out_nng2);
 	iscc_Digraph ref_nng2;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -95,7 +92,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng3;
 	scc_ErrorCode ec3 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 3, primary_data_points, false, 0.0, &out_nng3);
+	                                                      15, 3, 10, primary_data_points, false, 0.0, &out_nng3);
 	iscc_Digraph ref_nng3;
 	iscc_digraph_from_string("..... ..##. ...../"
 	                         "....# ..#.. ...../"
@@ -122,7 +119,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng4;
 	scc_ErrorCode ec4 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 3, primary_data_points, true, 0.2, &out_nng4);
+	                                                      15, 3, 10, primary_data_points, true, 0.2, &out_nng4);
 	iscc_Digraph ref_nng4;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -149,7 +146,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng5;
 	scc_ErrorCode ec5 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 2, NULL, false, 0.0, &out_nng5);
+	                                                      15, 2, 0, NULL, false, 0.0, &out_nng5);
 	iscc_Digraph ref_nng5;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..#.. ...../"
@@ -176,7 +173,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng6;
 	scc_ErrorCode ec6 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 2, NULL, true, 0.2, &out_nng6);
+	                                                      15, 2, 0, NULL, true, 0.2, &out_nng6);
 	iscc_Digraph ref_nng6;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..#.. ...../"
@@ -203,7 +200,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng7;
 	scc_ErrorCode ec7 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 2, primary_data_points, false, 0.0, &out_nng7);
+	                                                      15, 2, 10, primary_data_points, false, 0.0, &out_nng7);
 	iscc_Digraph ref_nng7;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..#.. ...../"
@@ -230,7 +227,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng8;
 	scc_ErrorCode ec8 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 2, primary_data_points, true, 0.2, &out_nng8);
+	                                                      15, 2, 10, primary_data_points, true, 0.2, &out_nng8);
 	iscc_Digraph ref_nng8;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..#.. ...../"
@@ -256,7 +253,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 
 	iscc_Digraph out_nng9;
 	scc_ErrorCode ec9 = iscc_get_nng_with_size_constraint(&scc_ut_test_data_small_struct,
-	                                                      15, 3, NULL, true, 0.01, &out_nng9);
+	                                                      15, 3, 0, NULL, true, 0.01, &out_nng9);
 	assert_int_equal(ec9, SCC_ER_NO_SOLUTION);
 }
 
@@ -264,9 +261,7 @@ void scc_ut_get_nng_with_size_constraint(void** state)
 void scc_ut_get_nng_with_type_constraint(void** state)
 {
 	(void) state;
-	const bool primary_data_points[15] = { true,  true,  true,  true,  true,
-	                                       false, false, false, false, false,
-	                                       true,  true,  true,  true,  true };
+	const scc_PointIndex primary_data_points[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 
 	const uint32_t type_constraints_two[2] = { 1, 1 };
 	const scc_TypeLabel type_labels_two[15] = { 0, 1, 0, 0, 1,
@@ -282,7 +277,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec1 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, false, 0.0, &out_nng1);
+	                                                      0, NULL, false, 0.0, &out_nng1);
 	iscc_Digraph ref_nng1;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..... ...#./"
@@ -311,7 +306,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec2 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, true, 0.3, &out_nng2);
+	                                                      0, NULL, true, 0.3, &out_nng2);
 	iscc_Digraph ref_nng2;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..... ...../"
@@ -340,7 +335,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec3 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      primary_data_points, false, 0.0, &out_nng3);
+	                                                      10, primary_data_points, false, 0.0, &out_nng3);
 	iscc_Digraph ref_nng3;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..... ...#./"
@@ -369,7 +364,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec4 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      primary_data_points, true, 0.3, &out_nng4);
+	                                                      10, primary_data_points, true, 0.3, &out_nng4);
 	iscc_Digraph ref_nng4;
 	iscc_digraph_from_string("..... ...#. ...../"
 	                         "..... ..... ...../"
@@ -398,7 +393,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec5 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, false, 0.0, &out_nng5);
+	                                                      0, NULL, false, 0.0, &out_nng5);
 	iscc_Digraph ref_nng5;
 	iscc_digraph_from_string("..... ..##. ...../"
 	                         "..... ..#.. ...#./"
@@ -427,7 +422,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec6 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, true, 0.3, &out_nng6);
+	                                                      0, NULL, true, 0.3, &out_nng6);
 	iscc_Digraph ref_nng6;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -456,7 +451,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec7 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      primary_data_points, false, 0.0, &out_nng7);
+	                                                      10, primary_data_points, false, 0.0, &out_nng7);
 	iscc_Digraph ref_nng7;
 	iscc_digraph_from_string("..... ..##. ...../"
 	                         "..... ..#.. ...#./"
@@ -485,7 +480,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec8 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      primary_data_points, true, 0.3, &out_nng8);
+	                                                      10, primary_data_points, true, 0.3, &out_nng8);
 	iscc_Digraph ref_nng8;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -514,7 +509,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec9 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      3, type_constraints_three, type_labels_three,
-	                                                      NULL, false, 0.0, &out_nng9);
+	                                                      0, NULL, false, 0.0, &out_nng9);
 	iscc_Digraph ref_nng9;
 	iscc_digraph_from_string("....# ..... ...#./"
 	                         "#...# ..... ...#./"
@@ -543,7 +538,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec10 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      3, type_constraints_three, type_labels_three,
-	                                                      NULL, true, 0.5, &out_nng10);
+	                                                      0, NULL, true, 0.5, &out_nng10);
 	iscc_Digraph ref_nng10;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -572,7 +567,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec11 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      3, type_constraints_three, type_labels_three,
-	                                                      primary_data_points, false, 0.0, &out_nng11);
+	                                                      10, primary_data_points, false, 0.0, &out_nng11);
 	iscc_Digraph ref_nng11;
 	iscc_digraph_from_string("....# ..... ...#./"
 	                         "#...# ..... ...#./"
@@ -601,7 +596,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec12 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      3, type_constraints_three, type_labels_three,
-	                                                      primary_data_points, true, 0.5, &out_nng12);
+	                                                      10, primary_data_points, true, 0.5, &out_nng12);
 	iscc_Digraph ref_nng12;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -630,7 +625,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec13 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
 	                                                       3, type_constraints_three, type_labels_three,
-	                                                       NULL, false, 0.0, &out_nng13);
+	                                                       0, NULL, false, 0.0, &out_nng13);
 	iscc_Digraph ref_nng13;
 	iscc_digraph_from_string("....# ...#. ...#./"
 	                         "#...# ..... ...#./"
@@ -659,7 +654,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec14 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
 	                                                       3, type_constraints_three, type_labels_three,
-	                                                       NULL, true, 0.5, &out_nng14);
+	                                                       0, NULL, true, 0.5, &out_nng14);
 	iscc_Digraph ref_nng14;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -688,7 +683,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec15 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
 	                                                       3, type_constraints_three, type_labels_three,
-	                                                       primary_data_points, false, 0.0, &out_nng15);
+	                                                       10, primary_data_points, false, 0.0, &out_nng15);
 	iscc_Digraph ref_nng15;
 	iscc_digraph_from_string("....# ...#. ...#./"
 	                         "#...# ..... ...#./"
@@ -717,7 +712,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec16 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                       15, 4,
 	                                                       3, type_constraints_three, type_labels_three,
-	                                                       primary_data_points, true, 0.5, &out_nng16);
+	                                                       10, primary_data_points, true, 0.5, &out_nng16);
 	iscc_Digraph ref_nng16;
 	iscc_digraph_from_string("..... ..... ...../"
 	                         "..... ..... ...../"
@@ -746,7 +741,7 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec17 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, true, 1.0, &out_nng17);
+	                                                      0, NULL, true, 1.0, &out_nng17);
 	assert_int_equal(ec17, SCC_ER_OK);
 	iscc_free_digraph(&out_nng17);
 
@@ -754,20 +749,18 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec18 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two, type_labels_two,
-	                                                      NULL, true, 0.01, &out_nng18);
+	                                                      0, NULL, true, 0.01, &out_nng18);
 	assert_int_equal(ec18, SCC_ER_NO_SOLUTION);
 
 
 	const uint32_t type_constraints_two_mod[2] = { 1, 0 };
-	const bool primary_data_points_mod[15] = { false, true, false, false, true,
-	                                           false, false, true, true, true,
-	                                           true, false, false, false, true };
+	const scc_PointIndex primary_data_points_mod[7] = { 1, 4, 7, 8, 9, 10, 14 };
 
 	iscc_Digraph out_nng19;
 	scc_ErrorCode ec19 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two_mod, type_labels_two,
-	                                                      primary_data_points_mod, true, 0.04, &out_nng19);
+	                                                      7, primary_data_points_mod, true, 0.04, &out_nng19);
 	assert_int_equal(ec19, SCC_ER_OK);
 	iscc_free_digraph(&out_nng19);
 
@@ -775,21 +768,21 @@ void scc_ut_get_nng_with_type_constraint(void** state)
 	scc_ErrorCode ec20 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 2,
 	                                                      2, type_constraints_two_mod, type_labels_two,
-	                                                      primary_data_points_mod, true, 0.03, &out_nng20);
+	                                                      7, primary_data_points_mod, true, 0.03, &out_nng20);
 	assert_int_equal(ec20, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng21;
 	scc_ErrorCode ec21 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two_mod, type_labels_two,
-	                                                      primary_data_points_mod, true, 0.04, &out_nng21);
+	                                                      7, primary_data_points_mod, true, 0.04, &out_nng21);
 	assert_int_equal(ec21, SCC_ER_NO_SOLUTION);
 
 	iscc_Digraph out_nng22;
 	scc_ErrorCode ec22 = iscc_get_nng_with_type_constraint(&scc_ut_test_data_small_struct,
 	                                                      15, 3,
 	                                                      2, type_constraints_two_mod, type_labels_two,
-	                                                      primary_data_points_mod, true, 0.06, &out_nng22);
+	                                                      7, primary_data_points_mod, true, 0.06, &out_nng22);
 	assert_int_equal(ec22, SCC_ER_OK);
 	iscc_free_digraph(&out_nng22);
 }
@@ -873,9 +866,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 
 	scc_Clabel external_cluster_labels[15];
 	const scc_Clabel M = SCC_CLABEL_NA;
-	const bool primary_data_points[15] = { true, true, true, true, true,
-	                                       false, false, false, false, false,
-	                                       true, true, true, true, true };
+	const scc_PointIndex primary_data_points[10] = { 0, 1, 2, 3, 4, 10, 11, 12, 13, 14 };
 
 	scc_Clustering* cl1;
 	assert_int_equal(scc_init_empty_clustering(15, external_cluster_labels, &cl1), SCC_ER_OK);
@@ -906,7 +897,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec1 = iscc_make_nng_clusters_from_seeds(cl1, &scc_ut_test_data_small_struct,
 	                                                      &sr1, &nng1, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label1[15] = { 0, 1, 2, 3, 4, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4 };
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_int_equal(cl1->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -950,7 +941,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec2 = iscc_make_nng_clusters_from_seeds(cl2, &scc_ut_test_data_small_struct,
 	                                                      &sr2, &nng2, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label2[15] = { 0, M, 1, 2, 3, 0, 0, M, M, 1, 1, 2, 2, 3, 3 };
 	assert_int_equal(ec2, SCC_ER_OK);
 	assert_int_equal(cl2->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -994,7 +985,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec3 = iscc_make_nng_clusters_from_seeds(cl3, &scc_ut_test_data_small_struct,
 	                                                      &sr3, &nng3, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label3[15] = { 0, 1, 0, 2, 3,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
 	assert_int_equal(ec3, SCC_ER_OK);
 	assert_int_equal(cl3->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1038,7 +1029,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec3a = iscc_make_nng_clusters_from_seeds(cl3a, &scc_ut_test_data_small_struct,
 	                                                      &sr3a, &nng3a, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label3a[15] = { 0, 1, 0, 2, 3,   1, 0, M, 3, 3,   2, 3, 1, 2, M };
 	assert_int_equal(ec3a, SCC_ER_OK);
 	assert_int_equal(cl3a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1082,7 +1073,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec4 = iscc_make_nng_clusters_from_seeds(cl4, &scc_ut_test_data_small_struct,
 	                                                      &sr4, &nng4, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label4[15] = { 0, 1, 0, 2, 3,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_int_equal(cl4->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1126,7 +1117,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec4a = iscc_make_nng_clusters_from_seeds(cl4a, &scc_ut_test_data_small_struct,
 	                                                      &sr4a, &nng4a, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label4a[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 1 };
 	assert_int_equal(ec4a, SCC_ER_OK);
 	assert_int_equal(cl4a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1170,7 +1161,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec5 = iscc_make_nng_clusters_from_seeds(cl5, &scc_ut_test_data_small_struct,
 	                                                      &sr5, &nng5, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label5[15] = { 0, 1, 0, 2, 2,   1, 0, 1, 3, 3,   2, 3, 1, 2, 0 };
 	assert_int_equal(ec5, SCC_ER_OK);
 	assert_int_equal(cl5->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1214,7 +1205,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec5a = iscc_make_nng_clusters_from_seeds(cl5a, &scc_ut_test_data_small_struct,
 	                                                      &sr5a, &nng5a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.1,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label5a[15] = { 0, 1, 0, 2, 2,   1, 0, M, 3, 3,   2, 3, 1, 2, 0 };
 	assert_int_equal(ec5a, SCC_ER_OK);
 	assert_int_equal(cl5a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1258,7 +1249,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec6 = iscc_make_nng_clusters_from_seeds(cl6, &scc_ut_test_data_small_struct,
 	                                                      &sr6, &nng6, true,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      NULL, SCC_UM_IGNORE, false, 0.0);
+	                                                      0, NULL, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label6[15] = { 0, 1, 0, 2, 0,   1, 0, 3, 3, 3,   2, 3, 1, 2, 0 };
 	assert_int_equal(ec6, SCC_ER_OK);
 	assert_int_equal(cl6->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1302,7 +1293,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec7 = iscc_make_nng_clusters_from_seeds(cl7, &scc_ut_test_data_small_struct,
 	                                                      &sr7, &nng7, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label7[15] = { 1, 1, M, M, 2,   M, 1, M, 2, M,   M, 0, 2, 0, 0 };
 	assert_int_equal(ec7, SCC_ER_OK);
 	assert_int_equal(cl7->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1346,7 +1337,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec7a = iscc_make_nng_clusters_from_seeds(cl7a, &scc_ut_test_data_small_struct,
 	                                                      &sr7a, &nng7a, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label7a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7a, SCC_ER_OK);
 	assert_int_equal(cl7a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1390,7 +1381,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec7b = iscc_make_nng_clusters_from_seeds(cl7b, &scc_ut_test_data_small_struct,
 	                                                      &sr7b, &nng7b, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label7b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7b, SCC_ER_OK);
 	assert_int_equal(cl7b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1434,7 +1425,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec7c = iscc_make_nng_clusters_from_seeds(cl7c, &scc_ut_test_data_small_struct,
 	                                                      &sr7c, &nng7c, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label7c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7c, SCC_ER_OK);
 	assert_int_equal(cl7c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1478,7 +1469,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec7d = iscc_make_nng_clusters_from_seeds(cl7d, &scc_ut_test_data_small_struct,
 	                                                      &sr7d, &nng7d, true,
 	                                                      SCC_UM_IGNORE, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label7d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec7d, SCC_ER_OK);
 	assert_int_equal(cl7d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1522,7 +1513,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec8 = iscc_make_nng_clusters_from_seeds(cl8, &scc_ut_test_data_small_struct,
 	                                                      &sr8, &nng8, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label8[15] = { 1, 1, 1, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec8, SCC_ER_OK);
 	assert_int_equal(cl8->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1566,7 +1557,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec8a = iscc_make_nng_clusters_from_seeds(cl8a, &scc_ut_test_data_small_struct,
 	                                                      &sr8a, &nng8a, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label8a[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec8a, SCC_ER_OK);
 	assert_int_equal(cl8a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1610,7 +1601,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec8b = iscc_make_nng_clusters_from_seeds(cl8b, &scc_ut_test_data_small_struct,
 	                                                      &sr8b, &nng8b, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label8b[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec8b, SCC_ER_OK);
 	assert_int_equal(cl8b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1654,7 +1645,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec8c = iscc_make_nng_clusters_from_seeds(cl8c, &scc_ut_test_data_small_struct,
 	                                                      &sr8c, &nng8c, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label8c[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec8c, SCC_ER_OK);
 	assert_int_equal(cl8c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1698,7 +1689,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec8d = iscc_make_nng_clusters_from_seeds(cl8d, &scc_ut_test_data_small_struct,
 	                                                      &sr8d, &nng8d, true,
 	                                                      SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label8d[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec8d, SCC_ER_OK);
 	assert_int_equal(cl8d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1742,7 +1733,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec9 = iscc_make_nng_clusters_from_seeds(cl9, &scc_ut_test_data_small_struct,
 	                                                      &sr9, &nng9, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label9[15] = { 1, 1, 1, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9, SCC_ER_OK);
 	assert_int_equal(cl9->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1786,7 +1777,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec9a = iscc_make_nng_clusters_from_seeds(cl9a, &scc_ut_test_data_small_struct,
 	                                                      &sr9a, &nng9a, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label9a[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9a, SCC_ER_OK);
 	assert_int_equal(cl9a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1830,7 +1821,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec9b = iscc_make_nng_clusters_from_seeds(cl9b, &scc_ut_test_data_small_struct,
 	                                                      &sr9b, &nng9b, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label9b[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9b, SCC_ER_OK);
 	assert_int_equal(cl9b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1874,7 +1865,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec9c = iscc_make_nng_clusters_from_seeds(cl9c, &scc_ut_test_data_small_struct,
 	                                                      &sr9c, &nng9c, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label9c[15] = { 1, 1, 1, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9c, SCC_ER_OK);
 	assert_int_equal(cl9c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1918,7 +1909,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec9d = iscc_make_nng_clusters_from_seeds(cl9d, &scc_ut_test_data_small_struct,
 	                                                      &sr9d, &nng9d, true,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label9d[15] = { 1, 1, 1, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec9d, SCC_ER_OK);
 	assert_int_equal(cl9d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -1962,7 +1953,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec10 = iscc_make_nng_clusters_from_seeds(cl10, &scc_ut_test_data_small_struct,
 	                                                      &sr10, &nng10, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label10[15] = { 1, 1, 2, 2, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec10, SCC_ER_OK);
 	assert_int_equal(cl10->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2006,7 +1997,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec10a = iscc_make_nng_clusters_from_seeds(cl10a, &scc_ut_test_data_small_struct,
 	                                                      &sr10a, &nng10a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label10a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec10a, SCC_ER_OK);
 	assert_int_equal(cl10a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2050,7 +2041,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec10b = iscc_make_nng_clusters_from_seeds(cl10b, &scc_ut_test_data_small_struct,
 	                                                      &sr10b, &nng10b, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label10b[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec10b, SCC_ER_OK);
 	assert_int_equal(cl10b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2094,7 +2085,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec10c = iscc_make_nng_clusters_from_seeds(cl10c, &scc_ut_test_data_small_struct,
 	                                                      &sr10c, &nng10c, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label10c[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec10c, SCC_ER_OK);
 	assert_int_equal(cl10c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2138,7 +2129,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec10d = iscc_make_nng_clusters_from_seeds(cl10d, &scc_ut_test_data_small_struct,
 	                                                      &sr10d, &nng10d, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label10d[15] = { 1, 1, 2, 2, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec10d, SCC_ER_OK);
 	assert_int_equal(cl10d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2182,7 +2173,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec11 = iscc_make_nng_clusters_from_seeds(cl11, &scc_ut_test_data_small_struct,
 	                                                      &sr11, &nng11, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label11[15] = { 1, 1, 2, M, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11, SCC_ER_OK);
 	assert_int_equal(cl11->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2226,7 +2217,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec11a = iscc_make_nng_clusters_from_seeds(cl11a, &scc_ut_test_data_small_struct,
 	                                                      &sr11a, &nng11a, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label11a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11a, SCC_ER_OK);
 	assert_int_equal(cl11a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2270,7 +2261,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec11b = iscc_make_nng_clusters_from_seeds(cl11b, &scc_ut_test_data_small_struct,
 	                                                      &sr11b, &nng11b, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label11b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11b, SCC_ER_OK);
 	assert_int_equal(cl11b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2314,7 +2305,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec11c = iscc_make_nng_clusters_from_seeds(cl11c, &scc_ut_test_data_small_struct,
 	                                                      &sr11c, &nng11c, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label11c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11c, SCC_ER_OK);
 	assert_int_equal(cl11c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2358,7 +2349,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec11d = iscc_make_nng_clusters_from_seeds(cl11d, &scc_ut_test_data_small_struct,
 	                                                      &sr11d, &nng11d, false,
 	                                                      SCC_UM_CLOSEST_ASSIGNED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label11d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec11d, SCC_ER_OK);
 	assert_int_equal(cl11d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2402,7 +2393,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec12 = iscc_make_nng_clusters_from_seeds(cl12, &scc_ut_test_data_small_struct,
 	                                                      &sr12, &nng12, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label12[15] = { 1, 1, 2, 0, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec12, SCC_ER_OK);
 	assert_int_equal(cl12->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2446,7 +2437,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec12a = iscc_make_nng_clusters_from_seeds(cl12a, &scc_ut_test_data_small_struct,
 	                                                      &sr12a, &nng12a, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label12a[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec12a, SCC_ER_OK);
 	assert_int_equal(cl12a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2490,7 +2481,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec12b = iscc_make_nng_clusters_from_seeds(cl12b, &scc_ut_test_data_small_struct,
 	                                                      &sr12b, &nng12b, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label12b[15] = { 1, 1, 2, 0, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec12b, SCC_ER_OK);
 	assert_int_equal(cl12b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2534,7 +2525,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec12c = iscc_make_nng_clusters_from_seeds(cl12c, &scc_ut_test_data_small_struct,
 	                                                      &sr12c, &nng12c, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label12c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec12c, SCC_ER_OK);
 	assert_int_equal(cl12c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2578,7 +2569,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec12d = iscc_make_nng_clusters_from_seeds(cl12d, &scc_ut_test_data_small_struct,
 	                                                      &sr12d, &nng12d, false,
 	                                                      SCC_UM_CLOSEST_SEED, false, 0.0,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label12d[15] = { 1, 1, 2, 0, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec12d, SCC_ER_OK);
 	assert_int_equal(cl12d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2622,7 +2613,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec13 = iscc_make_nng_clusters_from_seeds(cl13, &scc_ut_test_data_small_struct,
 	                                                      &sr13, &nng13, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_IGNORE, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_IGNORE, false, 0.0);
 	const scc_Clabel ref_cluster_label13[15] = { 1, 1, M, M, 2,   M, 1, M, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13, SCC_ER_OK);
 	assert_int_equal(cl13->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2666,7 +2657,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec13a = iscc_make_nng_clusters_from_seeds(cl13a, &scc_ut_test_data_small_struct,
 	                                                      &sr13a, &nng13a, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0);
 	const scc_Clabel ref_cluster_label13a[15] = { 1, 1, 2, 2, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13a, SCC_ER_OK);
 	assert_int_equal(cl13a->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2710,7 +2701,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec13b = iscc_make_nng_clusters_from_seeds(cl13b, &scc_ut_test_data_small_struct,
 	                                                      &sr13b, &nng13b, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 0.75);
 	const scc_Clabel ref_cluster_label13b[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13b, SCC_ER_OK);
 	assert_int_equal(cl13b->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2754,7 +2745,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec13c = iscc_make_nng_clusters_from_seeds(cl13c, &scc_ut_test_data_small_struct,
 	                                                      &sr13c, &nng13c, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0);
 	const scc_Clabel ref_cluster_label13c[15] = { 1, 1, 2, 0, 2,   0, 1, 1, 2, 2,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13c, SCC_ER_OK);
 	assert_int_equal(cl13c->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -2798,7 +2789,7 @@ void scc_ut_make_nng_clusters_from_seeds(void** state)
 	scc_ErrorCode ec13d = iscc_make_nng_clusters_from_seeds(cl13d, &scc_ut_test_data_small_struct,
 	                                                      &sr13d, &nng13d, false,
 	                                                      SCC_UM_CLOSEST_SEED, true, 0.5,
-	                                                      primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
+	                                                      10, primary_data_points, SCC_UM_CLOSEST_SEED, true, 0.75);
 	const scc_Clabel ref_cluster_label13d[15] = { 1, 1, 2, M, 2,   M, 1, 1, 2, M,   2, 0, 2, 0, 0 };
 	assert_int_equal(ec13d, SCC_ER_OK);
 	assert_int_equal(cl13d->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);

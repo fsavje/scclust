@@ -30,7 +30,7 @@ void iscc_run_nonval_tests_batches(scc_UnassignedMethod unassigned_method,
                                    bool radius_constraint,
                                    double radius,
                                    size_t len_primary_data_points,
-                                   const bool primary_data_points[]);
+                                   const scc_PointIndex primary_data_points[]);
 
 static void iscc_make_batch_options(scc_ClusterOptions* out_options,
                                     uint32_t size_constraint,
@@ -38,7 +38,7 @@ static void iscc_make_batch_options(scc_ClusterOptions* out_options,
                                     bool radius_constraint,
                                     double radius,
                                     size_t len_primary_data_points,
-                                    const bool primary_data_points[],
+                                    const scc_PointIndex primary_data_points[],
                                     uint32_t batch_size)
 {
 	*out_options = (scc_ClusterOptions) {
@@ -73,7 +73,7 @@ static scc_ClusterOptions iscc_translate_options(const uint32_t size_constraint,
                                                  const bool radius_constraint,
                                                  const double radius,
                                                  const size_t len_primary_data_points,
-                                                 const bool* const primary_data_points,
+                                                 const scc_PointIndex* const primary_data_points,
                                                  const scc_UnassignedMethod secondary_unassigned_method,
                                                  const bool secondary_radius_constraint,
                                                  const double secondary_radius,
@@ -145,31 +145,13 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_Clustering* cl_compare;
 	scc_ClusterOptions options;
 	scc_ErrorCode ec;
-	const bool T = true;
-	const bool F = false;
 	const scc_Clabel NA = SCC_CLABEL_NA;
 	scc_Clabel external_cluster_labels[100];
 	scc_Clabel external_cluster_labels_compare[100];
-	const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F };
-	const bool primary_data_points_none[100] = { F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F,
-	                                             F, F, F, F, F, F, F, F, F, F };
+	const size_t len_primary_data_points = 50;
+	const scc_PointIndex primary_data_points[50] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 40,
+	                                        41, 42, 43, 44, 45, 46, 47, 48, 49, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+	                                        80, 81, 82, 83, 84, 85, 86, 87, 88, 89 };
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 3,
@@ -232,13 +214,6 @@ void scc_ut_nng_clustering_batches(void** state)
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	iscc_make_batch_options(&options, 3,
-	                                SCC_UM_IGNORE, false, 0.0, 50, primary_data_points, 10);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	scc_free_clustering(&cl);
-
 	scc_init_existing_clustering(100, 10, external_cluster_labels, false, &cl);
 	iscc_make_batch_options(&options, 3,
 	                                SCC_UM_IGNORE, false, 0.0, 0, NULL, 10);
@@ -253,12 +228,6 @@ void scc_ut_nng_clustering_batches(void** state)
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	iscc_make_batch_options(&options, 3,
-	                                SCC_UM_IGNORE, false, 0.0, 100, primary_data_points_none, 10);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
-	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
-	scc_free_clustering(&cl);
 
 /*
 	DOES NOT WORK WITH ANN, CHECK WHY!
@@ -588,7 +557,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 3,
 	                                SCC_UM_IGNORE, false, 0.0,
-	                                100, primary_data_points, 0);
+	                                len_primary_data_points, primary_data_points, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -605,7 +574,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -619,7 +588,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 2,
 	                                SCC_UM_IGNORE, false, 0.0,
-	                                100, primary_data_points, 10);
+	                                len_primary_data_points, primary_data_points, 10);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -636,7 +605,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -650,7 +619,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 10,
 	                                SCC_UM_IGNORE, false, 0.0,
-	                                100, primary_data_points, 1);
+	                                len_primary_data_points, primary_data_points, 1);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -667,7 +636,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -683,7 +652,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 3,
 	                                SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                100, primary_data_points, 0);
+	                                len_primary_data_points, primary_data_points, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -704,7 +673,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 2,
 	                                SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                100, primary_data_points, 10);
+	                                len_primary_data_points, primary_data_points, 10);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -725,7 +694,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 10,
 	                                SCC_UM_ANY_NEIGHBOR, false, 0.0,
-	                                100, primary_data_points, 1);
+	                                len_primary_data_points, primary_data_points, 1);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -748,7 +717,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 3,
 	                                SCC_UM_IGNORE, true, 20.0,
-	                                100, primary_data_points, 0);
+	                                len_primary_data_points, primary_data_points, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -765,7 +734,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(3,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -779,7 +748,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 2,
 	                                SCC_UM_IGNORE, true, 20.0,
-	                                100, primary_data_points, 10);
+	                                len_primary_data_points, primary_data_points, 10);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -796,7 +765,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(2,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -810,7 +779,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 10,
 	                                SCC_UM_IGNORE, true, 30.0,
-	                                100, primary_data_points, 1);
+	                                len_primary_data_points, primary_data_points, 1);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -827,7 +796,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	options = iscc_translate_options(10,
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
-	                        100, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
+	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl_compare, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->num_clusters, cl_compare->num_clusters);
@@ -843,7 +812,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 3,
 	                                SCC_UM_ANY_NEIGHBOR, true, 20.0,
-	                                100, primary_data_points, 0);
+	                                len_primary_data_points, primary_data_points, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -864,7 +833,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 2,
 	                                SCC_UM_ANY_NEIGHBOR, true, 20.0,
-	                                100, primary_data_points, 10);
+	                                len_primary_data_points, primary_data_points, 10);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -885,7 +854,7 @@ void scc_ut_nng_clustering_batches(void** state)
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	iscc_make_batch_options(&options, 10,
 	                                SCC_UM_ANY_NEIGHBOR, true, 30.0,
-	                                100, primary_data_points, 1);
+	                                len_primary_data_points, primary_data_points, 1);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
@@ -906,28 +875,20 @@ void scc_ut_nng_clustering_batches_nonval(void** state)
 {
 	(void) state;
 
-	const bool T = true;
-	const bool F = false;
-	const bool primary_data_points[100] = { T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F,
-	                                        T, T, T, T, T, T, T, T, T, T,
-	                                        F, F, F, F, F, F, F, F, F, F };
+	const size_t len_primary_data_points = 50;
+	const scc_PointIndex primary_data_points[50] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 40,
+	                                        41, 42, 43, 44, 45, 46, 47, 48, 49, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+	                                        80, 81, 82, 83, 84, 85, 86, 87, 88, 89 };
 
 	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, false, 0.0, 0, NULL);
 	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, false, 0.0, 0, NULL);
 	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, true, 40.0, 0, NULL);
 	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, true, 40.0, 0, NULL);
 
-	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, false, 0.0, 100, primary_data_points);
-	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, false, 0.0, 100, primary_data_points);
-	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, true, 40.0, 100, primary_data_points);
-	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, true, 40.0, 100, primary_data_points);
+	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, false, 0.0, len_primary_data_points, primary_data_points);
+	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, false, 0.0, len_primary_data_points, primary_data_points);
+	iscc_run_nonval_tests_batches(SCC_UM_IGNORE, true, 40.0, len_primary_data_points, primary_data_points);
+	iscc_run_nonval_tests_batches(SCC_UM_ANY_NEIGHBOR, true, 40.0, len_primary_data_points, primary_data_points);
 }
 
 
@@ -948,7 +909,7 @@ void iscc_run_nonval_tests_batches(const scc_UnassignedMethod unassigned_method,
                                    const bool radius_constraint,
                                    const double radius,
                                    const size_t len_primary_data_points,
-                                   const bool primary_data_points[const])
+                                   const scc_PointIndex primary_data_points[const])
 {
 	bool cl_is_OK;
 	scc_Clustering* cl;

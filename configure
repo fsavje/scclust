@@ -174,14 +174,11 @@ DOC_TARGETS="include"
 SCCH_LIMITSH="false"
 SCCH_CLABEL_TYPE=""
 SCCH_CLABEL_NA=""
+SCCH_POINTINDEX_TYPE=""
 SCCH_TYPELABEL_TYPE=""
 
-SPIH_LIMITSH="false"
-SPIH_POINTINDEX_TYPE=""
-SPIH_POINTINDEX_NA=""
-SPIH_ARCINDEX_TYPE=""
-
 TYPEH_LIMITSH="false"
+TYPEH_ARCINDEX_TYPE=""
 TYPEH_CLABEL_MAX=""
 TYPEH_POINTINDEX_MAX=""
 TYPEH_ARCINDEX_MAX=""
@@ -218,25 +215,16 @@ fi
 
 case $OPT_POINTINDEX_TYPE in
 	uint32_t )
-		SPIH_POINTINDEX_TYPE="uint32_t"
-		SPIH_POINTINDEX_NA="UINT32_MAX"
+		SCCH_POINTINDEX_TYPE="uint32_t"
 		TYPEH_POINTINDEX_MAX="UINT32_MAX"
 		;;
 	uint64_t )
-		SPIH_POINTINDEX_TYPE="uint64_t"
-		SPIH_POINTINDEX_NA="UINT64_MAX"
+		SCCH_POINTINDEX_TYPE="uint64_t"
 		TYPEH_POINTINDEX_MAX="UINT64_MAX"
 		;;
 	int )
-		SPIH_POINTINDEX_TYPE="int"
-		SPIH_LIMITSH="true"
-		SPIH_POINTINDEX_NA="INT_MAX"
-		TYPEH_LIMITSH="true"
-		TYPEH_POINTINDEX_MAX="INT_MAX"
-		;;
-	int_mna )
-		SPIH_POINTINDEX_TYPE="int"
-		SPIH_POINTINDEX_NA="-1"
+		SCCH_POINTINDEX_TYPE="int"
+		SCCH_LIMITSH="true"
 		TYPEH_LIMITSH="true"
 		TYPEH_POINTINDEX_MAX="INT_MAX"
 		;;
@@ -248,11 +236,11 @@ esac
 
 case $OPT_ARCINDEX_TYPE in
 	uint32_t )
-		SPIH_ARCINDEX_TYPE="uint32_t"
+		TYPEH_ARCINDEX_TYPE="uint32_t"
 		TYPEH_ARCINDEX_MAX="UINT32_MAX"
 		;;
 	uint64_t )
-		SPIH_ARCINDEX_TYPE="uint64_t"
+		TYPEH_ARCINDEX_TYPE="uint64_t"
 		TYPEH_ARCINDEX_MAX="UINT64_MAX"
 		;;
 	* )
@@ -347,12 +335,6 @@ else
 	SCCH_LIMITSH=",g/{% limits_include %}/d"
 fi
 
-if [ "$SPIH_LIMITSH" = "true" ]; then
-	SPIH_LIMITSH=",s/{% limits_include %}//g"
-else
-	SPIH_LIMITSH=",g/{% limits_include %}/d"
-fi
-
 if [ "$TYPEH_LIMITSH" = "true" ]; then
 	TYPEH_LIMITSH=",s/{% limits_include %}//g"
 else
@@ -441,6 +423,7 @@ EOF
 
 ed -s $SOURCE_DIR/templates/scclust.h > $BUILD_DIR/include/scclust.h <<EOF
 $SCCH_LIMITSH
+,s/{% pointindex_type %}/$SCCH_POINTINDEX_TYPE/g
 ,s/{% clabel_type %}/$SCCH_CLABEL_TYPE/g
 ,s/{% clabel_na %}/$SCCH_CLABEL_NA/g
 ,s/{% typelabel_type %}/$SCCH_TYPELABEL_TYPE/g
@@ -451,17 +434,9 @@ $SCCH_LIMITSH
 q
 EOF
 
-ed -s $SOURCE_DIR/templates/scclust_spi.h > $BUILD_DIR/include/scclust_spi.h <<EOF
-$SPIH_LIMITSH
-,s/{% pointindex_type %}/$SPIH_POINTINDEX_TYPE/g
-,s/{% pointindex_na %}/$SPIH_POINTINDEX_NA/g
-,s/{% arcindex_type %}/$SPIH_ARCINDEX_TYPE/g
-,p
-q
-EOF
-
 ed -s $SOURCE_DIR/templates/scclust_types.h > $BUILD_DIR/src/scclust_types.h <<EOF
 $TYPEH_LIMITSH
+,s/{% arcindex_type %}/$TYPEH_ARCINDEX_TYPE/g
 ,s/{% clabel_max %}/$TYPEH_CLABEL_MAX/g
 ,s/{% pointindex_max %}/$TYPEH_POINTINDEX_MAX/g
 ,s/{% arcindex_max %}/$TYPEH_ARCINDEX_MAX/g

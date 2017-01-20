@@ -1011,9 +1011,6 @@ void scc_ut_fs_exclusion_graph(void** state)
 {
 	(void) state;
 
-	bool keep_vertex[18] = { true, true, true, true, true, true,
-	                         true, true, true, true, true, true,
-	                         true, true, true, true, true, true };
 	iscc_Digraph nng;
 	iscc_digraph_from_string(".#..#............./"
 	                         "#...#............./"
@@ -1055,15 +1052,13 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         ".........#..###.#./",
 	                         &exg);
 	iscc_Digraph exclusion_graph;
-	scc_ErrorCode ec1 = iscc_fs_exclusion_graph(&nng, keep_vertex, &exclusion_graph);
+	scc_ErrorCode ec1 = iscc_fs_exclusion_graph(&nng, 0, NULL, &exclusion_graph);
 	assert_int_equal(ec1, SCC_ER_OK);
 	assert_equal_digraph(&exg, &exclusion_graph);
 	iscc_free_digraph(&nng);
 	iscc_free_digraph(&exg);
 	iscc_free_digraph(&exclusion_graph);
 
-	bool keep_vertex2[10] = { true, true, true, true, true,
-	                          true, true, true, true, true };
 	iscc_Digraph nng2;
 	iscc_digraph_from_string(".#..# ...../"
 	                         "..... ...../"
@@ -1090,7 +1085,7 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         "..#.. ..##./",
 	                         &exg2);
 	iscc_Digraph exclusion_graph2;
-	scc_ErrorCode ec2 = iscc_fs_exclusion_graph(&nng2, keep_vertex2, &exclusion_graph2);
+	scc_ErrorCode ec2 = iscc_fs_exclusion_graph(&nng2, 0, NULL, &exclusion_graph2);
 	assert_int_equal(ec2, SCC_ER_OK);
 	assert_equal_digraph(&exg2, &exclusion_graph2);
 	iscc_free_digraph(&nng2);
@@ -1138,7 +1133,7 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         ".........#..###.#./",
 	                         &exg3);
 	iscc_Digraph exclusion_graph3;
-	scc_ErrorCode ec3 = iscc_fs_exclusion_graph(&nng3, keep_vertex, &exclusion_graph3);
+	scc_ErrorCode ec3 = iscc_fs_exclusion_graph(&nng3, 0, NULL, &exclusion_graph3);
 	assert_int_equal(ec3, SCC_ER_OK);
 	assert_equal_digraph(&exg3, &exclusion_graph3);
 	iscc_free_digraph(&nng3);
@@ -1171,7 +1166,7 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         "..#.. ..##./",
 	                         &exg4);
 	iscc_Digraph exclusion_graph4;
-	scc_ErrorCode ec4 = iscc_fs_exclusion_graph(&nng4, keep_vertex2, &exclusion_graph4);
+	scc_ErrorCode ec4 = iscc_fs_exclusion_graph(&nng4, 0, NULL, &exclusion_graph4);
 	assert_int_equal(ec4, SCC_ER_OK);
 	assert_equal_digraph(&exg4, &exclusion_graph4);
 	iscc_free_digraph(&nng4);
@@ -1179,9 +1174,7 @@ void scc_ut_fs_exclusion_graph(void** state)
 	iscc_free_digraph(&exclusion_graph4);
 
 
-	bool keep_vertex5[18] = { true, false, true, false, true, false,
-	                          true, false, true, false, true, false,
-	                          true, false, true, false, true, false };
+	scc_PointIndex keep_vertex5[9] = { 0, 2, 4, 6, 8, 10, 12, 14, 16 };
 	iscc_Digraph nng5;
 	iscc_digraph_from_string(".#..#............./"
 	                         "#...#............./"
@@ -1223,15 +1216,14 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         "................../",
 	                         &exg5);
 	iscc_Digraph exclusion_graph5;
-	scc_ErrorCode ec5 = iscc_fs_exclusion_graph(&nng5, keep_vertex5, &exclusion_graph5);
+	scc_ErrorCode ec5 = iscc_fs_exclusion_graph(&nng5, 9, keep_vertex5, &exclusion_graph5);
 	assert_int_equal(ec5, SCC_ER_OK);
 	assert_equal_digraph(&exg5, &exclusion_graph5);
 	iscc_free_digraph(&nng5);
 	iscc_free_digraph(&exg5);
 	iscc_free_digraph(&exclusion_graph5);
 
-	bool keep_vertex6[10] = { true, false, true, false, true,
-	                          true, true, true, false, false };
+	scc_PointIndex keep_vertex6[6] = { 0, 2, 4, 5, 6, 7 };
 	iscc_Digraph nng6;
 	iscc_digraph_from_string(".#..# ...../"
 	                         "..... ...../"
@@ -1258,7 +1250,7 @@ void scc_ut_fs_exclusion_graph(void** state)
 	                         "..... ...../",
 	                         &exg6);
 	iscc_Digraph exclusion_graph6;
-	scc_ErrorCode ec6 = iscc_fs_exclusion_graph(&nng6, keep_vertex6, &exclusion_graph6);
+	scc_ErrorCode ec6 = iscc_fs_exclusion_graph(&nng6, 6, keep_vertex6, &exclusion_graph6);
 	assert_int_equal(ec6, SCC_ER_OK);
 	assert_equal_digraph(&exg6, &exclusion_graph6);
 	iscc_free_digraph(&nng6);

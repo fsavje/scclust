@@ -91,8 +91,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
 	}
 	scc_ErrorCode ec;
-	if ((ec = iscc_check_cluster_options(options,
-		                                  clustering->num_data_points)) != SCC_ER_OK) {
+	if ((ec = iscc_check_cluster_options(options, clustering->num_data_points)) != SCC_ER_OK) {
 		return ec;
 	}
 	if (clustering->num_clusters != 0) {
@@ -116,6 +115,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		if ((ec = iscc_get_nng_with_size_constraint(data_set,
 		                                            clustering->num_data_points,
 		                                            options->size_constraint,
+		                                            options->len_primary_data_points,
 		                                            options->primary_data_points,
 		                                            (options->seed_radius == SCC_RM_USE_SUPPLIED),
 		                                            options->seed_supplied_radius,
@@ -130,6 +130,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 		                                            (uint_fast16_t) options->num_types,
 		                                            options->type_constraints,
 		                                            options->type_labels,
+		                                            options->len_primary_data_points,
 		                                            options->primary_data_points,
 		                                            (options->seed_radius == SCC_RM_USE_SUPPLIED),
 		                                            options->seed_supplied_radius,
@@ -197,19 +198,26 @@ static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const 
 	}
 
 	if ((options->seed_method != SCC_SM_LEXICAL) &&
+			(options->seed_method != SCC_SM_BATCHES) &&
 			(options->seed_method != SCC_SM_INWARDS_ORDER) &&
 			(options->seed_method != SCC_SM_INWARDS_UPDATING) &&
 			(options->seed_method != SCC_SM_INWARDS_ALT_UPDATING) &&
 			(options->seed_method != SCC_SM_EXCLUSION_ORDER) &&
-			(options->seed_method != SCC_SM_EXCLUSION_UPDATING) &&
-			(options->seed_method != SCC_SM_BATCHES)) {
+			(options->seed_method != SCC_SM_EXCLUSION_UPDATING)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown seed method.");
 	}
-	if ((options->primary_data_points != NULL) && (options->len_primary_data_points < num_data_points)) {
+	if ((options->primary_data_points != NULL) && (options->len_primary_data_points == 0)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
 	}
-	if ((options->primary_data_points == NULL) && (options->secondary_unassigned_method != SCC_UM_IGNORE)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid unassigned method.");
+	if (options->primary_data_points != NULL) {
+		for (size_t i = 1; i < options->len_primary_data_points; ++i) {
+			if (options->primary_data_points[i - 1] >= options->primary_data_points[i]) {
+				return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "`primary_data_points` is not sorted.");
+			}
+		}
+	}
+	if ((options->primary_data_points == NULL) && (options->len_primary_data_points > 0)) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
 	}
 
 	if ((options->primary_unassigned_method != SCC_UM_IGNORE) &&
@@ -278,29 +286,21 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 
-	const bool nng_is_ordered = (options->num_types < 2);
-	const uint32_t size_constraint = options->size_constraint;
-	const scc_SeedMethod seed_method = options->seed_method;
-	const bool* primary_data_points = options->primary_data_points;
-	scc_UnassignedMethod primary_unassigned_method = options->primary_unassigned_method;
-	scc_UnassignedMethod secondary_unassigned_method = options->secondary_unassigned_method;
-	scc_RadiusMethod seed_radius = options->seed_radius;
-	double seed_supplied_radius = options->seed_supplied_radius;
-	scc_RadiusMethod primary_radius = options->primary_radius;
-	double primary_supplied_radius = options->primary_supplied_radius;
-	scc_RadiusMethod secondary_radius = options->secondary_radius;
-	double secondary_supplied_radius = options->secondary_supplied_radius;
-
 	iscc_SeedResult seed_result = {
-		.capacity = 1 + (clustering->num_data_points / size_constraint),
+		.capacity = 1 + (clustering->num_data_points / options->size_constraint),
 		.count = 0,
 		.seeds = NULL,
 	};
 
 	scc_ErrorCode ec;
-	if ((ec = iscc_find_seeds(nng, seed_method, &seed_result)) != SCC_ER_OK) {
+	if ((ec = iscc_find_seeds(nng, options->seed_method, &seed_result)) != SCC_ER_OK) {
 		return ec;
 	}
+
+	scc_RadiusMethod primary_radius = options->primary_radius;
+	double primary_supplied_radius = options->primary_supplied_radius;
+	scc_RadiusMethod secondary_radius = options->secondary_radius;
+	double secondary_supplied_radius = options->secondary_supplied_radius;
 
 	// Estimate assign radius if we need to, and modify options
 	if ((primary_radius == SCC_RM_USE_ESTIMATED) ||
@@ -309,7 +309,7 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 		if ((ec = iscc_estimate_avg_seed_dist(data_set,
 		                                      &seed_result,
 		                                      nng,
-		                                      size_constraint,
+		                                      options->size_constraint,
 		                                      &avg_seed_dist)) != SCC_ER_OK) {
 			free(seed_result.seeds);
 			return ec;
@@ -337,13 +337,13 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	}
 
 	if (primary_radius == SCC_RM_USE_SEED_RADIUS) {
-		primary_radius = seed_radius;
-		primary_supplied_radius = seed_supplied_radius;
+		primary_radius = options->seed_radius;
+		primary_supplied_radius = options->seed_supplied_radius;
 	}
 
 	if (secondary_radius == SCC_RM_USE_SEED_RADIUS) {
-		secondary_radius = seed_radius;
-		secondary_supplied_radius = seed_supplied_radius;
+		secondary_radius = options->seed_radius;
+		secondary_supplied_radius = options->seed_supplied_radius;
 	}
 
 	assert((primary_radius == SCC_RM_NO_RADIUS) || (primary_radius == SCC_RM_USE_SUPPLIED));
@@ -363,12 +363,13 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
 	                                       data_set,
 	                                       &seed_result,
 	                                       nng,
-	                                       nng_is_ordered,
-	                                       primary_unassigned_method,
+	                                       (options->num_types < 2),
+	                                       options->primary_unassigned_method,
 	                                       (primary_radius == SCC_RM_USE_SUPPLIED),
 	                                       primary_supplied_radius,
-	                                       primary_data_points,
-	                                       secondary_unassigned_method,
+	                                       options->len_primary_data_points,
+	                                       options->primary_data_points,
+	                                       options->secondary_unassigned_method,
 	                                       (secondary_radius == SCC_RM_USE_SUPPLIED),
 	                                       secondary_supplied_radius);
 
