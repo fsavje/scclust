@@ -232,15 +232,6 @@ void scc_ut_nng_clustering(void** state)
 	options = iscc_translate_options(3,
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-	                        0, NULL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	scc_free_clustering(&cl);
-
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	options = iscc_translate_options(3,
-                           0, NULL, 0, NULL,
-	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_OK);
@@ -3821,15 +3812,6 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
-	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
-	scc_free_clustering(&cl);
-
-	scc_init_empty_clustering(100, external_cluster_labels, &cl);
-	options = iscc_translate_options(3,
-                                       3, type_constraints_three, 100, type_labels_three,
-                                       SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
-                                       0, NULL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
 	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);

@@ -434,7 +434,6 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 	       (unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	       (unassigned_method == SCC_UM_CLOSEST_SEED));
 	assert(!radius_constraint || (radius > 0.0));
-	assert((primary_data_points != NULL) || (secondary_unassigned_method == SCC_UM_IGNORE));
 	assert((secondary_unassigned_method == SCC_UM_IGNORE) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_ASSIGNED) ||
 	       (secondary_unassigned_method == SCC_UM_CLOSEST_SEED));
@@ -585,7 +584,7 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
 		return ec;
 	}
 
-	if ((primary_data_points != NULL) && (secondary_unassigned_method != SCC_UM_IGNORE)) {
+	if (secondary_unassigned_method != SCC_UM_IGNORE) {
 		size_t num_to_assign = 0;
 		const scc_PointIndex num_data_points_pi = (scc_PointIndex) clustering->num_data_points;
 		for (scc_PointIndex i = 0; i < num_data_points_pi; ++i) {
