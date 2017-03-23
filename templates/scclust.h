@@ -401,10 +401,10 @@ typedef struct scc_ClusteringStats {
 	double sum_dists;
 	double min_dist;
 	double max_dist;
-	double cl_avg_min_dist;
-	double cl_avg_max_dist;
-	double cl_avg_dist_weighted;
-	double cl_avg_dist_unweighted;
+	double avg_min_dist;
+	double avg_max_dist;
+	double avg_dist_weighted;
+	double avg_dist_unweighted;
 } scc_ClusteringStats;
 
 
