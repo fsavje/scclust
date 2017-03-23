@@ -64,7 +64,7 @@ int main(void) {
 	if(ec != SCC_ER_OK) return 1;
 
 	// Set clustering options (start with defaults)
-	scc_ClusterOptions options = scc_default_options();
+	scc_ClusterOptions options = scc_get_default_options();
 	// At least 3 data points in each cluster
 	options.size_constraint = 3;
 

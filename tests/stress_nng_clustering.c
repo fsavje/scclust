@@ -73,7 +73,7 @@ static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clust
                                                const scc_TypeLabel type_labels[const],
                                                bool* const out_is_OK)
 {
-	scc_ClusterOptions options = scc_default_options();
+	scc_ClusterOptions options = scc_get_default_options();
 	options.size_constraint = size_constraint;
 	options.num_types = num_types;
 	options.type_constraints = type_constraints;

@@ -46,7 +46,9 @@ extern "C" {
 // =============================================================================
 
 #define SCC_SCCLUST_MAJOR_VERSION {% scclust_major_version %}
+
 #define SCC_SCCLUST_MINOR_VERSION {% scclust_minor_version %}
+
 #define SCC_SCCLUST_PATCH_VERSION {% scclust_patch_version %}
 
 
@@ -91,6 +93,7 @@ typedef enum scc_ErrorCode {
 
 	/// Functionality not yet implemented.
 	SCC_ER_NOT_IMPLEMENTED
+
 } scc_ErrorCode;
 
 
@@ -310,6 +313,7 @@ typedef enum scc_SeedMethod {
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
 	SCC_SM_EXCLUSION_UPDATING
+
 } scc_SeedMethod;
 
 
@@ -356,7 +360,7 @@ typedef struct scc_ClusterOptions {
 } scc_ClusterOptions;
 
 
-scc_ClusterOptions scc_default_options(void);
+scc_ClusterOptions scc_get_default_options(void);
 
 
 scc_ErrorCode scc_sc_clustering(void* data_set,
@@ -387,7 +391,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
                                    bool* out_is_OK);
 
 
-/// Struct to store clustering statistics
+/// Struct to report clustering statistics
 typedef struct scc_ClusteringStats {
 	uint64_t num_data_points;
 	uint64_t num_assigned;

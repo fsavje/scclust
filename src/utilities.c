@@ -50,7 +50,7 @@ static const int32_t ISCC_OPTIONS_STRUCT_VERSION = 722678001;
 // Public function implementations
 // =============================================================================
 
-scc_ClusterOptions scc_default_options(void)
+scc_ClusterOptions scc_get_default_options(void)
 {
 	return (scc_ClusterOptions) {
 		.options_version = ISCC_OPTIONS_STRUCT_VERSION,

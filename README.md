@@ -72,12 +72,12 @@ int main(void) {
 	if(ec != SCC_ER_OK) return 1;
 
 	// Set clustering options (start with defaults)
-	scc_ClusterOptions options = scc_default_cluster_options;
+	scc_ClusterOptions options = scc_get_default_options();
 	// At least 3 data points in each cluster
 	options.size_constraint = 3;
 
 	// Make clustering
-	ec = scc_make_clustering(data_set, clustering, &options);
+	ec = scc_sc_clustering(data_set, &options, clustering);
 	if(ec != SCC_ER_OK) return 1;
 
 	// Print clustering

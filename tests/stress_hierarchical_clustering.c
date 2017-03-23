@@ -36,7 +36,7 @@ void scc_ut_stress_hierarchical_clustering(void** state)
 	(void) state;
 
 	srand(123456789);
-	scc_ClusterOptions options = scc_default_options();
+	scc_ClusterOptions options = scc_get_default_options();
 
 	for (size_t r = 0; r < NUM_ROUNDS; ++r) {
 		scc_ErrorCode ec;
