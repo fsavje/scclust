@@ -35,8 +35,8 @@
 // External function implementations
 // =============================================================================
 
-scc_ErrorCode scc_init_data_set(const uintmax_t num_data_points,
-                                const uintmax_t num_dimensions,
+scc_ErrorCode scc_init_data_set(const uint64_t num_data_points,
+                                const uint32_t num_dimensions,
                                 const size_t len_data_matrix,
                                 const double data_matrix[const],
                                 scc_DataSet** const out_data_set)

@@ -58,7 +58,7 @@ void scc_get_compiled_version(uint32_t* const out_major,
 }
 
 
-scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
+scc_ErrorCode scc_init_empty_clustering(const uint64_t num_data_points,
                                         scc_Clabel external_cluster_labels[const],
                                         scc_Clustering** const out_clustering)
 {
@@ -98,8 +98,8 @@ scc_ErrorCode scc_init_empty_clustering(const uintmax_t num_data_points,
 }
 
 
-scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
-                                           const uintmax_t num_clusters,
+scc_ErrorCode scc_init_existing_clustering(const uint64_t num_data_points,
+                                           const uint64_t num_clusters,
                                            scc_Clabel current_cluster_labels[const],
                                            const bool deep_label_copy,
                                            scc_Clustering** const out_clustering)
@@ -123,7 +123,7 @@ scc_ErrorCode scc_init_existing_clustering(const uintmax_t num_data_points,
 	if (num_clusters == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
 	}
-	if (num_clusters > ((uintmax_t) SCC_CLABEL_MAX)) {
+	if (num_clusters > ((uint64_t) SCC_CLABEL_MAX)) {
 		return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many clusters (adjust the `scc_Clabel` type).");
 	}
 	if (num_clusters > SIZE_MAX) {
@@ -342,15 +342,15 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* const clustering,
-                                      uintmax_t* const out_num_data_points,
-                                      uintmax_t* const out_num_clusters)
+                                      uint64_t* const out_num_data_points,
+                                      uint64_t* const out_num_clusters)
 {
 	if (!iscc_check_input_clustering(clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
 
-	if (out_num_data_points != NULL) *out_num_data_points = clustering->num_data_points;
-	if (out_num_clusters != NULL) *out_num_clusters = clustering->num_clusters;
+	if (out_num_data_points != NULL) *out_num_data_points = (uint64_t) clustering->num_data_points;
+	if (out_num_clusters != NULL) *out_num_clusters = (uint64_t) clustering->num_clusters;
 
 	return iscc_no_error();
 }
@@ -417,7 +417,7 @@ scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
 		.num_assigned = 0,
 		.num_clusters = clustering->num_clusters,
 		.num_populated_clusters = 0,
-		.min_cluster_size = UINTMAX_MAX,
+		.min_cluster_size = UINT64_MAX,
 		.max_cluster_size = 0,
 		.avg_cluster_size = 0.0,
 		.sum_dists = 0.0,
