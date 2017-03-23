@@ -161,39 +161,39 @@ static int iscc_hi_compare_dist_edges(const void* a,
 // =============================================================================
 
 scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
-                                          scc_Clustering* const clustering,
                                           const uint32_t size_constraint,
-                                          const bool batch_assign)
+                                          const bool batch_assign,
+                                          scc_Clustering* const out_clustering)
 {
-	if (!iscc_check_input_clustering(clustering)) {
+	if (!iscc_check_input_clustering(out_clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set, out_clustering->num_data_points)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
 	}
 	if (size_constraint < 2) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");
 	}
-	if (clustering->num_data_points < size_constraint) {
+	if (out_clustering->num_data_points < size_constraint) {
 		return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than size constraint.");
 	}
 
 	scc_ErrorCode ec;
 	size_t size_largest_cluster = 0; // Initialize to avoid gcc warning
 	iscc_hi_ClusterStack cl_stack;
-	if (clustering->num_clusters == 0) {
-		if (clustering->cluster_label == NULL) {
-			clustering->external_labels = false;
-			clustering->cluster_label = malloc(sizeof(scc_Clabel[clustering->num_data_points]));
-			if (clustering->cluster_label == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
+	if (out_clustering->num_clusters == 0) {
+		if (out_clustering->cluster_label == NULL) {
+			out_clustering->external_labels = false;
+			out_clustering->cluster_label = malloc(sizeof(scc_Clabel[out_clustering->num_data_points]));
+			if (out_clustering->cluster_label == NULL) return iscc_make_error(SCC_ER_NO_MEMORY);
 		}
 
-		size_largest_cluster = clustering->num_data_points;
-		if ((ec = iscc_hi_empty_cl_stack(clustering->num_data_points, &cl_stack)) != SCC_ER_OK) {
+		size_largest_cluster = out_clustering->num_data_points;
+		if ((ec = iscc_hi_empty_cl_stack(out_clustering->num_data_points, &cl_stack)) != SCC_ER_OK) {
 			return ec;
 		}
 	} else {
-		if ((ec = iscc_hi_init_cl_stack(clustering, &cl_stack, &size_largest_cluster)) != SCC_ER_OK) {
+		if ((ec = iscc_hi_init_cl_stack(out_clustering, &cl_stack, &size_largest_cluster)) != SCC_ER_OK) {
 			return ec;
 		}
 	}
@@ -208,7 +208,7 @@ scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
 		.pointindex_array1 = malloc(sizeof(scc_PointIndex[size_pointindex_array])),
 		.pointindex_array2 = malloc(sizeof(scc_PointIndex[size_pointindex_array])),
 		.dist_array = malloc(sizeof(double[size_dist_array])),
-		.vertex_markers = calloc(clustering->num_data_points, sizeof(uint_fast16_t)),
+		.vertex_markers = calloc(out_clustering->num_data_points, sizeof(uint_fast16_t)),
 		.edge_store1 = malloc(sizeof(iscc_hi_DistanceEdge[size_largest_cluster])),
 		.edge_store2 = malloc(sizeof(iscc_hi_DistanceEdge[size_largest_cluster])),
 	};
@@ -221,7 +221,7 @@ scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
 
 	if (ec == SCC_ER_OK) {
 		ec = iscc_hi_run_hierarchical_clustering(&cl_stack,
-		                                         clustering,
+		                                         out_clustering,
 		                                         data_set,
 		                                         &work_area,
 		                                         size_constraint,
