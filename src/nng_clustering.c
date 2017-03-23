@@ -38,29 +38,7 @@
 // Internal variables
 // =============================================================================
 
-#define ISCC_M_OPTIONS_STRUCT_VERSION 722678001
-static const int32_t ISCC_OPTIONS_STRUCT_VERSION = ISCC_M_OPTIONS_STRUCT_VERSION;
-
-const scc_ClusterOptions scc_default_cluster_options = {
-	.options_version = ISCC_M_OPTIONS_STRUCT_VERSION, // GCC error if not init with macro
-	.size_constraint = 0,
-	.num_types = 0,
-	.type_constraints = NULL,
-	.len_type_labels = 0,
-	.type_labels = NULL,
-	.seed_method = SCC_SM_LEXICAL,
-	.len_primary_data_points = 0,
-	.primary_data_points = NULL,
-	.primary_unassigned_method = SCC_UM_ANY_NEIGHBOR,
-	.secondary_unassigned_method = SCC_UM_IGNORE,
-	.seed_radius = SCC_RM_NO_RADIUS,
-	.seed_supplied_radius = 0.0,
-	.primary_radius = SCC_RM_USE_SEED_RADIUS,
-	.primary_supplied_radius = 0.0,
-	.secondary_radius = SCC_RM_USE_SEED_RADIUS,
-	.secondary_supplied_radius = 0.0,
-	.batch_size = 0,
-};
+static const int32_t ISCC_OPTIONS_STRUCT_VERSION = 722678001;
 
 
 // =============================================================================
@@ -79,6 +57,31 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* clustering,
 // =============================================================================
 // External function implementations
 // =============================================================================
+
+scc_ClusterOptions scc_default_options(void)
+{
+	return (scc_ClusterOptions) {
+		.options_version = ISCC_OPTIONS_STRUCT_VERSION,
+		.size_constraint = 0,
+		.num_types = 0,
+		.type_constraints = NULL,
+		.len_type_labels = 0,
+		.type_labels = NULL,
+		.seed_method = SCC_SM_LEXICAL,
+		.len_primary_data_points = 0,
+		.primary_data_points = NULL,
+		.primary_unassigned_method = SCC_UM_ANY_NEIGHBOR,
+		.secondary_unassigned_method = SCC_UM_IGNORE,
+		.seed_radius = SCC_RM_NO_RADIUS,
+		.seed_supplied_radius = 0.0,
+		.primary_radius = SCC_RM_USE_SEED_RADIUS,
+		.primary_supplied_radius = 0.0,
+		.secondary_radius = SCC_RM_USE_SEED_RADIUS,
+		.secondary_supplied_radius = 0.0,
+		.batch_size = 0,
+	};
+}
+
 
 scc_ErrorCode scc_sc_clustering(void* const data_set,
                                 const scc_ClusterOptions* const options,
