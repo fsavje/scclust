@@ -253,6 +253,12 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
                                      scc_Clabel out_label_buffer[]);
 
 
+// num_seeds == num_clusters
+scc_ErrorCode scc_get_cluster_seeds(const scc_Clustering* clustering,
+                                    size_t len_out_seed_buffer,
+                                    scc_PointIndex out_seed_buffer[]);
+
+
 // =============================================================================
 // Clustering functions
 // =============================================================================
@@ -355,6 +361,7 @@ typedef struct scc_ClusterOptions {
 	scc_RadiusMethod secondary_radius;
 	double secondary_supplied_radius;
 	uint32_t batch_size;
+	bool save_seeds;
 } scc_ClusterOptions;
 
 

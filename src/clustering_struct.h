@@ -58,6 +58,8 @@ struct scc_Clustering {
 	 *  #cluster_label will not be freed when the instance of #scc_Clustering is destroyed.
 	 */
 	bool external_labels;
+
+	const scc_PointIndex* seeds;
 };
 
 
@@ -70,7 +72,7 @@ static const int32_t ISCC_CLUSTERING_STRUCT_VERSION = 722587001;
  *  The null clustering is an easily detectable invalid clustering. It is mainly used as return
  *  value when functions encounter errors.
  */
-static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, 0, NULL, false };
+static const scc_Clustering ISCC_NULL_CLUSTERING = { 0, 0, 0, NULL, false, NULL };
 
 
 #endif // ifndef SCC_CLUSTERING_STRUCT_HG
