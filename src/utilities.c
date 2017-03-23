@@ -399,7 +399,6 @@ scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const options
 			(options->seed_method != SCC_SM_BATCHES) &&
 			(options->seed_method != SCC_SM_INWARDS_ORDER) &&
 			(options->seed_method != SCC_SM_INWARDS_UPDATING) &&
-			(options->seed_method != SCC_SM_INWARDS_ALT_UPDATING) &&
 			(options->seed_method != SCC_SM_EXCLUSION_ORDER) &&
 			(options->seed_method != SCC_SM_EXCLUSION_UPDATING)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown seed method.");

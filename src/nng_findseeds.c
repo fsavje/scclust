@@ -56,10 +56,6 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* nng,
                                             iscc_SeedResult* out_seeds);
 
 
-static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* nng,
-                                                iscc_SeedResult* out_seeds);
-
-
 static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* nng,
                                               bool updating,
                                               iscc_SeedResult* out_seeds);
@@ -147,10 +143,6 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 
 		case SCC_SM_INWARDS_UPDATING:
 			ec = iscc_findseeds_inwards(nng, true, out_seeds);
-			break;
-
-		case SCC_SM_INWARDS_ALT_UPDATING:
-			ec = iscc_findseeds_inwards_alt(nng, out_seeds);
 			break;
 
 		case SCC_SM_EXCLUSION_ORDER:
@@ -277,86 +269,19 @@ static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* const nng,
 				const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
 				for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
 				        v_arc != v_arc_stop; ++v_arc) {
-					const scc_PointIndex* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
-					for (scc_PointIndex* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
-					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
-						// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
-						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
-							iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
+					if (sorted_v < sort.vertex_index[*v_arc]) {
+						const scc_PointIndex* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
+						for (scc_PointIndex* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
+						        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
+							// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
+							if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
+								iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
+							}
 						}
 					}
 				}
 			}
-		}
-	}
-
-	iscc_fs_free_sort_result(&sort);
-	free(marks);
-
-	return iscc_no_error();
-}
-
-
-static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* const nng,
-                                                //const bool updating, // always updating
-                                                iscc_SeedResult* const out_seeds)
-{
-	assert(iscc_digraph_is_valid(nng));
-	assert(!iscc_digraph_is_empty(nng));
-	assert(nng->vertices > 1);
-	assert(out_seeds != NULL);
-	assert(out_seeds->capacity > 0);
-	assert(out_seeds->count == 0);
-	assert(out_seeds->seeds == NULL);
-
-	scc_ErrorCode ec;
-	iscc_fs_SortResult sort;
-	if ((ec = iscc_fs_sort_by_inwards(nng, true, &sort)) != SCC_ER_OK) return ec;
-
-	bool* const marks = calloc(nng->vertices, sizeof(bool));
-	out_seeds->seeds = malloc(sizeof(scc_PointIndex[out_seeds->capacity]));
-	if ((marks == NULL) || (out_seeds->seeds == NULL)) {
-		iscc_fs_free_sort_result(&sort);
-		free(marks);
-		free(out_seeds->seeds);
-		return iscc_make_error(SCC_ER_NO_MEMORY);
-	}
-
-	const scc_PointIndex* const sorted_v_stop = sort.sorted_vertices + nng->vertices;
-	for (scc_PointIndex* sorted_v = sort.sorted_vertices;
-	        sorted_v != sorted_v_stop; ++sorted_v) {
-
-		#if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
-			iscc_fs_debug_check_sort(sorted_v, sorted_v_stop - 1, sort.inwards_count);
-		#endif
-
-		if (iscc_fs_check_neighbors_marks(*sorted_v, nng, marks)) {
-			assert(nng->tail_ptr[*sorted_v] != nng->tail_ptr[*sorted_v + 1]);
-
-			if ((ec = iscc_fs_add_seed(*sorted_v, out_seeds)) != SCC_ER_OK) {
-				iscc_fs_free_sort_result(&sort);
-				free(marks);
-				free(out_seeds->seeds);
-				return ec;
-			}
-
-			iscc_fs_mark_seed_neighbors(*sorted_v, nng, marks);
-
-			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
-			for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
-			        v_arc != v_arc_stop; ++v_arc) {
-				if (sorted_v < sort.vertex_index[*v_arc]) {
-					const scc_PointIndex* const v_arc_arc_stop = nng->head + nng->tail_ptr[*v_arc + 1];
-					for (scc_PointIndex* v_arc_arc = nng->head + nng->tail_ptr[*v_arc];
-					        v_arc_arc != v_arc_arc_stop; ++v_arc_arc) {
-						// Only decrease if vertex can be seed (i.e., not already assigned, not already considered and has arcs in nng)
-						if (!marks[*v_arc_arc] && (sorted_v < sort.vertex_index[*v_arc_arc]) && (nng->tail_ptr[*v_arc_arc] != nng->tail_ptr[*v_arc_arc + 1])) {
-							iscc_fs_decrease_v_in_sort(*v_arc_arc, sort.inwards_count, sort.vertex_index, sort.bucket_index, sorted_v);
-						}
-					}
-				}
-			}
-		} else if (!marks[*sorted_v]) {
+		} else if (updating && !marks[*sorted_v]) {
 			const scc_PointIndex* const v_arc_stop = nng->head + nng->tail_ptr[*sorted_v + 1];
 			for (const scc_PointIndex* v_arc = nng->head + nng->tail_ptr[*sorted_v];
 			        v_arc != v_arc_stop; ++v_arc) {
