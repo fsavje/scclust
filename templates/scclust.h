@@ -181,8 +181,8 @@ typedef struct scc_DataSet scc_DataSet;
  *
  *  \return #scc_ErrorCode describing eventual error.
  */
-scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
-                                uintmax_t num_dimensions,
+scc_ErrorCode scc_init_data_set(uint64_t num_data_points,
+                                uint32_t num_dimensions,
                                 size_t len_data_matrix,
                                 const double data_matrix[],
                                 scc_DataSet** out_data_set);
@@ -219,12 +219,14 @@ bool scc_is_initialized_data_set(const scc_DataSet* data_set);
 /// Type used for clusterings
 typedef struct scc_Clustering scc_Clustering;
 
-scc_ErrorCode scc_init_empty_clustering(uintmax_t num_data_points,
+
+scc_ErrorCode scc_init_empty_clustering(uint64_t num_data_points,
                                         scc_Clabel external_cluster_labels[],
                                         scc_Clustering** out_clustering);
 
-scc_ErrorCode scc_init_existing_clustering(uintmax_t num_data_points,
-                                           uintmax_t num_clusters,
+
+scc_ErrorCode scc_init_existing_clustering(uint64_t num_data_points,
+                                           uint64_t num_clusters,
                                            scc_Clabel current_cluster_labels[],
                                            bool deep_label_copy,
                                            scc_Clustering** out_clustering);
@@ -248,8 +250,8 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
                                    bool* out_is_OK);
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
-                                      uintmax_t* out_num_data_points,
-                                      uintmax_t* out_num_clusters);
+                                      uint64_t* out_num_data_points,
+                                      uint64_t* out_num_clusters);
 
 
 scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
@@ -346,7 +348,7 @@ typedef struct scc_ClusterOptions {
 	 */
 	int32_t options_version;
 	uint32_t size_constraint;
-	uintmax_t num_types;
+	uint32_t num_types;
 	const uint32_t* type_constraints;
 	size_t len_type_labels;
 	const scc_TypeLabel* type_labels;
@@ -384,13 +386,13 @@ scc_ErrorCode scc_hierarchical_clustering(void* data_set,
 // =============================================================================
 
 /// Struct to store clustering statistics
-	uintmax_t num_data_points;
-	uintmax_t num_assigned;
-	uintmax_t num_clusters;
-	uintmax_t num_populated_clusters;
-	uintmax_t min_cluster_size;
-	uintmax_t max_cluster_size;
 typedef struct scc_ClusteringStats {
+	uint64_t num_data_points;
+	uint64_t num_assigned;
+	uint64_t num_clusters;
+	uint64_t num_populated_clusters;
+	uint64_t min_cluster_size;
+	uint64_t max_cluster_size;
 	double avg_cluster_size;
 	double sum_dists;
 	double min_dist;
