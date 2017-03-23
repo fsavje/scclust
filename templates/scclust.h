@@ -376,9 +376,9 @@ scc_ErrorCode scc_sc_clustering(void* data_set,
 
 
 scc_ErrorCode scc_hierarchical_clustering(void* data_set,
-                                          scc_Clustering* clustering,
                                           uint32_t size_constraint,
-                                          bool batch_assign);
+                                          bool batch_assign,
+                                          scc_Clustering* out_clustering);
 
 
 // =============================================================================
