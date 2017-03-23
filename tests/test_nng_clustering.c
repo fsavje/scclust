@@ -100,7 +100,7 @@ static scc_ClusterOptions iscc_translate_options(const uint32_t size_constraint,
 
 static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clustering,
                                                const uint32_t size_constraint,
-                                               const uintmax_t num_types,
+                                               const uint32_t num_types,
                                                const uint32_t type_constraints[const],
                                                const size_t len_type_labels,
                                                const scc_TypeLabel type_labels[const],
@@ -113,7 +113,7 @@ static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clust
 	options.len_type_labels = len_type_labels;
 	options.type_labels = type_labels;
 
-	return scc_check_clustering(clustering, options, out_is_OK);
+	return scc_check_clustering(clustering, &options, out_is_OK);
 }
 
 
@@ -3774,7 +3774,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
 	options = iscc_translate_options(3,
-                                       SIZE_MAX, type_constraints_three, 100, type_labels_three,
+                                       4294967295, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
 	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);

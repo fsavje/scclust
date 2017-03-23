@@ -66,7 +66,9 @@ SOURCE_FILES="
 	src/nng_findseeds.c
 	src/nng_findseeds.h
 	src/scclust_spi.c
-	src/scclust.c"
+	src/scclust.c
+	src/utilities.c
+	src/utilities.h"
 
 TEMPLATE_FILES="
 	DoxyAPI
