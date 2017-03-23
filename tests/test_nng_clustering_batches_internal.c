@@ -34,7 +34,7 @@ void iscc_run_nonval_tests_batches(scc_UnassignedMethod unassigned_method,
                                    const scc_PointIndex primary_data_points[]);
 
 static scc_ClusterOptions iscc_translate_options(const uint32_t size_constraint,
-                                                 const uintmax_t num_types,
+                                                 const uint32_t num_types,
                                                  const uint32_t* const type_constraints,
                                                  const size_t len_type_labels,
                                                  const scc_TypeLabel* const type_labels,
