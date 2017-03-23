@@ -39,11 +39,12 @@ static const uint_fast16_t ISCC_HI_NUM_TO_CHECK = 100;
 // Internal structs
 // =============================================================================
 
-typedef struct iscc_hi_DistanceEdge {
+typedef struct iscc_hi_DistanceEdge iscc_hi_DistanceEdge;
+struct iscc_hi_DistanceEdge {
 	scc_PointIndex head;
 	double distance;
 	iscc_hi_DistanceEdge* next_dist;
-} iscc_hi_DistanceEdge;
+};
 
 
 typedef struct iscc_hi_ClusterItem {

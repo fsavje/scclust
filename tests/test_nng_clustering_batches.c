@@ -104,7 +104,7 @@ static scc_ClusterOptions iscc_translate_options(const uint32_t size_constraint,
 
 static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clustering,
                                                const uint32_t size_constraint,
-                                               const uintmax_t num_types,
+                                               const uint32_t num_types,
                                                const uint32_t type_constraints[const],
                                                const size_t len_type_labels,
                                                const scc_TypeLabel type_labels[const],
@@ -117,7 +117,7 @@ static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clust
 	options.len_type_labels = len_type_labels;
 	options.type_labels = type_labels;
 
-	return scc_check_clustering(clustering, options, out_is_OK);
+	return scc_check_clustering(clustering, &options, out_is_OK);
 }
 
 

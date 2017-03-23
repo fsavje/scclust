@@ -97,7 +97,6 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 	const uint32_t size_constraint = options->size_constraint;
 	const uintmax_t num_types = options->num_types;
 	const uint32_t* const type_constraints = options->type_constraints;
-	const size_t len_type_labels = options->len_type_labels;
 	const scc_TypeLabel* const type_labels = options->type_labels;
 
 	assert(clustering->num_clusters <= ((uintmax_t) SCC_CLABEL_MAX));

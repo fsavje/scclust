@@ -32,7 +32,7 @@
 
 static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clustering,
                                                const uint32_t size_constraint,
-                                               const uintmax_t num_types,
+                                               const uint32_t num_types,
                                                const uint32_t type_constraints[const],
                                                const size_t len_type_labels,
                                                const scc_TypeLabel type_labels[const],
@@ -45,7 +45,7 @@ static scc_ErrorCode scc_check_clustering_wrap(const scc_Clustering* const clust
 	options.len_type_labels = len_type_labels;
 	options.type_labels = type_labels;
 
-	return scc_check_clustering(clustering, options, out_is_OK);
+	return scc_check_clustering(clustering, &options, out_is_OK);
 }
 
 
@@ -567,7 +567,7 @@ void scc_ut_get_clustering_info(void** state)
 		.clustering_version = ISCC_CLUSTERING_STRUCT_VERSION,
 	};
 
-	uintmax_t out_num_data_points, out_num_clusters;
+	uint64_t out_num_data_points, out_num_clusters;
 
 	scc_ErrorCode ec1 = scc_get_clustering_info(&in_cl, NULL, NULL);
 	assert_int_equal(ec1, SCC_ER_OK);
