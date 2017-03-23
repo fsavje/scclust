@@ -413,20 +413,6 @@ scc_ErrorCode scc_get_clustering_stats(void* data_set,
                                        scc_ClusteringStats* out_stats);
 
 
-typedef struct scc_SeedVector {
-	size_t num_seeds;
-	scc_PointIndex* seeds;
-} scc_SeedVector;
-
-
-scc_ErrorCode scc_get_cluster_seeds(void* data_set,
-                                    const scc_ClusterOptions* options,
-                                    scc_SeedVector* out_seed_vector);
-
-
-void scc_free_seed_vector(scc_SeedVector* seed_vector);
-
-
 #ifdef __cplusplus
 }
 #endif

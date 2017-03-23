@@ -323,36 +323,6 @@ scc_ErrorCode scc_get_clustering_stats(void* const data_set,
 }
 
 
-scc_ErrorCode scc_get_cluster_seeds(void* const data_set,
-                                    const scc_ClusterOptions* const options,
-                                    scc_SeedVector* const out_seed_vector)
-{
-	if (!iscc_check_data_set(data_set)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
-	}
-	scc_ErrorCode ec;
-	if ((ec = iscc_check_cluster_options(options, iscc_num_data_points(data_set))) != SCC_ER_OK) {
-		return ec;
-	}
-	if (out_seed_vector->seeds != NULL) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "`out_seed_vector->seeds` must be NULL.");
-	}
-	return iscc_make_error(SCC_ER_NOT_IMPLEMENTED);
-}
-
-
-void scc_free_seed_vector(scc_SeedVector* const seed_vector)
-{
-	if (seed_vector != NULL) {
-		free(seed_vector->seeds);
-		*seed_vector = (scc_SeedVector) {
-			.num_seeds = 0,
-			.seeds = NULL,
-		};
-	}
-}
-
-
 // =============================================================================
 // External function implementations
 // =============================================================================
