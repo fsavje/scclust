@@ -183,8 +183,11 @@ scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
 	if (!iscc_check_input_clustering(out_clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
-	if (!iscc_check_data_set(data_set, out_clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (iscc_num_data_points(data_set) != out_clustering->num_data_points) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Number of data points in data set does not match clustering object.");
 	}
 	if (size_constraint < 2) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");
@@ -363,7 +366,8 @@ static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* c
 	assert(cl_stack->clusters != NULL);
 	assert(cl_stack->pointindex_store != NULL);
 	assert(iscc_check_input_clustering(cl));
-	assert(iscc_check_data_set(data_set, cl->num_data_points));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == cl->num_data_points);
 	assert(work_area != NULL);
 	assert(size_constraint >= 2);
 
@@ -443,7 +447,7 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* const c
 	assert(cluster_to_break != NULL);
 	assert(cluster_to_break->size >= 2 * size_constraint);
 	assert(cluster_to_break->members != NULL);
-	assert(iscc_check_data_set(data_set, 0));
+	assert(iscc_check_data_set(data_set));
 	assert(work_area != NULL);
 	assert(work_area->pointindex_array1 != NULL);
 	assert(work_area->pointindex_array2 != NULL);
@@ -716,7 +720,7 @@ static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* const cl,
 	assert(cl != NULL);
 	assert(cl->size >= 4);
 	assert(cl->members != NULL);
-	assert(iscc_check_data_set(data_set, 0));
+	assert(iscc_check_data_set(data_set));
 	assert(work_area != NULL);
 	assert(work_area->pointindex_array1 != NULL);
 	assert(work_area->pointindex_array2 != NULL);
@@ -792,7 +796,7 @@ static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cons
 	assert(cl->size >= 4);
 	assert(cl->members != NULL);
 	assert(center1 != center2);
-	assert(iscc_check_data_set(data_set, 0));
+	assert(iscc_check_data_set(data_set));
 	assert(work_area != NULL);
 	assert(work_area->dist_array != NULL);
 	assert(work_area->edge_store1 != NULL);

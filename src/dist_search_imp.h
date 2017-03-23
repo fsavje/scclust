@@ -36,8 +36,10 @@ extern "C" {
 // Miscellaneous functions
 // =============================================================================
 
-bool iscc_imp_check_data_set(void* data_set,
-                             size_t num_data_points);
+bool iscc_imp_check_data_set(void* data_set);
+
+
+size_t iscc_imp_num_data_points(void* data_set);
 
 
 // `output_dists` must be of length `(len_point_indices - 1) len_point_indices / 2`

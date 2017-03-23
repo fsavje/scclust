@@ -50,8 +50,10 @@ typedef struct iscc_NNSearchObject iscc_NNSearchObject;
 // Distance search functions
 // =============================================================================
 
-typedef bool (*scc_check_data_set) (void*,
-                                    size_t);
+typedef bool (*scc_check_data_set) (void*);
+
+
+typedef size_t (*scc_num_data_points) (void*);
 
 
 typedef bool (*scc_get_dist_matrix) (void*,
@@ -112,6 +114,7 @@ bool scc_reset_dist_functions(void);
 
 
 bool scc_set_dist_functions(scc_check_data_set,
+                            scc_num_data_points,
                             scc_get_dist_matrix,
                             scc_get_dist_rows,
                             scc_init_max_dist_object,

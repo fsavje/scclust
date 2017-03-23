@@ -27,7 +27,7 @@
 #include "rand.h"
 
 static const size_t SAMPLE_SIZE = 10000;
-static const size_t DATA_DIMENSION = 3;
+static const uint32_t DATA_DIMENSION = 3;
 static const size_t NUM_ROUNDS = 10;
 
 

@@ -73,8 +73,11 @@ scc_ErrorCode scc_nng_clustering_batches(scc_Clustering* const clustering,
 	if (!iscc_check_input_clustering(clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (iscc_num_data_points(data_set) != clustering->num_data_points) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Number of data points in data set does not match clustering object.");
 	}
 	if (size_constraint < 2) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");

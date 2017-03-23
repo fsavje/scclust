@@ -56,8 +56,11 @@ scc_ErrorCode scc_sc_clustering(void* const data_set,
 	if (!iscc_check_input_clustering(out_clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
-	if (!iscc_check_data_set(data_set, out_clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (iscc_num_data_points(data_set) != out_clustering->num_data_points) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Number of data points in data set does not match clustering object.");
 	}
 	scc_ErrorCode ec;
 	if ((ec = iscc_check_cluster_options(options, out_clustering->num_data_points)) != SCC_ER_OK) {
@@ -131,7 +134,8 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const cluster
                                                    const scc_ClusterOptions* options)
 {
 	assert(iscc_check_input_clustering(clustering));
-	assert(iscc_check_data_set(data_set, clustering->num_data_points));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == clustering->num_data_points);
 	assert(iscc_digraph_is_valid(nng));
 	assert(!iscc_digraph_is_empty(nng));
 
