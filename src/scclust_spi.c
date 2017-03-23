@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,11 @@
 #include "dist_search_imp.h"
 
 
+// =============================================================================
+// External variable initialization
+// =============================================================================
+
+// See "dist_search.h" for definition
 iscc_dist_functions_struct iscc_dist_functions = {
 	.check_data_set = iscc_imp_check_data_set,
 	.get_dist_matrix = iscc_imp_get_dist_matrix,
@@ -37,6 +42,10 @@ iscc_dist_functions_struct iscc_dist_functions = {
 	.close_nn_search_object = iscc_imp_close_nn_search_object,
 };
 
+
+// =============================================================================
+// Public function implementations
+// =============================================================================
 
 bool scc_reset_dist_functions(void)
 {

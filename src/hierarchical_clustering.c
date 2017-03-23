@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,49 +39,50 @@ static const uint_fast16_t ISCC_HI_NUM_TO_CHECK = 100;
 // Internal structs
 // =============================================================================
 
-typedef struct iscc_hi_DistanceEdge iscc_hi_DistanceEdge;
-struct iscc_hi_DistanceEdge {
+typedef struct iscc_hi_DistanceEdge {
 	scc_PointIndex head;
 	double distance;
 	iscc_hi_DistanceEdge* next_dist;
-};
+} iscc_hi_DistanceEdge;
 
-typedef struct iscc_hi_ClusterItem iscc_hi_ClusterItem;
-struct iscc_hi_ClusterItem {
+
+typedef struct iscc_hi_ClusterItem {
 	size_t size;
 	uint_fast16_t marker;
 	scc_PointIndex* members;
-};
+} iscc_hi_ClusterItem;
 
-typedef struct iscc_hi_ClusterStack iscc_hi_ClusterStack;
-struct iscc_hi_ClusterStack {
+
+typedef struct iscc_hi_ClusterStack {
 	size_t capacity;
 	size_t items;
 	iscc_hi_ClusterItem* clusters;
 	scc_PointIndex* pointindex_store;
-};
+} iscc_hi_ClusterStack;
 
-typedef struct iscc_hi_WorkArea iscc_hi_WorkArea;
-struct iscc_hi_WorkArea {
+
+typedef struct iscc_hi_WorkArea {
 	scc_PointIndex* const pointindex_array1;
 	scc_PointIndex* const pointindex_array2;
 	double* const dist_array;
 	uint_fast16_t* const vertex_markers;
 	iscc_hi_DistanceEdge* const edge_store1;
 	iscc_hi_DistanceEdge* const edge_store2;
-};
+} iscc_hi_WorkArea;
 
 
 // =============================================================================
-// Internal function prototypes
+// Static function prototypes
 // =============================================================================
 
 static scc_ErrorCode iscc_hi_empty_cl_stack(size_t num_data_points,
                                             iscc_hi_ClusterStack* out_cl_stack);
 
+
 static scc_ErrorCode iscc_hi_init_cl_stack(const scc_Clustering* in_cl,
                                            iscc_hi_ClusterStack* out_cl_stack,
                                            size_t* out_size_largest_cluster);
+
 
 static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* cl_stack,
                                                          scc_Clustering* cl,
@@ -90,8 +91,10 @@ static scc_ErrorCode iscc_hi_run_hierarchical_clustering(iscc_hi_ClusterStack* c
                                                          uint32_t size_constraint,
                                                          bool batch_assign);
 
+
 static scc_ErrorCode iscc_hi_push_to_stack(iscc_hi_ClusterStack* cl_stack,
                                            iscc_hi_ClusterItem** cl);
+
 
 static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* cluster_to_break,
                                                     void* data_set,
@@ -100,8 +103,10 @@ static scc_ErrorCode iscc_hi_break_cluster_into_two(iscc_hi_ClusterItem* cluster
                                                     bool batch_assign,
                                                     iscc_hi_ClusterItem* out_new_cluster);
 
+
 static inline uint_fast16_t iscc_hi_get_next_marker(iscc_hi_ClusterItem* cl,
                                                     uint_fast16_t vertex_markers[]);
+
 
 static inline iscc_hi_DistanceEdge* iscc_hi_get_next_k_nn(iscc_hi_DistanceEdge* prev_dist,
                                                           uint32_t k,
@@ -109,19 +114,23 @@ static inline iscc_hi_DistanceEdge* iscc_hi_get_next_k_nn(iscc_hi_DistanceEdge* 
                                                           uint_fast16_t curr_marker,
                                                           scc_PointIndex out_dist_array[static k]);
 
+
 static inline iscc_hi_DistanceEdge* iscc_hi_get_next_dist(iscc_hi_DistanceEdge* prev_dist,
                                                           const uint_fast16_t vertex_markers[],
                                                           uint_fast16_t curr_marker);
+
 
 static inline void iscc_hi_move_point_to_cluster1(scc_PointIndex id,
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
 
+
 static inline void iscc_hi_move_point_to_cluster2(scc_PointIndex id,
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
+
 
 static inline void iscc_hi_move_array_to_cluster1(uint32_t len_ids,
                                                   const scc_PointIndex ids[static len_ids],
@@ -129,11 +138,13 @@ static inline void iscc_hi_move_array_to_cluster1(uint32_t len_ids,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
 
+
 static inline void iscc_hi_move_array_to_cluster2(uint32_t len_ids,
                                                   const scc_PointIndex ids[static len_ids],
                                                   iscc_hi_ClusterItem* cl,
                                                   uint_fast16_t vertex_markers[],
                                                   uint_fast16_t curr_marker);
+
 
 static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* cl,
                                           void* data_set,
@@ -141,23 +152,26 @@ static scc_ErrorCode iscc_hi_find_centers(iscc_hi_ClusterItem* cl,
                                           scc_PointIndex* out_center1,
                                           scc_PointIndex* out_center2);
 
+
 static scc_ErrorCode iscc_hi_populate_edge_lists(const iscc_hi_ClusterItem* cl,
                                                  void* data_set,
                                                  scc_PointIndex center1,
                                                  scc_PointIndex center2,
                                                  iscc_hi_WorkArea* work_area);
 
+
 static inline void iscc_hi_sort_edge_list(const iscc_hi_ClusterItem* cl,
                                           scc_PointIndex center,
                                           const double row_dists[static cl->size],
                                           iscc_hi_DistanceEdge edge_store[static cl->size]);
+
 
 static int iscc_hi_compare_dist_edges(const void* a,
                                       const void* b);
 
 
 // =============================================================================
-// External function implementations
+// Public function implementations
 // =============================================================================
 
 scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
@@ -242,7 +256,7 @@ scc_ErrorCode scc_hierarchical_clustering(void* const data_set,
 
 
 // =============================================================================
-// Internal function implementations
+// Static function implementations
 // =============================================================================
 
 static scc_ErrorCode iscc_hi_empty_cl_stack(const size_t num_data_points,

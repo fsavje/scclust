@@ -37,7 +37,8 @@ OBJECTS = \
 	nng_core.o \
 	nng_findseeds.o \
 	scclust_spi.o \
-	scclust.o
+	scclust.o \
+	utilities.o
 
 .PHONY: all clean docs library
 
