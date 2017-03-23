@@ -263,7 +263,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 		if (num_types > ISCC_TYPELABEL_MAX) {
 			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
 		}
-		if (num_types > UINT_FAST16_MAX) {
+		if (num_types > UINT16_MAX) {
 			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
 		}
 		if (type_constraints == NULL) {

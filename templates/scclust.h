@@ -370,10 +370,10 @@ typedef struct scc_ClusterOptions {
 
 extern const scc_ClusterOptions scc_default_cluster_options;
 
+scc_ErrorCode scc_sc_clustering(void* data_set,
+                                const scc_ClusterOptions* options,
+                                scc_Clustering* out_clustering);
 
-scc_ErrorCode scc_make_clustering(void* data_set,
-                                  scc_Clustering* clustering,
-                                  const scc_ClusterOptions* options);
 
 scc_ErrorCode scc_hierarchical_clustering(void* data_set,
                                           scc_Clustering* clustering,
