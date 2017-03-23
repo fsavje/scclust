@@ -367,8 +367,8 @@ typedef struct scc_ClusterOptions {
 } scc_ClusterOptions;
 
 
+scc_ClusterOptions scc_default_options(void);
 
-extern const scc_ClusterOptions scc_default_cluster_options;
 
 scc_ErrorCode scc_sc_clustering(void* data_set,
                                 const scc_ClusterOptions* options,
