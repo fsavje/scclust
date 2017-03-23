@@ -101,7 +101,7 @@ void scc_ut_find_seeds(void** state)
 		.count = 0,
 		.seeds = NULL,
 	};
-	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_ALT_UPDATING, &sr3alt);
+	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_UPDATING, &sr3alt);
 	assert_int_equal(ec3alt, SCC_ER_OK);
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);
@@ -214,7 +214,7 @@ void scc_ut_find_seeds_withdiag(void** state)
 		.count = 0,
 		.seeds = NULL,
 	};
-	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_ALT_UPDATING, &sr3alt);
+	scc_ErrorCode ec3alt = iscc_find_seeds(&nng, SCC_SM_INWARDS_UPDATING, &sr3alt);
 	assert_int_equal(ec3alt, SCC_ER_OK);
 	assert_int_equal(sr3alt.count, 5);
 	assert_int_equal(sr3alt.capacity, sr3alt.count);

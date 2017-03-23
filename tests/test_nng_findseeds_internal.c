@@ -130,40 +130,6 @@ void scc_ut_findseeds_inwards(void** state)
 }
 
 
-void scc_ut_findseeds_inwards_alt(void** state)
-{
-	(void) state;
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string("...#....../"
-	                         "...#....../"
-	                         "#........./"
-	                         ".#......../"
-	                         ".....#..../"
-	                         ".#......../"
-	                         "....#...../"
-	                         "......#.../"
-	                         "......#.../"
-	                         "......#.../",
-	                         &nng1);
-	iscc_SeedResult sr1 = {
-		.capacity = 10,
-		.count = 0,
-		.seeds = NULL,
-	};
-	scc_PointIndex fp_seeds1[4] = {2, 7, 4, 3};
-
-	scc_ErrorCode ec1 = iscc_findseeds_inwards_alt(&nng1, &sr1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	assert_int_equal(sr1.capacity, 10);
-	assert_int_equal(sr1.count, 4);
-	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, 4 * sizeof(scc_PointIndex));
-	free(sr1.seeds);
-	iscc_free_digraph(&nng1);
-}
-
-
 void scc_ut_findseeds_exclusion(void** state)
 {
 	(void) state;
@@ -322,40 +288,6 @@ void scc_ut_findseeds_inwards_withdiag(void** state)
 
 	free(sr2.seeds);
 	iscc_free_digraph(&nng2);
-}
-
-
-void scc_ut_findseeds_inwards_alt_withdiag(void** state)
-{
-	(void) state;
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string("#..#....../"
-	                         ".#.#....../"
-	                         "#.#......./"
-	                         ".#.#....../"
-	                         "....##..../"
-	                         ".#...#..../"
-	                         "....#.#.../"
-	                         "......##../"
-	                         "......#.#./"
-	                         "......#..#/",
-	                         &nng1);
-	iscc_SeedResult sr1 = {
-		.capacity = 10,
-		.count = 0,
-		.seeds = NULL,
-	};
-	scc_PointIndex fp_seeds1[4] = {2, 7, 4, 3};
-
-	scc_ErrorCode ec1 = iscc_findseeds_inwards_alt(&nng1, &sr1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	assert_int_equal(sr1.capacity, 10);
-	assert_int_equal(sr1.count, 4);
-	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, 4 * sizeof(scc_PointIndex));
-	free(sr1.seeds);
-	iscc_free_digraph(&nng1);
 }
 
 
@@ -520,40 +452,6 @@ void scc_ut_findseeds_inwards_caliper(void** state)
 }
 
 
-void scc_ut_findseeds_inwards_alt_caliper(void** state)
-{
-	(void) state;
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string("..... ...../"
-	                         "..... #.#../"
-	                         "..... #..../"
-	                         "..... .##../"
-	                         "..... ...../"
-	                         "..... ...../"
-	                         ".#... ..#../"
-	                         "..#.# ...../"
-	                         "...## ....#/"
-	                         "...#. .#.../",
-	                         &nng1);
-	iscc_SeedResult sr1 = {
-		.capacity = 10,
-		.count = 0,
-		.seeds = NULL,
-	};
-	scc_PointIndex fp_seeds1[3] = {8, 6, 2};
-
-	scc_ErrorCode ec1 = iscc_findseeds_inwards_alt(&nng1, &sr1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	assert_int_equal(sr1.capacity, 10);
-	assert_int_equal(sr1.count, 3);
-	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, 3 * sizeof(scc_PointIndex));
-	free(sr1.seeds);
-	iscc_free_digraph(&nng1);
-}
-
-
 void scc_ut_findseeds_exclusion_caliper(void** state)
 {
 	(void) state;
@@ -715,40 +613,6 @@ void scc_ut_findseeds_inwards_caliper_withdiag(void** state)
 }
 
 
-void scc_ut_findseeds_inwards_alt_caliper_withdiag(void** state)
-{
-	(void) state;
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string("..... ...../"
-	                         ".#... #.#../"
-	                         "..#.. #..../"
-	                         "...#. .##../"
-	                         "..... ...../"
-	                         "..... ...../"
-	                         ".#... .##../"
-	                         "..#.# ..#../"
-	                         "...## ...##/"
-	                         "...#. .#..#/",
-	                         &nng1);
-	iscc_SeedResult sr1 = {
-		.capacity = 10,
-		.count = 0,
-		.seeds = NULL,
-	};
-	scc_PointIndex fp_seeds1[3] = {8, 6, 2};
-
-	scc_ErrorCode ec1 = iscc_findseeds_inwards_alt(&nng1, &sr1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	assert_int_equal(sr1.capacity, 10);
-	assert_int_equal(sr1.count, 3);
-	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, 3 * sizeof(scc_PointIndex));
-	free(sr1.seeds);
-	iscc_free_digraph(&nng1);
-}
-
-
 void scc_ut_findseeds_exclusion_caliper_withdiag(void** state)
 {
 	(void) state;
@@ -907,40 +771,6 @@ void scc_ut_findseeds_inwards_caliper_selfpointing_withdiag(void** state)
 
 	free(sr2.seeds);
 	iscc_free_digraph(&nng2);
-}
-
-
-void scc_ut_findseeds_inwards_alt_caliper_selfpointing_withdiag(void** state)
-{
-	(void) state;
-
-	iscc_Digraph nng1;
-	iscc_digraph_from_string("#.... ...../"
-	                         ".#... #.#../"
-	                         "..#.. #..../"
-	                         "...#. .##../"
-	                         "..... ...../"
-	                         "..... #..../"
-	                         ".#... .##../"
-	                         "..#.# ..#../"
-	                         "...## ...##/"
-	                         "...#. .#..#/",
-	                         &nng1);
-	iscc_SeedResult sr1 = {
-		.capacity = 10,
-		.count = 0,
-		.seeds = NULL,
-	};
-	scc_PointIndex fp_seeds1[4] = {0, 8, 6, 2};
-
-	scc_ErrorCode ec1 = iscc_findseeds_inwards_alt(&nng1, &sr1);
-	assert_int_equal(ec1, SCC_ER_OK);
-	assert_int_equal(sr1.capacity, 10);
-	assert_int_equal(sr1.count, 4);
-	assert_non_null(sr1.seeds);
-	assert_memory_equal(sr1.seeds, fp_seeds1, 4 * sizeof(scc_PointIndex));
-	free(sr1.seeds);
-	iscc_free_digraph(&nng1);
 }
 
 
@@ -1833,23 +1663,18 @@ int main(void)
 	const struct CMUnitTest test_cases[] = {
 		cmocka_unit_test(scc_ut_findseeds_lexical),
 		cmocka_unit_test(scc_ut_findseeds_inwards),
-		cmocka_unit_test(scc_ut_findseeds_inwards_alt),
 		cmocka_unit_test(scc_ut_findseeds_exclusion),
 		cmocka_unit_test(scc_ut_findseeds_lexical_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_inwards_withdiag),
-		cmocka_unit_test(scc_ut_findseeds_inwards_alt_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_exclusion_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_lexical_caliper),
 		cmocka_unit_test(scc_ut_findseeds_inwards_caliper),
-		cmocka_unit_test(scc_ut_findseeds_inwards_alt_caliper),
 		cmocka_unit_test(scc_ut_findseeds_exclusion_caliper),
 		cmocka_unit_test(scc_ut_findseeds_lexical_caliper_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_inwards_caliper_withdiag),
-		cmocka_unit_test(scc_ut_findseeds_inwards_alt_caliper_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_exclusion_caliper_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_lexical_caliper_selfpointing_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_inwards_caliper_selfpointing_withdiag),
-		cmocka_unit_test(scc_ut_findseeds_inwards_alt_caliper_selfpointing_withdiag),
 		cmocka_unit_test(scc_ut_findseeds_exclusion_caliper_selfpointing_withdiag),
 		cmocka_unit_test(scc_ut_fs_exclusion_graph),
 		cmocka_unit_test(scc_ut_fs_add_seed),
