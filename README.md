@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fsavje/scclust.svg?branch=master)](https://travis-ci.org/fsavje/scclust)
 
-**scclust** is used for **s**ize **c**onstrained **clust**ering. It solves clustering problems where one wants to partition of a set of data points in to groups subject to constraints on the composition of the groups. In particular, scclust constructs a clustering that satisfies the constraints while trying to minimize the dissimilarity of points assigned to the same clusters. It is possible to specify overall size constraints and constraints specific to types of data points. For example, one can require that each cluster should contain at least five data points in total and at least two "red" data points.
+**scclust** is used for **s**ize-**c**onstrained **clust**ering. It solves clustering problems where one wants to partition of a set of data points in to groups subject to constraints on the composition of the groups. In particular, scclust constructs a clustering that satisfies the constraints while trying to minimize the dissimilarity of points assigned to the same clusters. It is possible to specify overall size constraints and constraints specific to types of data points. For example, one can require that each cluster should contain at least five data points in total and at least two "red" data points.
 
 scclust is made with large data sets in mind, and it can cluster millions of data points in less than a minute. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management can be accessed and changed at runtime.
 
