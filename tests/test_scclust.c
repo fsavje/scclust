@@ -683,10 +683,10 @@ void scc_ut_get_clustering_stats(void** state)
 	assert_double_equal(out_stats1.sum_dists, 20.776226);
 	assert_double_equal(out_stats1.min_dist, 0.019146);
 	assert_double_equal(out_stats1.max_dist, 2.195331);
-	assert_double_equal(out_stats1.cl_avg_min_dist, 0.646028);
-	assert_double_equal(out_stats1.cl_avg_max_dist, 1.763760);
-	assert_double_equal(out_stats1.cl_avg_dist_weighted, 1.031564);
-	assert_double_equal(out_stats1.cl_avg_dist_unweighted, 1.182866);
+	assert_double_equal(out_stats1.avg_min_dist, 0.646028);
+	assert_double_equal(out_stats1.avg_max_dist, 1.763760);
+	assert_double_equal(out_stats1.avg_dist_weighted, 1.031564);
+	assert_double_equal(out_stats1.avg_dist_unweighted, 1.182866);
 
 	const scc_Clabel M = SCC_CLABEL_NA;
 	scc_Clabel cluster_labels2[100] = { M, 0, M, M, M, 1, M, M, 3, M,
@@ -721,10 +721,10 @@ void scc_ut_get_clustering_stats(void** state)
 	assert_double_equal(out_stats2.sum_dists, 1126.431356);
 	assert_double_equal(out_stats2.min_dist, 0.0);
 	assert_double_equal(out_stats2.max_dist, 102.899636);
-	assert_double_equal(out_stats2.cl_avg_min_dist, 28.301867);
-	assert_double_equal(out_stats2.cl_avg_max_dist, 59.867698);
-	assert_double_equal(out_stats2.cl_avg_dist_weighted, 60.25076);
-	assert_double_equal(out_stats2.cl_avg_dist_unweighted, 47.155168);
+	assert_double_equal(out_stats2.avg_min_dist, 28.301867);
+	assert_double_equal(out_stats2.avg_max_dist, 59.867698);
+	assert_double_equal(out_stats2.avg_dist_weighted, 60.25076);
+	assert_double_equal(out_stats2.avg_dist_unweighted, 47.155168);
 }
 
 

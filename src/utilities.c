@@ -212,10 +212,10 @@ scc_ErrorCode scc_get_clustering_stats(void* const data_set,
 		.sum_dists = 0.0,
 		.min_dist = DBL_MAX,
 		.max_dist = 0.0,
-		.cl_avg_min_dist = 0.0,
-		.cl_avg_max_dist = 0.0,
-		.cl_avg_dist_weighted = 0.0,
-		.cl_avg_dist_unweighted = 0.0,
+		.avg_min_dist = 0.0,
+		.avg_max_dist = 0.0,
+		.avg_dist_weighted = 0.0,
+		.avg_dist_unweighted = 0.0,
 	};
 
 	for (size_t c = 0; c < clustering->num_clusters; ++c) {
@@ -299,18 +299,18 @@ scc_ErrorCode scc_get_clustering_stats(void* const data_set,
 		if (tmp_stats.max_dist < cluster_max) {
 			tmp_stats.max_dist = cluster_max;
 		}
-		tmp_stats.cl_avg_min_dist += cluster_min;
-		tmp_stats.cl_avg_max_dist += cluster_max;
+		tmp_stats.avg_min_dist += cluster_min;
+		tmp_stats.avg_max_dist += cluster_max;
 
-		tmp_stats.cl_avg_dist_weighted += ((double) cluster_size[c]) * cluster_sum_dists / ((double) size_dist_matrix);
-		tmp_stats.cl_avg_dist_unweighted += cluster_sum_dists / ((double) size_dist_matrix);
+		tmp_stats.avg_dist_weighted += ((double) cluster_size[c]) * cluster_sum_dists / ((double) size_dist_matrix);
+		tmp_stats.avg_dist_unweighted += cluster_sum_dists / ((double) size_dist_matrix);
 	}
 
 	tmp_stats.avg_cluster_size = ((double) tmp_stats.num_assigned) / ((double) tmp_stats.num_populated_clusters);
-	tmp_stats.cl_avg_min_dist = tmp_stats.cl_avg_min_dist / ((double) tmp_stats.num_populated_clusters);
-	tmp_stats.cl_avg_max_dist = tmp_stats.cl_avg_max_dist / ((double) tmp_stats.num_populated_clusters);
-	tmp_stats.cl_avg_dist_weighted = tmp_stats.cl_avg_dist_weighted / ((double) tmp_stats.num_assigned);
-	tmp_stats.cl_avg_dist_unweighted = tmp_stats.cl_avg_dist_unweighted / ((double) tmp_stats.num_populated_clusters);
+	tmp_stats.avg_min_dist = tmp_stats.avg_min_dist / ((double) tmp_stats.num_populated_clusters);
+	tmp_stats.avg_max_dist = tmp_stats.avg_max_dist / ((double) tmp_stats.num_populated_clusters);
+	tmp_stats.avg_dist_weighted = tmp_stats.avg_dist_weighted / ((double) tmp_stats.num_assigned);
+	tmp_stats.avg_dist_unweighted = tmp_stats.avg_dist_unweighted / ((double) tmp_stats.num_populated_clusters);
 
 	free(cluster_size);
 	free(id_store);
