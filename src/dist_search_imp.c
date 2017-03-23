@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -160,6 +160,7 @@ struct iscc_MaxDistObject {
 	const scc_PointIndex* search_indices;
 };
 
+
 static const int32_t ISCC_MAXDIST_STRUCT_VERSION = 722439001;
 
 
@@ -285,6 +286,7 @@ struct iscc_NNSearchObject {
 	size_t len_search_indices;
 	const scc_PointIndex* search_indices;
 };
+
 
 static const int32_t ISCC_NN_SEARCH_STRUCT_VERSION = 722294001;
 

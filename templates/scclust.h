@@ -382,7 +382,7 @@ scc_ErrorCode scc_hierarchical_clustering(void* data_set,
 
 
 // =============================================================================
-// Clustering stats function
+// Utility functions
 // =============================================================================
 
 /// Struct to store clustering statistics

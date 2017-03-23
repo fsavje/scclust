@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,66 +35,70 @@
 // Internal structs
 // =============================================================================
 
-typedef struct iscc_fs_SortResult iscc_fs_SortResult;
-struct iscc_fs_SortResult {
+typedef struct iscc_fs_SortResult {
 	scc_PointIndex* inwards_count;
 	scc_PointIndex* sorted_vertices;
 	scc_PointIndex** vertex_index;
 	scc_PointIndex** bucket_index;
-};
+} iscc_fs_SortResult;
 
 
 // =============================================================================
-// Internal function prototypes
+// Static function prototypes
 // =============================================================================
 
 static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* nng,
                                             iscc_SeedResult* out_seeds);
 
+
 static scc_ErrorCode iscc_findseeds_inwards(const iscc_Digraph* nng,
                                             bool updating,
                                             iscc_SeedResult* out_seeds);
 
+
 static scc_ErrorCode iscc_findseeds_inwards_alt(const iscc_Digraph* nng,
                                                 iscc_SeedResult* out_seeds);
+
 
 static scc_ErrorCode iscc_findseeds_exclusion(const iscc_Digraph* nng,
                                               bool updating,
                                               iscc_SeedResult* out_seeds);
 
-//iscc_findseeds_onearc_updating(const scc_Digraph* nng, ...);
-
-//iscc_findseeds_simulated_annealing();
-
-//iscc_findseeds_approximation();
 
 static scc_ErrorCode iscc_fs_exclusion_graph(const iscc_Digraph* nng,
                                              size_t len_not_excluded,
                                              const scc_PointIndex not_excluded[],
                                              iscc_Digraph* out_dg);
 
+
 static inline scc_ErrorCode iscc_fs_add_seed(scc_PointIndex s,
                                              iscc_SeedResult* seed_result);
+
 
 static inline bool iscc_fs_check_neighbors_marks(scc_PointIndex v,
                                                  const iscc_Digraph*  nng,
                                                  const bool marks[static nng->vertices]);
 
+
 static inline void iscc_fs_mark_seed_neighbors(scc_PointIndex s,
                                                const iscc_Digraph* nng,
                                                bool marks[static nng->vertices]);
 
+
 static void iscc_fs_free_sort_result(iscc_fs_SortResult* sr);
+
 
 static scc_ErrorCode iscc_fs_sort_by_inwards(const iscc_Digraph* nng,
                                              bool make_indices,
                                              iscc_fs_SortResult* out_sort);
+
 
 static inline void iscc_fs_decrease_v_in_sort(scc_PointIndex v_to_decrease,
                                               scc_PointIndex inwards_count[restrict],
                                               scc_PointIndex* vertex_index[restrict],
                                               scc_PointIndex* bucket_index[restrict],
                                               scc_PointIndex* current_pos);
+
 
 #ifdef SCC_STABLE_FINDSEED
 
@@ -104,6 +108,7 @@ static inline void iscc_fs_debug_bucket_sort(const scc_PointIndex* bucket_start,
                                              scc_PointIndex* vertex_index[]);
 
 #endif // ifdef SCC_STABLE_FINDSEED
+
 
 #if defined(SCC_STABLE_FINDSEED) && !defined(NDEBUG)
 
@@ -178,7 +183,7 @@ scc_ErrorCode iscc_find_seeds(const iscc_Digraph* const nng,
 
 
 // =============================================================================
-// Internal function implementations
+// Static function implementations
 // =============================================================================
 
 static scc_ErrorCode iscc_findseeds_lexical(const iscc_Digraph* const nng,

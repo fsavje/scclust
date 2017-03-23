@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,21 +32,12 @@
 #include "nng_batch_clustering.h"
 #include "nng_core.h"
 #include "nng_findseeds.h"
+#include "utilities.h"
 
 
 // =============================================================================
-// Internal variables
+// Static function prototypes
 // =============================================================================
-
-static const int32_t ISCC_OPTIONS_STRUCT_VERSION = 722678001;
-
-
-// =============================================================================
-// Internal function prototypes
-// =============================================================================
-
-static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* options,
-                                                size_t num_data_points);
 
 static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* clustering,
                                                    void* data_set,
@@ -55,33 +46,8 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* clustering,
 
 
 // =============================================================================
-// External function implementations
+// Public function implementations
 // =============================================================================
-
-scc_ClusterOptions scc_default_options(void)
-{
-	return (scc_ClusterOptions) {
-		.options_version = ISCC_OPTIONS_STRUCT_VERSION,
-		.size_constraint = 0,
-		.num_types = 0,
-		.type_constraints = NULL,
-		.len_type_labels = 0,
-		.type_labels = NULL,
-		.seed_method = SCC_SM_LEXICAL,
-		.len_primary_data_points = 0,
-		.primary_data_points = NULL,
-		.primary_unassigned_method = SCC_UM_ANY_NEIGHBOR,
-		.secondary_unassigned_method = SCC_UM_IGNORE,
-		.seed_radius = SCC_RM_NO_RADIUS,
-		.seed_supplied_radius = 0.0,
-		.primary_radius = SCC_RM_USE_SEED_RADIUS,
-		.primary_supplied_radius = 0.0,
-		.secondary_radius = SCC_RM_USE_SEED_RADIUS,
-		.secondary_supplied_radius = 0.0,
-		.batch_size = 0,
-	};
-}
-
 
 scc_ErrorCode scc_sc_clustering(void* const data_set,
                                 const scc_ClusterOptions* const options,
@@ -156,128 +122,8 @@ scc_ErrorCode scc_sc_clustering(void* const data_set,
 
 
 // =============================================================================
-// Internal function implementations
+// Static function implementations
 // =============================================================================
-
-static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const options,
-                                                const size_t num_data_points)
-{
-	if (options->options_version != ISCC_OPTIONS_STRUCT_VERSION) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Incompatible scc_ClusterOptions version.");
-	}
-	if (options->size_constraint < 2) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Size constraint must be 2 or greater.");
-	}
-	if (num_data_points < options->size_constraint) {
-		return iscc_make_error_msg(SCC_ER_NO_SOLUTION, "Fewer data points than size constraint.");
-	}
-
-	if (options->num_types < 2) {
-		if (options->type_constraints != NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
-		}
-		if (options->len_type_labels != 0) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-		if (options->type_labels != NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-	} else {
-		if (options->num_types > ISCC_TYPELABEL_MAX) {
-			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
-		}
-		if (options->num_types > UINT16_MAX) {
-			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
-		}
-		if (options->type_constraints == NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
-		}
-		if (options->len_type_labels < num_data_points) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-		if (options->type_labels == NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-	}
-
-	if ((options->seed_method != SCC_SM_LEXICAL) &&
-			(options->seed_method != SCC_SM_BATCHES) &&
-			(options->seed_method != SCC_SM_INWARDS_ORDER) &&
-			(options->seed_method != SCC_SM_INWARDS_UPDATING) &&
-			(options->seed_method != SCC_SM_INWARDS_ALT_UPDATING) &&
-			(options->seed_method != SCC_SM_EXCLUSION_ORDER) &&
-			(options->seed_method != SCC_SM_EXCLUSION_UPDATING)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown seed method.");
-	}
-	if ((options->primary_data_points != NULL) && (options->len_primary_data_points == 0)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
-	}
-	if (options->primary_data_points != NULL) {
-		for (size_t i = 1; i < options->len_primary_data_points; ++i) {
-			if (options->primary_data_points[i - 1] >= options->primary_data_points[i]) {
-				return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "`primary_data_points` is not sorted.");
-			}
-		}
-	}
-	if ((options->primary_data_points == NULL) && (options->len_primary_data_points > 0)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid primary data points.");
-	}
-
-	if ((options->primary_unassigned_method != SCC_UM_IGNORE) &&
-			(options->primary_unassigned_method != SCC_UM_ANY_NEIGHBOR) &&
-			(options->primary_unassigned_method != SCC_UM_CLOSEST_ASSIGNED) &&
-			(options->primary_unassigned_method != SCC_UM_CLOSEST_SEED)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown unassigned method.");
-	}
-	if (options->secondary_unassigned_method == SCC_UM_ANY_NEIGHBOR) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid unassigned method.");
-	}
-	if ((options->secondary_unassigned_method != SCC_UM_IGNORE) &&
-			(options->secondary_unassigned_method != SCC_UM_CLOSEST_ASSIGNED) &&
-			(options->secondary_unassigned_method != SCC_UM_CLOSEST_SEED)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Unknown unassigned method.");
-	}
-	if ((options->seed_radius != SCC_RM_NO_RADIUS) &&
-			(options->seed_radius != SCC_RM_USE_SUPPLIED)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius method.");
-	}
-	if ((options->seed_radius == SCC_RM_USE_SUPPLIED) && (options->seed_supplied_radius <= 0.0)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius.");
-	}
-	if ((options->primary_radius != SCC_RM_NO_RADIUS) &&
-			(options->primary_radius != SCC_RM_USE_SUPPLIED) &&
-			(options->primary_radius != SCC_RM_USE_SEED_RADIUS) &&
-			(options->primary_radius != SCC_RM_USE_ESTIMATED)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius method.");
-	}
-	if ((options->primary_radius == SCC_RM_USE_SUPPLIED) && (options->primary_supplied_radius <= 0.0)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius.");
-	}
-	if ((options->secondary_radius != SCC_RM_NO_RADIUS) &&
-			(options->secondary_radius != SCC_RM_USE_SUPPLIED) &&
-			(options->secondary_radius != SCC_RM_USE_SEED_RADIUS) &&
-			(options->secondary_radius != SCC_RM_USE_ESTIMATED)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius method.");
-	}
-	if ((options->secondary_radius == SCC_RM_USE_SUPPLIED) && (options->secondary_supplied_radius <= 0.0)) {
-		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid radius.");
-	}
-
-	if (options->seed_method == SCC_SM_BATCHES) {
-		if (options->num_types >= 2) {
-			return iscc_make_error_msg(SCC_ER_NOT_IMPLEMENTED, "SCC_SM_BATCHES cannot be used with type constraints.");
-		}
-		if (options->secondary_unassigned_method != SCC_UM_IGNORE) {
-			return iscc_make_error_msg(SCC_ER_NOT_IMPLEMENTED, "SCC_SM_BATCHES must be used with `secondary_unassigned_method = SCC_UM_IGNORE`.");
-		}
-		if (options->primary_radius != SCC_RM_USE_SEED_RADIUS) {
-			return iscc_make_error_msg(SCC_ER_NOT_IMPLEMENTED, "SCC_SM_BATCHES must be used with `primary_radius = SCC_RM_USE_SEED_RADIUS`.");
-		}
-	}
-
-	return iscc_no_error();
-}
-
 
 static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* const clustering,
                                                    void* const data_set,

@@ -33,7 +33,8 @@ SCC_OBJECTS = \
 	nng_core.o \
 	nng_findseeds.o \
 	scclust_spi.o \
-	scclust.o
+	scclust.o \
+	utilities.o
 
 SCC_DIR = scc_build
 SCC_OBJECTS := $(addprefix $(SCC_DIR)/src/,$(SCC_OBJECTS))
