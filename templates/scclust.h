@@ -2,7 +2,7 @@
  * scclust -- A C library for size constrained clustering
  * https://github.com/fsavje/scclust
  *
- * Copyright (C) 2015-2016  Fredrik Savje -- http://fredriksavje.com
+ * Copyright (C) 2015-2017  Fredrik Savje -- http://fredriksavje.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,7 @@ extern "C" {
 #define SCC_SCCLUST_MINOR_VERSION {% scclust_minor_version %}
 #define SCC_SCCLUST_PATCH_VERSION {% scclust_patch_version %}
 
+
 /** Get the version the library was compiled with.
  *
  *  \param[out] out_major variable to write major version to.
@@ -66,8 +67,7 @@ void scc_get_compiled_version(uint32_t* out_major,
 // =============================================================================
 
 /// Error code returned by methods in the library.
-enum scc_ErrorCode {
-
+typedef enum scc_ErrorCode {
 	/// No error.
 	SCC_ER_OK,
 
@@ -90,12 +90,9 @@ enum scc_ErrorCode {
 	SCC_ER_DIST_SEARCH_ERROR,
 
 	/// Functionality not yet implemented.
-	SCC_ER_NOT_IMPLEMENTED,
+	SCC_ER_NOT_IMPLEMENTED
+} scc_ErrorCode;
 
-};
-
-/// Typedef for the scc_ErrorCode enum
-typedef enum scc_ErrorCode scc_ErrorCode;
 
 /** Get latest scclust error.
  *
@@ -123,6 +120,7 @@ bool scc_get_latest_error(size_t len_error_message_buffer,
  */
 typedef {% pointindex_type %} scc_PointIndex;
 
+
 /// Macro for data point ID type.
 #define SCC_M_POINTINDEX_TYPE_{% pointindex_type %}
 
@@ -135,11 +133,14 @@ typedef {% pointindex_type %} scc_PointIndex;
  */
 typedef {% clabel_type %} scc_Clabel;
 
+
 /// Macro for cluster labels type.
 #define SCC_M_CLABEL_TYPE_{% clabel_type %}
 
+
 /// Label given to unassigned vertices.
 static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
+
 
 /// Macro for unassigned label.
 #define SCC_M_CLABEL_NA {% clabel_na %}
@@ -152,6 +153,7 @@ static const scc_Clabel SCC_CLABEL_NA = {% clabel_na %};
  */
 typedef {% typelabel_type %} scc_TypeLabel;
 
+
 /// Macro for cluster data point type.
 #define SCC_M_TYPELABEL_TYPE_{% typelabel_type %}
 
@@ -162,6 +164,7 @@ typedef {% typelabel_type %} scc_TypeLabel;
 
 /// Typedef for struct containing data sets.
 typedef struct scc_DataSet scc_DataSet;
+
 
 /** Construct new data set from raw data.
  *
@@ -184,6 +187,7 @@ scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
                                 const double data_matrix[],
                                 scc_DataSet** out_data_set);
 
+
 /** Free data set.
  *
  *  Frees a #scc_DataSet previously allocated by #scc_init_data_set.
@@ -191,6 +195,7 @@ scc_ErrorCode scc_init_data_set(uintmax_t num_data_points,
  *  \param[in,out] data_set double pointer to a #scc_DataSet objec to free.
  */
 void scc_free_data_set(scc_DataSet** data_set);
+
 
 /** Check data set.
  *
@@ -224,9 +229,12 @@ scc_ErrorCode scc_init_existing_clustering(uintmax_t num_data_points,
                                            bool deep_label_copy,
                                            scc_Clustering** out_clustering);
 
+
 void scc_free_clustering(scc_Clustering** clustering);
 
+
 bool scc_is_initialized_clustering(const scc_Clustering* clustering);
+
 
 scc_ErrorCode scc_copy_clustering(const scc_Clustering* in_clustering,
                                   scc_Clustering** out_clustering);
@@ -242,6 +250,7 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
                                       uintmax_t* out_num_data_points,
                                       uintmax_t* out_num_clusters);
+
 
 scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
                                      size_t len_out_label_buffer,
@@ -261,8 +270,7 @@ scc_ErrorCode scc_get_cluster_labels(const scc_Clustering* clustering,
  *
  *  See #scc_get_seed_clustering for more details. See also the appendix of \cite Higgins2016.
  */
-enum scc_SeedMethod {
-
+typedef enum scc_SeedMethod {
 	/** Find seeds lexically by vertex ID.
 	 *
 	 *  This method finds seed sequentially by checking whether adding the next seed satisfy the four conditions described in #scc_get_seed_clustering.
@@ -310,35 +318,27 @@ enum scc_SeedMethod {
 	 *  and find seeds in ascending order by this count. Unlike the #SCC_SM_EXCLUSION_ORDER, this method updates the edge count after finding a
 	 *  seed so that only edges where the tails that still can become seeds are counted.
 	 */
-	SCC_SM_EXCLUSION_UPDATING,
-};
-
-/// Typedef for the scc_NNGMethod enum
-typedef enum scc_SeedMethod scc_SeedMethod;
+	SCC_SM_EXCLUSION_UPDATING
+} scc_SeedMethod;
 
 
-enum scc_UnassignedMethod {
+typedef enum scc_UnassignedMethod {
 	SCC_UM_IGNORE,
 	SCC_UM_ANY_NEIGHBOR,
 	SCC_UM_CLOSEST_ASSIGNED,
-	SCC_UM_CLOSEST_SEED,
-};
-
-typedef enum scc_UnassignedMethod scc_UnassignedMethod;
+	SCC_UM_CLOSEST_SEED
+} scc_UnassignedMethod;
 
 
-enum scc_RadiusMethod {
+typedef enum scc_RadiusMethod {
 	SCC_RM_NO_RADIUS,
 	SCC_RM_USE_SUPPLIED,
 	SCC_RM_USE_SEED_RADIUS,
-	SCC_RM_USE_ESTIMATED,
-};
-
-typedef enum scc_RadiusMethod scc_RadiusMethod;
+	SCC_RM_USE_ESTIMATED
+} scc_RadiusMethod;
 
 
-struct scc_ClusterOptions {
-
+typedef struct scc_ClusterOptions {
 	/** scc_ClusterOptions struct version
 	 *
 	 *  \note
@@ -362,9 +362,9 @@ struct scc_ClusterOptions {
 	scc_RadiusMethod secondary_radius;
 	double secondary_supplied_radius;
 	uint32_t batch_size;
-};
+} scc_ClusterOptions;
 
-typedef struct scc_ClusterOptions scc_ClusterOptions;
+
 
 extern const scc_ClusterOptions scc_default_cluster_options;
 
@@ -384,13 +384,13 @@ scc_ErrorCode scc_hierarchical_clustering(void* data_set,
 // =============================================================================
 
 /// Struct to store clustering statistics
-struct scc_ClusteringStats {
 	uintmax_t num_data_points;
 	uintmax_t num_assigned;
 	uintmax_t num_clusters;
 	uintmax_t num_populated_clusters;
 	uintmax_t min_cluster_size;
 	uintmax_t max_cluster_size;
+typedef struct scc_ClusteringStats {
 	double avg_cluster_size;
 	double sum_dists;
 	double min_dist;
@@ -399,10 +399,8 @@ struct scc_ClusteringStats {
 	double cl_avg_max_dist;
 	double cl_avg_dist_weighted;
 	double cl_avg_dist_unweighted;
-};
+} scc_ClusteringStats;
 
-/// Type used for clustering statistics
-typedef struct scc_ClusteringStats scc_ClusteringStats;
 
 scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
                                        void* data_set,
