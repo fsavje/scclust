@@ -241,13 +241,6 @@ bool scc_is_initialized_clustering(const scc_Clustering* clustering);
 scc_ErrorCode scc_copy_clustering(const scc_Clustering* in_clustering,
                                   scc_Clustering** out_clustering);
 
-scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
-                                   uint32_t size_constraint,
-                                   uintmax_t num_types,
-                                   const uint32_t type_constraints[],
-                                   size_t len_type_labels,
-                                   const scc_TypeLabel type_labels[],
-                                   bool* out_is_OK);
 
 scc_ErrorCode scc_get_clustering_info(const scc_Clustering* clustering,
                                       uint64_t* out_num_data_points,
@@ -384,6 +377,19 @@ scc_ErrorCode scc_hierarchical_clustering(void* data_set,
 // =============================================================================
 // Utility functions
 // =============================================================================
+
+/** Check clustering
+ *
+ *  Checks whether supplied clustering satisfies clustering constraints in options.
+ *  Currently it checks `size_constraint`, `type_constraints` and `primary_data_points`.
+ *  I.e., it ignores all radius constraints.
+ *
+ *  \return #scc_ErrorCode describing eventual error.
+ */
+scc_ErrorCode scc_check_clustering(const scc_Clustering* clustering,
+                                   const scc_ClusterOptions* options,
+                                   bool* out_is_OK);
+
 
 /// Struct to store clustering statistics
 typedef struct scc_ClusteringStats {

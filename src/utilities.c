@@ -76,11 +76,7 @@ scc_ClusterOptions scc_default_options(void)
 
 
 scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
-                                   const uint32_t size_constraint,
-                                   const uintmax_t num_types,
-                                   const uint32_t type_constraints[const],
-                                   const size_t len_type_labels,
-                                   const scc_TypeLabel type_labels[const],
+                                   const scc_ClusterOptions* const options,
                                    bool* const out_is_OK)
 {
 	if (out_is_OK == NULL) {
@@ -93,34 +89,16 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 	if (clustering->num_clusters == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
 	}
-
-	if (num_types < 2) {
-		if (type_constraints != NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
-		}
-		if (len_type_labels != 0) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-		if (type_labels != NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-	} else {
-		if (num_types > ISCC_TYPELABEL_MAX) {
-			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
-		}
-		if (num_types > UINT16_MAX) {
-			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
-		}
-		if (type_constraints == NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type constraints.");
-		}
-		if (len_type_labels < clustering->num_data_points) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
-		if (type_labels == NULL) {
-			return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid type labels.");
-		}
+	scc_ErrorCode ec;
+	if ((ec = iscc_check_cluster_options(options, clustering->num_data_points)) != SCC_ER_OK) {
+		return ec;
 	}
+
+	const uint32_t size_constraint = options->size_constraint;
+	const uintmax_t num_types = options->num_types;
+	const uint32_t* const type_constraints = options->type_constraints;
+	const size_t len_type_labels = options->len_type_labels;
+	const scc_TypeLabel* const type_labels = options->type_labels;
 
 	assert(clustering->num_clusters <= ((uintmax_t) SCC_CLABEL_MAX));
 	const scc_Clabel max_cluster = (scc_Clabel) clustering->num_clusters;
@@ -129,6 +107,14 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 		if (clustering->cluster_label[i] == 0) continue; // Since `scc_Clabel` can be unsigned
 		if (clustering->cluster_label[i] == SCC_CLABEL_NA) continue;
 		return iscc_no_error(); // Error found, return. (`out_is_OK` is set to false)
+	}
+
+	if (options->primary_data_points != NULL) {
+		for (size_t i = 0; i < options->len_primary_data_points; ++i) {
+			if (clustering->cluster_label[options->primary_data_points[i]] == SCC_CLABEL_NA) {
+				return iscc_no_error(); // Error found, return. (`out_is_OK` is set to false)
+			}
+		}
 	}
 
 	if (num_types < 2) {
