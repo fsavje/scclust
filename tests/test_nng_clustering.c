@@ -125,7 +125,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -134,7 +134,7 @@ void scc_ut_nng_clustering(void** state)
                            1, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -142,7 +142,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
@@ -150,7 +150,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_small_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_small_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -159,7 +159,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -168,7 +168,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -178,7 +178,7 @@ void scc_ut_nng_clustering(void** state)
                            0, test_type_constraints, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -187,7 +187,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 10, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -197,7 +197,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, test_type_labels,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -206,7 +206,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        100, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -215,7 +215,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -224,7 +224,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -233,7 +233,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -242,7 +242,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, err1_primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -251,7 +251,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, err2_primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -260,7 +260,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -269,7 +269,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_ANY_NEIGHBOR, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -278,7 +278,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, true, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -287,7 +287,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NOT_IMPLEMENTED);
 	scc_free_clustering(&cl);
 
@@ -296,7 +296,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -309,7 +309,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -331,7 +331,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -353,7 +353,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -375,7 +375,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -397,7 +397,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -419,7 +419,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -441,7 +441,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -463,7 +463,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -485,7 +485,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -507,7 +507,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -529,7 +529,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -551,7 +551,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -572,7 +572,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -594,7 +594,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -616,7 +616,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -638,7 +638,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -660,7 +660,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -682,7 +682,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -704,7 +704,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -726,7 +726,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -748,7 +748,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -770,7 +770,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -792,7 +792,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -814,7 +814,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -836,7 +836,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -858,7 +858,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -880,7 +880,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -902,7 +902,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -924,7 +924,7 @@ void scc_ut_nng_clustering(void** state)
                            0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -946,7 +946,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -968,7 +968,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -990,7 +990,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1012,7 +1012,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1034,7 +1034,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1056,7 +1056,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 40.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1078,7 +1078,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1100,7 +1100,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1122,7 +1122,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1144,7 +1144,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1166,7 +1166,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1188,7 +1188,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1210,7 +1210,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1232,7 +1232,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1254,7 +1254,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1276,7 +1276,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1298,7 +1298,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1320,7 +1320,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1342,7 +1342,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1364,7 +1364,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1386,7 +1386,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1408,7 +1408,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1430,7 +1430,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1452,7 +1452,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1474,7 +1474,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1496,7 +1496,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1518,7 +1518,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1540,7 +1540,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1562,7 +1562,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1584,7 +1584,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1606,7 +1606,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1628,7 +1628,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1650,7 +1650,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1672,7 +1672,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1694,7 +1694,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1716,7 +1716,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1738,7 +1738,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1760,7 +1760,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1782,7 +1782,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1804,7 +1804,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1826,7 +1826,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1848,7 +1848,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1870,7 +1870,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_IGNORE, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1892,7 +1892,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1914,7 +1914,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1936,7 +1936,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1958,7 +1958,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -1980,7 +1980,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2002,7 +2002,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2024,7 +2024,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2046,7 +2046,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2068,7 +2068,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2090,7 +2090,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2112,7 +2112,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2134,7 +2134,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2156,7 +2156,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2178,7 +2178,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2200,7 +2200,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2222,7 +2222,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2244,7 +2244,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2266,7 +2266,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2288,7 +2288,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2310,7 +2310,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2332,7 +2332,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2354,7 +2354,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_INWARDS_ALT_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2376,7 +2376,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2398,7 +2398,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2420,7 +2420,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2442,7 +2442,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2464,7 +2464,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2486,7 +2486,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2508,7 +2508,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2530,7 +2530,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2552,7 +2552,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -2574,7 +2574,7 @@ void scc_ut_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                        SCC_SM_LEXICAL, SCC_UM_CLOSEST_SEED, false, 0.0,
 	                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -3715,7 +3715,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -3723,7 +3723,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 
 	scc_init_empty_clustering(100, external_cluster_labels, &cl);
@@ -3731,7 +3731,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_small_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_small_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3740,7 +3740,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3749,7 +3749,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -3758,7 +3758,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        SIZE_MAX, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_TOO_LARGE_PROBLEM);
 	scc_free_clustering(&cl);
 
@@ -3767,7 +3767,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, NULL, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3776,7 +3776,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 50, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3785,7 +3785,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, NULL,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3794,7 +3794,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        100, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3803,7 +3803,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, 100, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3812,7 +3812,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3821,7 +3821,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        len_primary_data_points, primary_data_points, 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3830,7 +3830,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_ANY_NEIGHBOR, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3839,7 +3839,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, true, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3848,7 +3848,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NOT_IMPLEMENTED);
 	scc_free_clustering(&cl);
 
@@ -3858,7 +3858,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three_mod1, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -3868,7 +3868,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three_mod2, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_INVALID_INPUT);
 	scc_free_clustering(&cl);
 
@@ -3877,7 +3877,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -3886,7 +3886,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 1.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -3895,7 +3895,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 10.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_NO_SOLUTION);
 	scc_free_clustering(&cl);
 
@@ -3904,7 +3904,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 30.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	scc_free_clustering(&cl);
 
@@ -3917,7 +3917,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -3939,7 +3939,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -3961,7 +3961,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -3983,7 +3983,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4005,7 +4005,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4027,7 +4027,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4049,7 +4049,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_LEXICAL, SCC_UM_IGNORE, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4071,7 +4071,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4093,7 +4093,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4115,7 +4115,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4137,7 +4137,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4159,7 +4159,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4181,7 +4181,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4203,7 +4203,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_LEXICAL, SCC_UM_IGNORE, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4225,7 +4225,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4247,7 +4247,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4269,7 +4269,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4291,7 +4291,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4313,7 +4313,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4335,7 +4335,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4357,7 +4357,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, false, 0.0,
                                        0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4379,7 +4379,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4401,7 +4401,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4423,7 +4423,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4445,7 +4445,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4467,7 +4467,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4489,7 +4489,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4511,7 +4511,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_ORDER, SCC_UM_CLOSEST_ASSIGNED, true, 20.0,
 	                                   0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4533,7 +4533,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4555,7 +4555,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4577,7 +4577,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4599,7 +4599,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4621,7 +4621,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4643,7 +4643,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4665,7 +4665,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4687,7 +4687,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4709,7 +4709,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4731,7 +4731,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4753,7 +4753,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4775,7 +4775,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4797,7 +4797,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4819,7 +4819,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_ANY_NEIGHBOR, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_IGNORE, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4841,7 +4841,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4863,7 +4863,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4885,7 +4885,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4907,7 +4907,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4929,7 +4929,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4951,7 +4951,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4973,7 +4973,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -4995,7 +4995,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5017,7 +5017,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5039,7 +5039,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5061,7 +5061,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5083,7 +5083,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5105,7 +5105,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5127,7 +5127,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_UPDATING, SCC_UM_CLOSEST_SEED, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_ASSIGNED, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5149,7 +5149,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5171,7 +5171,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5193,7 +5193,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5215,7 +5215,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5237,7 +5237,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5259,7 +5259,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5281,7 +5281,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5303,7 +5303,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5325,7 +5325,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5347,7 +5347,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5369,7 +5369,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5391,7 +5391,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5413,7 +5413,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5435,7 +5435,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_EXCLUSION_ORDER, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED, true, 20.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5457,7 +5457,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5479,7 +5479,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_three, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5501,7 +5501,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5523,7 +5523,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5545,7 +5545,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_one, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5567,7 +5567,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5589,7 +5589,7 @@ void scc_ut_nng_clustering_with_types(void** state)
                                        3, type_constraints_four, 100, type_labels_three,
                                        SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, false, 0.0,
                                        len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5611,7 +5611,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5633,7 +5633,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_three, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5655,7 +5655,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5677,7 +5677,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5699,7 +5699,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_one, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5721,7 +5721,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -5743,7 +5743,7 @@ void scc_ut_nng_clustering_with_types(void** state)
 	                                   3, type_constraints_four, 100, type_labels_three,
 	                                   SCC_SM_INWARDS_UPDATING, SCC_UM_CLOSEST_SEED + 100, true, 20.0,
 	                                   len_primary_data_points, primary_data_points, SCC_UM_CLOSEST_SEED + 100, false, 0.0, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6708,7 +6708,7 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6726,7 +6726,7 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6744,7 +6744,7 @@ void iscc_run_nonval_tests(const scc_SeedMethod seed_method,
 	                        0, NULL, 0, NULL,
                             seed_method, unassigned_method, radius_constraint, radius,
                             len_primary_data_points, primary_data_points, secondary_unassigned_method, secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6793,7 +6793,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6812,7 +6812,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6831,7 +6831,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6850,7 +6850,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6869,7 +6869,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6888,7 +6888,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);
@@ -6907,7 +6907,7 @@ void iscc_run_type_nonval_tests(const scc_SeedMethod seed_method,
                                        seed_method, unassigned_method, radius_constraint, radius,
                                        len_primary_data_points, primary_data_points, secondary_unassigned_method,
                                        secondary_radius_constraint, secondary_radius, 0);
-	ec = scc_make_clustering(&scc_ut_test_data_large_struct, cl, &options);
+	ec = scc_sc_clustering(&scc_ut_test_data_large_struct, &options, cl);
 	assert_int_equal(ec, SCC_ER_OK);
 	assert_int_equal(cl->clustering_version, ISCC_CLUSTERING_STRUCT_VERSION);
 	assert_int_equal(cl->num_data_points, 100);

@@ -69,7 +69,7 @@ int main(void) {
 	options.size_constraint = 3;
 
 	// Make clustering
-	ec = scc_make_clustering(data_set, clustering, &options);
+	ec = scc_sc_clustering(data_set, &options, clustering);
 	if(ec != SCC_ER_OK) return 1;
 
 	// Print clustering

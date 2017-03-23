@@ -80,26 +80,26 @@ static scc_ErrorCode iscc_make_clustering_from_nng(scc_Clustering* clustering,
 // External function implementations
 // =============================================================================
 
-scc_ErrorCode scc_make_clustering(void* const data_set,
-                                  scc_Clustering* const clustering,
-                                  const scc_ClusterOptions* const options)
+scc_ErrorCode scc_sc_clustering(void* const data_set,
+                                const scc_ClusterOptions* const options,
+                                scc_Clustering* const out_clustering)
 {
-	if (!iscc_check_input_clustering(clustering)) {
+	if (!iscc_check_input_clustering(out_clustering)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid clustering object.");
 	}
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set, out_clustering->num_data_points)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
 	}
 	scc_ErrorCode ec;
-	if ((ec = iscc_check_cluster_options(options, clustering->num_data_points)) != SCC_ER_OK) {
+	if ((ec = iscc_check_cluster_options(options, out_clustering->num_data_points)) != SCC_ER_OK) {
 		return ec;
 	}
-	if (clustering->num_clusters != 0) {
+	if (out_clustering->num_clusters != 0) {
 		return iscc_make_error_msg(SCC_ER_NOT_IMPLEMENTED, "Cannot refine existing clusterings.");
 	}
 
 	if (options->seed_method == SCC_SM_BATCHES) {
-		return scc_nng_clustering_batches(clustering,
+		return scc_nng_clustering_batches(out_clustering,
 		                                  data_set,
 		                                  options->size_constraint,
 		                                  options->primary_unassigned_method,
@@ -113,7 +113,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 	iscc_Digraph nng;
 	if (options->num_types < 2) {
 		if ((ec = iscc_get_nng_with_size_constraint(data_set,
-		                                            clustering->num_data_points,
+		                                            out_clustering->num_data_points,
 		                                            options->size_constraint,
 		                                            options->len_primary_data_points,
 		                                            options->primary_data_points,
@@ -123,9 +123,9 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 			return ec;
 		}
 	} else {
-		assert(options->num_types <= UINT_FAST16_MAX);
+		assert(options->num_types <= UINT16_MAX);
 		if ((ec = iscc_get_nng_with_type_constraint(data_set,
-		                                            clustering->num_data_points,
+		                                            out_clustering->num_data_points,
 		                                            options->size_constraint,
 		                                            (uint_fast16_t) options->num_types,
 		                                            options->type_constraints,
@@ -141,7 +141,7 @@ scc_ErrorCode scc_make_clustering(void* const data_set,
 
 	assert(!iscc_digraph_is_empty(&nng));
 
-	ec = iscc_make_clustering_from_nng(clustering,
+	ec = iscc_make_clustering_from_nng(out_clustering,
 	                                   data_set,
 	                                   &nng,
 	                                   options);
@@ -183,7 +183,7 @@ static scc_ErrorCode iscc_check_cluster_options(const scc_ClusterOptions* const 
 		if (options->num_types > ISCC_TYPELABEL_MAX) {
 			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
 		}
-		if (options->num_types > UINT_FAST16_MAX) {
+		if (options->num_types > UINT16_MAX) {
 			return iscc_make_error_msg(SCC_ER_TOO_LARGE_PROBLEM, "Too many data point types.");
 		}
 		if (options->type_constraints == NULL) {

@@ -141,7 +141,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -155,7 +155,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -169,7 +169,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            len_primary_data_points, primary_data_points, secondary_unassigned_method, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -183,7 +183,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            len_primary_data_points, primary_data_points, secondary_unassigned_method, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -197,7 +197,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, false, 0.0,
 	                            len_primary_data_points, primary_data_points, secondary_unassigned_method, true, 10.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -211,7 +211,7 @@ void scc_ut_stress_nng_clustering(void** state)
 	                        0, NULL, 0, NULL,
 	                            seed_method, unassigned_method, true, 10.0,
 	                            len_primary_data_points, primary_data_points, secondary_unassigned_method, true, 10.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -266,7 +266,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -280,7 +280,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, 1);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -294,7 +294,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, false, 0.0,
                                         0, NULL, batch_size);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -308,7 +308,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, true, 10.0,
                                         0, NULL, batch_size);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -322,7 +322,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, false, 0.0,
                                         len_primary_data_points, primary_data_points, batch_size);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -336,7 +336,7 @@ void scc_ut_stress_nng_clustering_batches(void** state)
 		iscc_make_batch_options(&options, size_constraint,
                                         unassigned_method, true, 10.0,
                                         len_primary_data_points, primary_data_points, batch_size);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, 0, NULL, 0, NULL, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -408,7 +408,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -422,7 +422,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       0, NULL, SCC_UM_IGNORE, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -436,7 +436,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -450,7 +450,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, false, 0.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -464,7 +464,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, false, 0.0,
 	                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, true, 10.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
@@ -478,7 +478,7 @@ void scc_ut_stress_nng_clustering_with_types(void** state)
 	                                       num_types, type_constraints, SAMPLE_SIZE, type_labels,
 	                                       seed_method, unassigned_method, true, 10.0,
 	                                       len_primary_data_points, primary_data_points, secondary_unassigned_method, true, 10.0, 0);
-		ec = scc_make_clustering(data_set, cl, &options);
+		ec = scc_sc_clustering(data_set, &options, cl);
 		if (ec == SCC_ER_OK) {
 			ec = scc_check_clustering(cl, size_constraint, num_types, type_constraints, SAMPLE_SIZE, type_labels, &cl_is_OK);
 			assert_int_equal(ec, SCC_ER_OK);
