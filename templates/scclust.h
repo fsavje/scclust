@@ -46,9 +46,7 @@ extern "C" {
 // =============================================================================
 
 #define SCC_SCCLUST_MAJOR_VERSION {% scclust_major_version %}
-
 #define SCC_SCCLUST_MINOR_VERSION {% scclust_minor_version %}
-
 #define SCC_SCCLUST_PATCH_VERSION {% scclust_patch_version %}
 
 
