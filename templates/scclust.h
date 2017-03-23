@@ -410,8 +410,8 @@ typedef struct scc_ClusteringStats {
 } scc_ClusteringStats;
 
 
-scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* clustering,
-                                       void* data_set,
+scc_ErrorCode scc_get_clustering_stats(void* data_set,
+                                       const scc_Clustering* clustering,
                                        scc_ClusteringStats* out_stats);
 
 

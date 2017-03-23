@@ -171,8 +171,8 @@ scc_ErrorCode scc_check_clustering(const scc_Clustering* const clustering,
 }
 
 
-scc_ErrorCode scc_get_clustering_stats(const scc_Clustering* const clustering,
-                                       void* const data_set,
+scc_ErrorCode scc_get_clustering_stats(void* const data_set,
+                                       const scc_Clustering* const clustering,
                                        scc_ClusteringStats* const out_stats)
 {
 	if (out_stats == NULL) {
