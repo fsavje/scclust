@@ -131,7 +131,8 @@ scc_ErrorCode iscc_get_nng_with_size_constraint(void* const data_set,
                                                 const double radius,
                                                 iscc_Digraph* const out_nng)
 {
-	assert(iscc_check_data_set(data_set, num_data_points));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == num_data_points);
 	assert(num_data_points >= 2);
 	assert(size_constraint <= num_data_points);
 	assert(size_constraint >= 2);
@@ -193,7 +194,8 @@ scc_ErrorCode iscc_get_nng_with_type_constraint(void* const data_set,
                                                 const double radius,
                                                 iscc_Digraph* const out_nng)
 {
-	assert(iscc_check_data_set(data_set, num_data_points));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == num_data_points);
 	assert(num_data_points >= 2);
 	assert(size_constraint <= num_data_points);
 	assert(size_constraint >= 2);
@@ -357,7 +359,8 @@ scc_ErrorCode iscc_estimate_avg_seed_dist(void* const data_set,
                                           const uint32_t size_constraint,
                                           double* const out_avg_seed_dist)
 {
-	assert(iscc_check_data_set(data_set, nng->vertices));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == nng->vertices);
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_valid(nng));
@@ -430,7 +433,8 @@ scc_ErrorCode iscc_make_nng_clusters_from_seeds(scc_Clustering* const clustering
                                                 const double secondary_radius)
 {
 	assert(iscc_check_input_clustering(clustering));
-	assert(iscc_check_data_set(data_set, clustering->num_data_points));
+	assert(iscc_check_data_set(data_set));
+	assert(iscc_num_data_points(data_set) == clustering->num_data_points);
 	assert(seed_result->count > 0);
 	assert(seed_result->seeds != NULL);
 	assert(iscc_digraph_is_valid(nng));
@@ -647,7 +651,7 @@ static scc_ErrorCode iscc_make_nng(void* const data_set,
                                    scc_PointIndex out_query_indices[const],
                                    iscc_Digraph* const out_nng)
 {
-	assert(iscc_check_data_set(data_set, len_query_indices));
+	assert(iscc_check_data_set(data_set));
 	assert(len_search_indices > 0);
 	assert(len_query_indices > 0);
 	assert(k > 0);

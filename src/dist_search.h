@@ -33,6 +33,7 @@
 
 typedef struct iscc_dist_functions_struct {
 	scc_check_data_set check_data_set;
+	scc_num_data_points num_data_points;
 	scc_get_dist_matrix get_dist_matrix;
 	scc_get_dist_rows get_dist_rows;
 	scc_init_max_dist_object init_max_dist_object;
@@ -51,11 +52,15 @@ extern iscc_dist_functions_struct iscc_dist_functions;
 // Miscellaneous functions
 // =============================================================================
 
-static inline bool iscc_check_data_set(void* data_set,
-                                       size_t num_data_points)
+static inline bool iscc_check_data_set(void* data_set)
 {
-	return iscc_dist_functions.check_data_set(data_set,
-	                                          num_data_points);
+	return iscc_dist_functions.check_data_set(data_set);
+}
+
+
+static inline size_t iscc_num_data_points(void* data_set)
+{
+	return iscc_dist_functions.num_data_points(data_set);
 }
 
 

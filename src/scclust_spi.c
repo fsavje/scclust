@@ -32,6 +32,7 @@
 // See "dist_search.h" for definition
 iscc_dist_functions_struct iscc_dist_functions = {
 	.check_data_set = iscc_imp_check_data_set,
+	.num_data_points = iscc_imp_num_data_points,
 	.get_dist_matrix = iscc_imp_get_dist_matrix,
 	.get_dist_rows = iscc_imp_get_dist_rows,
 	.init_max_dist_object = iscc_imp_init_max_dist_object,
@@ -51,6 +52,7 @@ bool scc_reset_dist_functions(void)
 {
 	iscc_dist_functions = (iscc_dist_functions_struct) {
 		.check_data_set = iscc_imp_check_data_set,
+		.num_data_points = iscc_imp_num_data_points,
 		.get_dist_matrix = iscc_imp_get_dist_matrix,
 		.get_dist_rows = iscc_imp_get_dist_rows,
 		.init_max_dist_object = iscc_imp_init_max_dist_object,
@@ -66,6 +68,7 @@ bool scc_reset_dist_functions(void)
 
 
 bool scc_set_dist_functions(scc_check_data_set check_data_set,
+                            scc_num_data_points num_data_points,
                             scc_get_dist_matrix get_dist_matrix,
                             scc_get_dist_rows get_dist_rows,
                             scc_init_max_dist_object init_max_dist_object,
@@ -77,6 +80,10 @@ bool scc_set_dist_functions(scc_check_data_set check_data_set,
 {
 	if (check_data_set != NULL) {
 		iscc_dist_functions.check_data_set = check_data_set;
+	}
+
+	if (num_data_points != NULL) {
+		iscc_dist_functions.num_data_points = num_data_points;
 	}
 
 	if (get_dist_matrix != NULL) {

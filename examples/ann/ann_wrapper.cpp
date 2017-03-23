@@ -94,7 +94,7 @@ struct iscc_NNSearchObject {
 
 bool scc_set_ann_dist_search()
 {
-	return scc_set_dist_functions(NULL, NULL, NULL, NULL, NULL, NULL,
+	return scc_set_dist_functions(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 	                              iscc_ann_init_nn_search_object,
 	                              iscc_ann_nearest_neighbor_search,
 	                              iscc_ann_close_nn_search_object);
@@ -113,7 +113,7 @@ bool iscc_ann_init_nn_search_object(void* const data_set,
 	assert(iscc_ann_open_search_objects >= 0);
 	assert(len_search_indices > 0);
 	assert(out_nn_search_object != NULL);
-	assert(iscc_imp_check_data_set(data_set, len_search_indices));
+	assert(iscc_imp_check_data_set(data_set));
 
 	if (len_search_indices > INT_MAX) return false;
 
@@ -186,7 +186,7 @@ bool iscc_ann_nearest_neighbor_search(iscc_NNSearchObject* const nn_search_objec
 	ANNpointSet* const search_tree = nn_search_object->search_tree;
 
 	assert(iscc_ann_open_search_objects > 0);
-	assert(iscc_imp_check_data_set(data_set, 0));
+	assert(iscc_imp_check_data_set(data_set));
 	assert(len_search_indices > 0);
 	assert(search_tree != NULL);
 	assert(len_query_indices > 0);

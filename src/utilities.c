@@ -185,8 +185,11 @@ scc_ErrorCode scc_get_clustering_stats(void* const data_set,
 	if (clustering->num_clusters == 0) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Empty clustering.");
 	}
-	if (!iscc_check_data_set(data_set, clustering->num_data_points)) {
+	if (!iscc_check_data_set(data_set)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
+	}
+	if (iscc_num_data_points(data_set) != clustering->num_data_points) {
+		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Number of data points in data set does not match clustering object.");
 	}
 
 	size_t* const cluster_size = calloc(clustering->num_clusters, sizeof(size_t));
@@ -324,11 +327,11 @@ scc_ErrorCode scc_get_cluster_seeds(void* const data_set,
                                     const scc_ClusterOptions* const options,
                                     scc_SeedVector* const out_seed_vector)
 {
-	if (!iscc_check_data_set(data_set, 0)) {
+	if (!iscc_check_data_set(data_set)) {
 		return iscc_make_error_msg(SCC_ER_INVALID_INPUT, "Invalid data set object.");
 	}
 	scc_ErrorCode ec;
-	if ((ec = iscc_check_cluster_options(options, 0)) != SCC_ER_OK) {
+	if ((ec = iscc_check_cluster_options(options, iscc_num_data_points(data_set))) != SCC_ER_OK) {
 		return ec;
 	}
 	if (out_seed_vector->seeds != NULL) {
