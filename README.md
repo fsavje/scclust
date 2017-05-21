@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/fsavje/scclust.svg?branch=master)](https://travis-ci.org/fsavje/scclust)
 
-**scclust** is used for **s**ize-**c**onstrained **clust**ering. It solves clustering problems where one wants to partition of a set of data points in to groups subject to constraints on the composition of the groups. In particular, scclust constructs a clustering that satisfies the constraints while trying to minimize the dissimilarity of points assigned to the same clusters. It is possible to specify overall size constraints and constraints specific to types of data points. For example, one can require that each cluster should contain at least five data points in total and at least two "red" data points.
+**scclust** is used for **s**ize-**c**onstrained **clust**ering. It solves clustering problems where one wants to partition of a set of data points in to groups subject to constraints on the composition of the groups. In particular, scclust tries to minimize the dissimilarity of points assigned to the same cluster subject to user-specified constraints. It is possible to specify overall size constraints and constraints specific to types of data points. For example, in a data set with "red" and "blue" data points, one can restrict each cluster to contain at least five points in total of which at least two must be "red".
 
 scclust is made with large data sets in mind, and it can cluster millions of data points in less than a minute. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management can be accessed and changed at runtime.
 
-scclust is written in C99 and only requires the standard C library to compile.
+scclust is written in C99 and requires only the standard C library to compile.
 
 *The library is currently in alpha. Breaking changes to the API might happen.*
 
@@ -28,7 +28,7 @@ scclust compiles into a static library.
 
 ## How to use scclust
 
-Details on how to use scclust is best found in the documentation, the library header (`include/scclust.h`) and the examples distributed with the code (`examples`). For those that are impatient, the following snippet shows a simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
+Details on how to use scclust is best found in the documentation, the library header and the examples distributed with the code. For those that are impatient, the following snippet shows a simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
 
 ```c
 #include <stdbool.h>
@@ -240,11 +240,11 @@ Change the data type that stores arc indices. This choice restricts the size of 
 
 ## Service Provider Interface (SPI)
 
-scclust is based on functions that access the data points and derive distances between them. It is possible to change these functions at runtime. This can be useful when extending scclust to accept other databases or if one wants to use particular functions to calculate the distances. In particular, scclust ships with a simple nearest neighbor search algorithm; performance can often be improved drastically by using a dedicated nearest neighbor search library.
+The main functionality of scclust is agnostic with respect to how the data points are stored. The library comes with a data structure that stores the points in a floating point array, and a set functions to access this data. It is possible to change these functions at runtime so that other data structure can be used for point storage. This can be useful when extending scclust to accept other databases or if one wants to use particular functions to calculate the distances. In particular, scclust ships with a simple nearest neighbor search algorithm; performance can often be improved drastically by using a dedicated nearest neighbor search library.
 
 See `include/scclust_spi.h` and `src/dist_search.h` for the distance functions that can be exchanged. Note that if the new functions accepts the `scc_DataSet` struct as input (see `src/data_set_struct.h`), one can swap only parts of the distance functions.
 
-See `examples/ann/` for an example where the [ANN library](https://www.cs.umd.edu/~mount/ANN/) is used for nearest neighbor searching. (It is recommended to compile scclust with the `--with-pointindex=int` option when using the ANN wrapper. This avoids costly type translations between the libraries.)
+See `examples/ann/` for an example where the [ANN library](https://www.cs.umd.edu/~mount/ANN/) is used for nearest neighbor search. (It is recommended to compile scclust with the `--with-pointindex=int` option when using the ANN wrapper. This avoids costly type translations between the libraries.)
 
 
 ## How to contribute
