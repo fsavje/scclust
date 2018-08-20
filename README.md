@@ -28,7 +28,7 @@ scclust compiles into a static library.
 
 ## How to use scclust
 
-Details on how to use scclust is best found in the documentation, the library header and the examples distributed with the code. For those that are impatient, the following snippet shows a simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
+Details on how to use scclust is best found in the documentation, the library header and the examples distributed with the code. For the impatient, the following snippet shows a simple use case: we have a set of data points and want to construct clusters that contain at least three points each.
 
 ```c
 #include <stdbool.h>
@@ -230,7 +230,7 @@ Allowed values: `uint32_t  uint64_t`
 
 Default: `uint32_t`
 
-Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the maximum number of arcs is given by `{number of points} x {minimum size of clusters}`. The maximum number of arcs are given by:
+Change the data type that stores arc indices. This choice restricts the size of the graphs used by scclust to solve clustering problems. A wider type allows for larger problems but requires more memory. A rough estimate of the maximum number of arcs is given by `{number of points} x {minimum size of clusters}`. The maximum number of arcs is given by:
 
 | `--with-arcindex=`  | Max arcs  |
 | ------------------- | --------- |
@@ -240,7 +240,7 @@ Change the data type that stores arc indices. This choice restricts the size of 
 
 ## Service Provider Interface (SPI)
 
-The main functionality of scclust is agnostic with respect to how the data points are stored. The library comes with a data structure that stores the points in a floating point array, and a set functions to access this data. It is possible to change these functions at runtime so that other data structure can be used for point storage. This can be useful when extending scclust to accept other databases or if one wants to use particular functions to calculate the distances. In particular, scclust ships with a simple nearest neighbor search algorithm; performance can often be improved drastically by using a dedicated nearest neighbor search library.
+The main functionality of scclust is agnostic to how the data points are stored. The library comes with a data structure that stores the points in a floating point array, and a set of functions to access this data. It is possible to change these functions at runtime so that other data structure can be used for point storage. This can be useful when extending scclust to accept other databases or if one wants to use particular functions to calculate the distances. In particular, scclust ships with a simple nearest neighbor search algorithm; performance can often be improved drastically by using a dedicated nearest neighbor search library.
 
 See `include/scclust_spi.h` and `src/dist_search.h` for the distance functions that can be exchanged. Note that if the new functions accepts the `scc_DataSet` struct as input (see `src/data_set_struct.h`), one can swap only parts of the distance functions.
 
