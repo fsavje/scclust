@@ -334,8 +334,9 @@ void scc_ut_hi_push_to_stack(void** state)
 	};
 
 	iscc_hi_ClusterItem* new_cl_item1 = NULL;
-	scc_ErrorCode ec1 = iscc_hi_push_to_stack(&cl_stack, &new_cl_item1);
+	scc_ErrorCode ec1 = iscc_hi_check_capacity(&cl_stack);
 	assert_int_equal(ec1, SCC_ER_OK);
+	iscc_hi_push_to_stack(&cl_stack, &new_cl_item1);
 	assert_int_equal(cl_stack.capacity, 3);
 	assert_int_equal(cl_stack.items, 3);
 	assert_ptr_equal(new_cl_item1, cl_stack.clusters + 2);
@@ -343,8 +344,9 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_memory_equal(cl_stack.pointindex_store, ref_pointindex_store, 20 * sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterItem* new_cl_item2 = NULL;
-	scc_ErrorCode ec2 = iscc_hi_push_to_stack(&cl_stack, &new_cl_item2);
+	scc_ErrorCode ec2 = iscc_hi_check_capacity(&cl_stack);
 	assert_int_equal(ec2, SCC_ER_OK);
+	iscc_hi_push_to_stack(&cl_stack, &new_cl_item2);
 	assert_int_equal(cl_stack.capacity, 19);
 	assert_int_equal(cl_stack.items, 4);
 	assert_ptr_equal(new_cl_item2, cl_stack.clusters + 3);
@@ -352,8 +354,9 @@ void scc_ut_hi_push_to_stack(void** state)
 	assert_memory_equal(cl_stack.pointindex_store, ref_pointindex_store, 20 * sizeof(scc_PointIndex));
 
 	iscc_hi_ClusterItem* new_cl_item3 = NULL;
-	scc_ErrorCode ec3 = iscc_hi_push_to_stack(&cl_stack, &new_cl_item3);
+	scc_ErrorCode ec3 = iscc_hi_check_capacity(&cl_stack);
 	assert_int_equal(ec3, SCC_ER_OK);
+	iscc_hi_push_to_stack(&cl_stack, &new_cl_item3);
 	assert_int_equal(cl_stack.capacity, 19);
 	assert_int_equal(cl_stack.items, 5);
 	assert_ptr_equal(new_cl_item3, cl_stack.clusters + 4);
@@ -367,8 +370,7 @@ void scc_ut_hi_push_to_stack(void** state)
 		.pointindex_store = calloc(20, sizeof(scc_PointIndex)),
 	};
 
-	iscc_hi_ClusterItem* new_cl_item_fail = NULL;
-	scc_ErrorCode ec_fail = iscc_hi_push_to_stack(&cl_stack_fail, &new_cl_item_fail);
+	scc_ErrorCode ec_fail = iscc_hi_check_capacity(&cl_stack_fail);
 	assert_int_equal(ec_fail, SCC_ER_TOO_LARGE_PROBLEM);
 
 	free(ref_clusters);
