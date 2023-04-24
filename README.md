@@ -1,14 +1,10 @@
 # scclust
 
-[![Build Status](https://travis-ci.org/fsavje/scclust.svg?branch=master)](https://travis-ci.org/fsavje/scclust)
-
 **scclust** is used for **s**ize-**c**onstrained **clust**ering. It solves clustering problems where one wants to partition a set of data points into groups subject to constraints on the composition of the groups. In particular, scclust tries to minimize the dissimilarity of points assigned to the same cluster subject to user-specified constraints. It is possible to specify overall size constraints and constraints specific to types of data points. For example, in a data set with "red" and "blue" data points, one can restrict each cluster to contain at least five points in total of which at least two must be "red".
 
 scclust is made with large data sets in mind, and it can cluster millions of data points in less than a minute. It's also fairly easy to adapt scclust to run with exotic databases or other distance metrics as all data management can be accessed and changed at runtime.
 
 scclust is written in C99 and requires only the standard C library to compile.
-
-*The library is currently in alpha. Breaking changes to the API might happen.*
 
 
 ## How to compile scclust
